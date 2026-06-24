@@ -254,7 +254,22 @@
   </div>
 </div>
 
-<!-- ─── Black Swan Risk ─── -->
+<!-- ─── Regime Switch (top priority — drives all strategy logic) ── -->
+<div class="layer" style="margin-top:24px">
+  <div class="layer-header">
+    <span class="layer-num" style="background:var(--yellow)">🔄</span>
+    <h2 class="layer-title">Regime Switch</h2>
+    <span class="layer-subtitle">Market regime detection — classifies conditions, activates strategy</span>
+  </div>
+  <div class="layer-grid">
+    <div class="card" id="card-regime-switch" style="border-left: 3px solid var(--yellow)">
+      <h3 class="card-title">🔄 Active Regime</h3>
+      <div id="regime-switch-content"><p style="font-size:0.8em;color:var(--muted)">Detecting market regime from live signals — DISTRIBUTION / RISK_OFF / CASCADE / TRENDING / RANGING / UNCERTAIN</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Black Swan Risk ── -->
 <div class="layer" style="margin-top:24px">
   <div class="layer-header">
     <span class="layer-num" style="background:var(--red)">⚠️</span>
@@ -848,6 +863,74 @@ function renderLiquidity(d) {
 
   if(el)el.innerHTML = html;
 }
+
+// ─── Render Regime Switch (GetClaw spec — Card 8) ───
+function renderRegimeSwitch(d) {
+  var el = document.getElementById('regime-switch-content');
+  var card = document.getElementById('card-regime-switch');
+
+  if (!d) {
+    if(el)el.innerHTML = '<p style="font-size:0.8em;color:var(--muted)">Regime data unavailable — run detect_regime.py</p>';
+    if(card)card.style.borderLeftColor = 'var(--border)';
+    return;
+  }
+
+  // Stale check — 30 minutes (regime data must be fresh)
+  var staleBanner = '';
+  var dataAgeMin = d.data_age_minutes || 0;
+  if (dataAgeMin > 30) {
+    staleBanner = '<div style="text-align:center;margin-bottom:8px;padding:5px 8px;background:rgba(210,153,34,0.1);border:1px solid var(--yellow);border-radius:4px;font-size:0.72em;color:var(--yellow)">⚠️ Stale — ' + Math.round(dataAgeMin) + 'min old. Regime can shift rapidly.</div>';
+    if(card)card.style.borderLeftColor = 'var(--yellow)';
+  }
+
+  var regime = d.regime || 'UNCERTAIN';
+  var confidence = d.confidence || 'LOW';
+  var colors = {TRENDING:'var(--green)',RANGING:'var(--green)',CASCADE:'var(--orange)',RISK_OFF:'var(--red)',DISTRIBUTION:'var(--red)',UNCERTAIN:'var(--muted)'};
+  var bgs = {TRENDING:'rgba(63,185,80,0.12)',RANGING:'rgba(63,185,80,0.08)',CASCADE:'rgba(255,140,0,0.12)',RISK_OFF:'rgba(248,81,73,0.15)',DISTRIBUTION:'rgba(248,81,73,0.15)',UNCERTAIN:'rgba(255,255,255,0.03)'};
+  var vc = colors[regime] || 'var(--muted)';
+  var vbg = bgs[regime] || 'rgba(255,255,255,0.03)';
+
+  var html = staleBanner;
+
+  // Large regime badge
+  html += '<div style="text-align:center;margin-bottom:10px;padding:12px 16px;background:' + vbg + ';border-radius:8px;border:1px solid ' + vc + '">';
+  html += '<div style="font-size:1.4em;font-weight:800;color:' + vc + ';letter-spacing:1px">' + esc(regime) + '</div>';
+  if (d.active_strategy) html += '<div style="font-size:0.85em;color:var(--muted);margin-top:4px">' + esc(d.active_strategy) + '</div>';
+
+  var ageMin = d.regime_age_minutes || 0;
+  var ageDisplay;
+  if (d.regime_changed) ageDisplay = '<span style="color:var(--yellow)">⚡ Just switched (' + ageMin + ' min)</span>';
+  else if (ageMin > 60) ageDisplay = '<span style="color:var(--green)">Stable ' + ageMin + ' min</span>';
+  else if (ageMin > 15) ageDisplay = '<span>Active ' + ageMin + ' min</span>';
+  else ageDisplay = '<span style="color:var(--yellow)">Fresh ' + ageMin + ' min</span>';
+  html += '<div style="font-size:0.75em;color:var(--muted);margin-top:3px">' + ageDisplay + '</div>';
+  html += '</div>';
+
+  var confColors = {HIGH:'var(--green)',MEDIUM:'var(--yellow)',LOW:'var(--muted)'};
+  html += '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:0.82em"><span style="color:var(--muted)">Confidence</span><span style="color:' + (confColors[confidence]||'var(--muted)') + ';font-weight:600">● ' + esc(confidence) + '</span></div>';
+
+  if (d.previous_regime) {
+    html += '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:0.78em"><span style="color:var(--muted)">Previous</span><span style="color:var(--muted)">' + esc(d.previous_regime);
+    if (d.regime_changed) html += ' → <span style="color:' + vc + ';font-weight:600">' + esc(regime) + '</span>';
+    html += '</span></div>';
+  }
+
+  if (d.suppressed_strategies && d.suppressed_strategies.length > 0) {
+    html += '<div style="margin-top:6px;font-size:0.72em;color:var(--muted);padding:4px 6px;background:rgba(255,255,255,0.03);border-radius:4px">Suppressed: ' + d.suppressed_strategies.map(function(s){return esc(s)}).join(', ') + '</div>';
+  }
+
+  if (d.tactical_note) {
+    html += '<div style="margin-top:8px;font-size:0.78em;color:var(--yellow);line-height:1.4;padding:6px 8px;background:rgba(251,191,36,0.08);border-radius:4px">💡 ' + esc(d.tactical_note) + '</div>';
+  }
+
+  if (d.btc_price) {
+    html += '<div style="margin-top:4px;font-size:0.7em;color:var(--muted)">BTC: $' + d.btc_price.toLocaleString(undefined,{maximumFractionDigits:0}) + '</div>';
+  }
+
+  if (!staleBanner && card) card.style.borderLeftColor = vc;
+  if(el)el.innerHTML = html;
+}
+
 function renderStructural(d, v7, gate) {
   if (!d) return;
   const gateVerdict = gate?.verdict || 'UNKNOWN';
@@ -1837,10 +1920,10 @@ async function refresh() {
       load('news_feed'), load('social_pulse'), load('signal_tracker'),
       load('sentiment'), load('positioning'), load('patterns'), load('black_swan'), load('crash_precursor'),
       load('amt_status'), load('sigma_status'), load('trp_status'),
-      load('liquidity_status')
+      load('liquidity_status'), load('regime_switch')
     ]);
   }
-  const [btc, gate, macro, structural, derivatives, cycle, supplementary, regime, meta, v7, sigStats, manualGate, cts, newsFeed, socialPulse, sigTrack, sentiment, positioning, patterns, blackSwan, crashPrecursor, amtStatus, sigmaStatus, trpStatus, liquidityStatus] = _dataCache;
+  const [btc, gate, macro, structural, derivatives, cycle, supplementary, regime, meta, v7, sigStats, manualGate, cts, newsFeed, socialPulse, sigTrack, sentiment, positioning, patterns, blackSwan, crashPrecursor, amtStatus, sigmaStatus, trpStatus, liquidityStatus, regimeSwitch] = _dataCache;
 
   // Header
   if (btc && btc.price) {
@@ -1887,6 +1970,9 @@ async function refresh() {
       }
     }
   }
+
+  // TOP — REGIME SWITCH (drives all strategy logic, first in priority)
+  renderRegimeSwitch(regimeSwitch);
 
   // TOP — DISRUPTION
   renderBlackSwan(blackSwan);
