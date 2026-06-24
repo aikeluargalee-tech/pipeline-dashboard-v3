@@ -188,16 +188,6 @@
 </div>
 
 
-<!-- L-1 Manual Macro Gate Banner -->
-<div id="l1-gate-banner" style="display:none;">
-  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-    <span id="l1-status-badge" style="padding:6px 16px;border-radius:8px;font-weight:800;font-size:0.95em;text-transform:uppercase;letter-spacing:1px;"></span>
-    <span id="l1-reason" style="flex:1;min-width:200px;font-weight:500;"></span>
-    <span id="l1-expiry" style="font-size:0.78em;color:var(--muted);"></span>
-  </div>
-  <div id="l1-trigger" style="margin-top:6px;font-size:0.75em;color:var(--muted);"></div>
-</div>
-
 <!-- Trading Session Clocks -->
 <div class="session-clocks" id="session-clocks">
   <div class="clock-item" id="clock-utc"><span class="clock-city">UTC</span><span class="clock-time">--:--</span></div>
@@ -1848,44 +1838,6 @@ function renderSignalTracker(d) {
   el.innerHTML = html;
 }
 
-// ─── L-1 Manual Macro Gate ───
-function renderL1Gate(mg, regime) {
-  const banner = document.getElementById('l1-gate-banner');
-  const badge = document.getElementById('l1-status-badge');
-  const reason = document.getElementById('l1-reason');
-  const expiry = document.getElementById('l1-expiry');
-  const trigger = document.getElementById('l1-trigger');
-  if (!banner || !badge || !reason || !expiry || !trigger) return;
-
-  if (!mg || !mg.active) {
-    // Standby — hide banner. Only show when a manual gate is actually active.
-    banner.style.display = 'none';
-    return;
-  }
-
-  // Active — show prominent banner
-  const isAbort = mg.status === 'ABORT';
-  banner.style.display = 'block';
-  banner.className = isAbort ? '' : 'pause';
-  badge.textContent = 'L-1 ' + mg.status;
-  badge.className = isAbort ? 'abort' : 'pause';
-  reason.textContent = mg.reason || '';
-
-  if (mg.re_evaluate_at && typeof mg.re_evaluate_at === 'string') {
-    const d = new Date(mg.re_evaluate_at + (mg.re_evaluate_at.endsWith('Z') ? '' : 'Z'));
-    const local = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-    expiry.textContent = '⏳ Re-evaluate: ' + local;
-  } else {
-    expiry.textContent = '';
-  }
-
-  if (mg.re_evaluate_trigger) {
-    trigger.textContent = '🔍 When to review: ' + mg.re_evaluate_trigger;
-  } else {
-    trigger.textContent = '';
-  }
-}
-
 // ─── Regime Summary ───
 function renderRegime(d) {
   if (!d || !d.synthesis) return;
@@ -1979,7 +1931,7 @@ async function refresh() {
     _dataCache = await Promise.all([
       load('btc_price'), load('gate0'), load('macro'), load('structural'),
       load('derivatives'), load('cycle'), load('supplementary'), load('regime'), load('meta'), load('v7_captures'),
-      load('signal_stats'), load('manual_gate'), load('corporate_treasury_stress'),
+      load('signal_stats'), load('corporate_treasury_stress'),
       load('news_feed'), load('social_pulse'), load('signal_tracker'),
       load('sentiment'), load('positioning'), load('patterns'), load('black_swan'), load('crash_precursor'),
       load('amt_status'), load('sigma_status'), load('trp_status'),
@@ -1989,7 +1941,7 @@ async function refresh() {
       load('playbook_volume_breakout'), load('playbook_cross_asset_macro')
     ]);
   }
-  const [btc, gate, macro, structural, derivatives, cycle, supplementary, regime, meta, v7, sigStats, manualGate, cts, newsFeed, socialPulse, sigTrack, sentiment, positioning, patterns, blackSwan, crashPrecursor, amtStatus, sigmaStatus, trpStatus, liquidityStatus, regimeSwitch, pbTurtle, pbMeanrev, pbLiqmo, pbFundmr, pbVolbrk, pbMacro] = _dataCache;
+  const [btc, gate, macro, structural, derivatives, cycle, supplementary, regime, meta, v7, sigStats, cts, newsFeed, socialPulse, sigTrack, sentiment, positioning, patterns, blackSwan, crashPrecursor, amtStatus, sigmaStatus, trpStatus, liquidityStatus, regimeSwitch, pbTurtle, pbMeanrev, pbLiqmo, pbFundmr, pbVolbrk, pbMacro] = _dataCache;
 
   // Header
   if (btc && btc.price) {
@@ -2050,7 +2002,6 @@ async function refresh() {
   // TOP — DISRUPTION
   renderBlackSwan(blackSwan);
   renderCrashPrecursor(crashPrecursor);
-  renderL1Gate(manualGate, regime);
   renderRegime(regime);
   renderGate0Full(gate);
   renderAmtStatus(amtStatus);
@@ -2360,7 +2311,7 @@ function renderGate0Full(gate) {
 
   const allModuleKeys = [
     'black_swan', 'vix_spx', 'ai3_wave', 'stablecoins', 'session',
-    'trp_check', 'mstr', 'elon', 'ai_bubble', 'quantum'
+    'trp_check', 'mstr', 'elon', 'ai_bubble', 'quantum', 'geopolitical'
   ];
 
   let html = '';

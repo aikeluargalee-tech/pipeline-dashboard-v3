@@ -178,7 +178,31 @@ def main():
         "detail": "AI-3 Wave SpaceX active" if ai3_active else "AI-3 Wave inactive"
     }
 
-    # 5. Compute overall verdict
+    # 5. Add geopolitical module (replaces L-1 manual gate — automated via TRP)
+    trp_status = read_json(os.path.join(SITE, "data/trp_status.json"))
+    geo_state = "PROCEED"
+    geo_detail = "No geopolitical signals detected"
+    if trp_status:
+        last_tier = trp_status.get("last_tier")
+        last_class = trp_status.get("last_classification", "")
+        signals_today = trp_status.get("signals_today", 0)
+        if last_tier == "S":
+            geo_state = "ABORT"
+            geo_detail = f"Tier S geopolitical signal: {last_class} — {signals_today} signals today"
+        elif last_tier == "A":
+            geo_state = "PAUSE"
+            geo_detail = f"Tier A geopolitical signal: {last_class} — {signals_today} signals today"
+        elif last_tier:
+            geo_state = "TIGHTENED"
+            geo_detail = f"Tier {last_tier} geopolitical signal: {last_class} — {signals_today} signals today"
+        elif signals_today > 0:
+            geo_detail = f"Monitoring — {signals_today} signals today, no tier classification"
+    modules["geopolitical"] = {
+        "state": geo_state,
+        "detail": geo_detail
+    }
+
+    # 6. Compute overall verdict
     state_priority = {"ABORT": 4, "PAUSE": 3, "TIGHTENED": 2, "PROCEED": 1, "Offline": 0}
     verdict = "PROCEED"
     sources = []
