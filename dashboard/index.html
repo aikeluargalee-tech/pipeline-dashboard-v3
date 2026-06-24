@@ -172,12 +172,6 @@
 <main id="dashboard" role="main" aria-label="BTC Pipeline Dashboard — Real-time quantitative market intelligence">
 
 
-<!-- TL;DR Executive Summary — optimized for AI answer engine extraction -->
-<div style="background:linear-gradient(135deg, rgba(251,191,36,0.06), rgba(16,185,129,0.04));border:1px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:24px;font-size:0.88em;line-height:1.7">
-  <strong style="color:var(--yellow);text-transform:uppercase;letter-spacing:0.08em;font-size:0.85em">⚡ Executive Summary</strong>
-  <p id="exec-summary-text" style="color:var(--muted);margin:8px 0 0 0">This live dashboard translates complex, institutional Bitcoin metrics into clear market conditions. We analyze global stock markets, systemic geopolitical risks, digital dollar stability, on-chain value scores, and futures trading activity to tell you if the market is stable, rising, or flashing high-risk crash signals. Updated automatically every 15 minutes.</p>
-</div>
-
 <div class="header">
   <div>
     <h1>⚡ Pipeline Dashboard</h1>
@@ -662,10 +656,6 @@ let currentMode = 'advanced';
 
 function initAdvancedMode() {
   document.body.classList.add('advanced-mode');
-  const execSummary = document.getElementById('exec-summary-text');
-  if (execSummary) {
-    execSummary.textContent = "Live Bitcoin market intelligence dashboard. Tracks Gate0 entry conditions, macro regime shifts (DXY, yields, risk assets), structural support/resistance bands with liquidation magnet clusters, derivatives positioning (funding rates, open interest flow), on-chain cycle valuation (MVRV Z-score, SOPR, Puell Multiple), and technical analysis overlays. Data refreshed every 15 minutes.";
-  }
 }
 
 // Translate verdicts for beginners
