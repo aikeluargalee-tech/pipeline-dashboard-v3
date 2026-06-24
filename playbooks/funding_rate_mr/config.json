@@ -1,0 +1,97 @@
+{
+  "strategy": "Funding Rate Mean Reversion",
+  "version": "1.0.0",
+  "timeframe": "1h",
+  "funding_period_hours": 8,
+
+  "activation": {
+    "require_regime": "RANGING",
+    "funding_abs_min": 0.01,
+    "deactivation_threshold": 0.008,
+    "pre_alert_threshold": 0.006
+  },
+
+  "modes": {
+    "extreme": {"funding_abs_min": 0.03, "consecutive_periods": 3},
+    "moderate": {"funding_abs_min": 0.01, "consecutive_periods": 2}
+  },
+
+  "entry": {
+    "long": {
+      "extreme": {
+        "rsi_max": 40,
+        "taker_ratio_min": 0.42,
+        "oi_delta_allowed": ["FLAT", "EXPANDING"],
+        "cvd_required": "flat_or_upturn",
+        "liquidity_allowed": ["HEALTHY", "THINNING"]
+      },
+      "moderate": {
+        "rsi_max": 45,
+        "taker_ratio_min": 0.45,
+        "oi_delta_allowed": ["FLAT"],
+        "cvd_required": "flat",
+        "liquidity_allowed": ["HEALTHY"]
+      }
+    },
+    "short": {
+      "extreme": {
+        "rsi_min": 60,
+        "taker_ratio_max": 0.58,
+        "oi_delta_allowed": ["FLAT", "EXPANDING"],
+        "cvd_required": "flat_or_downturn",
+        "liquidity_allowed": ["HEALTHY", "THINNING"]
+      },
+      "moderate": {
+        "rsi_min": 55,
+        "taker_ratio_max": 0.55,
+        "oi_delta_allowed": ["FLAT"],
+        "cvd_required": "flat",
+        "liquidity_allowed": ["HEALTHY"]
+      }
+    }
+  },
+
+  "stops": {
+    "extreme": {"atr_mult": 1.0},
+    "moderate": {"atr_mult": 1.5},
+    "structural_mult": {"long": 0.999, "short": 1.001}
+  },
+
+  "take_profit": {
+    "tier1_pct": 0.50,
+    "tier1_atr_mult": 1.0,
+    "tier2_pct": 0.50,
+    "tier2_target": "mean_20h",
+    "funding_normalized_exit": 0.005,
+    "rr_min": {"extreme": 1.2, "moderate": 1.0}
+  },
+
+  "sizing": {
+    "base_risk_pct": {"extreme": 1.0, "moderate": 0.5},
+    "conf_scalar": {"HIGH": 1.0, "MEDIUM": 0.8, "LOW": 0.5},
+    "hard_cap_mult": 1.5
+  },
+
+  "time_limits": {
+    "extreme_max_hold_hours": 16,
+    "moderate_max_hold_hours": 8
+  },
+
+  "settlement_checkpoint": {
+    "interval_hours": 8,
+    "funding_improvement_ratio": 0.5,
+    "on_failure_action": "REDUCE_50_PCT"
+  },
+
+  "invalidation": {
+    "funding_flip_threshold": 0.01,
+    "oi_wrong_direction": {"long_floor": -1.0, "short_ceiling": 1.0},
+    "taker_divergence": {"long_min": 0.35, "short_max": 0.65},
+    "liquidity_kill": ["DRY", "EVAPORATING"],
+    "funding_normalized": 0.008
+  },
+
+  "idle_monitor": {
+    "pre_alert_threshold": 0.006
+  }
+}
