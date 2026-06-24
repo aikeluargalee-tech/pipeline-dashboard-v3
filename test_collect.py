@@ -66,11 +66,9 @@ def test_gate0_missing_files():
         assert "verdict" in result, "Should have verdict"
         assert "modules" in result, "Should have modules"
         assert "rules" in result, "Should have rules"
-        # Black Swan should default to 0
-        assert result["modules"]["black_swan"]["score"] == 0
-        # Session should fallback to computed NY open
-        assert "session" in result["modules"]
-        assert result["modules"]["session"]["name"] == "Unknown"
+        # With new fetch_gate0_full.py architecture, missing data = empty modules + PROCEED fallback
+        assert result["verdict"] == "PROCEED"
+        assert result["modules"] == {}
 
 run_test("gate0 — all /tmp files missing", test_gate0_missing_files)
 

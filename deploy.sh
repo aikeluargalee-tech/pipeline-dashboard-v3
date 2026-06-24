@@ -97,6 +97,10 @@ run_pipeline "gate0"         "$SITE/scripts/fetch_gate0.py"
 run_pipeline "sr_bands"      "$SITE/scripts/fetch_sr_bands.py"
 run_pipeline "synthesis"     "$SITE/scripts/fetch_synthesis.py"
 run_pipeline "v7_images"     "$SITE/scripts/capture_v7_images.py"
+run_pipeline "gate0_full"    "$SITE/scripts/producers/fetch_gate0_full.py"
+run_pipeline "amt_status"    "$SITE/scripts/producers/fetch_amt_status.py"
+run_pipeline "sigma_status"  "$SITE/scripts/producers/fetch_sigma_status.py"
+run_pipeline "trp_status"    "$SITE/scripts/producers/fetch_trp_status.py"
 
 echo "── Production complete: $PASSED passed, $FAILED failed ──"
 
@@ -139,7 +143,7 @@ fi
 
 # ─── 6. Stage + commit + push ───
 echo "── Checking for changes ──"
-git add data/*.json data/run_status.json assets/v7_long.png assets/v7_short.png assets/styles.css assets/nav.js assets/favicon.png assets/logo.png assets/social-card.png index.html dashboard/index.html methodology/index.html glossary/index.html about/index.html faq/index.html contact/index.html research/ compare/ privacy/index.html terms/index.html verdicts/ track-record/ docs/ events-and-disruptions/ sitemap.xml robots.txt manifest.json scripts/ 2>/dev/null
+git add data/*.json data/gate0.json data/amt_status.json data/sigma_status.json data/trp_status.json data/run_status.json assets/v7_long.png assets/v7_short.png assets/styles.css assets/nav.js assets/favicon.png assets/logo.png assets/social-card.png index.html dashboard/index.html methodology/index.html glossary/index.html about/index.html faq/index.html contact/index.html research/ compare/ privacy/index.html terms/index.html verdicts/ track-record/ docs/ events-and-disruptions/ sitemap.xml robots.txt manifest.json scripts/ 2>/dev/null
 if [ $? -ne 0 ]; then
     echo "⚠ git add had errors — some files may not exist yet (OK for first deploy)"
 fi
