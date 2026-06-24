@@ -1858,14 +1858,8 @@ function renderL1Gate(mg, regime) {
   if (!banner || !badge || !reason || !expiry || !trigger) return;
 
   if (!mg || !mg.active) {
-    // Standby — show dim card so user knows facility exists
-    banner.style.display = 'block';
-    banner.className = 'standby';
-    badge.textContent = 'L-1 INACTIVE';
-    badge.className = 'inactive';
-    reason.textContent = 'Manual macro gate standing by — no geopolitical override active';
-    expiry.textContent = '';
-    trigger.textContent = '';
+    // Standby — hide banner. Only show when a manual gate is actually active.
+    banner.style.display = 'none';
     return;
   }
 
