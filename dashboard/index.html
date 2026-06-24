@@ -268,7 +268,7 @@
     </div>
   </div>
   <!-- Playbook Status Cards — 2 rows × 3 columns -->
-  <div class="playbook-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:12px">
+  <div class="playbook-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px">
     <div class="card" id="card-pb-turtle" style="border-left: 3px solid var(--green)">
       <h3 class="card-title">🐢 Turtle Breakout <span style="font-size:0.7em;color:var(--muted)">TRENDING</span></h3>
       <div id="pb-turtle-content"><p style="font-size:0.75em;color:var(--muted)">Donchian 20H breakout — idle</p></div>
@@ -919,6 +919,11 @@ function renderRegimeSwitch(d) {
 
   var html = staleBanner;
 
+  // ── BTC Price — top, large, anchored ──
+  if (d.btc_price) {
+    html += '<div style="text-align:center;margin-bottom:8px;padding:8px 0;font-size:1.25em;font-weight:800;color:var(--text);letter-spacing:0.5px">BTC: $' + d.btc_price.toLocaleString(undefined,{maximumFractionDigits:0}) + '</div>';
+  }
+
   // Large regime badge
   html += '<div style="text-align:center;margin-bottom:10px;padding:12px 16px;background:' + vbg + ';border-radius:8px;border:1px solid ' + vc + '">';
   html += '<div style="font-size:1.4em;font-weight:800;color:' + vc + ';letter-spacing:1px">' + esc(regime) + '</div>';
@@ -948,10 +953,6 @@ function renderRegimeSwitch(d) {
 
   if (d.tactical_note) {
     html += '<div style="margin-top:8px;font-size:0.78em;color:var(--yellow);line-height:1.4;padding:6px 8px;background:rgba(251,191,36,0.08);border-radius:4px">💡 ' + esc(d.tactical_note) + '</div>';
-  }
-
-  if (d.btc_price) {
-    html += '<div style="margin-top:4px;font-size:0.7em;color:var(--muted)">BTC: $' + d.btc_price.toLocaleString(undefined,{maximumFractionDigits:0}) + '</div>';
   }
 
   if (!staleBanner && card) card.style.borderLeftColor = vc;
