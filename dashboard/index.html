@@ -2437,7 +2437,7 @@ function populateCardNarratives(gate, regime, macro, structural, derivatives, cy
       if (m.regime_detail) mp2.push(m.regime_detail);
       if (m.sandwich && m.sandwich.width_usd) mp2.push('sandwich: $' + m.sandwich.width_usd.toLocaleString());
       if (m.asymmetry_ratio != null) mp2.push('asymmetry: ' + (m.asymmetry_ratio * 100).toFixed(0) + '% above');
-      nar('nar-magnets', mp2.length ? 'Liquidation magnets: ' + mp2.join(' | ') + '. Leveraged clusters act as price attractors — overhead = short squeeze fuel, downside = long squeeze fuel.' : 'Liquidation magnets show where leveraged positions cluster. Closer magnets = stronger pull. No cluster data currently available — run parse_heatmap.py with vision analysis output.');
+      nar('nar-magnets', mp2.length ? 'Liquidation magnets:\n• Overhead: $' + Number(ab?.price || 0).toLocaleString() + ' (+' + (ab?.distance_pct || '?') + '%)\n• Downside: $' + Number(bl?.price || 0).toLocaleString() + ' (' + (bl?.distance_pct || '?') + '%)\n• Distance ratio: ' + (m.distance_ratio != null ? m.distance_ratio + ':1' : '?') + '\n• Regime: ' + (m.regime || 'Unknown') + '\n• ' + (m.regime_detail || '') + '\n• Sandwich: $' + ((m.sandwich && m.sandwich.width_usd) ? m.sandwich.width_usd.toLocaleString() : '?') + '\n• Asymmetry: ' + (m.asymmetry_ratio != null ? (m.asymmetry_ratio * 100).toFixed(0) + '% above' : '?') + '\n\nLeveraged clusters act as price attractors — overhead = short squeeze fuel, downside = long squeeze fuel.' : 'Liquidation magnets show where leveraged positions cluster. Closer magnets = stronger pull. No cluster data currently available — run parse_heatmap.py with vision analysis output.');
     }
     if (structural.sr_bands) {
       var b = structural.sr_bands;
