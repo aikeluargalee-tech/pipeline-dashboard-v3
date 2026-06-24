@@ -1,0 +1,42 @@
+{
+  "status": "active",
+  "mode": "LOOSE",
+  "timestamp": "2026-06-24T12:08:27.662717+00:00",
+  "btc_price": 62944.0,
+  "atr": 1804.46,
+  "atr_pct": 2.88,
+  "stop_multiplier": 1.5,
+  "stop_distance_usd": 2706.69,
+  "indicators": {
+    "bb_upper": 66362.63,
+    "bb_lower": 60532.56,
+    "bb_mid": 63447.6,
+    "stoch_rsi_k": 64.0,
+    "taker_buy_ratio": 0.458,
+    "cvd_trend": "NEGATIVE",
+    "funding_rate": 0.0021
+  },
+  "long_signal": {
+    "entry": false,
+    "entry_price": null,
+    "stop_loss": null,
+    "tp_primary": null,
+    "tp_secondary_pct": null,
+    "checks": {
+      "bb_lower": false,
+      "stoch_rsi": false
+    }
+  },
+  "short_signal": {
+    "entry": false,
+    "entry_price": null,
+    "stop_loss": null,
+    "tp_primary": null,
+    "tp_secondary_pct": null,
+    "checks": {
+      "bb_upper": false,
+      "stoch_rsi": false,
+      "ma50_guard": "Blocked \u2014 price significantly below MA50 without strong sell momentum"
+    }
+  }
+}
