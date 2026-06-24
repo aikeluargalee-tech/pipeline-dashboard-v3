@@ -200,6 +200,7 @@
 
 <!-- Trading Session Clocks -->
 <div class="session-clocks" id="session-clocks">
+  <div class="clock-item" id="clock-utc"><span class="clock-city">UTC</span><span class="clock-time">--:--</span></div>
   <div class="clock-item" id="clock-ny"><span class="clock-city">NY</span><span class="clock-time">--:--</span></div>
   <div class="clock-item" id="clock-london"><span class="clock-city">London</span><span class="clock-time">--:--</span></div>
   <div class="clock-item" id="clock-dubai"><span class="clock-city">Dubai</span><span class="clock-time">--:--</span></div>
@@ -1936,6 +1937,7 @@ function renderRegime(d) {
 // ─── Trading Session Clocks ───
 function updateClocks() {
   const zones = [
+    { id: 'clock-utc', tz: 'UTC', open: null, close: null, city: 'UTC' },
     { id: 'clock-ny', tz: 'America/New_York', open: [9,30], close: [16,0], city: 'NY' },
     { id: 'clock-london', tz: 'Europe/London', open: [8,0], close: [16,30], city: 'London' },
     { id: 'clock-dubai', tz: 'Asia/Dubai', open: [10,0], close: [14,0], city: 'Dubai' },
@@ -1954,15 +1956,19 @@ function updateClocks() {
     });
     timeEl.textContent = fmt.format(now);
 
-    // Check if session is active
-    const local = new Date(now.toLocaleString('en-US', { timeZone: z.tz }));
-    const mins = local.getHours() * 60 + local.getMinutes();
-    const openMin = z.open[0] * 60 + z.open[1];
-    const closeMin = z.close[0] * 60 + z.close[1];
-    const isWeekday = local.getDay() >= 1 && local.getDay() <= 5;
+    // Check if session is active (skip for 24/7 reference clocks like UTC)
+    if (z.open && z.close) {
+      const local = new Date(now.toLocaleString('en-US', { timeZone: z.tz }));
+      const mins = local.getHours() * 60 + local.getMinutes();
+      const openMin = z.open[0] * 60 + z.open[1];
+      const closeMin = z.close[0] * 60 + z.close[1];
+      const isWeekday = local.getDay() >= 1 && local.getDay() <= 5;
 
-    if (isWeekday && mins >= openMin && mins < closeMin) {
-      el.classList.add('active-session');
+      if (isWeekday && mins >= openMin && mins < closeMin) {
+        el.classList.add('active-session');
+      } else {
+        el.classList.remove('active-session');
+      }
     } else {
       el.classList.remove('active-session');
     }
