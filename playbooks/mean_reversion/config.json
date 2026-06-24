@@ -1,0 +1,72 @@
+{
+  "strategy": "Mean Reversion + Vol Filter",
+  "version": "1.0.0",
+  "timeframe": "1h",
+  "mean_window": 20,
+  "rsi_period": 14,
+
+  "entry": {
+    "long": {
+      "tight": {
+        "rsi_max": 35,
+        "taker_ratio_max": 0.40,
+        "taker_rising_candles": 2,
+        "oi_delta_allowed": ["FLAT", "EXPANDING"],
+        "funding_min": -0.0002,
+        "liquidity_allowed": ["HEALTHY", "THINNING"]
+      },
+      "loose": {
+        "rsi_max": 30,
+        "taker_ratio_max": 0.35,
+        "oi_delta_allowed": ["FLAT"],
+        "funding_min": -0.0001,
+        "liquidity_allowed": ["HEALTHY"]
+      }
+    },
+    "short": {
+      "tight": {
+        "rsi_min": 65,
+        "taker_ratio_min": 0.60,
+        "taker_fading_candles": 2,
+        "oi_delta_allowed": ["FLAT", "EXPANDING"],
+        "funding_max": 0.0002,
+        "liquidity_allowed": ["HEALTHY", "THINNING"]
+      },
+      "loose": {
+        "rsi_min": 70,
+        "taker_ratio_min": 0.65,
+        "oi_delta_allowed": ["FLAT"],
+        "funding_max": 0.0001,
+        "liquidity_allowed": ["HEALTHY"]
+      }
+    }
+  },
+
+  "stops": {
+    "tight": {"atr_mult": 1.2},
+    "loose": {"atr_mult": 2.0}
+  },
+
+  "take_profit": {
+    "tier1_pct_of_mean_distance": 0.40,
+    "tier1_position_pct": 0.50,
+    "tight_rr_min": 1.5,
+    "loose_rr_min": 1.2
+  },
+
+  "sizing": {
+    "base_risk_pct": {"HIGH": 1.5, "MEDIUM": 1.0, "LOW": 0.5},
+    "atr_scalar": {"TIGHT": 1.0, "LOOSE": 0.6}
+  },
+
+  "time_limits": {
+    "tight_max_hold_hours": 12,
+    "loose_max_hold_hours": 8
+  },
+
+  "invalidation": {
+    "trend_ignition": {"taker_ratio": 0.65, "oi_delta": "EXPANDING"},
+    "liquidity_kill": ["DRY", "EVAPORATING"],
+    "funding_extreme": 0.01
+  }
+}
