@@ -16,17 +16,17 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="Live Bitcoin monitoring: Gate0 status, funding rates, liquidation clusters, on-chain cycle metrics, and derivatives data. Updated every 15 minutes.">
 <meta property="og:site_name" content="BTC Pipeline">
-<meta property="og:updated_time" id="og-updated" content="2026-06-24T03:56:26+00:00">
+<meta property="og:updated_time" id="og-updated" content="2026-06-24T04:25:58+00:00">
 <!-- Google AI Overviews freshness signals -->
 <meta property="article:published_time" content="2024-01-01T00:00:00Z">
-<meta property="article:modified_time" id="article-modified" content="2026-06-24T03:56:26+00:00">
+<meta property="article:modified_time" id="article-modified" content="2026-06-24T04:25:58+00:00">
 <!-- Dublin Core — Perplexity respects these -->
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
 <meta name="DC.title" content="BTC Pipeline Dashboard">
 <meta name="DC.type" content="Dataset">
 <meta name="DC.format" content="text/html">
 <meta name="DC.language" content="en">
-<meta name="DC.date" id="dc-date" content="2026-06-24T03:56:26+00:00">
+<meta name="DC.date" id="dc-date" content="2026-06-24T04:25:58+00:00">
 <!-- Schema.org Dataset markup for AI engines -->
 <script type="application/ld+json" id="schema-dataset">
 {
@@ -39,7 +39,7 @@
   "measurementTechnique": "Automated JSON data pipeline, 15-minute refresh cadence via cron-scheduled collection",
   "creator": { "@type": "Organization", "name": "BTC Pipeline" },
   "license": "https://creativecommons.org/licenses/by/4.0/",
-  "dateModified": "2026-06-24T03:56:26+00:00",
+  "dateModified": "2026-06-24T04:25:58+00:00",
   "distribution": [
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard/data/gate0.json", "name": "Gate0 Signal Data" },
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard/data/macro.json", "name": "Macro Indicator Data" },
@@ -194,7 +194,7 @@
     </div>
   </div>
   <div style="text-align:right">
-    <span class="btc-price" id="btc-price">$62,743</span>
+    <span class="btc-price" id="btc-price">$62,558</span>
     <span class="btc-change" id="btc-change"></span>
     <div class="meta" id="btc-range"></div>
   </div>
@@ -299,7 +299,7 @@
 <div class="regime-summary" id="regime-card">
   <div class="regime-title">⚡ REGIME SYNTHESIS</div>
   <div class="regime-verdict" id="regime-verdict">CAUTIOUS NEUTRAL</div>
-  <div class="regime-detail" id="regime-detail">Tightened rules active. 1 bullish / 0 bearish signals. | TA: Price 11.8% below MA50 — medium-term structure bearish</div>
+  <div class="regime-detail" id="regime-detail">Tightened rules active. 1 bullish / 0 bearish signals. | TA: Price 12.1% below MA50 — medium-term structure bearish</div>
   <div class="regime-layers" id="regime-layers"></div>
   <div class="card-narrative" id="nar-regime" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
 </div>
@@ -781,54 +781,89 @@ function renderStructural(d, v7, gate) {
     ? `<span style="display:inline-block;margin-top:6px;padding:3px 10px;border-radius:4px;background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.3);color:var(--yellow);font-size:0.75em;font-weight:800;letter-spacing:0.5px">🟡 ${transGateVerdict} — Avoid high risk leverage</span>`
     : '';
 
-  // Magnets
+  // ─── Magnets (per GetClaw priority: nearest magnet PRIMARY, strongest cluster SECONDARY) ───
   let mhtml = '';
-  // Permanent description — explains what liquidation magnets are
-  mhtml += '<div style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.05)">Leveraged liquidation clusters act as <strong style="color:var(--text)">price magnets</strong> — zones where cascading liquidations create self-reinforcing moves. <span style="color:var(--green)">Above</span> = short squeeze fuel (shorts liquidated → price spikes). <span style="color:var(--red)">Below</span> = long squeeze fuel (longs liquidated → price dives).</div>';
-
   if (d.magnets && (d.magnets.above?.nearest_magnet?.price || d.magnets.below?.nearest_magnet?.price)) {
-    const above = d.magnets.above || {};
-    const below = d.magnets.below || {};
+    const m = d.magnets;
+    const above = m.above || {};
+    const below = m.below || {};
     const am = above.nearest_magnet || {};
     const bm = below.nearest_magnet || {};
 
+    // ── PRIMARY: Nearest magnets (top of card, large) ──
     if (am.price) {
-      mhtml += `<div class="magnet-bar above"><span class="price" style="color:var(--green)">⬆ Overhead $${esc(Number(am.price).toLocaleString())}</span><span class="bar"></span><span class="pct">${esc(am.distance_pct > 0 ? '+' : '')}${esc(String(am.distance_pct || '?'))}%</span></div>`;
+      const distPct = am.distance_pct || 0;
+      mhtml += `<div class="magnet-bar above"><span class="price" style="color:var(--green);font-size:1.05em">⬆ Overhead <strong>$${esc(Number(am.price).toLocaleString())}</strong></span><span class="bar"></span><span class="pct">${esc(distPct > 0 ? '+' : '')}${esc(String(distPct || '?'))}%</span></div>`;
     }
     if (bm.price) {
-      mhtml += `<div class="magnet-bar below"><span class="price" style="color:var(--red)">⬇ Downside $${esc(Number(bm.price).toLocaleString())}</span><span class="bar"></span><span class="pct">${esc(String(bm.distance_pct || '?'))}%</span></div>`;
+      const distPct = bm.distance_pct || 0;
+      mhtml += `<div class="magnet-bar below"><span class="price" style="color:var(--red);font-size:1.05em">⬇ Downside <strong>$${esc(Number(bm.price).toLocaleString())}</strong></span><span class="bar"></span><span class="pct">${esc(String(distPct || '?'))}%</span></div>`;
     }
 
-    // Cluster details
+    // ── Distance Ratio Analysis ──
+    if (m.distance_ratio != null) {
+      const dr = m.distance_ratio;
+      let drLabel, drColor;
+      if (dr < 0.5) { drLabel = 'Upside Squeeze — overhead ' + dr.toFixed(1) + '× closer'; drColor = 'var(--green)'; }
+      else if (dr > 2.0) { drLabel = 'Downside Sweep — downside ' + (1/dr).toFixed(1) + '× closer'; drColor = 'var(--red)'; }
+      else { drLabel = 'Balanced — ' + dr.toFixed(1) + ':1 ratio'; drColor = 'var(--muted)'; }
+      mhtml += `<div style="margin-top:4px;font-size:0.8em;color:${drColor}">📐 ${esc(drLabel)}</div>`;
+    }
+
+    // ── Regime badge + explanation ──
+    if (m.regime) {
+      let cls = 'balanced';
+      if (m.regime.includes('Squeeze')) cls = 'squeeze';
+      else if (m.regime.includes('Sweep')) cls = 'sweep';
+      else if (m.regime.includes('Vice')) cls = 'vice';
+      mhtml += `<div style="margin-top:6px"><span class="regime-badge ${cls}">${esc(m.regime)}</span></div>`;
+      if (m.regime_detail) {
+        mhtml += `<div style="margin-top:3px;font-size:0.78em;color:var(--muted);line-height:1.4">${esc(m.regime_detail)}</div>`;
+      }
+    }
+
+    // ── SECONDARY: Strongest clusters ──
     const ac = above.strongest_cluster;
     const bc = below.strongest_cluster;
-    if (ac) mhtml += metricRow('Overhead cluster', `$${ac.low?.toLocaleString()}–$${ac.high?.toLocaleString()}` + (above.density ? ` · ${esc(above.density)}` : ''));
-    if (bc) mhtml += metricRow('Downside cluster', `$${bc.low?.toLocaleString()}–$${bc.high?.toLocaleString()}` + (below.density ? ` · ${esc(below.density)}` : ''));
-
-    // Tactical deduction
-    if (d.magnets.tactical_note) {
-      mhtml += `<div style="margin-top:6px;font-size:0.8em;color:var(--yellow);line-height:1.4;padding:6px 8px;background:rgba(251,191,36,0.08);border-radius:4px">💡 ${esc(d.magnets.tactical_note)}</div>`;
+    if (ac || bc) {
+      mhtml += '<div style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.05)">';
+      if (ac) mhtml += metricRow('Overhead cluster', `$${ac.low?.toLocaleString()}–$${ac.high?.toLocaleString()}` + (above.density ? ` · ${esc(above.density)}` : '') + (above.cluster_width_usd ? ` · $${above.cluster_width_usd}` : ''));
+      if (bc) mhtml += metricRow('Downside cluster', `$${bc.low?.toLocaleString()}–$${bc.high?.toLocaleString()}` + (below.density ? ` · ${esc(below.density)}` : '') + (below.cluster_width_usd ? ` · $${below.cluster_width_usd}` : ''));
+      mhtml += '</div>';
     }
 
-    // Regime
-    if (d.magnets.regime) {
-      const regime = d.magnets.regime;
-      let cls = 'balanced';
-      if (regime.includes('Squeeze')) cls = 'squeeze';
-      else if (regime.includes('Sweep')) cls = 'sweep';
-      else if (regime.includes('Vice')) cls = 'vice';
-      mhtml += `<div style="margin-top:8px"><span class="regime-badge ${cls}">${esc(regime)}</span></div>`;
+    // ── Sandwich + Asymmetry ──
+    if (m.sandwich && m.sandwich.width_usd != null) {
+      mhtml += metricRow('Sandwich', '$' + m.sandwich.width_usd.toLocaleString());
+    }
+    if (m.asymmetry_ratio != null) {
+      const asymLabel = m.asymmetry_ratio > 0.55 ? 'Above-dominant' : m.asymmetry_ratio < 0.45 ? 'Below-dominant' : 'Balanced';
+      mhtml += metricRow('Asymmetry', asymLabel + ' (' + (m.asymmetry_ratio * 100).toFixed(0) + '% above)');
     }
 
-    // Sandwich
-    if (d.magnets.sandwich) {
-      mhtml += metricRow('Sandwich width', '$' + d.magnets.sandwich.width_usd?.toLocaleString());
+    // ── Trend ──
+    if (m.trend && m.trend.direction) {
+      mhtml += metricRow('Trend', m.trend.direction);
     }
 
-    mhtml += metricRow('Confidence', d.magnets.confidence || '?');
-    mhtml += metricRow('Updated', d.magnets.timestamp || '—');
+    // ── Tactical deduction ──
+    if (m.tactical_note) {
+      mhtml += `<div style="margin-top:6px;font-size:0.8em;color:var(--yellow);line-height:1.4;padding:6px 8px;background:rgba(251,191,36,0.08);border-radius:4px">💡 ${esc(m.tactical_note)}</div>`;
+    } else if (m.regime_detail) {
+      // Fallback tactical if no explicit note
+      mhtml += `<div style="margin-top:6px;font-size:0.8em;color:var(--yellow);line-height:1.4;padding:6px 8px;background:rgba(251,191,36,0.08);border-radius:4px">💡 ${esc(m.regime_detail)}</div>`;
+    }
+
+    // ── Meta: confidence + age ──
+    let metaHtml = '';
+    if (m.confidence) metaHtml += 'Confidence: ' + esc(m.confidence);
+    if (m.data_age_minutes != null) {
+      const ageColor = m.data_age_minutes > 240 ? 'var(--red)' : m.data_age_minutes > 120 ? 'var(--yellow)' : 'var(--green)';
+      metaHtml += (metaHtml ? ' · ' : '') + `<span style="color:${ageColor}">${m.data_age_minutes}m ago</span>`;
+    }
+    if (metaHtml) mhtml += `<div style="margin-top:8px;font-size:0.7em;color:var(--muted)">${metaHtml}</div>`;
   } else {
-    mhtml += '<div style="font-size:0.8em;color:var(--muted);font-style:italic">No cluster data available. Magnets are generated by Gemini vision analysis of the Coinglass heatmap (4H cron). Check that <code>capture_heatmap.py</code> ran successfully.</div>';
+    mhtml += '<div style="font-size:0.8em;color:var(--muted);font-style:italic">No cluster data. Run heatmap capture via <code>parse_heatmap.py</code> with vision analysis output, or trigger the 4H heatmap cron.</div>';
   }
   var el=document.getElementById('magnets-content');if(el)el.innerHTML = mhtml;
 
@@ -2397,9 +2432,12 @@ function populateCardNarratives(gate, regime, macro, structural, derivatives, cy
       var bl = m.below && m.below.nearest_magnet;
       if (ab && ab.price) mp2.push('overhead magnet at $' + Number(ab.price).toLocaleString() + ' (+' + (ab.distance_pct || '?') + '%)');
       if (bl && bl.price) mp2.push('downside magnet at $' + Number(bl.price).toLocaleString() + ' (' + (bl.distance_pct || '?') + '%)');
+      if (m.distance_ratio != null) mp2.push('distance ratio ' + m.distance_ratio + ':1');
       if (m.regime) mp2.push('regime: ' + m.regime);
+      if (m.regime_detail) mp2.push(m.regime_detail);
       if (m.sandwich && m.sandwich.width_usd) mp2.push('sandwich: $' + m.sandwich.width_usd.toLocaleString());
-      nar('nar-magnets', mp2.length ? 'Liquidation magnets: ' + mp2.join(' | ') + '. Leveraged clusters act as price attractors — overhead = short squeeze fuel, downside = long squeeze fuel.' : 'Liquidation magnets show where leveraged positions cluster. Closer magnets = stronger pull. No cluster data currently available — generated by Gemini vision analysis of Coinglass heatmap.');
+      if (m.asymmetry_ratio != null) mp2.push('asymmetry: ' + (m.asymmetry_ratio * 100).toFixed(0) + '% above');
+      nar('nar-magnets', mp2.length ? 'Liquidation magnets: ' + mp2.join(' | ') + '. Leveraged clusters act as price attractors — overhead = short squeeze fuel, downside = long squeeze fuel.' : 'Liquidation magnets show where leveraged positions cluster. Closer magnets = stronger pull. No cluster data currently available — run parse_heatmap.py with vision analysis output.');
     }
     if (structural.sr_bands) {
       var b = structural.sr_bands;

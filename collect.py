@@ -922,7 +922,7 @@ def collect_structural():
     if sr_bands:
         result["sr_bands"] = sr_bands
 
-    # Liquidation magnets — always emit, with fallback when upstream is missing
+    # Liquidation magnets — full methodology from btc-liquidation-magnets skill
     if heatmap is None:
         heatmap = {}
     above = (heatmap.get("above") or {})
@@ -932,9 +932,25 @@ def collect_structural():
     above_price = above_magnet.get("price") if above_magnet else None
     below_price = below_magnet.get("price") if below_magnet else None
     btc_price = heatmap.get("btc_price")
+    heatmap_ts = heatmap.get("timestamp", "")
+
+    # Compute data age
+    data_age_minutes = None
+    if heatmap_ts:
+        try:
+            from datetime import datetime
+            parsed = datetime.strptime(heatmap_ts, "%Y-%m-%d %H:%M UTC")
+            parsed = parsed.replace(tzinfo=timezone.utc)
+            data_age_minutes = int((datetime.now(timezone.utc) - parsed).total_seconds() / 60)
+        except Exception:
+            pass
 
     sandwich = None
     regime = None
+    regime_detail = None
+    asymmetry_ratio = None
+    distance_ratio = None
+
     above_price = safe_float(above_price, "liquidation above magnet price")
     below_price = safe_float(below_price, "liquidation below magnet price")
     btc_price = safe_float(btc_price, "liquidation btc price")
@@ -950,25 +966,50 @@ def collect_structural():
                 "above_dist": above_dist,
                 "below_dist": below_dist,
             }
+            # Distance ratio per btc-liquidation-magnets methodology
+            if below_dist > 0:
+                distance_ratio = round(above_dist / below_dist, 1)
+
+            # Asymmetry: which side has bigger clusters (by width)
+            above_width = above.get("cluster_width_usd", 0) or 0
+            below_width = below.get("cluster_width_usd", 0) or 0
+            if above_width + below_width > 0:
+                asymmetry_ratio = round(above_width / (above_width + below_width), 2)
+
+            # Regime classification — full 5-step methodology
             if width <= 500:
                 regime = "Vice Grip ⚡"
+                regime_detail = "Range ≤$500 — breakout imminent. Stop range trading, position for expansion."
             elif above_dist < below_dist * 0.5:
                 regime = "Upside Squeeze"
+                regime_detail = f"Overhead magnet {above_dist/below_dist:.1f}× closer. Temporary bullish — shorts being squeezed. Ride up, TP at cluster high. Opposite magnet at ${below_price:,.0f} is next target after exhaustion."
             elif below_dist < above_dist * 0.5:
                 regime = "Downside Sweep"
+                regime_detail = f"Downside magnet {below_dist/above_dist:.1f}× closer. Temporary bearish — longs being swept. Buy opportunity after sweep completes. Overhead at ${above_price:,.0f} is next target."
             else:
                 regime = "Balanced"
+                regime_detail = "Both magnets roughly equidistant. Range trade: buy low magnet, sell high magnet."
 
-    result["magnets"] = {
+    # Build enriched magnets output
+    magnets = {
         "above": above,
         "below": below,
         "sandwich": sandwich,
         "regime": regime,
+        "regime_detail": regime_detail,
+        "distance_ratio": distance_ratio,
+        "asymmetry_ratio": asymmetry_ratio,
         "btc_price": btc_price,
         "confidence": heatmap.get("confidence"),
         "timestamp": heatmap.get("timestamp"),
-        "stale": not bool(heatmap),
+        "data_age_minutes": data_age_minutes,
+        "tactical_note": heatmap.get("tactical_note", ""),
+        "trend": heatmap.get("trend"),
+        "range": heatmap.get("range"),
+        "stale": not bool(heatmap) or (data_age_minutes is not None and data_age_minutes > 240),
     }
+
+    result["magnets"] = magnets
 
     # Volume Profile
     if vol_profile:
