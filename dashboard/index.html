@@ -185,13 +185,6 @@
       Live Bitcoin market intelligence: Gate0 pass/fail entry conditions, macro regime analysis, structural support/resistance bands, liquidation heatmap clusters, derivatives positioning, and on-chain cycle metrics — auto-refreshed every 15 minutes.
     </p>
     <div class="meta" id="meta">Loading...</div>
-    <div class="mode-toggle-container">
-      <span class="mode-label">View:</span>
-      <div class="mode-switch">
-        <button class="mode-btn" id="btn-mode-simple" onclick="setDashboardMode('simple')">Beginner (Simple)</button>
-        <button class="mode-btn active" id="btn-mode-advanced" onclick="setDashboardMode('advanced')">Trader (Advanced)</button>
-      </div>
-    </div>
   </div>
   <div style="text-align:right">
     <span class="btc-price" id="btc-price">$62,558</span>
@@ -667,36 +660,12 @@
 // --- Beginner Mode State Management ---
 let currentMode = 'advanced';
 
-function setDashboardMode(mode) {
-  currentMode = mode;
-  const body = document.body;
-  const btnSimple = document.getElementById('btn-mode-simple');
-  const btnAdvanced = document.getElementById('btn-mode-advanced');
+function initAdvancedMode() {
+  document.body.classList.add('advanced-mode');
   const execSummary = document.getElementById('exec-summary-text');
-  
-  if (mode === 'advanced') {
-    body.classList.remove('simple-mode');
-    body.classList.add('advanced-mode');
-    if (btnSimple) btnSimple.classList.remove('active');
-    if (btnAdvanced) btnAdvanced.classList.add('active');
-    if (execSummary) {
-      execSummary.textContent = "Live Bitcoin market intelligence dashboard. Tracks Gate0 entry conditions, macro regime shifts (DXY, yields, risk assets), structural support/resistance bands with liquidation magnet clusters, derivatives positioning (funding rates, open interest flow), on-chain cycle valuation (MVRV Z-score, SOPR, Puell Multiple), and technical analysis overlays. Data refreshed every 15 minutes.";
-    }
-  } else {
-    body.classList.remove('advanced-mode');
-    body.classList.add('simple-mode');
-    if (btnSimple) btnSimple.classList.add('active');
-    if (btnAdvanced) btnAdvanced.classList.remove('active');
-    if (execSummary) {
-      execSummary.textContent = "This live dashboard translates complex, institutional Bitcoin metrics into clear market conditions. We analyze global stock markets, systemic geopolitical risks, digital dollar stability, on-chain value scores, and futures trading activity to signal when conditions look stable, when risk is elevated, and when to step back and wait. Updated automatically every 15 minutes.";
-    }
+  if (execSummary) {
+    execSummary.textContent = "Live Bitcoin market intelligence dashboard. Tracks Gate0 entry conditions, macro regime shifts (DXY, yields, risk assets), structural support/resistance bands with liquidation magnet clusters, derivatives positioning (funding rates, open interest flow), on-chain cycle valuation (MVRV Z-score, SOPR, Puell Multiple), and technical analysis overlays. Data refreshed every 15 minutes.";
   }
-  
-  // Save preference
-  localStorage.setItem('btc_dashboard_view_mode', mode);
-  
-  // Re-run refresh to swap text descriptions
-  refresh();
 }
 
 // Translate verdicts for beginners
@@ -747,9 +716,8 @@ function initBeginnerFriendlyLayout() {
     }
   });
   
-  // Set initial mode from localStorage or default to advanced
-  const savedMode = localStorage.getItem('btc_dashboard_view_mode') || 'advanced';
-  setDashboardMode(savedMode);
+  // Initialize advanced mode (hardcoded — no beginner toggle)
+  initAdvancedMode();
 }
 
 const DATA = '../data/';
@@ -1043,7 +1011,7 @@ function renderPlaybookMacro(d) { renderPlaybookCard('pb-macro-content', d, 'car
 function renderStructural(d, v7, gate) {
   if (!d) return;
   const gateVerdict = gate?.verdict || 'UNKNOWN';
-  const transGateVerdict = currentMode === 'simple' ? translateGateBadge(gateVerdict) : `L0 ${gateVerdict}`;
+  const transGateVerdict = `L0 ${gateVerdict}`;
   const l0Badge = gateVerdict === 'PAUSE' || gateVerdict === 'ABORT'
     ? `<span style="display:inline-block;margin-top:6px;padding:3px 10px;border-radius:4px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);color:var(--red);font-size:0.75em;font-weight:800;letter-spacing:0.5px">⛔ ${transGateVerdict} — Monitoring Only</span>`
     : gateVerdict === 'TIGHTENED'
@@ -1951,11 +1919,7 @@ function renderRegime(d) {
   else if (verdictText.includes('BEAR') || verdictText.includes('DO NOT')) color = 'var(--red)';
   else if (verdictText.includes('STAND')) color = 'var(--orange)';
 
-  if (currentMode === 'simple') {
-    verdict.textContent = translateVerdict(verdictText);
-  } else {
-    verdict.textContent = verdictText;
-  }
+  verdict.textContent = verdictText;
   verdict.style.color = color;
 
   detail.textContent = s.detail || '';
@@ -1973,7 +1937,7 @@ function renderRegime(d) {
     const layer = d[l.key];
     if (!layer) continue;
     const layerVer = layer.verdict || '—';
-    const translatedVer = currentMode === 'simple' ? translateVerdict(layerVer) : layerVer;
+    const translatedVer = layerVer;
     parts.push(`${esc(String(layer.emoji || ''))} ${esc(l.label)} <strong style="color:var(--text)">${esc(translatedVer)}</strong> ${esc(String(layer.detail || ''))}`);
   }
   layers.innerHTML = parts.join(' <span style="color:var(--muted);margin:0 6px">|</span> ');
