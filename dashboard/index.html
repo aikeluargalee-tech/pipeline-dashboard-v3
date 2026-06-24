@@ -266,6 +266,31 @@
       <h3 class="card-title">🔄 Active Regime</h3>
       <div id="regime-switch-content"><p style="font-size:0.8em;color:var(--muted)">Detecting market regime from live signals — DISTRIBUTION / RISK_OFF / CASCADE / TRENDING / RANGING / UNCERTAIN</p></div>
     </div>
+    <!-- Playbook Status Cards -->
+    <div class="card" id="card-pb-turtle" style="border-left: 3px solid var(--green)">
+      <h3 class="card-title">🐢 Turtle Breakout <span style="font-size:0.7em;color:var(--muted)">TRENDING</span></h3>
+      <div id="pb-turtle-content"><p style="font-size:0.75em;color:var(--muted)">Donchian 20H breakout — idle</p></div>
+    </div>
+    <div class="card" id="card-pb-meanrev" style="border-left: 3px solid var(--blue)">
+      <h3 class="card-title">📉 Mean Reversion <span style="font-size:0.7em;color:var(--muted)">RANGING</span></h3>
+      <div id="pb-meanrev-content"><p style="font-size:0.75em;color:var(--muted)">RSI/BB reversion — idle</p></div>
+    </div>
+    <div class="card" id="card-pb-liqmo" style="border-left: 3px solid var(--orange)">
+      <h3 class="card-title">💧 Liq Momentum <span style="font-size:0.7em;color:var(--muted)">CASCADE</span></h3>
+      <div id="pb-liqmo-content"><p style="font-size:0.75em;color:var(--muted)">OI decline + taker weakness — idle</p></div>
+    </div>
+    <div class="card" id="card-pb-fundmr" style="border-left: 3px solid var(--blue)">
+      <h3 class="card-title">💰 Funding Rate MR <span style="font-size:0.7em;color:var(--muted)">RANGING</span></h3>
+      <div id="pb-fundmr-content"><p style="font-size:0.75em;color:var(--muted)">0.01% hysteresis gate — idle</p></div>
+    </div>
+    <div class="card" id="card-pb-volbrk" style="border-left: 3px solid var(--green)">
+      <h3 class="card-title">📊 Volume Breakout <span style="font-size:0.7em;color:var(--muted)">TRENDING</span></h3>
+      <div id="pb-volbrk-content"><p style="font-size:0.75em;color:var(--muted)">Volume surge + CVD — idle</p></div>
+    </div>
+    <div class="card" id="card-pb-macro" style="border-left: 3px solid var(--red)">
+      <h3 class="card-title">🌐 Cross-Asset Macro <span style="font-size:0.7em;color:var(--muted)">DISTR/RISK_OFF</span></h3>
+      <div id="pb-macro-content"><p style="font-size:0.75em;color:var(--muted)">DXY/VIX/SPY defense — idle</p></div>
+    </div>
   </div>
 </div>
 
@@ -930,6 +955,87 @@ function renderRegimeSwitch(d) {
   if (!staleBanner && card) card.style.borderLeftColor = vc;
   if(el)el.innerHTML = html;
 }
+
+// ─── Playbook Status Renderers ───
+
+function renderPlaybookCard(id, data, cardId) {
+  var el = document.getElementById(id);
+  var card = document.getElementById(cardId);
+  if (!el) return;
+
+  if (!data || data.status === 'offline') {
+    el.innerHTML = '<p style="font-size:0.75em;color:var(--muted)">Offline — no data</p>';
+    if (card) card.style.borderLeftColor = 'var(--border)';
+    return;
+  }
+
+  var status = data.status;
+  var signal = data.signal;
+  var reason = data.reason || '';
+
+  // Normalize status: some playbooks use 'idle', others 'inactive', some omit status entirely
+  if (!status) {
+    if (signal && signal !== 'NO_SIGNAL') status = 'active';
+    else status = 'inactive';
+  }
+
+  // Color mapping
+  var sigColor = signal === 'LONG' ? 'var(--green)' : signal === 'SHORT' ? 'var(--red)' : 'var(--muted)';
+  var statusColors = {active:{text:'var(--green)',bg:'rgba(63,185,80,0.12)'},inactive:{text:'var(--yellow)',bg:'rgba(251,191,36,0.1)'},idle:{text:'var(--yellow)',bg:'rgba(251,191,36,0.1)'}};
+  var sc = statusColors[status] || {text:'var(--muted)',bg:'rgba(255,255,255,0.03)'};
+  var statusLabel = status === 'active' ? 'ACTIVE' : (status === 'inactive' || status === 'idle') ? 'IDLE' : (status || '—');
+
+  var html = '';
+
+  // Status + signal row
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">';
+  html += '<span style="font-size:0.72em;padding:2px 6px;border-radius:3px;background:' + sc.bg + ';color:' + sc.text + ';font-weight:600">' + esc(statusLabel) + '</span>';
+  if (status === 'active' && signal && signal !== 'NO_SIGNAL') {
+    html += '<span style="font-size:0.82em;font-weight:700;color:' + sigColor + '">' + esc(signal) + '</span>';
+  }
+  html += '</div>';
+
+  // Reason (idle/inactive)
+  if (reason && status !== 'active') {
+    html += '<div style="font-size:0.7em;color:var(--muted);margin-bottom:2px">' + esc(reason) + '</div>';
+  }
+
+  // Active position metrics
+  if (status === 'active' && signal && signal !== 'NO_SIGNAL' && data.entry_price) {
+    html += '<div style="font-size:0.72em;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap">';
+    html += '<span>Entry: <b style="color:var(--text)">$' + data.entry_price.toLocaleString() + '</b></span>';
+    if (data.stop_loss) html += '<span>Stop: <b style="color:var(--red)">$' + data.stop_loss.toLocaleString() + '</b></span>';
+    if (data.tp_primary) html += '<span>TP: <b style="color:var(--green)">$' + data.tp_primary.toLocaleString() + '</b></span>';
+    if (data.position_size_pct) html += '<span>Size: <b>' + data.position_size_pct + '%</b></span>';
+    if (data.rr_ratio) html += '<span>R:R <b>' + data.rr_ratio + '</b></span>';
+    html += '</div>';
+  }
+
+  // Extra: mode, confidence
+  if (data.mode) {
+    html += '<div style="font-size:0.68em;color:var(--muted);margin-top:2px">Mode: ' + esc(data.mode) + (data.confidence ? ' · ' + esc(data.confidence) : '') + '</div>';
+  }
+
+  // Exposure cap note
+  if (data.exposure_cap_note) {
+    html += '<div style="font-size:0.65em;color:var(--yellow);margin-top:2px">⚠️ ' + esc(data.exposure_cap_note) + '</div>';
+  }
+
+  // Overlap trigger
+  if (data.overlap_triggers && data.overlap_triggers.length > 0) {
+    html += '<div style="font-size:0.65em;color:var(--orange);margin-top:2px">🔁 ' + esc(data.overlap_triggers[0].reason) + '</div>';
+  }
+
+  if (card) card.style.borderLeftColor = status === 'active' ? sigColor : 'var(--border)';
+  el.innerHTML = html;
+}
+
+function renderPlaybookTurtle(d) { renderPlaybookCard('pb-turtle-content', d, 'card-pb-turtle'); }
+function renderPlaybookMeanrev(d) { renderPlaybookCard('pb-meanrev-content', d, 'card-pb-meanrev'); }
+function renderPlaybookLiqmo(d) { renderPlaybookCard('pb-liqmo-content', d, 'card-pb-liqmo'); }
+function renderPlaybookFundmr(d) { renderPlaybookCard('pb-fundmr-content', d, 'card-pb-fundmr'); }
+function renderPlaybookVolbrk(d) { renderPlaybookCard('pb-volbrk-content', d, 'card-pb-volbrk'); }
+function renderPlaybookMacro(d) { renderPlaybookCard('pb-macro-content', d, 'card-pb-macro'); }
 
 function renderStructural(d, v7, gate) {
   if (!d) return;
@@ -1920,10 +2026,13 @@ async function refresh() {
       load('news_feed'), load('social_pulse'), load('signal_tracker'),
       load('sentiment'), load('positioning'), load('patterns'), load('black_swan'), load('crash_precursor'),
       load('amt_status'), load('sigma_status'), load('trp_status'),
-      load('liquidity_status'), load('regime_switch')
+      load('liquidity_status'), load('regime_switch'),
+      load('playbook_turtle_breakout'), load('playbook_mean_reversion'),
+      load('playbook_liquidation_momentum'), load('playbook_funding_rate_mr'),
+      load('playbook_volume_breakout'), load('playbook_cross_asset_macro')
     ]);
   }
-  const [btc, gate, macro, structural, derivatives, cycle, supplementary, regime, meta, v7, sigStats, manualGate, cts, newsFeed, socialPulse, sigTrack, sentiment, positioning, patterns, blackSwan, crashPrecursor, amtStatus, sigmaStatus, trpStatus, liquidityStatus, regimeSwitch] = _dataCache;
+  const [btc, gate, macro, structural, derivatives, cycle, supplementary, regime, meta, v7, sigStats, manualGate, cts, newsFeed, socialPulse, sigTrack, sentiment, positioning, patterns, blackSwan, crashPrecursor, amtStatus, sigmaStatus, trpStatus, liquidityStatus, regimeSwitch, pbTurtle, pbMeanrev, pbLiqmo, pbFundmr, pbVolbrk, pbMacro] = _dataCache;
 
   // Header
   if (btc && btc.price) {
@@ -1973,6 +2082,13 @@ async function refresh() {
 
   // TOP — REGIME SWITCH (drives all strategy logic, first in priority)
   renderRegimeSwitch(regimeSwitch);
+  // Playbook status — 6 strategy cards under Market Context
+  renderPlaybookTurtle(pbTurtle);
+  renderPlaybookMeanrev(pbMeanrev);
+  renderPlaybookLiqmo(pbLiqmo);
+  renderPlaybookFundmr(pbFundmr);
+  renderPlaybookVolbrk(pbVolbrk);
+  renderPlaybookMacro(pbMacro);
 
   // TOP — DISRUPTION
   renderBlackSwan(blackSwan);

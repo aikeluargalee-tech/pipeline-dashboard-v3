@@ -1,0 +1,79 @@
+{
+  "strategy": "Turtle Breakout",
+  "version": "1.0.0",
+  "timeframe": "1h",
+  "donchian_period": 20,
+
+  "entry": {
+    "long": {
+      "high": {
+        "donchian_breakout_close_above_20h_high": true,
+        "taker_ratio_min": 0.55,
+        "cvd_positive": true,
+        "oi_delta_allowed": ["EXPANDING"],
+        "funding_max": 0.0005,
+        "liquidity_allowed": ["HEALTHY", "THINNING"],
+        "price_near_high_pct": 0.5
+      },
+      "medium": {
+        "sigma_conviction_min": "HIGH",
+        "funding_not_negative": true,
+        "cvd_not_bearish": true,
+        "liquidity_allowed": ["HEALTHY", "THINNING"],
+        "oi_delta_allowed": ["EXPANDING", "FLAT"]
+      }
+    },
+    "short": {
+      "high": {
+        "donchian_breakout_close_below_20h_low": true,
+        "taker_ratio_max": 0.45,
+        "cvd_negative": true,
+        "oi_delta_allowed": ["EXPANDING"],
+        "funding_min": -0.0005,
+        "liquidity_allowed": ["HEALTHY", "THINNING"],
+        "price_near_low_pct": 0.5
+      },
+      "medium": {
+        "sigma_conviction_min": "HIGH",
+        "funding_not_positive": true,
+        "cvd_not_bullish": true,
+        "liquidity_allowed": ["HEALTHY", "THINNING"],
+        "oi_delta_allowed": ["EXPANDING", "FLAT"]
+      }
+    }
+  },
+
+  "stops": {
+    "high": {"atr_mult": 2.0, "trail": true},
+    "medium": {"atr_mult": 1.5, "trail": true}
+  },
+
+  "take_profit": {
+    "method": "trailing_atr",
+    "atr_mult": 4.0,
+    "tier1_atr_mult": 2.0,
+    "tier1_position_pct": 0.40,
+    "tight_rr_min": 2.0,
+    "loose_rr_min": 1.5
+  },
+
+  "sizing": {
+    "base_risk_pct": {"HIGH": 2.0, "MEDIUM": 1.0},
+    "account_risk_pct": 2.0,
+    "donchian_width_scalar": {"narrow": 0.8, "normal": 1.0, "wide": 1.2}
+  },
+
+  "time_limits": {
+    "max_hold_hours": 48
+  },
+
+  "invalidation": {
+    "regime_flip_away_from_trending": true,
+    "donchian_channel_break_reverse": true,
+    "cvd_direction_failure": {"candles": 3},
+    "oi_decline_pct": -5,
+    "volume_dry_up_below_avg": 0.5,
+    "liquidity_kill": ["DRY", "EVAPORATING"],
+    "funding_exhaustion": 0.008
+  }
+}

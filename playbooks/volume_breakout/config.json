@@ -1,0 +1,96 @@
+{
+  "strategy": "Volume + Breakout Confirmation",
+  "version": "1.0.0",
+  "timeframe": "1h",
+  "volume_window": 20,
+
+  "entry": {
+    "long": {
+      "momentum": {
+        "volume_mult": 1.5,
+        "taker_ratio_min": 0.63,
+        "cvd_accel_candles": 3,
+        "oi_delta_allowed": ["EXPANDING"],
+        "funding_max": 0.0005,
+        "liquidity_allowed": ["HEALTHY", "THINNING"],
+        "price_near_high_pct": 0.5
+      },
+      "retest": {
+        "volume_mult": 1.2,
+        "taker_ratio_min": 0.60,
+        "cvd_hold_candles": 2,
+        "oi_delta_allowed": ["EXPANDING", "FLAT"],
+        "funding_max": 0.0005,
+        "liquidity_allowed": ["HEALTHY", "THINNING"],
+        "price_near_high_pct": 0.8,
+        "retest_depth_max_pct": 0.4
+      }
+    },
+    "short": {
+      "momentum": {
+        "volume_mult": 1.5,
+        "taker_ratio_max": 0.37,
+        "cvd_accel_candles": 3,
+        "oi_delta_allowed": ["EXPANDING"],
+        "funding_min": -0.0005,
+        "liquidity_allowed": ["HEALTHY", "THINNING"],
+        "price_near_low_pct": 0.5
+      },
+      "retest": {
+        "volume_mult": 1.2,
+        "taker_ratio_max": 0.40,
+        "cvd_hold_candles": 2,
+        "oi_delta_allowed": ["EXPANDING", "FLAT"],
+        "funding_min": -0.0005,
+        "liquidity_allowed": ["HEALTHY", "THINNING"],
+        "price_near_low_pct": 0.8,
+        "retest_depth_max_pct": 0.4
+      }
+    }
+  },
+
+  "stops": {
+    "momentum": {
+      "atr_mult": 1.5,
+      "breakout_level_invalidation": "close_below"
+    },
+    "retest": {
+      "atr_mult": 1.0,
+      "breakout_level_invalidation": "close_below"
+    }
+  },
+
+  "take_profit": {
+    "momentum_tp_atr_mult": 2.5,
+    "retest_tp_atr_mult": 3.0,
+    "tier1_position_pct": 0.40,
+    "tight_rr_min": 2.0,
+    "loose_rr_min": 1.5
+  },
+
+  "sizing": {
+    "base_risk_pct": {"HIGH": 2.0, "MEDIUM": 1.5, "LOW": 1.0},
+    "mode_scalar": {"MOMENTUM": 1.0, "RETEST": 0.8},
+    "vs_turtle_multiplier": 1.5
+  },
+
+  "time_limits": {
+    "momentum_max_hold_hours": 6,
+    "retest_max_hold_hours": 12
+  },
+
+  "volume_exhaustion": {
+    "declining_candles": 3,
+    "below_avg_mult": 0.7,
+    "cvd_failure": "cvd_flips_negative"
+  },
+
+  "invalidation": {
+    "regime_flip": true,
+    "volume_contraction": {"candles": 3, "below_avg": 0.7},
+    "cvd_flip_negative": true,
+    "oi_decline_pct": -5,
+    "close_back_inside_range": true,
+    "funding_exhaustion": 0.008
+  }
+}

@@ -17,8 +17,9 @@ def load_json(path):
     try:
         with open(path) as f:
             return json.load(f)
-    except Exception:
-        return None
+    except Exception as e:
+        print(f"[regime_gate] Error loading {path}: {e}")
+        return {}
 
 
 def get_regime():
@@ -64,7 +65,10 @@ def validate_regime(required_regime):
         }
 
     # ── Mode selection ──
-    atr_norm = regime.get("atr_normalized", 999) if isinstance(regime.get("atr_normalized"), (int, float)) else 999
+    # Canonical ATR default = 2.0%. 999 was a sentinel that could leak into stops.
+    raw_atr = regime.get("atr_normalized")
+    atr_data_valid = isinstance(raw_atr, (int, float))
+    atr_norm = float(raw_atr) if atr_data_valid else 2.0  # type: ignore[arg-type]
     if confidence in ("HIGH", "MEDIUM") and atr_norm < 0.8:
         mode = "TIGHT"
     else:
@@ -80,6 +84,7 @@ def validate_regime(required_regime):
         "age_minutes": age,
         "mode": mode,
         "atr_normalized": atr_norm,
+        "atr_data_valid": atr_data_valid,
         "liquidity_verdict": liquidity_verdict,
     }
 
