@@ -1,6 +1,7 @@
 {
   "warmup_progress": "62/96",
   "1d_layer": "offline",
+  "current_price": 62810.0,
   "latest_signal": {
     "type": "Whale Pivot",
     "timestamp": "2026-06-24T02:47:31.918824+00:00",
@@ -8,7 +9,41 @@
   },
   "last_whale_pivot": {
     "direction": "LONG",
-    "price": 62711.0
+    "price": 62711.0,
+    "timestamp": "2026-06-24T02:47:31.918824+00:00",
+    "conviction": 0.75,
+    "checklist": {
+      "at_key_level": false,
+      "absorption_detected": true,
+      "aggression_opposing": true,
+      "delta_confirms": true
+    },
+    "balance_state": "DEVELOPING_BALANCE",
+    "age": "1h 18m ago",
+    "distance": "+0.2% ($99)",
+    "distance_pct": 0.16,
+    "current_price": 62810.0,
+    "validity": "monitoring",
+    "validity_reason": "Pivot triggered 1h 18m ago, awaiting confirmation",
+    "checklist_details": [
+      {
+        "label": "At Key Level",
+        "passed": false
+      },
+      {
+        "label": "Absorption",
+        "passed": true
+      },
+      {
+        "label": "Aggression Opposing",
+        "passed": true
+      },
+      {
+        "label": "Delta Confirms",
+        "passed": true
+      }
+    ],
+    "checklist_score": "3/4"
   },
-  "timestamp": "2026-06-24 03:56 UTC"
+  "timestamp": "2026-06-24 04:06 UTC"
 }
