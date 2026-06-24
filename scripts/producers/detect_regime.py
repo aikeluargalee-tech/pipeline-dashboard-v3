@@ -59,7 +59,7 @@ def parse_age_minutes(age_str):
                 pass
         elif part.isdigit():
             total += int(part)
-    return total or None
+    return total if total > 0 else None
 
 
 def main():
@@ -99,12 +99,12 @@ def main():
 
     # ── Sigma conviction ──
     if sg:
-        raw = str(sg.get("conviction", "")).upper()
-        if "HIGH" in raw:
+        raw = str(sg.get("conviction", "")).strip().upper()
+        if raw == "HIGH":
             signals["sigma_conviction"] = "HIGH"
-        elif "MEDIUM" in raw:
+        elif raw == "MEDIUM":
             signals["sigma_conviction"] = "MEDIUM"
-        elif "LOW" in raw:
+        elif raw == "LOW":
             signals["sigma_conviction"] = "LOW"
         else:
             signals["sigma_conviction"] = "FLAT"
@@ -172,7 +172,8 @@ def main():
     # ── CASCADE (liquidation event) ──
     if not result:
         if (signals.get("oi_delta") == "DECLINING"
-                and signals.get("price_vs_20h_high", 0) < -1.5
+                and signals.get("_price_data_valid")
+                and signals.get("price_vs_20h_high", 999) < -1.5
                 and signals.get("taker_buy_ratio", 0.5) < 0.35):
             result = regime("CASCADE", "HIGH", "Liquidation Momentum",
                             ["Turtle Breakout", "Mean Reversion"],
