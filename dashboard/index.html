@@ -134,24 +134,6 @@
 <meta name="theme-color" content="#05070d">
 <meta name="twitter:card" content="summary_large_image">
 <meta property="og:image" content="https://aikeluargalee-tech.github.io/pipeline-dashboard/assets/social-card.png">
-<style>
-  .system-overview-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-  @media (max-width: 768px) {
-    .system-overview-grid {
-      grid-template-columns: repeat(2, 1fr) !important;
-    }
-  }
-  @media (max-width: 480px) {
-    .system-overview-grid {
-      grid-template-columns: 1fr !important;
-    }
-  }
-</style>
 </head>
 <body>
 <div id="nav-placeholder"></div>
@@ -767,7 +749,7 @@ function renderMacro(d) {
   if (d.us_10y_yield) html += metricRow('10Y Yield', fmt(d.us_10y_yield, 2) + '%');
   if (d.m2_supply) html += metricRow('M2 Supply', '$' + fmt(d.m2_supply, 0) + 'B');
   if (d.regime) html += metricRow('Regime', d.regime, 'warn');
-  document.getElementById('macro-metrics').innerHTML = html || metricRow('Status', 'No data', 'neutral');
+  var el=document.getElementById('macro-metrics');if(el)el.innerHTML = html || metricRow('Status', 'No data', 'neutral');
 
   // Risk assets
   let rhtml = '';
@@ -782,10 +764,10 @@ function renderMacro(d) {
     }
   }
   if (d.vix && !isNaN(d.vix)) rhtml += metricRow('VIX', fmt(d.vix, 1), d.vix > 22 ? 'negative' : d.vix > 15 ? 'warn' : 'positive');
-  document.getElementById('risk-metrics').innerHTML = rhtml || metricRow('Status', 'No data', 'neutral');
+  var el=document.getElementById('risk-metrics');if(el)el.innerHTML = rhtml || metricRow('Status', 'No data', 'neutral');
 
   // News — replaced by renderNewsFeed (AlphaEar data)
-  document.getElementById('news-feed').innerHTML = metricRow('Fetching headlines...', '', 'neutral');
+  var el=document.getElementById('news-feed');if(el)el.innerHTML = metricRow('Fetching headlines...', '', 'neutral');
 }
 
 // ─── Render Layer 2: Structural ───
@@ -838,7 +820,7 @@ function renderStructural(d, v7, gate) {
     mhtml += metricRow('Confidence', d.magnets.confidence || '?');
     mhtml += metricRow('Updated', d.magnets.timestamp || '—');
   }
-  document.getElementById('magnets-content').innerHTML = mhtml || metricRow('No magnet data', '', 'neutral');
+  var el=document.getElementById('magnets-content');if(el)el.innerHTML = mhtml || metricRow('No magnet data', '', 'neutral');
 
   // Heatmap images
   let hmHtml = '';
@@ -858,7 +840,7 @@ function renderStructural(d, v7, gate) {
     }
   }
   if (hmHtml) {
-    document.getElementById('magnets-content').innerHTML += `<div style="margin-top:12px"><div style="font-size:0.75em;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px">🔥 Liquidation Heatmap</div>${hmHtml}</div>`;
+    var el=document.getElementById('magnets-content');if(el)el.innerHTML += `<div style="margin-top:12px"><div style="font-size:0.75em;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px">🔥 Liquidation Heatmap</div>${hmHtml}</div>`;
   }
 
   // S/R Bands
@@ -884,7 +866,7 @@ function renderStructural(d, v7, gate) {
       }
     }
   }
-  document.getElementById('sr-content').innerHTML = shtml || metricRow('No S/R data', '', 'neutral');
+  var el=document.getElementById('sr-content');if(el)el.innerHTML = shtml || metricRow('No S/R data', '', 'neutral');
 
   // Volume Profile
   let vhtml = '';
@@ -934,7 +916,7 @@ function renderStructural(d, v7, gate) {
       vhtml += chart;
     }
   }
-  document.getElementById('vol-content').innerHTML = vhtml || metricRow('No volume data', '', 'neutral');
+  var el=document.getElementById('vol-content');if(el)el.innerHTML = vhtml || metricRow('No volume data', '', 'neutral');
 
   // VAL Absorption Alert
   const valEl = document.getElementById('val-absorption-content');
@@ -1234,7 +1216,7 @@ function renderDerivatives(d) {
     html += metricRow('Coinbase Premium', fmtPct(d.coinbase_premium), colorPct(d.coinbase_premium));
     if (d.cb_label) html += metricRow('Signal', d.cb_label);
   }
-  document.getElementById('deriv-content').innerHTML = html || metricRow('No derivatives data available', '', 'neutral');
+  var el=document.getElementById('deriv-content');if(el)el.innerHTML = html || metricRow('No derivatives data available', '', 'neutral');
 
   let oiHtml = '';
   if (d.open_interest_btc) oiHtml += metricRow('Open Interest', fmt(d.open_interest_btc, 0) + ' BTC');
@@ -1295,7 +1277,7 @@ function renderDerivatives(d) {
     oiHtml += metricRowRaw('Cascade Risk', `<span style="color:var(--${risk === 'HIGH' ? 'red' : risk === 'LOW' ? 'green' : 'yellow'});font-weight:700">${risk}</span>`);
   }
 
-  document.getElementById('oi-content').innerHTML = oiHtml || metricRow('No OI data available', '', 'neutral');
+  var el=document.getElementById('oi-content');if(el)el.innerHTML = oiHtml || metricRow('No OI data available', '', 'neutral');
 }
 
 // ─── Render Corporate Treasury Stress ───
@@ -1388,7 +1370,7 @@ function renderCycle(d) {
     html += metricRow('Cycle Score', d.composite_score + '/100');
   }
   if (d.cycle_phase) html += metricRow('Phase', d.cycle_phase);
-  document.getElementById('onchain-content').innerHTML = html || metricRow('No on-chain data', '', 'neutral');
+  var el=document.getElementById('onchain-content');if(el)el.innerHTML = html || metricRow('No on-chain data', '', 'neutral');
 
   // Distribution
   let dhtml = '';
@@ -1398,7 +1380,7 @@ function renderCycle(d) {
     });
     dhtml += metricRow('Total addresses', d.distribution.total_addresses?.toLocaleString() || '—');
   }
-  document.getElementById('dist-content').innerHTML = dhtml || metricRow('No distribution data', '', 'neutral');
+  var el=document.getElementById('dist-content');if(el)el.innerHTML = dhtml || metricRow('No distribution data', '', 'neutral');
 }
 
 // ─── TA Layer ───
@@ -1420,7 +1402,7 @@ function renderTA(d) {
   if (d.atr_pct) maHtml += metricRow('ATR %', fmt(d.atr_pct, 2) + '%');
   if (d.change_7d !== null && d.change_7d !== undefined) maHtml += metricRow('7D Change', fmtPct(d.change_7d), colorPct(d.change_7d));
   if (d.change_30d !== null && d.change_30d !== undefined) maHtml += metricRow('30D Change', fmtPct(d.change_30d), colorPct(d.change_30d));
-  document.getElementById('ma-content').innerHTML = maHtml || metricRow('No MA data', '', 'neutral');
+  var el=document.getElementById('ma-content');if(el)el.innerHTML = maHtml || metricRow('No MA data', '', 'neutral');
 
   // RSI
   let rsiHtml = '';
@@ -1442,7 +1424,7 @@ function renderTA(d) {
     </div>`;
     rsiHtml += `<div style="display:flex;justify-content:space-between;font-size:0.7em;color:var(--muted)"><span>0 Oversold</span><span>50</span><span>100 Overbought</span></div>`;
   }
-  document.getElementById('rsi-content').innerHTML = rsiHtml || metricRow('No RSI data', '', 'neutral');
+  var el=document.getElementById('rsi-content');if(el)el.innerHTML = rsiHtml || metricRow('No RSI data', '', 'neutral');
 
   // Bollinger Bands
   let bbHtml = '';
@@ -1460,7 +1442,7 @@ function renderTA(d) {
       bbHtml += metricRow('Position', pos + '% (0=lower, 100=upper)');
     }
   }
-  document.getElementById('bb-content').innerHTML = bbHtml || metricRow('No BB data', '', 'neutral');
+  var el=document.getElementById('bb-content');if(el)el.innerHTML = bbHtml || metricRow('No BB data', '', 'neutral');
 
   // Options Skew
   let optHtml = '';
@@ -1477,7 +1459,7 @@ function renderTA(d) {
       }
     }
   }
-  document.getElementById('options-content').innerHTML = optHtml || metricRow('No options data', '', 'neutral');
+  var el=document.getElementById('options-content');if(el)el.innerHTML = optHtml || metricRow('No options data', '', 'neutral');
 }
 
 // ─── News Feed (English, BTC-relevant) ───
@@ -1600,6 +1582,7 @@ function renderL1Gate(mg, regime) {
   const reason = document.getElementById('l1-reason');
   const expiry = document.getElementById('l1-expiry');
   const trigger = document.getElementById('l1-trigger');
+  if (!banner || !badge || !reason || !expiry || !trigger) return;
 
   if (!mg || !mg.active) {
     // Standby — show dim card so user knows facility exists
@@ -1643,6 +1626,7 @@ function renderRegime(d) {
   const verdict = document.getElementById('regime-verdict');
   const detail = document.getElementById('regime-detail');
   const layers = document.getElementById('regime-layers');
+  if (!verdict || !detail || !layers) return;
 
   // Color the verdict
   const verdictText = s.verdict || 'LOADING';
@@ -1696,7 +1680,7 @@ function updateClocks() {
     const el = document.getElementById(z.id);
     if (!el) continue;
     const timeEl = el.querySelector('.clock-time');
-    
+    if (!timeEl) continue;
     const fmt = new Intl.DateTimeFormat('en-US', {
       timeZone: z.tz, hour: '2-digit', minute: '2-digit', hour12: false
     });
@@ -1739,8 +1723,10 @@ async function refresh() {
   if (btc && btc.price) {
     document.getElementById('btc-price').textContent = '$' + btc.price.toLocaleString(undefined, {maximumFractionDigits: 0});
     const ch = document.getElementById('btc-change');
-    ch.textContent = fmtPct(btc.change_pct);
-    ch.style.color = btc.change_pct >= 0 ? 'var(--green)' : 'var(--red)';
+    if (ch) {
+      ch.textContent = fmtPct(btc.change_pct);
+      ch.style.color = btc.change_pct >= 0 ? 'var(--green)' : 'var(--red)';
+    }
     document.getElementById('btc-range').textContent = `24H: $${btc.low?.toLocaleString()} – $${btc.high?.toLocaleString()}`;
   }
 

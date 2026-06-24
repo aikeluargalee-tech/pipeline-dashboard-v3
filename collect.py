@@ -239,7 +239,7 @@ def write_sitemap():
     from datetime import datetime, timezone
     today_iso = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     
-    base = "https://aikeluargalee-tech.github.io/pipeline-dashboard-v2"
+    base = "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3"
     try:
         remote_url = subprocess.check_output(["git", "remote", "get-url", "origin"], text=True, stderr=subprocess.DEVNULL).strip()
         match = re.search(r'/([^/]+?)(?:\.git)?$', remote_url)

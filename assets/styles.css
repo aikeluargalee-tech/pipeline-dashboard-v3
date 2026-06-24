@@ -332,6 +332,7 @@ body.simple-mode #ta-section {
   padding: 20px;
   box-shadow: 0 4px 32px -4px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.02);
   transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  overflow-wrap: break-word;
 }
 .card:hover {
   border-color: var(--border-hover);
@@ -361,6 +362,20 @@ body.simple-mode #ta-section {
 .regime-badge.sweep { background: rgba(244,63,94,0.12); color: var(--red); border: 1px solid rgba(244,63,94,0.25); }
 .regime-badge.balanced { background: rgba(59,130,246,0.12); color: var(--blue); border: 1px solid rgba(59,130,246,0.25); }
 .regime-badge.vice { background: rgba(249,115,22,0.12); color: var(--orange); border: 1px solid rgba(249,115,22,0.25); }
+
+/* System Overview Grid */
+.system-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+@media (max-width: 768px) {
+  .system-overview-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 480px) {
+  .system-overview-grid { grid-template-columns: 1fr !important; }
+}
 
 /* News */
 .news-item { padding: 10px 12px; margin-bottom: 4px; border-radius: 8px; background: rgba(255,255,255,0.015); border: 1px solid transparent; transition: all 0.2s ease; }

@@ -352,9 +352,15 @@
     return d.toISOString().slice(0,16).replace('T', ' ') + ' UTC';
   }
 
+  function esc(s) {
+    if (s === null || s === undefined) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
   function toggleRow(id) {
     const detailRow = document.getElementById(`detail-${id}`);
     const btn = document.getElementById(`btn-${id}`);
+    if (!detailRow || !btn) return;
     if (detailRow.style.display === 'none') {
       detailRow.style.display = 'table-row';
       btn.textContent = '▼';
@@ -379,7 +385,7 @@
           const cls = hData.direction_correct ? 'correct' : 'incorrect';
           const symbol = hData.direction_correct ? '✅' : '❌';
           const chg = hData.price_change_pct >= 0 ? `+${hData.price_change_pct}%` : `${hData.price_change_pct}%`;
-          html += `<span class="badge ${cls}" style="margin-right:4px" title="${fmtPrice(hData.price_then)} (${chg})">${h}: ${symbol}</span>`;
+          html += `<span class="badge ${cls}" style="margin-right:4px" title="${esc(fmtPrice(hData.price_then))} (${esc(chg)})">${h}: ${symbol}</span>`;
         }
       }
       return html;
@@ -393,11 +399,11 @@
       const outcome = o.outcome;
       const chg = o.price_change_pct >= 0 ? `+${o.price_change_pct}%` : `${o.price_change_pct}%`;
       if (outcome === 'win') {
-        return `<span class="badge win" title="Exit: ${fmtPrice(o.exit_price)}">WIN ${chg} ✅</span>`;
+        return `<span class="badge win" title="Exit: ${esc(fmtPrice(o.exit_price))}">WIN ${esc(chg)} ✅</span>`;
       } else if (outcome === 'loss') {
-        return `<span class="badge loss" title="Exit: ${fmtPrice(o.exit_price)}">STOP ${chg} ❌</span>`;
+        return `<span class="badge loss" title="Exit: ${esc(fmtPrice(o.exit_price))}">STOP ${esc(chg)} ❌</span>`;
       } else {
-        return `<span class="badge expired" title="Exit: ${fmtPrice(o.exit_price)}">EXP ${chg} ⚪</span>`;
+        return `<span class="badge expired" title="Exit: ${esc(fmtPrice(o.exit_price))}">EXP ${esc(chg)} ⚪</span>`;
       }
     }
   }
@@ -429,11 +435,11 @@
       }
 
       tr.innerHTML = `
-        <td><button class="row-expand-btn" id="btn-${p.id}" onclick="toggleRow('${p.id}')">▶</button></td>
+        <td><button class="row-expand-btn" id="btn-${esc(p.id)}" onclick="toggleRow('${esc(p.id)}')">▶</button></td>
         <td class="ts-col">${fmtDate(p.created_at)}</td>
-        <td style="color:var(--muted)">${typeLabel}</td>
-        <td><strong>${forecastLabel}</strong></td>
-        <td><span class="badge ${dirClass}">${p.direction}</span></td>
+        <td style="color:var(--muted)">${esc(typeLabel)}</td>
+        <td><strong>${esc(forecastLabel)}</strong></td>
+        <td><span class="badge ${esc(dirClass)}">${esc(p.direction)}</span></td>
         <td class="price-col">${levelStr}</td>
         <td class="price-col" style="font-size:0.85em;line-height:1.4">${targetStopStr}</td>
         <td>${getStatusBadge(p)}</td>
@@ -451,7 +457,7 @@
       detailTr.innerHTML = `
         <td colspan="8" style="padding: 16px 20px; background: rgba(0,0,0,0.15)">
           <div style="font-weight:600;margin-bottom:8px;font-size:0.85em;color:var(--text)">FROZEN PIPELINE STATE SNAPSHOT (IMMUTABLE):</div>
-          <pre class="details-box">${JSON.stringify(cleanSnapshot, null, 2)}</pre>
+          <pre class="details-box">${esc(JSON.stringify(cleanSnapshot, null, 2))}</pre>
         </td>
       `;
       tbody.appendChild(detailTr);
