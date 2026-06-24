@@ -262,11 +262,13 @@
     <span class="layer-subtitle">Market regime detection — classifies conditions, activates strategy</span>
   </div>
   <div class="layer-grid">
-    <div class="card" id="card-regime-switch" style="border-left: 3px solid var(--yellow)">
+    <div class="card" id="card-regime-switch" style="border-left: 3px solid var(--yellow); grid-column: 1 / -1;">
       <h3 class="card-title">🔄 Active Regime</h3>
       <div id="regime-switch-content"><p style="font-size:0.8em;color:var(--muted)">Detecting market regime from live signals — DISTRIBUTION / RISK_OFF / CASCADE / TRENDING / RANGING / UNCERTAIN</p></div>
     </div>
-    <!-- Playbook Status Cards -->
+  </div>
+  <!-- Playbook Status Cards — 2 rows × 3 columns -->
+  <div class="playbook-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:12px">
     <div class="card" id="card-pb-turtle" style="border-left: 3px solid var(--green)">
       <h3 class="card-title">🐢 Turtle Breakout <span style="font-size:0.7em;color:var(--muted)">TRENDING</span></h3>
       <div id="pb-turtle-content"><p style="font-size:0.75em;color:var(--muted)">Donchian 20H breakout — idle</p></div>
