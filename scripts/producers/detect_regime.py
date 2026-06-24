@@ -114,16 +114,16 @@ def main():
         btc_spot = amt.get("btc_spot", 0)
         high_24h = amt.get("high_24h", btc_spot)
         low_24h = amt.get("low_24h", btc_spot)
-        if btc_spot and high_24h and low_24h:
+        if btc_spot and high_24h and low_24h and btc_spot > 0 and high_24h > low_24h:
             signals["price_vs_20h_high"] = round((btc_spot - high_24h) / high_24h * 100, 2)
             signals["price_vs_20h_low"] = round((btc_spot - low_24h) / low_24h * 100, 2)
-            # ATR normalized = 24h range as % of price
+            # 24h range as % of price (proxy for volatility — not true ATR)
             atr_val = (high_24h - low_24h) / btc_spot * 100
             signals["atr_normalized"] = round(atr_val, 2)
         else:
             signals["price_vs_20h_high"] = 0
             signals["price_vs_20h_low"] = 0
-            signals["atr_normalized"] = 0
+            signals["atr_normalized"] = 999  # sentinel: data invalid, suppress RANGING
 
     # ═══════════════════════════════════════════
     # DETECTION LOGIC (priority order per GetClaw)
@@ -167,7 +167,7 @@ def main():
     # ── CASCADE (liquidation event) ──
     if not result:
         if (signals.get("oi_delta") == "DECLINING"
-                and abs(signals.get("price_vs_20h_high", 0)) > 1.5
+                and signals.get("price_vs_20h_high", 0) < -1.5
                 and signals.get("taker_buy_ratio", 0.5) < 0.35):
             result = regime("CASCADE", "HIGH", "Liquidation Momentum",
                             ["Turtle Breakout", "Mean Reversion"],
@@ -216,8 +216,10 @@ def main():
         prev_timestamp = prev_data.get("timestamp")
         if prev_timestamp and previous_regime == result["regime"]:
             try:
-                prev_ts = datetime.fromisoformat(prev_timestamp.replace(" ", "T").replace(" UTC", "+00:00"))
-                regime_age_minutes = int((now - prev_ts).total_seconds() / 60)
+                # Handle multiple ISO formats: "YYYY-MM-DD HH:MM UTC", "YYYY-MM-DDTHH:MM:SS+00:00", "YYYY-MM-DDTHH:MM:SS"
+                ts_clean = prev_timestamp.replace(" UTC", "+00:00").replace(" ", "T")
+                prev_ts = datetime.fromisoformat(ts_clean)
+                regime_age_minutes = max(0, int((now - prev_ts).total_seconds() / 60))
             except Exception:
                 regime_age_minutes = 0
 
