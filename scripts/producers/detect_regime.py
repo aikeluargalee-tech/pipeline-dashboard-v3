@@ -114,7 +114,19 @@ def main():
     signals["price_vs_20h_high"] = None
     signals["price_vs_20h_low"] = None
     signals["atr_normalized"] = 999
+    signals["funding_rate"] = None
+    signals["volume_ratio_24h"] = None
+    signals["buy_volume_24h"] = None
     if amt:
+        # Funding rate from AMT feed
+        amt_funding = amt.get("funding", {})
+        if amt_funding:
+            signals["funding_rate"] = amt_funding.get("rate")
+        # Volume data for breakout confirmation
+        amt_vol = amt.get("taker_volume", {})
+        if amt_vol:
+            signals["volume_ratio_24h"] = amt_vol.get("ratio_24h")
+            signals["buy_volume_24h"] = amt_vol.get("buy_volume_24h")
         btc_spot = amt.get("btc_spot", 0)
         high_24h = amt.get("high_24h", btc_spot)
         low_24h = amt.get("low_24h", btc_spot)
@@ -148,26 +160,26 @@ def main():
     # ── DISTRIBUTION (highest priority) ──
     lv = signals.get("liquidity_verdict", "UNKNOWN")
     if lv in ("DRY", "EVAPORATING"):
-        result = regime("DISTRIBUTION", "HIGH", "Flat / Defensive Only",
-                        ["Turtle Breakout", "Mean Reversion", "Liquidation Momentum"],
-                        "Liquidity is DRY/EVAPORATING — distribution underway. Stay flat.")
+        result = regime("DISTRIBUTION", "HIGH", "Cross-Asset Macro Signal",
+                        ["Turtle Breakout", "Mean Reversion", "Liquidation Momentum", "Funding Rate Mean Reversion"],
+                        "Liquidity is DRY/EVAPORATING — distribution underway. Cross-asset macro defense active.")
     elif (lv == "THINNING"
           and signals.get("oi_delta") == "DECLINING"
           and signals.get("cvd_trend") == "NEGATIVE"):
-        result = regime("DISTRIBUTION", "MEDIUM", "Flat / Defensive Only",
-                        ["Turtle Breakout", "Mean Reversion", "Liquidation Momentum"],
-                        "Liquidity thinning with OI declining and CVD negative — distribution warning.")
+        result = regime("DISTRIBUTION", "MEDIUM", "Cross-Asset Macro Signal",
+                        ["Turtle Breakout", "Mean Reversion", "Liquidation Momentum", "Funding Rate Mean Reversion"],
+                        "Liquidity thinning with OI declining and CVD negative — distribution warning. Cross-asset macro defense.")
 
     # ── RISK_OFF (Gate0 driven) ──
     if not result:
         if signals.get("black_swan_score", 0) >= 10:
-            result = regime("RISK_OFF", "HIGH", "Reduce Exposure / Macro Fade",
-                            ["Turtle Breakout", "Mean Reversion", "Liquidation Momentum"],
-                            f"Black Swan score {signals['black_swan_score']}/17 — systemic risk elevated.")
+            result = regime("RISK_OFF", "HIGH", "Cross-Asset Macro Signal",
+                            ["Turtle Breakout", "Mean Reversion", "Liquidation Momentum", "Funding Rate Mean Reversion"],
+                            f"Black Swan score {signals['black_swan_score']}/17 — systemic risk elevated. Cross-asset macro defense.")
         elif signals.get("crash_precursor_d2", 0) >= 3:
-            result = regime("RISK_OFF", "MEDIUM", "Reduce Exposure / Macro Fade",
-                            ["Turtle Breakout", "Mean Reversion", "Liquidation Momentum"],
-                            "Crash precursor signals firing — institutional exit risk.")
+            result = regime("RISK_OFF", "MEDIUM", "Cross-Asset Macro Signal",
+                            ["Turtle Breakout", "Mean Reversion", "Liquidation Momentum", "Funding Rate Mean Reversion"],
+                            "Crash precursor signals firing — institutional exit risk. Cross-asset macro defense.")
 
     # ── CASCADE (liquidation event) ──
     if not result:
@@ -179,7 +191,21 @@ def main():
                             ["Turtle Breakout", "Mean Reversion"],
                             "OI declining + price far from 20h high + taker < 35% — liquidation cascade in progress.")
 
-    # ── TRENDING (directional move) ──
+    # ── TRENDING + Volume Confirmation (Strategy 5: Volume + Breakout Confirmation) ──
+    if not result:
+        vol_ratio = signals.get("volume_ratio_24h")
+        if (signals.get("cvd_trend") == "POSITIVE"
+                and signals.get("taker_buy_ratio", 0) > 0.60
+                and signals.get("oi_delta") == "EXPANDING"
+                and signals.get("_price_data_valid")
+                and abs(signals.get("price_vs_20h_high", 999)) < 0.5
+                and vol_ratio is not None and vol_ratio > 1.2):
+            result = regime("TRENDING", "HIGH", "Volume + Breakout Confirmation",
+                            ["Mean Reversion", "Funding Rate Mean Reversion", "Cross-Asset Macro Signal"],
+                            "Trend confirmed + volume surge (taker ratio {:.3f}, vol ratio {:.2f}) — breakout conviction HIGH.".format(
+                                signals.get("taker_buy_ratio", 0), vol_ratio))
+
+    # ── TRENDING (Strategy 1: Turtle Breakout) ──
     if not result:
         if (signals.get("cvd_trend") == "POSITIVE"
                 and signals.get("taker_buy_ratio", 0) > 0.55
@@ -187,23 +213,35 @@ def main():
                 and signals.get("_price_data_valid")
                 and abs(signals.get("price_vs_20h_high", 999)) < 0.5):
             result = regime("TRENDING", "HIGH", "Turtle Breakout",
-                            ["Mean Reversion"],
+                            ["Mean Reversion", "Funding Rate Mean Reversion"],
                             "CVD positive + taker > 55% + OI expanding + price near 20h high — trend confirmed.")
         elif (signals.get("sigma_conviction") == "HIGH"
                 and signals.get("funding_signal") != "NEGATIVE"):
             result = regime("TRENDING", "MEDIUM", "Turtle Breakout",
-                            ["Mean Reversion"],
+                            ["Mean Reversion", "Funding Rate Mean Reversion"],
                             "SIGMA conviction HIGH with funding not negative — directional bias active.")
 
-    # ── RANGING (vol in band) ──
+    # ── RANGING + Funding Rate Extreme (Strategy 4: Funding Rate Mean Reversion) ──
+    if not result:
+        fr = signals.get("funding_rate")
+        if fr is not None and (fr > 0.0001 or fr < -0.0001):
+            # Funding extreme detected — Funding Rate Mean Reversion active
+            fr_direction = "longs crowded" if fr > 0 else "shorts paying"
+            conf = "HIGH" if abs(fr) > 0.0005 else "MEDIUM"
+            result = regime("RANGING", conf, "Funding Rate Mean Reversion",
+                            ["Turtle Breakout", "Liquidation Momentum", "Cross-Asset Macro Signal"],
+                            "Funding rate {:.4f}% ({}) — mean reversion opportunity. Fade the crowd.".format(
+                                fr * 100, fr_direction))
+
+    # ── RANGING (Strategy 2: Mean Reversion + Vol Filter) ──
     if not result:
         if signals.get("atr_normalized", 999) < 0.8:
             result = regime("RANGING", "MEDIUM", "Mean Reversion + Vol Filter",
-                            ["Turtle Breakout", "Liquidation Momentum"],
+                            ["Turtle Breakout", "Liquidation Momentum", "Cross-Asset Macro Signal"],
                             "ATR normalized < 0.8% — volatility contracting, mean reversion conditions.")
         else:
-            result = regime("RANGING", "LOW", "Mean Reversion (loose)",
-                            ["Liquidation Momentum"],
+            result = regime("RANGING", "LOW", "Mean Reversion + Vol Filter",
+                            ["Liquidation Momentum", "Cross-Asset Macro Signal"],
                             "No strong directional or risk signals. ATR elevated — loose mean reversion only.")
 
     # ── UNCERTAIN fallback ──
