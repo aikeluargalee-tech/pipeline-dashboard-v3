@@ -188,8 +188,8 @@
     <div class="mode-toggle-container">
       <span class="mode-label">View:</span>
       <div class="mode-switch">
-        <button class="mode-btn active" id="btn-mode-simple" onclick="setDashboardMode('simple')">Beginner (Simple)</button>
-        <button class="mode-btn" id="btn-mode-advanced" onclick="setDashboardMode('advanced')">Trader (Advanced)</button>
+        <button class="mode-btn" id="btn-mode-simple" onclick="setDashboardMode('simple')">Beginner (Simple)</button>
+        <button class="mode-btn active" id="btn-mode-advanced" onclick="setDashboardMode('advanced')">Trader (Advanced)</button>
       </div>
     </div>
   </div>
@@ -665,7 +665,7 @@
 <script src="../assets/nav.js"></script>
 <script>
 // --- Beginner Mode State Management ---
-let currentMode = 'simple';
+let currentMode = 'advanced';
 
 function setDashboardMode(mode) {
   currentMode = mode;
@@ -747,8 +747,8 @@ function initBeginnerFriendlyLayout() {
     }
   });
   
-  // Set initial mode from localStorage or default to simple
-  const savedMode = localStorage.getItem('btc_dashboard_view_mode') || 'simple';
+  // Set initial mode from localStorage or default to advanced
+  const savedMode = localStorage.getItem('btc_dashboard_view_mode') || 'advanced';
   setDashboardMode(savedMode);
 }
 
