@@ -110,6 +110,10 @@ def main():
             signals["sigma_conviction"] = "FLAT"
 
     # ── Price structure (from AMT feed) ──
+    signals["_price_data_valid"] = False
+    signals["price_vs_20h_high"] = None
+    signals["price_vs_20h_low"] = None
+    signals["atr_normalized"] = 999
     if amt:
         btc_spot = amt.get("btc_spot", 0)
         high_24h = amt.get("high_24h", btc_spot)
@@ -120,6 +124,7 @@ def main():
             # 24h range as % of price (proxy for volatility — not true ATR)
             atr_val = (high_24h - low_24h) / btc_spot * 100
             signals["atr_normalized"] = round(atr_val, 2)
+            signals["_price_data_valid"] = True
         else:
             signals["price_vs_20h_high"] = 0
             signals["price_vs_20h_low"] = 0
@@ -178,7 +183,8 @@ def main():
         if (signals.get("cvd_trend") == "POSITIVE"
                 and signals.get("taker_buy_ratio", 0) > 0.55
                 and signals.get("oi_delta") == "EXPANDING"
-                and abs(signals.get("price_vs_20h_high", 0)) < 0.5):
+                and signals.get("_price_data_valid")
+                and abs(signals.get("price_vs_20h_high", 999)) < 0.5):
             result = regime("TRENDING", "HIGH", "Turtle Breakout",
                             ["Mean Reversion"],
                             "CVD positive + taker > 55% + OI expanding + price near 20h high — trend confirmed.")
@@ -216,8 +222,11 @@ def main():
         prev_timestamp = prev_data.get("timestamp")
         if prev_timestamp and previous_regime == result["regime"]:
             try:
-                # Handle multiple ISO formats: "YYYY-MM-DD HH:MM UTC", "YYYY-MM-DDTHH:MM:SS+00:00", "YYYY-MM-DDTHH:MM:SS"
-                ts_clean = prev_timestamp.replace(" UTC", "+00:00").replace(" ", "T")
+                # Handle multiple ISO formats
+                if prev_timestamp.endswith('Z'):
+                    ts_clean = prev_timestamp[:-1] + '+00:00'
+                else:
+                    ts_clean = prev_timestamp.replace(" UTC", "+00:00").replace(" ", "T")
                 prev_ts = datetime.fromisoformat(ts_clean)
                 regime_age_minutes = max(0, int((now - prev_ts).total_seconds() / 60))
             except Exception:
