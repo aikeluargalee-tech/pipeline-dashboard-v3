@@ -1,0 +1,77 @@
+{
+  "strategy": "Liquidation Momentum",
+  "version": "1.0.0",
+  "timeframe": "1h",
+  "bias": "predominantly_short",
+
+  "entry": {
+    "short": {
+      "aggressive": {
+        "price_vs_20h_high_max": -1.5,
+        "taker_ratio_max": 0.35,
+        "oi_negative": true,
+        "candle_delta_negative_candles": 2,
+        "liquidity_disallowed": ["DRY", "EVAPORATING"]
+      },
+      "cautious": {
+        "price_vs_20h_high_max": -2.0,
+        "taker_ratio_max": 0.30,
+        "oi_accelerating": true,
+        "candle_delta_negative_candles": 3,
+        "liquidity_disallowed": ["DRY", "EVAPORATING"]
+      }
+    },
+    "long": {
+      "cautious_only": true,
+      "cvd_diverging_up": true,
+      "taker_recovering_from_below_35_to_above": 0.40,
+      "oi_declining": true,
+      "funding_below": -0.0003,
+      "black_swan_max": 0
+    }
+  },
+
+  "stops": {
+    "aggressive": {"atr_mult": 1.0},
+    "cautious": {"atr_mult": 1.5},
+    "structural_hard_stop_mult": 1.001
+  },
+
+  "take_profit": {
+    "tier1_pct": 0.40,
+    "tier1_atr_mult": 1.0,
+    "tier2_pct": 0.40,
+    "tier2_atr_mult": 2.0,
+    "tier3_pct": 0.20,
+    "tier3_trailing_atr_mult": 0.5,
+    "rr_min": 1.5,
+    "early_exit_taker_ratio": 0.50
+  },
+
+  "sizing": {
+    "base_risk_pct": {"HIGH": 1.5, "MEDIUM": 0.75},
+    "size_scalar": {"AGGRESSIVE": 1.0, "CAUTIOUS": 0.6}
+  },
+
+  "time_limits": {
+    "aggressive_max_hold_hours": 4,
+    "cautious_max_hold_hours": 2,
+    "stale_data_cutoff_minutes": 30
+  },
+
+  "invalidation": {
+    "oi_stabilization_threshold": 0,
+    "taker_recovery_ratio": 0.55,
+    "black_swan_threshold": 10,
+    "liquidity_kill": ["DRY", "EVAPORATING"],
+    "cvd_consolidation_candles": 2
+  },
+
+  "idle_monitor": {
+    "pre_cascade": {
+      "oi_change_1h_threshold": -0.5,
+      "taker_ratio_max": 0.42,
+      "price_vs_20h_high_max": -0.8
+    }
+  }
+}

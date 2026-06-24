@@ -105,6 +105,7 @@ run_pipeline "liquidity"     "$SITE/scripts/producers/fetch_liquidity_status.py"
 run_pipeline "regime_switch" "$SITE/scripts/producers/detect_regime.py"
 run_pipeline "regime_synthesis" "$SITE/scripts/producers/fetch_regime_synthesis.py"
 run_pipeline "mean_reversion" "$SITE/playbooks/mean_reversion/playbook.py"
+run_pipeline "liq_momentum" "$SITE/playbooks/liquidation_momentum/playbook.py"
 
 echo "── Production complete: $PASSED passed, $FAILED failed ──"
 
