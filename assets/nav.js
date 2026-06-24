@@ -1,9 +1,11 @@
-// Shared Navigation + Footer Component
+// Shared Navigation (V3) + Footer Component
 // Injected into every page for consistent navigation.
 // Falls back to static HTML in <noscript> for crawlers.
 
 (function() {
-  const BASE = window.location.pathname.startsWith('/pipeline-dashboard-v2') 
+  const BASE = window.location.pathname.startsWith('/pipeline-dashboard-v3')
+    ? '/pipeline-dashboard-v3'
+    : window.location.pathname.startsWith('/pipeline-dashboard-v2') 
     ? '/pipeline-dashboard-v2' 
     : (window.location.pathname.startsWith('/pipeline-dashboard') ? '/pipeline-dashboard' : '');
 
