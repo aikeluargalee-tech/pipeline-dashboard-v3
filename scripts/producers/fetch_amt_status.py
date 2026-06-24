@@ -34,7 +34,11 @@ def main():
     if amt_feed and "4layer" in amt_feed:
         layer_data = amt_feed["4layer"]
         warmup = layer_data.get("warmup", {})
-        history_len = warmup.get("history_len", 0)
+        history_len = 0
+        try:
+            history_len = int(warmup.get("history_len", 0))
+        except (ValueError, TypeError):
+            pass
         warmup_progress = f"{min(history_len, 96)}/96"
 
         if warmup.get("1D") == "active" or history_len >= 96:
