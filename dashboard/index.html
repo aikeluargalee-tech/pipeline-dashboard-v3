@@ -181,9 +181,9 @@
     <div class="meta" id="meta">Loading...</div>
   </div>
   <div style="text-align:right">
-    <span class="btc-price" id="btc-price">$62,558</span>
+    <span class="btc-price" id="btc-price">$60,258</span>
     <span class="btc-change" id="btc-change"></span>
-    <div class="meta" id="btc-range"></div>
+    <div class="meta" id="btc-range">24H: $60,250 – $63,239</div>
   </div>
 </div>
 
@@ -1925,6 +1925,27 @@ function updateClocks() {
 // Cache fetched data to avoid refetching on view mode toggle (INP optimization)
 let _dataCache = null;
 
+async function fetchLiveBTC() {
+  // Fetch live BTC price directly from Binance (no CORS, always fresh)
+  try {
+    const r = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
+    if (!r.ok) return;
+    const d = await r.json();
+    const price = parseFloat(d.lastPrice);
+    const changePct = parseFloat(d.priceChangePercent);
+    const high = parseFloat(d.highPrice);
+    const low = parseFloat(d.lowPrice);
+    if (!price) return;
+    document.getElementById('btc-price').textContent = '$' + price.toLocaleString(undefined, {maximumFractionDigits: 0});
+    const ch = document.getElementById('btc-change');
+    if (ch) {
+      ch.textContent = (changePct >= 0 ? '+' : '') + changePct.toFixed(2) + '%';
+      ch.style.color = changePct >= 0 ? 'var(--green)' : 'var(--red)';
+    }
+    document.getElementById('btc-range').textContent = '24H: $' + low.toLocaleString(undefined, {maximumFractionDigits: 0}) + ' \u2013 $' + high.toLocaleString(undefined, {maximumFractionDigits: 0});
+  } catch(e) { /* silent — pipeline data fallback already rendered */ }
+}
+
 async function refresh() {
   // Use cached data if available (view mode toggle reuses cache)
   if (!_dataCache) {
@@ -1953,6 +1974,8 @@ async function refresh() {
     }
     document.getElementById('btc-range').textContent = `24H: $${btc.low?.toLocaleString()} – $${btc.high?.toLocaleString()}`;
   }
+
+  // Only use pipeline data — live price is set independently by fetchLiveBTC()
 
   if (meta) {
     const metaEl = document.getElementById('meta');
@@ -2729,6 +2752,12 @@ refresh();  // initial data load
 setInterval(() => { _dataCache = null; refresh(); }, 900000); // 15 min — clear cache and refetch
 updateClocks();
 setInterval(updateClocks, 60000); // 1 min — keeps clocks live
+fetchLiveBTC(); // immediate
+setInterval(fetchLiveBTC, 30000); // 30 sec — live Binance price
+
+window.addEventListener('pageshow', function(e) {
+  if (e.persisted) { _dataCache = null; refresh(); fetchLiveBTC(); }
+});
 
 // ─── Dashboard Enhancements: Tooltips + Learn-More Links + Onboarding ───
 
