@@ -1,0 +1,95 @@
+{
+  "strategy": "Cross-Asset Macro Signal",
+  "version": "1.0.0",
+  "timeframe": "4h",
+  "bias": "short_only",
+  "macro_inputs": ["DXY", "VIX", "SPY", "GOLD", "US10Y"],
+
+  "activation": {
+    "regimes": ["DISTRIBUTION", "RISK_OFF"]
+  },
+
+  "modes": {
+    "SEVERE": {"regime_phase": "ACUTE", "macro_score_min": 6},
+    "ELEVATED": {"regime_phase": ["ACUTE", "EARLY"], "macro_score_min": 4},
+    "CAUTIOUS": {"regime_phase": "EARLY", "macro_score_min": 3}
+  },
+
+  "macro_scoring": {
+    "dxy": {"change_1d_up": 0.003, "trend_5d_up": 1},
+    "vix": {"level_above_20": 1, "spike_pct": 15},
+    "spy": {"change_1d_down": 0.01, "below_20dma": 1},
+    "gold": {"change_1d_up": 0.005, "trend_5d_up": 1},
+    "yield_10y": {"change_1d_up": 0.0008, "change_1d_down": 0.0008}
+  },
+
+  "entry": {
+    "short": {
+      "SEVERE": {
+        "price_vs_20h_high_max": -1.0,
+        "rsi_max": 55,
+        "taker_ratio_max": 0.45,
+        "oi_delta_allowed": ["FLAT", "DECLINING"],
+        "funding_required": "neutral_or_positive",
+        "liquidity_disallowed": ["EVAPORATING"],
+        "black_swan_max": 0
+      },
+      "ELEVATED": {
+        "price_vs_20h_high_max": -1.5,
+        "rsi_max": 50,
+        "taker_ratio_max": 0.42,
+        "oi_delta_allowed": ["DECLINING"],
+        "funding_required": "positive",
+        "liquidity_allowed": ["HEALTHY", "THINNING"],
+        "black_swan_max": 0
+      },
+      "CAUTIOUS": {
+        "price_vs_20h_high_max": -2.0,
+        "rsi_max": 45,
+        "taker_ratio_max": 0.40,
+        "oi_delta_allowed": ["DECLINING"],
+        "funding_required": "positive",
+        "liquidity_allowed": ["HEALTHY"],
+        "black_swan_max": 0
+      }
+    }
+  },
+
+  "stops": {
+    "SEVERE": {"atr_mult": 1.0},
+    "ELEVATED": {"atr_mult": 1.5},
+    "CAUTIOUS": {"atr_mult": 2.0},
+    "structural_guard_mult": 1.001,
+    "full_confirm_tighten_atr_mult": 0.75
+  },
+
+  "take_profit": {
+    "tier1_pct": 0.40,
+    "tier1_atr_mult": 1.5,
+    "tier2_pct": 0.60,
+    "tier2_target": "mean_20_4h",
+    "rr_min": {"SEVERE": 1.5, "ELEVATED": 1.2, "CAUTIOUS": 1.0},
+    "macro_score_exit": 2
+  },
+
+  "sizing": {
+    "base_risk_pct": {"SEVERE": 1.2, "ELEVATED": 0.7, "CAUTIOUS": 0.3},
+    "phase_scalar": {"ACUTE": 1.0, "EARLY": 0.75},
+    "hard_cap_pct": 1.5
+  },
+
+  "time_limits": {
+    "SEVERE_max_hold_hours": 72,
+    "ELEVATED_max_hold_hours": 120,
+    "CAUTIOUS_max_hold_hours": 168,
+    "rescore_interval_hours": 24
+  },
+
+  "invalidation": {
+    "macro_score_collapse": 1,
+    "vix_reversal_below": 18,
+    "dxy_reversal_pct": -0.004,
+    "spy_recovery_pct": 0.01,
+    "liquidity_kill": ["EVAPORATING"]
+  }
+}

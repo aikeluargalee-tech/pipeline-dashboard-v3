@@ -107,6 +107,7 @@ run_pipeline "regime_synthesis" "$SITE/scripts/producers/fetch_regime_synthesis.
 run_pipeline "mean_reversion" "$SITE/playbooks/mean_reversion/playbook.py"
 run_pipeline "liq_momentum" "$SITE/playbooks/liquidation_momentum/playbook.py"
 run_pipeline "funding_mr" "$SITE/playbooks/funding_rate_mr/playbook.py"
+run_pipeline "cross_asset" "$SITE/playbooks/cross_asset_macro/playbook.py"
 
 echo "── Production complete: $PASSED passed, $FAILED failed ──"
 
