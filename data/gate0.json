@@ -7,31 +7,47 @@
     "action": "Reduce position size. Tight stops. Wait for conditions to clear."
   },
   "modules": {
+    "trp_check": {
+      "state": "PROCEED",
+      "detail": "No signals pending"
+    },
     "black_swan": {
       "state": "PROCEED",
-      "score": 0
+      "detail": "Black Swan score: 0/17"
     },
     "vix_spx": {
       "state": "PROCEED",
-      "vix": 16.4,
-      "spx_change": 1.07,
-      "vix_weekly_chg": 6.2
+      "detail": "No VIX/SPX data cached. Omega not yet run this session."
     },
-    "ai3_wave": {
-      "state": "TIGHTENED",
-      "active": true
+    "mstr": {
+      "state": "PROCEED",
+      "detail": "No new MSTR filings"
+    },
+    "elon": {
+      "state": "PROCEED",
+      "detail": "Firecrawl API key not found (skipping Elon check)"
+    },
+    "ai_bubble": {
+      "state": "PROCEED",
+      "detail": "US market closed (outside hours)"
+    },
+    "quantum": {
+      "state": "PROCEED",
+      "detail": "No new quantum+bitcoin news"
     },
     "stablecoins": {
-      "state": "PROCEED"
+      "state": "PROCEED",
+      "detail": "No stablecoin peg data available"
     },
     "session": {
       "state": "PROCEED",
-      "name": "ASIA",
-      "ny_open": "13:30 UTC",
-      "golden_window": "9:30 PM \u2013 1:00 AM",
-      "is_weekend": false
+      "detail": "Active session: ASIA"
+    },
+    "ai3_wave": {
+      "state": "TIGHTENED",
+      "detail": "AI-3 Wave SpaceX active"
     }
   },
-  "timestamp": "2026-06-22 10:21 UTC",
-  "_collected": "2026-06-22 10:21 UTC"
+  "timestamp": "2026-06-24 01:46 UTC",
+  "_collected": "2026-06-24 01:46 UTC"
 }

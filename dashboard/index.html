@@ -16,17 +16,17 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="Live Bitcoin monitoring: Gate0 status, funding rates, liquidation clusters, on-chain cycle metrics, and derivatives data. Updated every 15 minutes.">
 <meta property="og:site_name" content="BTC Pipeline">
-<meta property="og:updated_time" id="og-updated" content="2026-06-22T10:21:39+00:00">
+<meta property="og:updated_time" id="og-updated" content="2026-06-24T01:46:35+00:00">
 <!-- Google AI Overviews freshness signals -->
 <meta property="article:published_time" content="2024-01-01T00:00:00Z">
-<meta property="article:modified_time" id="article-modified" content="2026-06-22T10:21:39+00:00">
+<meta property="article:modified_time" id="article-modified" content="2026-06-24T01:46:35+00:00">
 <!-- Dublin Core — Perplexity respects these -->
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
 <meta name="DC.title" content="BTC Pipeline Dashboard">
 <meta name="DC.type" content="Dataset">
 <meta name="DC.format" content="text/html">
 <meta name="DC.language" content="en">
-<meta name="DC.date" id="dc-date" content="2026-06-22T10:21:39+00:00">
+<meta name="DC.date" id="dc-date" content="2026-06-24T01:46:35+00:00">
 <!-- Schema.org Dataset markup for AI engines -->
 <script type="application/ld+json" id="schema-dataset">
 {
@@ -39,7 +39,7 @@
   "measurementTechnique": "Automated JSON data pipeline, 15-minute refresh cadence via cron-scheduled collection",
   "creator": { "@type": "Organization", "name": "BTC Pipeline" },
   "license": "https://creativecommons.org/licenses/by/4.0/",
-  "dateModified": "2026-06-22T10:21:39+00:00",
+  "dateModified": "2026-06-24T01:46:35+00:00",
   "distribution": [
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard/data/gate0.json", "name": "Gate0 Signal Data" },
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard/data/macro.json", "name": "Macro Indicator Data" },
@@ -134,6 +134,19 @@
 <meta name="theme-color" content="#05070d">
 <meta name="twitter:card" content="summary_large_image">
 <meta property="og:image" content="https://aikeluargalee-tech.github.io/pipeline-dashboard/assets/social-card.png">
+<style>
+  .system-overview-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 768px) {
+    .system-overview-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+  }
+</style>
 </head>
 <body>
 <div id="nav-placeholder"></div>
@@ -194,7 +207,7 @@
     </div>
   </div>
   <div style="text-align:right">
-    <span class="btc-price" id="btc-price">$64,142</span>
+    <span class="btc-price" id="btc-price">$62,978</span>
     <span class="btc-change" id="btc-change"></span>
     <div class="meta" id="btc-range"></div>
   </div>
@@ -220,6 +233,40 @@
   <div class="clock-item" id="clock-tokyo"><span class="clock-city">Tokyo</span><span class="clock-time">--:--</span></div>
 </div>
 
+<!-- System Overview Grid -->
+<div class="system-overview-container">
+  <div class="system-overview-grid">
+    <!-- Gate 0 Verdict -->
+    <a href="#card-gate0" style="text-decoration: none; color: inherit;">
+      <div class="card" id="so-gate0" style="margin: 0; padding: 12px 16px; border-left: 3px solid var(--border);">
+        <div style="font-size: 0.72em; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; font-weight: 700;">🚦 Gate 0 Verdict</div>
+        <div id="so-gate0-val" style="font-size: 1.25em; font-weight: 800; margin-top: 6px;">Loading...</div>
+      </div>
+    </a>
+    <!-- AMT Status -->
+    <a href="#card-amt" style="text-decoration: none; color: inherit;">
+      <div class="card" id="so-amt" style="margin: 0; padding: 12px 16px; border-left: 3px solid var(--border);">
+        <div style="font-size: 0.72em; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; font-weight: 700;">📡 AMT Warmup</div>
+        <div id="so-amt-val" style="font-size: 1.25em; font-weight: 800; margin-top: 6px;">Loading...</div>
+      </div>
+    </a>
+    <!-- SIGMA Conviction -->
+    <a href="#card-sigma" style="text-decoration: none; color: inherit;">
+      <div class="card" id="so-sigma" style="margin: 0; padding: 12px 16px; border-left: 3px solid var(--border);">
+        <div style="font-size: 0.72em; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; font-weight: 700;">⚡ SIGMA Conviction</div>
+        <div id="so-sigma-val" style="font-size: 1.25em; font-weight: 800; margin-top: 6px;">Loading...</div>
+      </div>
+    </a>
+    <!-- TRP Status -->
+    <a href="#card-trp" style="text-decoration: none; color: inherit;">
+      <div class="card" id="so-trp" style="margin: 0; padding: 12px 16px; border-left: 3px solid var(--border);">
+        <div style="font-size: 0.72em; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; font-weight: 700;">📰 TRP Signals</div>
+        <div id="so-trp-val" style="font-size: 1.25em; font-weight: 800; margin-top: 6px;">Loading...</div>
+      </div>
+    </a>
+  </div>
+</div>
+
 <!-- ─── Black Swan Risk ─── -->
 <div class="layer" style="margin-top:24px">
   <div class="layer-header">
@@ -227,13 +274,37 @@
     <h2 class="layer-title">Black Swan Sentinel</h2>
     <span class="layer-subtitle">Systemic risk monitoring — 8-factor scoring engine</span>
   </div>
-  <div class="card" id="card-blackswan" style="border-left: 3px solid var(--red)">
-    <h3 class="card-title">🛡️ Risk Score</h3>
-    <div id="blackswan-content"></div>
-  </div>
-  <div class="card" id="card-crash" style="border-left: 3px solid var(--red)">
-    <h3 class="card-title">⚠️ Crash Precursor</h3>
-    <div id="crash-content"><p style="font-size:0.8em;color:var(--muted)">Real-time crash signals: taker aggression, bid wall decay, funding stress, OI implosion, divergence.</p></div>
+  <div class="layer-grid">
+    <div class="card" id="card-blackswan" style="border-left: 3px solid var(--red)">
+      <h3 class="card-title">🛡️ Risk Score</h3>
+      <div id="blackswan-content"></div>
+    </div>
+    <div class="card" id="card-crash" style="border-left: 3px solid var(--red)">
+      <h3 class="card-title">⚠️ Crash Precursor</h3>
+      <div id="crash-content"><p style="font-size:0.8em;color:var(--muted)">Real-time crash signals: taker aggression, bid wall decay, funding stress, OI implosion, divergence.</p></div>
+    </div>
+    <div class="card" id="card-gate0" style="border-left: 3px solid var(--cyan)">
+      <h3 class="card-title">🚦 Gate 0 Threat Monitors</h3>
+      <div id="gate0-modules-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-top: 12px;"></div>
+    </div>
+    <div class="card" id="card-amt" style="border-left: 3px solid var(--blue)">
+      <h3 class="card-title">📡 AMT Status</h3>
+      <div id="amt-content"></div>
+      <div style="margin-top: 12px; font-size: 0.78em;">
+        <a href="https://aikeluargalee-tech.github.io/btc-amt-viewer/" target="_blank" style="color: var(--cyan); text-decoration: none; font-weight: 600;">View AMT Analyzer →</a>
+      </div>
+    </div>
+    <div class="card" id="card-sigma" style="border-left: 3px solid var(--purple)">
+      <h3 class="card-title">⚡ SIGMA Conviction</h3>
+      <div id="sigma-content"></div>
+      <div style="font-size: 0.72em; color: var(--muted); margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 6px;">
+        Updated manually by Milo after GetClaw Sigma BTC run.
+      </div>
+    </div>
+    <div class="card" id="card-trp" style="border-left: 3px solid var(--orange)">
+      <h3 class="card-title">📰 TRP Status</h3>
+      <div id="trp-content"></div>
+    </div>
   </div>
 </div>
 
@@ -241,7 +312,7 @@
 <div class="regime-summary" id="regime-card">
   <div class="regime-title">⚡ REGIME SYNTHESIS</div>
   <div class="regime-verdict" id="regime-verdict">CAUTIOUS NEUTRAL</div>
-  <div class="regime-detail" id="regime-detail">Tightened rules active. 1 bullish / 0 bearish signals. | TA: Price 10.7% below MA50 — medium-term structure bearish</div>
+  <div class="regime-detail" id="regime-detail">Tightened rules active. 1 bullish / 0 bearish signals. | TA: Price 11.5% below MA50 — medium-term structure bearish</div>
   <div class="regime-layers" id="regime-layers"></div>
   <div class="card-narrative" id="nar-regime" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
 </div>
@@ -524,6 +595,9 @@
     <summary style="cursor:pointer;color:var(--muted);font-size:0.78em;padding:8px 0">📊 Raw Data Access (JSON)</summary>
     <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">
       <a href="../data/gate0.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">Gate0</a>
+      <a href="../data/amt_status.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">AMT Status</a>
+      <a href="../data/sigma_status.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">Sigma Status</a>
+      <a href="../data/trp_status.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">TRP Status</a>
       <a href="../data/macro.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">Macro</a>
       <a href="../data/structural.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">Structural</a>
       <a href="../data/derivatives.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">Derivatives</a>
@@ -1650,10 +1724,11 @@ async function refresh() {
       load('derivatives'), load('cycle'), load('supplementary'), load('regime'), load('meta'), load('v7_captures'),
       load('signal_stats'), load('manual_gate'), load('corporate_treasury_stress'),
       load('news_feed'), load('social_pulse'), load('signal_tracker'),
-      load('sentiment'), load('positioning'), load('patterns'), load('black_swan'), load('crash_precursor')
+      load('sentiment'), load('positioning'), load('patterns'), load('black_swan'), load('crash_precursor'),
+      load('amt_status'), load('sigma_status'), load('trp_status')
     ]);
   }
-  const [btc, gate, macro, structural, derivatives, cycle, supplementary, regime, meta, v7, sigStats, manualGate, cts, newsFeed, socialPulse, sigTrack, sentiment, positioning, patterns, blackSwan, crashPrecursor] = _dataCache;
+  const [btc, gate, macro, structural, derivatives, cycle, supplementary, regime, meta, v7, sigStats, manualGate, cts, newsFeed, socialPulse, sigTrack, sentiment, positioning, patterns, blackSwan, crashPrecursor, amtStatus, sigmaStatus, trpStatus] = _dataCache;
 
   // Header
   if (btc && btc.price) {
@@ -1704,6 +1779,10 @@ async function refresh() {
   renderCrashPrecursor(crashPrecursor);
   renderL1Gate(manualGate, regime);
   renderRegime(regime);
+  renderGate0Full(gate);
+  renderAmtStatus(amtStatus);
+  renderSigmaStatus(sigmaStatus);
+  renderTrpStatus(trpStatus);
   // UPPER — MACRO
   renderMacro(macro);
   renderNewsFeed(newsFeed);
@@ -1978,6 +2057,196 @@ function renderCrashPrecursor(d) {
   el.innerHTML = html;
 }
 
+function renderGate0Full(gate) {
+  const el = document.getElementById('gate0-modules-grid');
+  const soVal = document.getElementById('so-gate0-val');
+  const soCard = document.getElementById('so-gate0');
+  
+  if (!gate || !gate.modules) {
+    if (el) el.innerHTML = '<p style="font-size:0.8em;color:var(--muted)">No data</p>';
+    if (soVal) {
+      soVal.textContent = 'No data';
+      soVal.style.color = 'var(--muted)';
+    }
+    return;
+  }
+
+  // System Overview Verdict
+  const verdict = gate.verdict || 'UNKNOWN';
+  if (soVal) {
+    soVal.textContent = verdict;
+    let vColor = 'var(--muted)';
+    if (verdict === 'PROCEED') vColor = 'var(--green)';
+    else if (verdict === 'TIGHTENED') vColor = 'var(--yellow)';
+    else if (verdict === 'PAUSE') vColor = 'var(--orange)';
+    else if (verdict === 'ABORT') vColor = 'var(--red)';
+    soVal.style.color = vColor;
+    if (soCard) soCard.style.borderLeftColor = vColor;
+  }
+
+  const allModuleKeys = [
+    'black_swan', 'vix_spx', 'ai3_wave', 'stablecoins', 'session',
+    'trp_check', 'mstr', 'elon', 'ai_bubble', 'quantum'
+  ];
+
+  let html = '';
+  allModuleKeys.forEach(key => {
+    const mod = gate.modules[key] || { state: 'Offline', detail: 'Offline' };
+    const state = mod.state || 'Offline';
+    const detail = mod.detail || 'Offline';
+    
+    // Color dot mapping
+    let dotColor = 'var(--muted)';
+    if (state === 'PROCEED') dotColor = 'var(--green)';
+    else if (state === 'TIGHTENED') dotColor = 'var(--yellow)';
+    else if (state === 'PAUSE') dotColor = 'var(--orange)';
+    else if (state === 'ABORT') dotColor = 'var(--red)';
+    else if (state === 'Offline') dotColor = 'gray';
+
+    const cleanLabel = key.replace('_', ' ').toUpperCase();
+    
+    html += `
+      <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:0.78em;display:flex;flex-direction:column;gap:4px;" title="${esc(detail)}">
+        <div style="display:flex;align-items:center;justify-content:space-between;font-weight:600;">
+          <span>${esc(cleanLabel)}</span>
+          <span style="height:8px;width:8px;border-radius:50%;background:${dotColor};display:inline-block;" title="${esc(state)}"></span>
+        </div>
+        <div style="font-size:0.85em;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(detail)}</div>
+      </div>
+    `;
+  });
+  if (el) el.innerHTML = html;
+}
+
+function renderAmtStatus(d) {
+  const el = document.getElementById('amt-content');
+  const soVal = document.getElementById('so-amt-val');
+  const soCard = document.getElementById('so-amt');
+
+  if (!d) {
+    if (el) el.innerHTML = '<p style="font-size:0.8em;color:var(--muted)">No data</p>';
+    if (soVal) {
+      soVal.textContent = 'No data';
+      soVal.style.color = 'var(--muted)';
+    }
+    return;
+  }
+
+  const wp = d.warmup_progress || '0/96';
+  const parts = wp.split('/');
+  const wpPct = parts.length === 2 ? Math.min(100, Math.round((parseInt(parts[0]) / parseInt(parts[1])) * 100)) : 0;
+  const isOnline = d["1d_layer"] === 'online';
+
+  if (soVal) {
+    soVal.textContent = wp;
+    soVal.style.color = isOnline ? 'var(--green)' : 'var(--yellow)';
+    if (soCard) soCard.style.borderLeftColor = isOnline ? 'var(--green)' : 'var(--yellow)';
+  }
+
+  let html = '';
+  html += metricRow('Warmup Progress', wp);
+  html += `
+    <div style="background:rgba(255,255,255,0.05);border-radius:4px;height:6px;margin:8px 0 12px 0;overflow:hidden;">
+      <div style="width:${wpPct}%;height:100%;background:${isOnline ? 'var(--green)' : 'var(--yellow)'};border-radius:4px;transition:width 0.5s;"></div>
+    </div>
+  `;
+
+  html += metricRow('1D Layer', isOnline ? 'ONLINE' : 'OFFLINE', isOnline ? 'positive' : 'warn');
+
+  if (d.latest_signal) {
+    const ls = d.latest_signal;
+    html += `<div style="margin-top:10px;padding:8px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;">
+      <div style="font-size:0.75em;color:var(--muted);text-transform:uppercase;font-weight:700;">Latest Signal</div>
+      <div style="font-size:0.85em;font-weight:600;margin-top:2px;">${esc(ls.summary)}</div>
+      <div style="font-size:0.7em;color:var(--muted);margin-top:2px;">${esc(ls.timestamp)}</div>
+    </div>`;
+  } else {
+    html += metricRow('Latest Signal', 'None', 'neutral');
+  }
+
+  if (d.last_whale_pivot) {
+    const wpivot = d.last_whale_pivot;
+    const dir = wpivot.direction || 'NONE';
+    const price = wpivot.price ? `$${esc(Number(wpivot.price).toLocaleString())}` : '—';
+    const cls = dir === 'LONG' ? 'positive' : dir === 'SHORT' ? 'negative' : 'neutral';
+    html += metricRow('Last Whale Pivot', `${dir} at ${price}`, cls);
+  } else {
+    html += metricRow('Last Whale Pivot', 'None', 'neutral');
+  }
+
+  if (el) el.innerHTML = html;
+}
+
+function renderSigmaStatus(d) {
+  const el = document.getElementById('sigma-content');
+  const soVal = document.getElementById('so-sigma-val');
+  const soCard = document.getElementById('so-sigma');
+
+  if (!d) {
+    if (el) el.innerHTML = '<p style="font-size:0.8em;color:var(--muted)">No data</p>';
+    if (soVal) {
+      soVal.textContent = 'No data';
+      soVal.style.color = 'var(--muted)';
+    }
+    return;
+  }
+
+  const dir = (d.direction || 'neutral').toUpperCase();
+  if (soVal) {
+    soVal.textContent = dir;
+    let sColor = 'var(--muted)';
+    if (dir === 'BULLISH' || dir === 'LONG') sColor = 'var(--green)';
+    else if (dir === 'BEARISH' || dir === 'SHORT') sColor = 'var(--red)';
+    soVal.style.color = sColor;
+    if (soCard) soCard.style.borderLeftColor = sColor;
+  }
+
+  let html = '';
+  html += metricRow('Conviction', d.conviction || '—');
+  html += metricRow('Direction', dir, dir === 'BULLISH' ? 'positive' : dir === 'BEARISH' ? 'negative' : 'neutral');
+  
+  if (el) el.innerHTML = html;
+}
+
+function renderTrpStatus(d) {
+  const el = document.getElementById('trp-content');
+  const soVal = document.getElementById('so-trp-val');
+  const soCard = document.getElementById('so-trp');
+
+  if (!d) {
+    if (el) el.innerHTML = '<p style="font-size:0.8em;color:var(--muted)">No data</p>';
+    if (soVal) {
+      soVal.textContent = 'No data';
+      soVal.style.color = 'var(--muted)';
+    }
+    return;
+  }
+
+  const sigToday = d.signals_today || 0;
+  if (soVal) {
+    soVal.textContent = String(sigToday);
+    soVal.style.color = sigToday > 0 ? 'var(--green)' : 'var(--muted)';
+    if (soCard) soCard.style.borderLeftColor = sigToday > 0 ? 'var(--green)' : 'var(--border)';
+  }
+
+  let html = '';
+  let pollStr = '—';
+  if (d.last_poll) {
+    try {
+      const dt = new Date(d.last_poll);
+      pollStr = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    } catch(e) {
+      pollStr = d.last_poll;
+    }
+  }
+  html += metricRow('Last Poll', pollStr);
+  html += metricRow('Signals Today', sigToday, sigToday > 0 ? 'positive' : 'neutral');
+  html += metricRow('Last Tier', d.last_tier || 'None', d.last_tier ? 'warn' : 'neutral');
+  html += metricRow('Last Details', d.last_classification || 'None');
+  html += metricRow('Cron Status', d.cron_active ? 'ACTIVE' : 'INACTIVE', d.cron_active ? 'positive' : 'warn');
+
+  if (el) el.innerHTML = html;
+}
 
 function renderNarrative(gate, regime, macro, structural, derivatives, cycle) {
   const el = document.getElementById('signal-narrative');
