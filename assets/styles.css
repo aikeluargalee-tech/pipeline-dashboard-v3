@@ -1025,7 +1025,7 @@ body.simple-mode #ta-section {
     padding: 16px 24px;
     gap: 14px;
     border-bottom: 1px solid var(--border);
-    z-index: 999; /* Ensure navigation overlays other elements */
+    z-index: 10000; /* Ensure navigation overlays other elements including onboarding */
   }
   .site-nav-links.open { display: flex; }
 }

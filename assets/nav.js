@@ -75,7 +75,7 @@
   <nav class="site-nav" aria-label="Primary navigation">
     <div class="site-nav-inner">
       <a href="${BASE}/" class="site-nav-logo" aria-label="Pipeline Dashboard home">⚡ Pipeline<span>Dashboard</span></a>
-      <button class="site-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+      <button class="site-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" onclick="var l=this.parentElement.querySelector('.site-nav-links');var o=l.classList.toggle('open');this.setAttribute('aria-expanded',o);">☰</button>
       <ul class="site-nav-links" role="menubar">
         <li role="none"><a role="menuitem" href="${BASE}/dashboard/">Dashboard</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/methodology/">Methodology</a></li>
