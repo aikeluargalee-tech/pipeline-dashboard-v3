@@ -352,6 +352,11 @@
       <div id="magnets-content"><p style="font-size:0.8em;color:var(--muted)">Liquidation clusters: aggregates leveraged order book positions to map price attraction zones.</p></div>
       <div class="card-narrative" id="nar-magnets" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
     </div>
+    <div class="card" id="card-liquidity" style="border-left: 3px solid var(--green)">
+      <h3 class="card-title">💧 Liquidity Health</h3>
+      <div id="liquidity-content"><p style="font-size:0.8em;color:var(--muted)">Tracks 4 dimensions of liquidity drying up — taker volume, OI, ETF flows, Coinbase premium.</p></div>
+      <div class="card-narrative" id="nar-liquidity" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
+    </div>
     <div class="card" id="card-sr">
       <h3 class="card-title">📊 S/R Bands</h3>
       <div id="sr-content"><p style="font-size:0.8em;color:var(--muted)">Support and resistance zones: computes key levels using ATR variance across timeframes.</p></div>
@@ -770,7 +775,55 @@ function renderMacro(d) {
   var el=document.getElementById('news-feed');if(el)el.innerHTML = metricRow('Fetching headlines...', '', 'neutral');
 }
 
-// ─── Render Layer 2: Structural ───
+// ─── Render Liquidity Health ───
+function renderLiquidity(d) {
+  if (!d) { var el=document.getElementById('liquidity-content');if(el)el.innerHTML = metricRow('Liquidity data unavailable', '', 'neutral'); return; }
+  let html = '';
+
+  // Verdict badge — color-coded
+  const verdict = d.liquidity_verdict || 'UNKNOWN';
+  const verdictColors = {HEALTHY:'var(--green)', THINNING:'var(--yellow)', DRY:'var(--orange)', EVAPORATING:'var(--red)'};
+  const verdictBg = {HEALTHY:'rgba(63,185,80,0.1)', THINNING:'rgba(210,153,34,0.1)', DRY:'rgba(255,140,0,0.12)', EVAPORATING:'rgba(248,81,73,0.15)'};
+  const vc = verdictColors[verdict] || 'var(--muted)';
+  const vbg = verdictBg[verdict] || 'rgba(255,255,255,0.03)';
+  html += `<div style="text-align:center;margin-bottom:8px;padding:8px 12px;background:${vbg};border-radius:6px;border:1px solid ${vc}">`;
+  html += `<div style="font-size:1.1em;font-weight:700;color:${vc}">${esc(verdict)}</div>`;
+  html += `<div style="font-size:0.7em;color:var(--muted);margin-top:2px">${esc(String(d.signals_dry))}/${esc(String(d.signals_total))} signals dry</div>`;
+  html += '</div>';
+
+  // Signal rows
+  function signalRow(label, value, signal, colorMap) {
+    const sc = colorMap[signal] || 'var(--muted)';
+    const dot = signal === 'ABANDONMENT' || signal === 'DECLINING' || signal === 'NEGATIVE' || signal === 'OUTFLOW' ? '🔴' : 
+               signal === 'WEAK' ? '🟡' : signal === 'NORMAL' || signal === 'POSITIVE' || signal === 'INFLOW' || signal === 'EXPANDING' || signal === 'HEALTHY' ? '🟢' : '⚪';
+    const disp = value != null ? (typeof value === 'number' ? (value < 1 ? (value*100).toFixed(1)+'%' : value.toLocaleString()) : esc(String(value))) : '?';
+    return `<div style="display:flex;justify-content:space-between;padding:3px 0;font-size:0.82em"><span style="color:var(--muted)">${esc(label)}</span><span>${dot} <span style="color:${sc}">${esc(signal)}</span> <span style="color:var(--muted);font-size:0.9em">${disp}</span></span></div>`;
+  }
+
+  html += signalRow('Taker Buy Ratio', d.taker_buy_ratio, d.taker_signal, {NORMAL:'var(--green)', WEAK:'var(--yellow)', ABANDONMENT:'var(--red)'});
+  html += signalRow('OI Delta', d.oi_change_pct, d.oi_delta, {EXPANDING:'var(--green)', FLAT:'var(--yellow)', DECLINING:'var(--red)'});
+  html += signalRow('ETF Flow', d.etf_flow_usd, d.etf_signal, {INFLOW:'var(--green)', NEUTRAL:'var(--yellow)', OUTFLOW:'var(--red)', UNKNOWN:'var(--muted)'});
+  html += signalRow('Coinbase Premium', d.coinbase_premium, d.coinbase_signal, {POSITIVE:'var(--green)', NEUTRAL:'var(--yellow)', NEGATIVE:'var(--red)', UNKNOWN:'var(--muted)'});
+
+  // Tactical note
+  if (d.tactical_note) {
+    html += `<div style="margin-top:8px;font-size:0.78em;color:var(--yellow);line-height:1.4;padding:6px 8px;background:rgba(251,191,36,0.08);border-radius:4px">💡 ${esc(d.tactical_note)}</div>`;
+  }
+
+  // CVD + Funding extras
+  if (d.cvd_trend && d.cvd_trend !== 'UNKNOWN') {
+    html += `<div style="margin-top:4px;font-size:0.72em;color:var(--muted)">CVD: ${esc(d.cvd_trend)}`;
+    if (d.funding_signal && d.funding_signal !== 'UNKNOWN') html += ` · Funding: ${esc(d.funding_signal)}`;
+    html += '</div>';
+  }
+
+  // Meta
+  if (d.timestamp) {
+    html += `<div style="margin-top:6px;font-size:0.68em;color:var(--muted)">${esc(d.timestamp)}</div>`;
+  }
+
+  var el=document.getElementById('liquidity-content');if(el)el.innerHTML = html;
+}
 function renderStructural(d, v7, gate) {
   if (!d) return;
   const gateVerdict = gate?.verdict || 'UNKNOWN';
@@ -1759,10 +1812,11 @@ async function refresh() {
       load('signal_stats'), load('manual_gate'), load('corporate_treasury_stress'),
       load('news_feed'), load('social_pulse'), load('signal_tracker'),
       load('sentiment'), load('positioning'), load('patterns'), load('black_swan'), load('crash_precursor'),
-      load('amt_status'), load('sigma_status'), load('trp_status')
+      load('amt_status'), load('sigma_status'), load('trp_status'),
+      load('liquidity_status')
     ]);
   }
-  const [btc, gate, macro, structural, derivatives, cycle, supplementary, regime, meta, v7, sigStats, manualGate, cts, newsFeed, socialPulse, sigTrack, sentiment, positioning, patterns, blackSwan, crashPrecursor, amtStatus, sigmaStatus, trpStatus] = _dataCache;
+  const [btc, gate, macro, structural, derivatives, cycle, supplementary, regime, meta, v7, sigStats, manualGate, cts, newsFeed, socialPulse, sigTrack, sentiment, positioning, patterns, blackSwan, crashPrecursor, amtStatus, sigmaStatus, trpStatus, liquidityStatus] = _dataCache;
 
   // Header
   if (btc && btc.price) {
@@ -1825,6 +1879,7 @@ async function refresh() {
   renderSocialPulse(socialPulse);
   // MIDDLE — STRUCTURE & POSITIONING
   renderStructural(structural, v7, gate);
+  renderLiquidity(liquidityStatus);
   renderDerivatives(derivatives);
   renderCTS(cts);
   renderCycle(cycle);
