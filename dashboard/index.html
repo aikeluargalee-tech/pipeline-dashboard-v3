@@ -46,7 +46,7 @@
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard/data/structural.json", "name": "Structural Liquidity Data" },
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard/data/derivatives.json", "name": "Derivatives Data" },
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard/data/cycle.json", "name": "Cycle Context Data" },
-    { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard/data/regime.json", "name": "Regime Synthesis Data" }
+    { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard/data/regime.json", "name": "Trade Conviction Data" }
   ],
   "variableMeasured": [
     { "@type": "PropertyValue", "name": "Gate0 Status", "description": "Composite pass/fail signal aggregating black swan scoring, VIX/SPX correlation, AI-3 wave detection, stablecoin health, and trading session" },
@@ -121,7 +121,7 @@
 <!-- Link to raw data files for AI crawler discovery -->
 <link rel="alternate" type="application/json" href="../data/gate0.json" title="Gate0 Signal Data">
 <link rel="alternate" type="application/json" href="../data/macro.json" title="Macro Indicator Data">
-<link rel="alternate" type="application/json" href="../data/regime.json" title="Regime Synthesis Data">
+<link rel="alternate" type="application/json" href="../data/regime.json" title="Trade Conviction Data">
 <link rel="alternate" type="application/json" href="../data/structural.json" title="Structural Liquidity Data">
 <link rel="alternate" type="application/json" href="../data/derivatives.json" title="Derivatives Data">
 <link rel="alternate" type="application/json" href="../data/cycle.json" title="Cycle Context Data">
@@ -254,11 +254,11 @@
   </div>
 </div>
 
-<!-- ─── Regime Switch (top priority — drives all strategy logic) ── -->
+<!-- ─── Market Context (top priority — drives all strategy logic) ── -->
 <div class="layer" style="margin-top:24px">
   <div class="layer-header">
     <span class="layer-num" style="background:var(--yellow)">🔄</span>
-    <h2 class="layer-title">Regime Switch</h2>
+    <h2 class="layer-title">Market Context</h2>
     <span class="layer-subtitle">Market regime detection — classifies conditions, activates strategy</span>
   </div>
   <div class="layer-grid">
@@ -312,7 +312,7 @@
 
 <!-- Regime Summary Card -->
 <div class="regime-summary" id="regime-card">
-  <div class="regime-title">⚡ REGIME SYNTHESIS</div>
+  <div class="regime-title">⚡ TRADE CONVICTION</div>
   <div class="regime-verdict" id="regime-verdict">CAUTIOUS NEUTRAL</div>
   <div class="regime-detail" id="regime-detail">Tightened rules active. 1 bullish / 0 bearish signals. | TA: Price 12.1% below MA50 — medium-term structure bearish</div>
   <div class="regime-layers" id="regime-layers"></div>
@@ -609,7 +609,7 @@
       <a href="../data/structural.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">Structural</a>
       <a href="../data/derivatives.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">Derivatives</a>
       <a href="../data/cycle.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">Cycle</a>
-      <a href="../data/regime.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">Regime</a>
+      <a href="../data/regime.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">Conviction</a>
       <a href="../data/btc_price.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">BTC Price</a>
       <a href="../data/meta.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">Meta</a>
     </div>
@@ -2809,7 +2809,7 @@ function showOnboarding() {
       <div style="text-align:left;margin-bottom:24px;display:flex;flex-direction:column;gap:12px">
         <div style="display:flex;gap:12px;align-items:flex-start">
           <span style="color:var(--cyan);font-size:1.2em;flex-shrink:0">1.</span>
-          <div><strong>Check the Regime Synthesis</strong> at the top — it's the overall risk synthesis (BULLISH, BEARISH, NEUTRAL).</div>
+          <div><strong>Check Trade Conviction</strong> at the top — it's the directional verdict (BULLISH, BEARISH, NEUTRAL) from 5-layer synthesis.</div>
         </div>
         <div style="display:flex;gap:12px;align-items:flex-start">
           <span style="color:var(--cyan);font-size:1.2em;flex-shrink:0">2.</span>

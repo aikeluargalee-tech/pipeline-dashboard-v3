@@ -103,6 +103,7 @@ run_pipeline "sigma_status"  "$SITE/scripts/producers/fetch_sigma_status.py"
 run_pipeline "trp_status"    "$SITE/scripts/producers/fetch_trp_status.py"
 run_pipeline "liquidity"     "$SITE/scripts/producers/fetch_liquidity_status.py"
 run_pipeline "regime_switch" "$SITE/scripts/producers/detect_regime.py"
+run_pipeline "regime_synthesis" "$SITE/scripts/producers/fetch_regime_synthesis.py"
 
 echo "── Production complete: $PASSED passed, $FAILED failed ──"
 
