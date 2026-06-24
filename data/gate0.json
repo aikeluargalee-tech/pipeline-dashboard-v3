@@ -1,10 +1,10 @@
 {
-  "verdict": "TIGHTENED",
+  "verdict": "PAUSE",
   "sources": [
-    "ai3_wave"
+    "quantum"
   ],
   "rules": {
-    "action": "Reduce position size. Tight stops. Wait for conditions to clear."
+    "action": "No new positions. Reduce open size. Monitor only."
   },
   "modules": {
     "trp_check": {
@@ -29,11 +29,11 @@
     },
     "ai_bubble": {
       "state": "PROCEED",
-      "detail": "US market closed (outside hours)"
+      "detail": "BTC 24h: -2.61%"
     },
     "quantum": {
-      "state": "PROCEED",
-      "detail": "No new quantum+bitcoin news"
+      "state": "PAUSE",
+      "detail": "TIER2: Quantum Threatens Almost $500B in Bitcoin, Research Finds \u2014 But Experts Believe  (Yahoo Finance)"
     },
     "stablecoins": {
       "state": "PROCEED",
@@ -46,8 +46,12 @@
     "ai3_wave": {
       "state": "TIGHTENED",
       "detail": "AI-3 Wave SpaceX active"
+    },
+    "geopolitical": {
+      "state": "PROCEED",
+      "detail": "No geopolitical signals detected"
     }
   },
-  "timestamp": "2026-06-24 03:56 UTC",
-  "_collected": "2026-06-24 04:25 UTC"
+  "timestamp": "2026-06-24 15:31 UTC",
+  "_collected": "2026-06-24 15:31 UTC"
 }
