@@ -75,7 +75,7 @@
   <nav class="site-nav" aria-label="Primary navigation">
     <div class="site-nav-inner">
       <a href="${BASE}/" class="site-nav-logo" aria-label="Pipeline Dashboard home">⚡ Pipeline<span>Dashboard</span></a>
-      <button class="site-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" onclick="var l=this.parentElement.querySelector('.site-nav-links');var o=l.classList.toggle('open');this.setAttribute('aria-expanded',o);">☰</button>
+      <button class="site-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
       <ul class="site-nav-links" role="menubar">
         <li role="none"><a role="menuitem" href="${BASE}/dashboard/">Dashboard</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/methodology/">Methodology</a></li>
@@ -168,10 +168,27 @@
   // Wire up mobile nav toggle with ARIA
   const toggle = document.querySelector('.site-nav-toggle');
   const links = document.querySelector('.site-nav-links');
+  const nav = document.querySelector('.site-nav');
   if (toggle && links) {
     toggle.addEventListener('click', function() {
       const isOpen = links.classList.toggle('open');
       toggle.setAttribute('aria-expanded', isOpen);
+    });
+
+    // Close menu when a nav link is tapped (good UX on mobile)
+    links.querySelectorAll('a').forEach(function(a) {
+      a.addEventListener('click', function() {
+        links.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Close menu when tapping outside the nav
+    document.addEventListener('click', function(e) {
+      if (nav && !nav.contains(e.target)) {
+        links.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
     });
   }
 })();

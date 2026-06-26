@@ -940,7 +940,7 @@ body.simple-mode #ta-section {
 .site-nav {
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 9000;
   background: rgba(5, 7, 13, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -997,8 +997,12 @@ body.simple-mode #ta-section {
   background: none;
   border: none;
   color: var(--text);
-  font-size: 1.4em;
+  font-size: 1.6em;
   cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
 }
 @media (max-width: 768px) {
   .site-nav-toggle {
