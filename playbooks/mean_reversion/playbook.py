@@ -426,6 +426,7 @@ def main():
     max_hold = cfg["time_limits"][f"{mode.lower()}_max_hold_hours"]
 
     # ── Build output ──
+    atr_valid = isinstance(atr_norm, (int, float)) and atr_norm < 900
     result = {
         "strategy": cfg["strategy"],
         "version": cfg["version"],
@@ -434,7 +435,8 @@ def main():
         "timestamp": now.isoformat(),
         "btc_price": round(price, 2),
         "mean_20h": round(mean_20h, 2) if mean_20h else None,
-        "atr_pct": round(atr_norm, 2),
+        "atr_pct": round(atr_norm, 2) if atr_valid else None,
+        "atr_data_valid": atr_valid,
         "atr_price": round(atr_price_val, 2),
         "rsi_14": round(rsi_val, 1) if rsi_val else None,
         "confidence": confidence,

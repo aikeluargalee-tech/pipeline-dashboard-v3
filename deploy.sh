@@ -151,6 +151,15 @@ fi
 
 # ─── 6. Stage + commit + push ───
 echo "── Checking for changes ──"
+
+# Inject current deploy timestamp into HTML meta/schema tags
+NOW_ISO=$(date -u '+%Y-%m-%dT%H:%M:%S+00:00')
+echo "  Injecting deploy timestamp: ${NOW_ISO}"
+sed -i "s|content=\"[0-9T:+Z-]*\" id=\"og-updated\"|content=\"${NOW_ISO}\" id=\"og-updated\"|g" dashboard/index.html
+sed -i "s|content=\"[0-9T:+Z-]*\" id=\"article-modified\"|content=\"${NOW_ISO}\" id=\"article-modified\"|g" dashboard/index.html
+sed -i "s|content=\"[0-9T:+Z-]*\" id=\"dc-date\"|content=\"${NOW_ISO}\" id=\"dc-date\"|g" dashboard/index.html
+sed -i "s|\"dateModified\": \"[^\"]*\"|\"dateModified\": \"${NOW_ISO}\"|g" dashboard/index.html
+
 git add data/*.json data/gate0.json data/amt_status.json data/sigma_status.json data/trp_status.json data/run_status.json assets/v7_long.png assets/v7_short.png assets/styles.css assets/nav.js assets/favicon.png assets/logo.png assets/social-card.png index.html dashboard/index.html methodology/index.html glossary/index.html about/index.html faq/index.html contact/index.html research/ compare/ privacy/index.html terms/index.html verdicts/ track-record/ docs/ events-and-disruptions/ sitemap.xml robots.txt manifest.json scripts/ 2>/dev/null
 if [ $? -ne 0 ]; then
     echo "⚠ git add had errors — some files may not exist yet (OK for first deploy)"
