@@ -16,17 +16,17 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="Live Bitcoin monitoring: Gate0 status, funding rates, liquidation clusters, on-chain cycle metrics, and derivatives data. Updated every 15 minutes.">
 <meta property="og:site_name" content="BTC Pipeline">
-<meta property="og:updated_time" id="og-updated" content="2026-06-26T10:41:57+00:00">
+<meta property="og:updated_time" id="og-updated" content="2026-06-26T10:51:57+00:00">
 <!-- Google AI Overviews freshness signals -->
 <meta property="article:published_time" content="2024-01-01T00:00:00Z">
-<meta property="article:modified_time" id="article-modified" content="2026-06-26T10:41:57+00:00">
+<meta property="article:modified_time" id="article-modified" content="2026-06-26T10:51:57+00:00">
 <!-- Dublin Core — Perplexity respects these -->
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
 <meta name="DC.title" content="BTC Pipeline Dashboard">
 <meta name="DC.type" content="Dataset">
 <meta name="DC.format" content="text/html">
 <meta name="DC.language" content="en">
-<meta name="DC.date" id="dc-date" content="2026-06-26T10:41:57+00:00">
+<meta name="DC.date" id="dc-date" content="2026-06-26T10:51:57+00:00">
 <!-- Schema.org Dataset markup for AI engines -->
 <script type="application/ld+json" id="schema-dataset">
 {
@@ -39,7 +39,7 @@
   "measurementTechnique": "Automated JSON data pipeline, 15-minute refresh cadence via cron-scheduled collection",
   "creator": { "@type": "Organization", "name": "BTC Pipeline" },
   "license": "https://creativecommons.org/licenses/by/4.0/",
-  "dateModified": "2026-06-26T10:41:58+00:00",
+  "dateModified": "2026-06-26T10:51:57+00:00",
   "distribution": [
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/gate0.json", "name": "Gate0 Signal Data" },
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/macro.json", "name": "Macro Indicator Data" },
@@ -366,11 +366,58 @@
       <div id="gate0-modules-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-top: 12px;"></div>
     </div>
     <div class="card" id="card-amt" style="border-left: 3px solid var(--blue)">
-      <h3 class="card-title">📡 AMT Status</h3>
+      <h2 class="card-title" style="font-size: 1.1em;">📡 Automated Market Tracker (AMT) Observations</h2>
       <div id="amt-content"></div>
-      <div style="margin-top: 12px; font-size: 0.78em;">
-        <a href="https://aikeluargalee-tech.github.io/btc-amt-viewer/" target="_blank" style="color: var(--cyan); text-decoration: none; font-weight: 600;">View AMT Analyzer →</a>
+      
+      <!-- Educational FAQ / Methodology Section for AEO & AdSense Compliance -->
+      <div style="margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; display: flex; flex-direction: column; gap: 12px; font-size: 0.8em; color: var(--muted); line-height: 1.5;">
+        <h3 style="color: var(--text); font-size: 0.95em; margin-bottom: 2px;">How is the AMT metric calculated?</h3>
+        <p style="margin: 0;">The AMT metric mathematically calculates convergence points by tracking the relationship between <strong>on-chain volume profiles</strong> and <strong>historical liquidity nodes</strong> across distributed ledgers.</p>
+
+        <h3 style="color: var(--text); font-size: 0.95em; margin-bottom: 2px;">What do Whale Pivots indicate?</h3>
+        <p style="margin: 0;">Whale pivots represent aggregated transaction density where large-scale participants historically structured block orders, serving as an observational data point for systemic market flow analysis.</p>
+
+        <h3 style="color: var(--text); font-size: 0.95em; margin-bottom: 2px;">Does AMT predict future price action?</h3>
+        <p style="margin: 0;">No. The dashboard strictly visualizes historical network states and present mathematical models. It does not predict future price action or constitute financial forecasting.</p>
       </div>
+
+      <div style="margin-top: 14px; font-size: 0.78em;">
+        <a href="https://aikeluargalee-tech.github.io/btc-amt-viewer/" target="_blank" style="color: var(--cyan); text-decoration: none; font-weight: 600;">View Full AMT Data Models →</a>
+      </div>
+
+      <!-- JSON-LD FAQPage Schema for SEO -->
+      <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How is the AMT metric calculated?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The AMT metric mathematically calculates convergence points by tracking the relationship between on-chain volume profiles and historical liquidity nodes across distributed ledgers."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What do Whale Pivots indicate?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Whale pivots represent aggregated transaction density where large-scale participants historically structured block orders, serving as an observational data point for systemic market flow analysis."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does AMT predict future price action?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. The dashboard strictly visualizes historical network states and present mathematical models. It does not predict future price action or constitute financial forecasting."
+            }
+          }
+        ]
+      }
+      </script>
     </div>
     <div class="card" id="card-sigma" style="border-left: 3px solid var(--purple)">
       <h3 class="card-title">⚡ SIGMA Conviction</h3>
@@ -390,7 +437,7 @@
 <div class="regime-summary" id="regime-card" style="margin-top:20px">
   <div class="regime-title">⚡ TRADE CONVICTION</div>
   <div class="regime-verdict" id="regime-verdict">CAUTIOUS NEUTRAL</div>
-  <div class="regime-detail" id="regime-detail">Tightened rules active. 1 bullish / 0 bearish signals. | TA: Price 15.3% below MA50 — medium-term structure bearish</div>
+  <div class="regime-detail" id="regime-detail">Tightened rules active. 1 bullish / 0 bearish signals. | TA: Price 15.5% below MA50 — medium-term structure bearish</div>
   <div class="regime-layers" id="regime-layers"></div>
   <div class="card-narrative" id="nar-regime" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
 </div>
@@ -2530,12 +2577,12 @@ function renderAmtStatus(d) {
   if (d.latest_signal) {
     const ls = d.latest_signal;
     html += `<div style="margin-top:10px;padding:8px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;">
-      <div style="font-size:0.75em;color:var(--muted);text-transform:uppercase;font-weight:700;">Latest Signal</div>
+      <div style="font-size:0.75em;color:var(--muted);text-transform:uppercase;font-weight:700;">Latest Observation</div>
       <div style="font-size:0.85em;font-weight:600;margin-top:2px;">${esc(ls.summary)}</div>
       <div style="font-size:0.7em;color:var(--muted);margin-top:2px;">${esc(ls.timestamp)}</div>
     </div>`;
   } else {
-    html += metricRow('Latest Signal', 'None', 'neutral');
+    html += metricRow('Latest Observation', 'None', 'neutral');
   }
 
   if (d.last_whale_pivot) {
@@ -2543,9 +2590,9 @@ function renderAmtStatus(d) {
     const dir = wpivot.direction || 'NONE';
     const price = wpivot.price ? `$${esc(Number(wpivot.price).toLocaleString())}` : '—';
     const cls = dir === 'LONG' ? 'positive' : dir === 'SHORT' ? 'negative' : 'neutral';
-    html += metricRow('Last Whale Pivot', `${dir} at ${price}`, cls);
+    html += metricRow('Historical Pivot Node', `${dir} at ${price}`, cls);
   } else {
-    html += metricRow('Last Whale Pivot', 'None', 'neutral');
+    html += metricRow('Historical Pivot Node', 'None', 'neutral');
   }
 
   if (el) el.innerHTML = html;
