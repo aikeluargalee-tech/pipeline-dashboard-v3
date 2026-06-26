@@ -2811,7 +2811,7 @@ function renderGate0Full(gate) {
     html += `
       <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:0.78em;display:flex;flex-direction:column;gap:4px;" title="${esc(detail)}">
         <div style="display:flex;align-items:center;justify-content:space-between;font-weight:600;">
-          <span>${esc(cleanLabel)}</span>
+          <span class="metric-label">${esc(cleanLabel)}</span>
           <span style="height:8px;width:8px;border-radius:50%;background:${dotColor};display:inline-block;" title="${esc(state)}"></span>
         </div>
         <div style="font-size:0.85em;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(detail)}</div>
@@ -3278,6 +3278,17 @@ const METRIC_TOOLTIPS = {
   'Put/Call Ratio': 'Options put/call volume ratio. High = bearish hedging.',
   '25D Skew': '25-delta options skew. Negative = puts more expensive (bearish).',
   'IV 30D': '30-day implied volatility for Bitcoin options.',
+  // Gate 0 Module Tooltips
+  'Systemic Risk': 'A composite score (Black Swan) measuring overall market vulnerability. A lower score is safer.',
+  'S&P500 & VIX Panic': 'Monitors traditional stock markets for panic. If the stock market drops, Bitcoin usually follows.',
+  'Wave Model': 'An AI model tracking cyclical market patterns and structural momentum waves.',
+  'Market Session': 'Shows which global financial hub (e.g., London, NY, Tokyo) is currently actively trading.',
+  'Institutional Alert': 'Tracks large, sudden movements or announcements from major financial institutions.',
+  'MicroStrategy Alerts': 'Monitors for announcements from MicroStrategy, the largest corporate holder of Bitcoin.',
+  'Social Media Noise': 'Measures extreme sentiment shifts or influential posts (like Elon Musk) on social media.',
+  'US Tech Stocks': 'Tracks the performance of major US technology stocks, which often influence Bitcoin\'s price.',
+  'Quantum Threats': 'Monitors news regarding quantum computing breakthroughs that could theoretically threaten Bitcoin\'s security.',
+  'Geopolitical Risk': 'Scans for global events, regulations, or conflicts that could impact cryptocurrency markets.'
 };
 
 // Card-to-glossary mapping for "Learn more" links
