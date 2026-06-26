@@ -12,12 +12,25 @@ SITE = "/home/maswilee/projects/pipeline-dashboard-v3"
 OUTPUT_PATH = os.path.join(SITE, "data/sigma_status.json")
 
 def main():
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    # Check if existing sigma_status.json has a real manual last_updated value
+    existing_last_updated = None
+    if os.path.exists(OUTPUT_PATH):
+        try:
+            with open(OUTPUT_PATH) as f:
+                existing = json.load(f)
+            # Preserve existing last_updated only if it's a real manual timestamp (not None)
+            existing_last_updated = existing.get("last_updated")
+        except Exception:
+            pass
+
     payload = {
         "conviction": "Manual update required",
         "direction": "neutral",
-        "last_updated": None,
+        # Preserve real manual timestamp if exists; otherwise mirror the auto-timestamp
+        "last_updated": existing_last_updated if existing_last_updated else ts,
         "source": "GetClaw via Milo",
-        "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+        "timestamp": ts
     }
 
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)

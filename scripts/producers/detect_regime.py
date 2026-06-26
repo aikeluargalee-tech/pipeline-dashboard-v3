@@ -282,6 +282,7 @@ def main():
         "regime_changed": regime_changed,
         "btc_price": amt.get("btc_spot") if amt else None,
         "timestamp": now.isoformat(),
+        "generated_at": now.isoformat(),  # Explicit freshness field for stale-check
         "data_age_minutes": 0,
     }
 

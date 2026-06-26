@@ -467,11 +467,12 @@
         "regime_label": "CAUTIOUS NEUTRAL"
       },
       "outcomes": {
-        "1d": null,
-        "7d": null,
-        "30d": null
+        "outcome": "loss",
+        "exit_price": 61726.5,
+        "resolved_at": "2026-06-24T13:00:00+00:00",
+        "price_change_pct": -1.0
       },
-      "resolved": false
+      "resolved": true
     },
     {
       "id": "regime_64979203",
@@ -516,6 +517,63 @@
           "ta_warning": "Price 14.8% below MA50 \u2014 medium-term structure bearish"
         },
         "btc_price": 60556.98
+      },
+      "outcomes": {
+        "1d": {
+          "price_then": 59312.64,
+          "price_change_pct": -2.05,
+          "min_price": 58115.01,
+          "max_price": 61962.4,
+          "direction_correct": true
+        },
+        "7d": null,
+        "30d": null
+      },
+      "resolved": false
+    },
+    {
+      "id": "regime_f5e0a87d",
+      "type": "regime_change",
+      "created_at": "2026-06-26T03:58:13.024678+00:00",
+      "btc_price_at_call": 59925.49,
+      "direction": "neutral",
+      "gate0_status": "TIGHTENED",
+      "regime_label": "CAUTIOUS NEUTRAL",
+      "rationale_snapshot": {
+        "gate": {
+          "verdict": "TIGHTENED",
+          "sources": [
+            "ai3_wave"
+          ]
+        },
+        "macro": {
+          "verdict": "NEUTRAL",
+          "emoji": "\ud83d\udfe1",
+          "detail": "VIX 18.9 normal"
+        },
+        "structure": {
+          "verdict": "HOLDING",
+          "emoji": "\ud83d\udfe1",
+          "detail": "3/3 timeframes active"
+        },
+        "derivatives": {
+          "verdict": "NEUTRAL",
+          "emoji": "\ud83d\udfe1",
+          "detail": "FR 0.0039% neutral, L/S 2.37, CVD -2362"
+        },
+        "cycle": {
+          "verdict": "MID",
+          "emoji": "\ud83d\udfe1",
+          "detail": ""
+        },
+        "synthesis": {
+          "verdict": "CAUTIOUS NEUTRAL",
+          "detail": "Tightened rules active. 0 bullish / 0 bearish signals. | TA: Price 14.8% below MA50 \u2014 medium-term structure bearish",
+          "bull_count": 0.0,
+          "bear_count": 0.0,
+          "ta_warning": "Price 14.8% below MA50 \u2014 medium-term structure bearish"
+        },
+        "btc_price": 59925.49
       },
       "outcomes": {
         "1d": null,
