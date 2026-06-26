@@ -489,24 +489,24 @@
 <div class="dashboard-block-container block-theme-cyan">
   <div class="block-header">
     <span class="block-number-badge">BLOCK 3</span>
-    <h2 class="block-title">Core Quantitative Layer Engines</h2>
+    <h2 class="block-title">Market Data Layers</h2>
   </div>
   <!-- Layer 1: Macro & Speculation -->
   <div class="layer" style="margin-top:0">
   <div class="layer-header">
     <span class="layer-num">1</span>
     <h2 class="layer-title">Macro & Speculation</h2>
-    <span class="layer-subtitle">Primary driver</span>
+    <span class="layer-subtitle">How the global economy affects Bitcoin</span>
   </div>
   <div class="layer-grid">
     <div class="card" id="card-macro">
       <h3 class="card-title">💵 Macro Conditions</h3>
-      <div id="macro-metrics"><p style="font-size:0.8em;color:var(--muted)">Quantitative macro indices: tracks DXY, yields, and central bank money supply indicators.</p></div>
+      <div id="macro-metrics"><p style="font-size:0.8em;color:var(--muted)">Tracks the US Dollar, interest rates, and money supply — key factors that influence Bitcoin's price.</p></div>
       <div class="card-narrative" id="nar-macro" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
     </div>
     <div class="card" id="card-risk">
       <h3 class="card-title">📈 Risk Assets</h3>
-      <div id="risk-metrics"><p style="font-size:0.8em;color:var(--muted)">Equity risk asset benchmarks: monitors SPY, QQQ, and stock volatility indices (VIX).</p></div>
+      <div id="risk-metrics"><p style="font-size:0.8em;color:var(--muted)">Monitors major US stock market indices (S&P 500, Nasdaq) and the stock market fear index (VIX).</p></div>
       <div class="card-narrative" id="nar-risk" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
     </div>
     <div class="card" id="card-news">
@@ -527,13 +527,13 @@
 <div class="layer" style="margin-top:32px">
   <div class="layer-header">
     <span class="layer-num">2</span>
-    <h2 class="layer-title">Structural Liquidity</h2>
-    <span class="layer-subtitle">Physics, not opinion</span>
+    <h2 class="layer-title">Price Levels & Liquidity</h2>
+    <span class="layer-subtitle">Where large orders are concentrated</span>
   </div>
   <div class="layer-grid">
     <div class="card" id="card-magnets">
       <h3 class="card-title">🧲 Liquidity Density Maps</h3>
-      <div id="magnets-content"><p style="font-size:0.8em;color:var(--muted)">Liquidation density maps: aggregates leveraged order book positions to visualize structural liquidity concentrations.</p></div>
+      <div id="magnets-content"><p style="font-size:0.8em;color:var(--muted)">Shows where large clusters of leveraged positions exist — price levels where many traders could be forced to buy or sell.</p></div>
       <div class="card-narrative" id="nar-magnets" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
       <!-- Static AEO Model Guide -->
       <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
@@ -548,17 +548,17 @@
     </div>
     <div class="card" id="card-liquidity" style="border-left: 3px solid var(--green)">
       <h3 class="card-title">💧 Liquidity Health</h3>
-      <div id="liquidity-content"><p style="font-size:0.8em;color:var(--muted)">Tracks 4 dimensions of liquidity drying up — taker volume, OI, ETF flows, Coinbase premium.</p></div>
+      <div id="liquidity-content"><p style="font-size:0.8em;color:var(--muted)">Measures whether money is flowing into or out of the Bitcoin market across 4 key channels.</p></div>
       <div class="card-narrative" id="nar-liquidity" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
     </div>
     <div class="card" id="card-sr">
       <h3 class="card-title">📊 Statistical Support/Resistance Bands</h3>
-      <div id="sr-content"><p style="font-size:0.8em;color:var(--muted)">Support and resistance zones: computes key levels using ATR variance across timeframes.</p></div>
+      <div id="sr-content"><p style="font-size:0.8em;color:var(--muted)">Calculates key price levels where Bitcoin has historically bounced (support) or been rejected (resistance).</p></div>
       <div class="card-narrative" id="nar-sr" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
     </div>
     <div class="card" id="card-vol">
       <h3 class="card-title">📏 Volume Profile</h3>
-      <div id="vol-content"><p style="font-size:0.8em;color:var(--muted)">Volume Profile: identifies Point of Control (POC) and value area boundaries.</p></div>
+      <div id="vol-content"><p style="font-size:0.8em;color:var(--muted)">Shows the price level where the most trading happened — the market's "center of gravity."</p></div>
       <div class="card-narrative" id="nar-vol" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
     </div>
     <div class="card" id="card-cts" style="border-left: 3px solid var(--orange)">
@@ -578,17 +578,17 @@
   <div class="layer-header">
     <span class="layer-num">3</span>
     <h2 class="layer-title">Derivatives</h2>
-    <span class="layer-subtitle">Real-time positioning</span>
+    <span class="layer-subtitle">How futures traders are positioned</span>
   </div>
   <div class="layer-grid">
     <div class="card" id="card-deriv">
       <h3 class="card-title">💰 Funding & Order Flow</h3>
-      <div id="deriv-content"><p style="font-size:0.8em;color:var(--muted)">Derivatives positioning: tracks cross-exchange funding rates and long/short skew.</p></div>
+      <div id="deriv-content"><p style="font-size:0.8em;color:var(--muted)">Tracks the fees traders pay to hold futures positions and whether more traders are betting up (long) or down (short).</p></div>
       <div class="card-narrative" id="nar-deriv" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
     </div>
     <div class="card" id="card-oi">
       <h3 class="card-title">📊 Open Interest</h3>
-      <div id="oi-content"><p style="font-size:0.8em;color:var(--muted)">Open Interest: monitors aggregate outstanding futures contracts and flow sentiment.</p></div>
+      <div id="oi-content"><p style="font-size:0.8em;color:var(--muted)">Monitors the total value of active futures contracts. Rising = new money entering, Falling = money leaving.</p></div>
       <div class="card-narrative" id="nar-oi" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
     </div>
   </div>
@@ -600,17 +600,17 @@
   <div class="layer-header">
     <span class="layer-num">4</span>
     <h2 class="layer-title">Cycle Context</h2>
-    <span class="layer-subtitle">Weekly/monthly, not per-session</span>
+    <span class="layer-subtitle">Long-term health metrics — updated weekly</span>
   </div>
   <div class="layer-grid">
     <div class="card" id="card-onchain">
       <h3 class="card-title">⛓️ On-Chain Valuation</h3>
-      <div id="onchain-content"><p style="font-size:0.8em;color:var(--muted)">On-chain valuation: compiles MVRV Z-Score, SOPR, and Puell Multiple cycles.</p></div>
+      <div id="onchain-content"><p style="font-size:0.8em;color:var(--muted)">Tracks long-term Bitcoin valuation using blockchain data: Is Bitcoin cheap or expensive compared to history?</p></div>
       <div class="card-narrative" id="nar-onchain" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
     </div>
     <div class="card" id="card-dist">
       <h3 class="card-title">💰 BTC Distribution</h3>
-      <div id="dist-content"><p style="font-size:0.8em;color:var(--muted)">Bitcoin distribution: monitors wallet size transitions and accumulator flow.</p></div>
+      <div id="dist-content"><p style="font-size:0.8em;color:var(--muted)">Monitors how Bitcoin is distributed across different wallet sizes — from small holders to large whales.</p></div>
       <div class="card-narrative" id="nar-dist" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
     </div>
   </div>
@@ -631,7 +631,7 @@
   <div class="layer-header">
     <span class="layer-num" style="background:var(--purple)">📊</span>
     <h2 class="layer-title">Sentiment & Flow</h2>
-    <span class="layer-subtitle">Fear & Greed, Coinbase Premium, Whale Positioning</span>
+    <span class="layer-subtitle">Crowd emotion, US buyer activity, and large holder behavior</span>
   </div>
   <div class="card-grid">
     <div class="card" id="card-fng">
@@ -667,7 +667,7 @@
   <div class="layer-header">
     <span class="layer-num" style="background:var(--orange)">🏛️</span>
     <h2 class="layer-title">Institutional Positioning</h2>
-    <span class="layer-subtitle">CME COT · Deribit Options</span>
+    <span class="layer-subtitle">How professional traders are positioned</span>
   </div>
   <div class="card-grid">
     <div class="card" id="card-cot">
@@ -685,7 +685,7 @@
   <div class="layer-header">
     <span class="layer-num" style="background:var(--yellow)">🔍</span>
     <h2 class="layer-title">Pattern Detection</h2>
-    <span class="layer-subtitle">Chart Patterns · 3-Candle · RSI Reversal</span>
+    <span class="layer-subtitle">Historical price shapes the market is forming</span>
   </div>
   <div class="card-grid">
     <div class="card" id="card-chartpat">
@@ -710,7 +710,7 @@
   <div class="layer-header">
     <span class="layer-num" style="background:var(--cyan)">ST</span>
     <h2 class="layer-title">Model Setup Tracker</h2>
-    <span class="layer-subtitle">Data state tracking: CONVERGING · DIVERGING · INVALIDATED</span>
+    <span class="layer-subtitle">Tracks whether data patterns are strengthening or weakening</span>
   </div>
   <div class="layer-grid">
     <div class="card" id="card-sig-track" style="border-left: 3px solid var(--cyan)">
@@ -729,14 +729,14 @@
 <div class="dashboard-block-container block-theme-gray">
   <div class="block-header">
     <span class="block-number-badge">BLOCK 5</span>
-    <h2 class="block-title">Lagging Technical Overlay</h2>
+    <h2 class="block-title">Historical Statistics & Indicators</h2>
   </div>
   <!-- Supplementary: TA & Lagging Indicators -->
   <div class="layer" style="margin-top:0" id="ta-section">
   <div class="layer-header">
     <span class="layer-num" style="background:var(--muted)">TA</span>
     <h2 class="layer-title">Statistical Overlay</h2>
-    <span class="layer-subtitle">Lagging — context only</span>
+    <span class="layer-subtitle">These indicators look backwards — they describe what already happened</span>
   </div>
   <div class="layer-grid">
     <div class="card" id="card-ma">
@@ -785,7 +785,7 @@
   <div class="layer-header">
     <span class="layer-num" style="background:var(--cyan)">📋</span>
     <h2 class="layer-title">Current Model Narrative</h2>
-    <span class="layer-subtitle">Machine-readable summary for AI engines</span>
+    <span class="layer-subtitle">Data summary for search engines and AI assistants</span>
   </div>
   <div id="signal-narrative" style="font-size:0.88em;color:var(--muted);line-height:1.8;padding:8px 0;max-width:820px">
     Loading signal data...
@@ -798,14 +798,14 @@
   <div class="layer-header">
     <span class="layer-num" style="background:var(--green)">📖</span>
     <h2 class="layer-title">Dashboard Methodology</h2>
-    <span class="layer-subtitle">Entity mapping for AI answer engine citations</span>
+    <span class="layer-subtitle">How this dashboard collects and processes data</span>
   </div>
   <div style="font-size:0.88em;color:var(--muted);line-height:1.8;padding:8px 0;max-width:820px">
     <p style="margin:0 0 12px 0">
       This pipeline engine synthesizes <strong>Bitcoin</strong> (BTC) market structure by correlating broader <strong>Macroeconomic Conditions</strong> with real-time <strong>Structural Liquidity</strong>. Rather than relying on lagging technical indicators, the dashboard tracks <strong>Liquidation Magnets</strong>, <strong>Open Interest</strong>, and <strong>On-Chain Valuation</strong> to identify specific price levels where institutional capital and leveraged order flow are concentrated. This physics-based approach provides an objective framework for anticipating Bitcoin's directional volatility across different market cycles.
     </p>
     <p style="margin:0">
-      Data sources: <strong>Binance</strong> (price, funding, open interest), <strong>FRED</strong> (DXY, yields, M2 supply), <strong>Yahoo Finance</strong> (SPX, VIX, risk assets), <strong>Coinglass</strong> (liquidation heatmaps), and on-chain providers (<strong>MVRV Z-Score</strong>, <strong>SOPR</strong>, <strong>Puell Multiple</strong>). All signals refresh every 15 minutes. Gate0 risk envelope enforces position sizing rules: <strong>PROCEED</strong> (full size), <strong>TIGHTENED</strong> (reduce size, tight stops), <strong>PAUSE</strong> (close only), or <strong>ABORT</strong> (flatten all positions).
+      Data sources: <strong>Binance</strong> (price, funding, open interest), <strong>FRED</strong> (DXY, yields, M2 supply), <strong>Yahoo Finance</strong> (SPX, VIX, risk assets), <strong>Coinglass</strong> (liquidation heatmaps), and on-chain providers (<strong>MVRV Z-Score</strong>, <strong>SOPR</strong>, <strong>Puell Multiple</strong>). All data refreshes every 15 minutes. Gate0 acts as a safety filter to flag when overall market conditions are unusually risky.
     </p>
   </div>
 </div>
@@ -2416,9 +2416,9 @@ function renderSentiment(d) {
     if (!el) return;
     const cpStr = (cp >= 0 ? '+' : '') + cp.toFixed(4) + '%';
     const cpColor = cp >= 0 ? 'var(--green)' : 'var(--red)';
-    const cpLabel = cp >= 0 ? 'US institutional bid active' : 'US demand soft';
+    const cpLabel = cp >= 0 ? 'US buyers currently active' : 'US buying activity is quiet';
     el.innerHTML = `<div class="metric-row"><span class="metric-label">Premium</span><span class="metric-value" style="color:${cpColor}">${cpStr}</span></div>
-      <div class="metric-row"><span class="metric-label">Direction</span><span class="metric-value">${esc(cpLabel)}</span></div>`;
+      <div class="metric-row"><span class="metric-label">Observation</span><span class="metric-value">${esc(cpLabel)}</span></div>`;
   }
 
   // Whale Ratio
@@ -2428,7 +2428,6 @@ function renderSentiment(d) {
     if (!el) return;
     let rows = `<div class="metric-row"><span class="metric-label">Ratio</span><span class="metric-value">${whale.ratio?.toFixed(2) || '—'}</span></div>`;
     if (whale.trend) rows += `<div class="metric-row"><span class="metric-label">Trend</span><span class="metric-value">${esc(String(whale.trend))}</span></div>`;
-    if (whale.signal) rows += `<div class="metric-row"><span class="metric-label">Signal</span><span class="metric-value">${esc(String(whale.signal))}</span></div>`;
     el.innerHTML = rows;
   }
 
@@ -2480,7 +2479,6 @@ function renderPositioning(d) {
       const comm = cot.commercials;
       rows += `<div class="metric-row"><span class="metric-label">Commercials</span><span class="metric-value">Long ${comm.long?.toLocaleString?.()||comm.long} | Short ${comm.short?.toLocaleString?.()||comm.short} | Net ${(comm.net>=0?'+':'') + (comm.net?.toLocaleString?.()||comm.net)}</span></div>`;
     }
-    if (cot.signal) rows += `<div class="metric-row"><span class="metric-label">Signal</span><span class="metric-value">${esc(String(cot.signal))}</span></div>`;
     el.innerHTML = rows;
   }
 
@@ -2495,7 +2493,6 @@ function renderPositioning(d) {
     if (opt.pcr_oi !== undefined) rows += `<div class="metric-row"><span class="metric-label">PCR (OI)</span><span class="metric-value">${typeof opt.pcr_oi === 'number' ? opt.pcr_oi.toFixed(2) : opt.pcr_oi}</span></div>`;
     if (opt.pcr_volume !== undefined) rows += `<div class="metric-row"><span class="metric-label">PCR (Vol)</span><span class="metric-value">${typeof opt.pcr_volume === 'number' ? opt.pcr_volume.toFixed(2) : opt.pcr_volume}</span></div>`;
     if (opt.notional_value) rows += `<div class="metric-row"><span class="metric-label">Notional</span><span class="metric-value">$${(opt.notional_value/1e9).toFixed(1)}B</span></div>`;
-    if (opt.signal) rows += `<div class="metric-row"><span class="metric-label">Signal</span><span class="metric-value">${esc(String(opt.signal))}</span></div>`;
     el.innerHTML = rows;
   }
 }
@@ -2511,11 +2508,10 @@ function renderPatterns(d) {
     const el = document.getElementById('chartpat-content');
     if (!el) return;
     let rows = `<div class="metric-row"><span class="metric-label">Pattern</span><span class="metric-value">${esc(String(cp.pattern))}</span></div>`;
-    rows += `<div class="metric-row"><span class="metric-label">Direction</span><span class="metric-value">${esc(String(cp.direction))}</span></div>`;
+    rows += `<div class="metric-row"><span class="metric-label">Observed Direction</span><span class="metric-value">${esc(String(cp.direction))}</span></div>`;
     rows += `<div class="metric-row"><span class="metric-label">State</span><span class="metric-value">${esc(String(cp.state))}</span></div>`;
     rows += `<div class="metric-row"><span class="metric-label">Confidence</span><span class="metric-value">${cp.confidence}/100</span></div>`;
     rows += `<div class="metric-row"><span class="metric-label">Timeframe</span><span class="metric-value">${esc(String(cp.timeframe))}</span></div>`;
-    if (cp.target) rows += `<div class="metric-row"><span class="metric-label">Target</span><span class="metric-value">$${cp.target?.toLocaleString?.()||cp.target}</span></div>`;
     el.innerHTML = rows;
   }
 
@@ -2525,7 +2521,7 @@ function renderPatterns(d) {
     const el = document.getElementById('candle3-content');
     if (!el) return;
     let rows = `<div class="metric-row"><span class="metric-label">Pattern</span><span class="metric-value">${esc(String(tc.pattern))}</span></div>`;
-    rows += `<div class="metric-row"><span class="metric-label">Direction</span><span class="metric-value">${esc(String(tc.direction))}</span></div>`;
+    rows += `<div class="metric-row"><span class="metric-label">Observed Direction</span><span class="metric-value">${esc(String(tc.direction))}</span></div>`;
     if (tc.price) rows += `<div class="metric-row"><span class="metric-label">Price</span><span class="metric-value">$${tc.price?.toLocaleString?.()||tc.price}</span></div>`;
     el.innerHTML = rows;
   }
@@ -2536,9 +2532,8 @@ function renderPatterns(d) {
     const el = document.getElementById('rsirev-content');
     if (!el) return;
     const signalColor = rr.signal === 'overbought' ? 'var(--red)' : rr.signal === 'oversold' ? 'var(--green)' : 'var(--muted)';
-    let rows = `<div class="metric-row"><span class="metric-label">Signal</span><span class="metric-value" style="color:${signalColor}">${esc(String(rr.signal).toUpperCase())}</span></div>`;
+    let rows = `<div class="metric-row"><span class="metric-label">Status</span><span class="metric-value" style="color:${signalColor}">${esc(String(rr.signal).toUpperCase())}</span></div>`;
     rows += `<div class="metric-row"><span class="metric-label">RSI</span><span class="metric-value">${rr.rsi?.toFixed(1)||'—'}</span></div>`;
-    rows += `<div class="metric-row"><span class="metric-label">Action</span><span class="metric-value">${esc(String(rr.action))}</span></div>`;
     el.innerHTML = rows;
   }
 }
@@ -2935,17 +2930,14 @@ function renderNarrative(gate, regime, macro, structural, derivatives, cycle) {
     const modules = gate.modules || {};
     const greenCount = Object.values(modules).filter(function(m) { return m.state === 'PROCEED'; }).length;
     const totalCount = Object.keys(modules).length || 5;
-    const action = v === 'PROCEED' ? 'All entry conditions met — full position sizing permitted'
-      : v === 'TIGHTENED' ? 'reduce position size, use tight stops — conditions require caution'
-      : v === 'PAUSE' ? 'New entries paused — maintain existing positions only'
-      : 'All entries halted — systemic risk threshold breached';
-    lines.push('Gate0 entry gating reads ' + v + ' — ' + triggered + '. ' + greenCount + ' of ' + totalCount + ' modules green. ' + action + '.');
+    const action = v === 'PROCEED' ? 'All safety checks passed — no elevated risks detected'
+      : v === 'TIGHTENED' ? 'Some safety checks show elevated readings — conditions require extra caution'
+      : v === 'PAUSE' ? 'Multiple safety checks are flagging risk — monitoring closely'
+      : 'Systemic risk threshold breached — extreme caution warranted';
+    lines.push('Gate0 safety filter reads ' + v + ' — ' + triggered + '. ' + greenCount + ' of ' + totalCount + ' modules green. ' + action + '.');
   }
 
-  if (regime && regime.synthesis) {
-    var s = regime.synthesis;
-    lines.push('Overall regime synthesis: ' + esc(String(s.verdict)) + '. ' + esc(String(s.detail || '')));
-  }
+
 
   if (macro) {
     var parts = [];
@@ -2953,7 +2945,7 @@ function renderNarrative(gate, regime, macro, structural, derivatives, cycle) {
     if (macro.us_10y_yield) parts.push('10Y yield ' + fmt(macro.us_10y_yield, 2) + '%');
     if (macro.regime) parts.push('regime classified as ' + macro.regime);
     if (macro.vix && !isNaN(macro.vix)) {
-      var vixLabel = macro.vix > 22 ? 'elevated (risk-off)' : macro.vix > 15 ? 'moderate' : 'low (risk-on)';
+      var vixLabel = macro.vix > 22 ? 'elevated (stock markets stressed)' : macro.vix > 15 ? 'moderate' : 'low (stock markets calm)';
       parts.push('VIX at ' + fmt(macro.vix, 1) + ' — ' + vixLabel);
     }
     if (parts.length) lines.push('Macro environment: ' + parts.join('. ') + '.');
@@ -2996,7 +2988,7 @@ function renderNarrative(gate, regime, macro, structural, derivatives, cycle) {
     var parts3 = [];
     if (derivatives.funding_rate !== null && derivatives.funding_rate !== undefined) {
       var frPct = (derivatives.funding_rate * 100).toFixed(4);
-      var frLabel = derivatives.funding_rate > 0.0005 ? 'bullish pressure (longs pay)' : derivatives.funding_rate < -0.0005 ? 'bearish pressure (shorts pay)' : 'neutral';
+      var frLabel = derivatives.funding_rate > 0.0005 ? 'positive (long holders paying short holders)' : derivatives.funding_rate < -0.0005 ? 'negative (short holders paying long holders)' : 'neutral';
       parts3.push('funding rate ' + frPct + '% per 8h — ' + frLabel);
     }
     if (derivatives.oi_trend) {
@@ -3056,7 +3048,7 @@ function populateCardNarratives(gate, regime, macro, structural, derivatives, cy
 
     if (macro.vix && !isNaN(macro.vix)) {
       var vL = macro.vix > 22 ? 'elevated — risk-off' : macro.vix > 15 ? 'moderate' : 'low — risk-on';
-      nar('nar-risk', 'VIX ' + fmt(macro.vix, 1) + ' — ' + vL + '. Track SPY, QQQ correlations for macro confirmation.');
+      nar('nar-risk', 'VIX ' + fmt(macro.vix, 1) + ' — ' + vL + '.');
     }
     if (macro.news && macro.news.length) {
       nar('nar-news', macro.news.length + ' recent headlines. Latest: ' + (macro.news[0].title || macro.news[0]));
@@ -3077,7 +3069,7 @@ function populateCardNarratives(gate, regime, macro, structural, derivatives, cy
       if (m.regime_detail) mp2.push(m.regime_detail);
       if (m.sandwich && m.sandwich.width_usd) mp2.push('sandwich: $' + m.sandwich.width_usd.toLocaleString());
       if (m.asymmetry_ratio != null) mp2.push('asymmetry: ' + (m.asymmetry_ratio * 100).toFixed(0) + '% above');
-      nar('nar-magnets', mp2.length ? 'Liquidation magnets:\n• Overhead: $' + Number(ab?.price || 0).toLocaleString() + ' (+' + (ab?.distance_pct || '?') + '%)\n• Downside: $' + Number(bl?.price || 0).toLocaleString() + ' (' + (bl?.distance_pct || '?') + '%)\n• Distance ratio: ' + (m.distance_ratio != null ? m.distance_ratio + ':1' : '?') + '\n• Regime: ' + (m.regime || 'Unknown') + '\n• ' + (m.regime_detail || '') + '\n• Sandwich: $' + ((m.sandwich && m.sandwich.width_usd) ? m.sandwich.width_usd.toLocaleString() : '?') + '\n• Asymmetry: ' + (m.asymmetry_ratio != null ? (m.asymmetry_ratio * 100).toFixed(0) + '% above' : '?') + '\n\nLeveraged clusters act as price attractors — overhead = short squeeze fuel, downside = long squeeze fuel.' : 'Liquidation magnets show where leveraged positions cluster. Closer magnets = stronger pull. No cluster data currently available — run parse_heatmap.py with vision analysis output.');
+      nar('nar-magnets', mp2.length ? 'Liquidation clusters:\n• Overhead: $' + Number(ab?.price || 0).toLocaleString() + ' (+' + (ab?.distance_pct || '?') + '%)\n• Downside: $' + Number(bl?.price || 0).toLocaleString() + ' (' + (bl?.distance_pct || '?') + '%)\n• Distance ratio: ' + (m.distance_ratio != null ? m.distance_ratio + ':1' : '?') + '\n• Regime: ' + (m.regime || 'Unknown') + '\n• ' + (m.regime_detail || '') + '\n• Sandwich: $' + ((m.sandwich && m.sandwich.width_usd) ? m.sandwich.width_usd.toLocaleString() : '?') + '\n• Asymmetry: ' + (m.asymmetry_ratio != null ? (m.asymmetry_ratio * 100).toFixed(0) + '% above' : '?') + '\n\nLeveraged clusters show where forced liquidations are concentrated.' : 'Liquidation clusters show where leveraged positions are concentrated. No cluster data currently available.');
     }
     if (structural.sr_bands) {
       var b = structural.sr_bands;
@@ -3110,12 +3102,12 @@ function populateCardNarratives(gate, regime, macro, structural, derivatives, cy
     if (derivatives.long_short_ratio && !isNaN(derivatives.long_short_ratio)) {
       dp.push('L/S ratio ' + fmt(derivatives.long_short_ratio, 2));
     }
-    nar('nar-deriv', dp.length ? dp.join(' | ') + ' — perp market positioning' : 'Funding data loading.');
+    nar('nar-deriv', dp.length ? dp.join(' | ') + ' — Futures market data.' : 'Funding data loading.');
 
     if (derivatives.oi_trend || derivatives.oi_change_24h !== undefined) {
       var oiText = derivatives.oi_trend || 'stable';
       if (derivatives.oi_change_24h !== null && !isNaN(derivatives.oi_change_24h)) oiText += ' (' + (derivatives.oi_change_24h >= 0 ? '+' : '') + fmt(derivatives.oi_change_24h, 1) + '%)';
-      nar('nar-oi', 'OI trend: ' + oiText + '. Aggregate futures positioning indicator.');
+      nar('nar-oi', 'OI trend: ' + oiText + '. Shows whether new money is entering the futures market.');
     }
   }
 
@@ -3129,7 +3121,7 @@ function populateCardNarratives(gate, regime, macro, structural, derivatives, cy
       cp.push('SOPR: ' + fmt(cycle.sopr, 4));
     }
     if (cycle.composite_score !== null) cp.push('score: ' + cycle.composite_score + '/100');
-    nar('nar-onchain', cp.length ? cp.join(' | ') + ' — long-term cycle positioning' : 'On-chain data loading.');
+    nar('nar-onchain', cp.length ? cp.join(' | ') + ' — Bitcoin\'s long-term valuation health.' : 'On-chain data loading.');
 
     if (cycle.distribution && cycle.distribution.tiers && cycle.distribution.tiers.length) {
       nar('nar-dist', cycle.distribution.tiers.length + ' holder tiers tracked. ' + (cycle.distribution.total_addresses ? cycle.distribution.total_addresses.toLocaleString() + ' total addresses.' : '') + ' Whale and retail distribution analysis.');
@@ -3159,8 +3151,8 @@ function populateCardNarratives(gate, regime, macro, structural, derivatives, cy
     // BB
     if (sup.bb_width) {
       var bw = sup.bb_width;
-      var bwLabel = bw < 5 ? 'Squeeze active — breakout likely' : 'Normal width';
-      nar('nar-bb', 'BB width: ' + fmt(bw, 2) + '% — ' + bwLabel + '. Volatility compression indicator.');
+      var bwLabel = bw < 5 ? 'Volatility is compressed — a larger price move may follow' : 'Normal width';
+      nar('nar-bb', 'BB width: ' + fmt(bw, 2) + '% — ' + bwLabel + '.');
     }
 
     // Options
@@ -3170,7 +3162,7 @@ function populateCardNarratives(gate, regime, macro, structural, derivatives, cy
       if (os.put_call_ratio) op.push('P/C: ' + fmt(os.put_call_ratio, 3));
       if (os.skew_25d) op.push('25D skew: ' + fmt(os.skew_25d, 2));
       if (os.iv_30d) op.push('IV 30D: ' + fmt(os.iv_30d, 2) + '%');
-      nar('nar-options', op.length ? op.join(' | ') + ' — derivatives sentiment overlay' : 'Options data loading.');
+      nar('nar-options', op.length ? op.join(' | ') + ' — Options market data.' : 'Options data loading.');
     }
   }
 }
@@ -3241,7 +3233,28 @@ const METRIC_TOOLTIPS = {
   'US Tech Stocks': 'Tracks the performance of major US technology stocks, which often influence Bitcoin\'s price.',
   'Quantum Threats': 'Monitors news regarding quantum computing breakthroughs that could theoretically threaten Bitcoin\'s security.',
   'Geopolitical Risk': 'Scans for global events, regulations, or conflicts that could impact cryptocurrency markets.',
-  'Warmup Progress': 'The system needs 96 intervals of data (24 hours) to fully calibrate its tracking models. 96/96 means it is fully ready.'
+  'Warmup Progress': 'The system needs 96 intervals of data (24 hours) to fully calibrate its tracking models. 96/96 means it is fully ready.',
+  // Block 3-4 Metric Tooltips
+  'Index': 'A score from 0-100 measuring crowd emotion. Low = fear (panic selling), High = greed (FOMO buying).',
+  'Premium': 'The price difference between Coinbase (US) and global exchanges. Positive = strong US buying interest.',
+  'Observation': 'Whether US institutional buyers are currently active or quiet based on price differences.',
+  'Ratio': 'Proportion of large transactions vs small ones. Higher = whales are more active.',
+  'Status': 'Current state of this metric or monitor.',
+  'As Of': 'The date this report data was last published.',
+  'Lev Funds': 'Leveraged Funds — hedge funds and money managers using borrowed money to trade.',
+  'Commercials': 'Commercial traders — companies that deal in Bitcoin for business purposes.',
+  'Total OI': 'Total open interest (active contracts) in Bitcoin options on Deribit.',
+  'Call/Put OI': 'Calls = bets price goes up. Puts = bets price goes down. Shows the balance.',
+  'PCR (OI)': 'Put/Call Ratio by open interest. Above 1.0 = more downside bets than upside bets.',
+  'PCR (Vol)': 'Put/Call Ratio by trading volume. Measures the flow of new bets.',
+  'Notional': 'Total dollar value of all open options contracts.',
+  'Pattern': 'The chart shape currently forming in price action (e.g., triangle, channel).',
+  'Observed Direction': 'The direction this pattern historically tends to resolve toward.',
+  'Confidence': 'How well the current price action matches the detected pattern (0-100).',
+  'Timeframe': 'The time interval this pattern was detected on (e.g., 1h, 4h, 1d).',
+  'State': 'Current phase of the pattern: forming, confirmed, or invalidated.',
+  'Cycle Score': 'Composite of MVRV, SOPR, Puell on 0-100 scale.',
+  'Score': 'Overall composite score for this metric.'
 };
 
 // Card-to-glossary mapping for "Learn more" links
