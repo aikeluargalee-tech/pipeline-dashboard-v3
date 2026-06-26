@@ -16,17 +16,17 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="Live Bitcoin monitoring: Gate0 status, funding rates, liquidation clusters, on-chain cycle metrics, and derivatives data. Updated every 15 minutes.">
 <meta property="og:site_name" content="BTC Pipeline">
-<meta property="og:updated_time" id="og-updated" content="2026-06-26T04:30:20+00:00">
+<meta property="og:updated_time" id="og-updated" content="2026-06-26T06:12:28+00:00">
 <!-- Google AI Overviews freshness signals -->
 <meta property="article:published_time" content="2024-01-01T00:00:00Z">
-<meta property="article:modified_time" id="article-modified" content="2026-06-26T04:30:20+00:00">
+<meta property="article:modified_time" id="article-modified" content="2026-06-26T06:12:28+00:00">
 <!-- Dublin Core — Perplexity respects these -->
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
 <meta name="DC.title" content="BTC Pipeline Dashboard">
 <meta name="DC.type" content="Dataset">
 <meta name="DC.format" content="text/html">
 <meta name="DC.language" content="en">
-<meta name="DC.date" id="dc-date" content="2026-06-26T04:30:20+00:00">
+<meta name="DC.date" id="dc-date" content="2026-06-26T06:12:28+00:00">
 <!-- Schema.org Dataset markup for AI engines -->
 <script type="application/ld+json" id="schema-dataset">
 {
@@ -39,7 +39,7 @@
   "measurementTechnique": "Automated JSON data pipeline, 15-minute refresh cadence via cron-scheduled collection",
   "creator": { "@type": "Organization", "name": "BTC Pipeline" },
   "license": "https://creativecommons.org/licenses/by/4.0/",
-  "dateModified": "2026-06-26T04:30:20+00:00",
+  "dateModified": "2026-06-26T06:12:28+00:00",
   "distribution": [
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/gate0.json", "name": "Gate0 Signal Data" },
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/macro.json", "name": "Macro Indicator Data" },
@@ -172,21 +172,22 @@
 <main id="dashboard" role="main" aria-label="BTC Pipeline Dashboard — Real-time quantitative market intelligence">
 
 
-<div class="header">
+<div class="header" style="justify-content: center; text-align: center;">
   <div>
     <h1>⚡ Pipeline Dashboard</h1>
-    <p class="dashboard-summary" style="font-size:0.88em;color:var(--muted);line-height:1.5;max-width:650px;margin-top:4px">
-      A real-time Bitcoin dashboard that checks if market conditions are safe, stable, or risky — updated every 15 minutes.
+    <p class="dashboard-summary" style="font-size:0.88em;color:var(--muted);line-height:1.5;max-width:650px;margin-top:4px; margin-left: auto; margin-right: auto;">
+      A real-time Bitcoin data aggregator tracking macroeconomic indicators, derivative positioning, and on-chain metrics — providing an objective, raw view of market conditions updated every 15 minutes.
     </p>
     <div class="meta" id="meta">Loading...</div>
   </div>
-  <div style="text-align:right">
-    <span class="btc-price" id="btc-price">$59,979</span>
-    <span class="btc-change" id="btc-change"></span>
-    <div class="meta" id="btc-range">Loading...</div>
-  </div>
 </div>
 
+<!-- BTC Price -->
+<div style="text-align:center; margin-bottom: 20px;">
+  <span class="btc-price" id="btc-price" style="font-size: 2em; font-weight: 800; color: var(--cyan); text-shadow: 0 0 20px rgba(34, 211, 238, 0.3);">$59,979</span>
+  <span class="btc-change" id="btc-change" style="font-size: 1em; font-weight: 600; margin-left: 10px;"></span>
+  <div class="meta" id="btc-range" style="color: var(--muted); font-size: 0.85em; margin-top: 6px;">Loading...</div>
+</div>
 
 <!-- Trading Session Clocks -->
 <div class="session-clocks" id="session-clocks">
@@ -198,39 +199,6 @@
   <div class="clock-item" id="clock-tokyo"><span class="clock-city">Tokyo</span><span class="clock-time">--:--</span></div>
 </div>
 
-<!-- System Overview Grid -->
-<div class="system-overview-container">
-  <div class="system-overview-grid">
-    <!-- Gate 0 Verdict -->
-    <a href="#card-gate0" style="text-decoration: none; color: inherit;">
-      <div class="card" id="so-gate0" style="margin: 0; padding: 12px 16px; border-left: 3px solid var(--border);">
-        <div style="font-size: 0.72em; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; font-weight: 700;">🚦 Gate 0 Verdict</div>
-        <div id="so-gate0-val" style="font-size: 1.25em; font-weight: 800; margin-top: 6px;">Loading...</div>
-      </div>
-    </a>
-    <!-- AMT Status -->
-    <a href="#card-amt" style="text-decoration: none; color: inherit;">
-      <div class="card" id="so-amt" style="margin: 0; padding: 12px 16px; border-left: 3px solid var(--border);">
-        <div style="font-size: 0.72em; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; font-weight: 700;">📡 AMT Warmup</div>
-        <div id="so-amt-val" style="font-size: 1.25em; font-weight: 800; margin-top: 6px;">Loading...</div>
-      </div>
-    </a>
-    <!-- SIGMA Conviction -->
-    <a href="#card-sigma" style="text-decoration: none; color: inherit;">
-      <div class="card" id="so-sigma" style="margin: 0; padding: 12px 16px; border-left: 3px solid var(--border);">
-        <div style="font-size: 0.72em; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; font-weight: 700;">⚡ SIGMA Conviction</div>
-        <div id="so-sigma-val" style="font-size: 1.25em; font-weight: 800; margin-top: 6px;">Loading...</div>
-      </div>
-    </a>
-    <!-- TRP Status -->
-    <a href="#card-trp" style="text-decoration: none; color: inherit;">
-      <div class="card" id="so-trp" style="margin: 0; padding: 12px 16px; border-left: 3px solid var(--border);">
-        <div style="font-size: 0.72em; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; font-weight: 700;">📰 TRP Signals</div>
-        <div id="so-trp-val" style="font-size: 1.25em; font-weight: 800; margin-top: 6px;">Loading...</div>
-      </div>
-    </a>
-  </div>
-</div>
 
 <!-- ─── Market Context (top priority — drives all strategy logic) ── -->
 <div class="layer" style="margin-top:24px">
@@ -319,7 +287,7 @@
 <div class="regime-summary" id="regime-card">
   <div class="regime-title">⚡ TRADE CONVICTION</div>
   <div class="regime-verdict" id="regime-verdict">CAUTIOUS NEUTRAL</div>
-  <div class="regime-detail" id="regime-detail">Tightened rules active. 0 bullish / 0 bearish signals. | TA: Price 14.7% below MA50 — medium-term structure bearish</div>
+  <div class="regime-detail" id="regime-detail">Tightened rules active. 1 bullish / 0 bearish signals. | TA: Price 15.0% below MA50 — medium-term structure bearish</div>
   <div class="regime-layers" id="regime-layers"></div>
   <div class="card-narrative" id="nar-regime" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
 </div>
