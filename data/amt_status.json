@@ -1,30 +1,30 @@
 {
   "warmup_progress": "96/96",
   "1d_layer": "online",
-  "current_price": 59662.0,
+  "current_price": 59842.0,
   "latest_signal": {
     "type": "Whale Pivot",
-    "timestamp": "2026-06-26T09:48:03.211603+00:00",
-    "summary": "Whale Pivot LONG at $59,953"
+    "timestamp": "2026-06-26T10:17:09.360073+00:00",
+    "summary": "Whale Pivot SHORT at $59,842"
   },
   "last_whale_pivot": {
-    "direction": "LONG",
-    "price": 59953.0,
-    "timestamp": "2026-06-26T09:48:03.211603+00:00",
-    "conviction": 1.0,
+    "direction": "SHORT",
+    "price": 59842.0,
+    "timestamp": "2026-06-26T10:17:09.360073+00:00",
+    "conviction": 0.75,
     "checklist": {
       "at_key_level": true,
       "absorption_detected": true,
-      "aggression_opposing": true,
+      "aggression_opposing": false,
       "delta_confirms": true
     },
     "balance_state": "DEVELOPING_BALANCE",
-    "age": "28m ago",
-    "distance": "-0.5% ($291)",
-    "distance_pct": -0.49,
-    "current_price": 59662.0,
-    "validity": "invalidated",
-    "validity_reason": "Price dropped below pivot (59,953)",
+    "age": "6m ago",
+    "distance": "+0.0% ($0)",
+    "distance_pct": 0.0,
+    "current_price": 59842.0,
+    "validity": "fresh",
+    "validity_reason": "Pivot just fired \u2014 watching for follow-through",
     "checklist_details": [
       {
         "label": "At Key Level",
@@ -36,14 +36,14 @@
       },
       {
         "label": "Aggression Opposing",
-        "passed": true
+        "passed": false
       },
       {
         "label": "Delta Confirms",
         "passed": true
       }
     ],
-    "checklist_score": "4/4"
+    "checklist_score": "3/4"
   },
-  "timestamp": "2026-06-26 10:16 UTC"
+  "timestamp": "2026-06-26 10:23 UTC"
 }

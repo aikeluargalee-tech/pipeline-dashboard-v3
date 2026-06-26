@@ -635,54 +635,21 @@ body.simple-mode #ta-section {
 .footer { margin-top: 36px; padding-top: 14px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.72em; text-align: center; letter-spacing: 0.02em; }
 
 /* Regime Summary Card — Command Center RADICAL */
+/* Regime Summary Card — Clean card with standard border and transparent background */
 .regime-summary {
-  background: rgba(10, 15, 28, 0.6);
-  backdrop-filter: blur(32px) saturate(200%);
-  -webkit-backdrop-filter: blur(32px) saturate(200%);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-right-color: rgba(255, 255, 255, 0.05);
-  border-bottom-color: rgba(255, 255, 255, 0.05);
-  border-radius: 24px;
-  padding: 28px;
-  margin: 28px 0;
+  background: rgba(255, 255, 255, 0.015);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin: 20px 0;
   text-align: center;
   position: relative;
   overflow: hidden;
   z-index: 1;
-  box-shadow:
-    0 16px 60px -5px rgba(0, 0, 0, 0.8),
-    0 0 100px -10px rgba(59, 130, 246, 0.2),
-    inset 0 1px 2px rgba(255,255,255,0.15);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.02);
   animation: fadeIn 0.5s ease forwards;
-}
-/* Animated rotating gradient border via oversized rotating square */
-.regime-summary::before {
-  content: '';
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 200%; height: 200%;
-  transform: translate(-50%, -50%);
-  background: conic-gradient(
-    from 0deg,
-    #22d3ee 0deg, #3b82f6 60deg, #8b5cf6 120deg, #ec4899 180deg,
-    #10b981 240deg, #22d3ee 300deg, #3b82f6 360deg
-  );
-  z-index: -2;
-}
-@keyframes regimeRotate {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to { transform: translate(-50%, -50%) rotate(360deg); }
-}
-/* Inner mask (adjusted for glass effect) */
-.regime-summary::after {
-  content: '';
-  position: absolute;
-  inset: 2px;
-  border-radius: 22px;
-  background: rgba(10, 15, 28, 0.4);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  z-index: -1;
 }
 @keyframes regimeGlow {
   0% {
