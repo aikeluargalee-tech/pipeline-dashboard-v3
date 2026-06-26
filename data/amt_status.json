@@ -1,34 +1,34 @@
 {
   "warmup_progress": "96/96",
   "1d_layer": "online",
-  "current_price": 60400.0,
+  "current_price": 60248.0,
   "latest_signal": {
     "type": "Whale Pivot",
-    "timestamp": "2026-06-26T06:17:55.388440+00:00",
-    "summary": "Whale Pivot LONG at $59,774"
+    "timestamp": "2026-06-26T08:02:58.950106+00:00",
+    "summary": "Whale Pivot LONG at $60,408"
   },
   "last_whale_pivot": {
     "direction": "LONG",
-    "price": 59774.0,
-    "timestamp": "2026-06-26T06:17:55.388440+00:00",
-    "conviction": 1.0,
+    "price": 60408.0,
+    "timestamp": "2026-06-26T08:02:58.950106+00:00",
+    "conviction": 0.75,
     "checklist": {
-      "at_key_level": true,
+      "at_key_level": false,
       "absorption_detected": true,
       "aggression_opposing": true,
       "delta_confirms": true
     },
     "balance_state": "DEVELOPING_BALANCE",
-    "age": "33m ago",
-    "distance": "+1.0% ($626)",
-    "distance_pct": 1.05,
-    "current_price": 60400.0,
-    "validity": "monitoring",
-    "validity_reason": "Pivot triggered 33m ago, awaiting confirmation",
+    "age": "36m ago",
+    "distance": "-0.3% ($160)",
+    "distance_pct": -0.26,
+    "current_price": 60248.0,
+    "validity": "invalidated",
+    "validity_reason": "Price dropped below pivot (60,408)",
     "checklist_details": [
       {
         "label": "At Key Level",
-        "passed": true
+        "passed": false
       },
       {
         "label": "Absorption",
@@ -43,7 +43,7 @@
         "passed": true
       }
     ],
-    "checklist_score": "4/4"
+    "checklist_score": "3/4"
   },
-  "timestamp": "2026-06-26 06:51 UTC"
+  "timestamp": "2026-06-26 08:39 UTC"
 }

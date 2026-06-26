@@ -16,17 +16,17 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="Live Bitcoin monitoring: Gate0 status, funding rates, liquidation clusters, on-chain cycle metrics, and derivatives data. Updated every 15 minutes.">
 <meta property="og:site_name" content="BTC Pipeline">
-<meta property="og:updated_time" id="og-updated" content="2026-06-26T06:51:36+00:00">
+<meta property="og:updated_time" id="og-updated" content="2026-06-26T08:39:30+00:00">
 <!-- Google AI Overviews freshness signals -->
 <meta property="article:published_time" content="2024-01-01T00:00:00Z">
-<meta property="article:modified_time" id="article-modified" content="2026-06-26T06:51:36+00:00">
+<meta property="article:modified_time" id="article-modified" content="2026-06-26T08:39:30+00:00">
 <!-- Dublin Core — Perplexity respects these -->
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
 <meta name="DC.title" content="BTC Pipeline Dashboard">
 <meta name="DC.type" content="Dataset">
 <meta name="DC.format" content="text/html">
 <meta name="DC.language" content="en">
-<meta name="DC.date" id="dc-date" content="2026-06-26T06:51:36+00:00">
+<meta name="DC.date" id="dc-date" content="2026-06-26T08:39:30+00:00">
 <!-- Schema.org Dataset markup for AI engines -->
 <script type="application/ld+json" id="schema-dataset">
 {
@@ -39,7 +39,7 @@
   "measurementTechnique": "Automated JSON data pipeline, 15-minute refresh cadence via cron-scheduled collection",
   "creator": { "@type": "Organization", "name": "BTC Pipeline" },
   "license": "https://creativecommons.org/licenses/by/4.0/",
-  "dateModified": "2026-06-26T06:51:37+00:00",
+  "dateModified": "2026-06-26T08:39:31+00:00",
   "distribution": [
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/gate0.json", "name": "Gate0 Signal Data" },
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/macro.json", "name": "Macro Indicator Data" },
@@ -203,133 +203,135 @@
 <hr style="border: 0; border-top: 1px solid var(--border); margin: 24px 0;">
 
 <!-- ─── Market Context (top priority — drives all strategy logic) ── -->
-<div class="layer" style="margin-top:24px">
-  <div class="layer-header">
-    <span class="layer-num" style="background:var(--yellow)">🔄</span>
-    <h2 class="layer-title">Market Context</h2>
-    <span class="layer-subtitle">Market regime detection — classifies conditions, activates strategy</span>
-  </div>
-  <div class="layer-grid">
-    <div class="card" id="card-regime-switch" style="border-left: 3px solid var(--yellow); grid-column: 1 / -1;">
-      <h3 class="card-title">🔄 Current Market State</h3>
-      <div id="regime-switch-content"><p style="font-size:0.8em;color:var(--muted)">Detecting market regime from live signals — DISTRIBUTION / RISK_OFF / CASCADE / TRENDING / RANGING / UNCERTAIN</p></div>
-      
-      <!-- Static Beginner & AEO Guide -->
-      <details style="margin-top: 16px; border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 12px; background: rgba(255,255,255,0.01); text-align: left;">
-        <summary style="font-size: 0.82em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 6px; user-select: none;">
-          <span>📖</span> How are Market States derived and what do they mean?
-        </summary>
-        <div style="margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; display: flex; flex-direction: column; gap: 14px; font-size: 0.78em; line-height: 1.5; color: var(--muted);">
-          <div>
-            <h4 style="color: var(--text); font-size: 0.9em; margin-bottom: 6px; font-weight: 600;">The Six Market States Explained</h4>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 8px 16px;">
-              <div><strong>📈 TRENDING:</strong> Price is moving consistently in one direction (up or down) with strong momentum.</div>
-              <div><strong>🔄 RANGING:</strong> Price is consolidating, fluctuating within a stable horizontal range.</div>
-              <div><strong>💥 CASCADE:</strong> Sudden high-speed liquidation sweeps causing rapid, high-volatility price swings.</div>
-              <div><strong>🛡️ RISK_OFF:</strong> Panic in traditional equity markets causing capital flight out of high-risk assets like BTC.</div>
-              <div><strong>📥 DISTRIBUTION:</strong> Selling pressure near local cycle tops, representing a transitional top-out phase.</div>
-              <div><strong>❓ UNCERTAIN:</strong> Conflicting data indicators, indicating no clear trend direction.</div>
+<div class="market-context-container" style="background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 24px; padding: 24px; margin-top: 24px; margin-bottom: 32px; box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);">
+  <div class="layer" style="margin-top:0">
+    <div class="layer-header">
+      <span class="layer-num" style="background:var(--yellow)">🔄</span>
+      <h2 class="layer-title">Market Context</h2>
+      <span class="layer-subtitle">Market regime detection — classifies conditions, activates strategy</span>
+    </div>
+    <div class="layer-grid">
+      <div class="card" id="card-regime-switch" style="border-left: 3px solid var(--yellow); grid-column: 1 / -1;">
+        <h3 class="card-title">🔄 Current Market State</h3>
+        <div id="regime-switch-content"><p style="font-size:0.8em;color:var(--muted)">Detecting market regime from live signals — DISTRIBUTION / RISK_OFF / CASCADE / TRENDING / RANGING / UNCERTAIN</p></div>
+        
+        <!-- Static Beginner & AEO Guide -->
+        <details style="margin-top: 16px; border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 12px; background: rgba(255,255,255,0.01); text-align: left;">
+          <summary style="font-size: 0.82em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 6px; user-select: none;">
+            <span>📖</span> How are Market States derived and what do they mean?
+          </summary>
+          <div style="margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; display: flex; flex-direction: column; gap: 14px; font-size: 0.78em; line-height: 1.5; color: var(--muted);">
+            <div>
+              <h4 style="color: var(--text); font-size: 0.9em; margin-bottom: 6px; font-weight: 600;">The Six Market States Explained</h4>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 8px 16px;">
+                <div><strong>📈 TRENDING:</strong> Price is moving consistently in one direction (up or down) with strong momentum.</div>
+                <div><strong>🔄 RANGING:</strong> Price is consolidating, fluctuating within a stable horizontal range.</div>
+                <div><strong>💥 CASCADE:</strong> Sudden high-speed liquidation sweeps causing rapid, high-volatility price swings.</div>
+                <div><strong>🛡️ RISK_OFF:</strong> Panic in traditional equity markets causing capital flight out of high-risk assets like BTC.</div>
+                <div><strong>📥 DISTRIBUTION:</strong> Selling pressure near local cycle tops, representing a transitional top-out phase.</div>
+                <div><strong>❓ UNCERTAIN:</strong> Conflicting data indicators, indicating no clear trend direction.</div>
+              </div>
+            </div>
+            <div>
+              <h4 style="color: var(--text); font-size: 0.9em; margin-bottom: 6px; font-weight: 600;">How the State is Mathematically Derived</h4>
+              <p style="margin-bottom: 8px;">Every 15 minutes, the automated pipeline computes these four objective quantitative inputs to classify the market state without human bias:</p>
+              <ol style="margin-left: 16px; display: flex; flex-direction: column; gap: 4px;">
+                <li><strong>Trend Filter (MA50):</strong> Measures current price deviations against the 50-period moving average.</li>
+                <li><strong>Volatility Expansion (ATR):</strong> Uses Average True Range to detect expansion (trending) or compression (ranging).</li>
+                <li><strong>Leverage Sweeps:</strong> Scans perpetual futures Open Interest (OI) and CVD to capture liquidation liquidities.</li>
+                <li><strong>Systemic TradFi Spreads:</strong> Monitors VIX (stock volatility index) and DXY (dollar strength) to spot macro panics.</li>
+              </ol>
             </div>
           </div>
-          <div>
-            <h4 style="color: var(--text); font-size: 0.9em; margin-bottom: 6px; font-weight: 600;">How the State is Mathematically Derived</h4>
-            <p style="margin-bottom: 8px;">Every 15 minutes, the automated pipeline computes these four objective quantitative inputs to classify the market state without human bias:</p>
-            <ol style="margin-left: 16px; display: flex; flex-direction: column; gap: 4px;">
-              <li><strong>Trend Filter (MA50):</strong> Measures current price deviations against the 50-period moving average.</li>
-              <li><strong>Volatility Expansion (ATR):</strong> Uses Average True Range to detect expansion (trending) or compression (ranging).</li>
-              <li><strong>Leverage Sweeps:</strong> Scans perpetual futures Open Interest (OI) and CVD to capture liquidation liquidities.</li>
-              <li><strong>Systemic TradFi Spreads:</strong> Monitors VIX (stock volatility index) and DXY (dollar strength) to spot macro panics.</li>
-            </ol>
+        </details>
+      </div>
+    </div>
+    <!-- Playbook Status Cards — 2 rows × 3 columns -->
+    <div class="playbook-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px">
+      <div class="card" id="card-pb-turtle" style="border-left: 3px solid var(--green)">
+        <h3 class="card-title">🐢 Turtle Breakout <span style="font-size:0.7em;color:var(--muted)">TRENDING</span></h3>
+        <div id="pb-turtle-content"><p style="font-size:0.75em;color:var(--muted)">Donchian 20H breakout — idle</p></div>
+        <!-- Static Playbook Guide -->
+        <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
+          <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
+            <span>📖</span> Playbook Guide
+          </summary>
+          <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
+            <div><strong>Purpose:</strong> Identifies long-term trends by tracking price breakouts.</div>
+            <div><strong>Activation:</strong> Triggers when Market State is `TRENDING` and price crosses the 20-hour high or low boundary.</div>
           </div>
-        </div>
-      </details>
-    </div>
-  </div>
-  <!-- Playbook Status Cards — 2 rows × 3 columns -->
-  <div class="playbook-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px">
-    <div class="card" id="card-pb-turtle" style="border-left: 3px solid var(--green)">
-      <h3 class="card-title">🐢 Turtle Breakout <span style="font-size:0.7em;color:var(--muted)">TRENDING</span></h3>
-      <div id="pb-turtle-content"><p style="font-size:0.75em;color:var(--muted)">Donchian 20H breakout — idle</p></div>
-      <!-- Static Playbook Guide -->
-      <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
-        <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
-          <span>📖</span> Playbook Guide
-        </summary>
-        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
-          <div><strong>Purpose:</strong> Identifies long-term trends by tracking price breakouts.</div>
-          <div><strong>Activation:</strong> Triggers when Market State is `TRENDING` and price crosses the 20-hour high or low boundary.</div>
-        </div>
-      </details>
-    </div>
-    <div class="card" id="card-pb-meanrev" style="border-left: 3px solid var(--blue)">
-      <h3 class="card-title">📉 Mean Reversion <span style="font-size:0.7em;color:var(--muted)">RANGING</span></h3>
-      <div id="pb-meanrev-content"><p style="font-size:0.75em;color:var(--muted)">RSI/BB reversion — idle</p></div>
-      <!-- Static Playbook Guide -->
-      <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
-        <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
-          <span>📖</span> Playbook Guide
-        </summary>
-        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
-          <div><strong>Purpose:</strong> Identifies price exhaustion to catch bounces in sideways markets.</div>
-          <div><strong>Activation:</strong> Triggers when Market State is `RANGING` and price touches outer limits of volatility bands (Bollinger/RSI).</div>
-        </div>
-      </details>
-    </div>
-    <div class="card" id="card-pb-liqmo" style="border-left: 3px solid var(--orange)">
-      <h3 class="card-title">💧 Liq Momentum <span style="font-size:0.7em;color:var(--muted)">CASCADE</span></h3>
-      <div id="pb-liqmo-content"><p style="font-size:0.75em;color:var(--muted)">OI decline + taker weakness — idle</p></div>
-      <!-- Static Playbook Guide -->
-      <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
-        <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
-          <span>📖</span> Playbook Guide
-        </summary>
-        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
-          <div><strong>Purpose:</strong> Captures rapid price moves driven by futures contract forced liquidations.</div>
-          <div><strong>Activation:</strong> Triggers when Market State is in a highly volatile `CASCADE` and leverage (Open Interest) declines rapidly.</div>
-        </div>
-      </details>
-    </div>
-    <div class="card" id="card-pb-fundmr" style="border-left: 3px solid var(--blue)">
-      <h3 class="card-title">💰 Funding Rate MR <span style="font-size:0.7em;color:var(--muted)">RANGING</span></h3>
-      <div id="pb-fundmr-content"><p style="font-size:0.75em;color:var(--muted)">0.01% hysteresis gate — idle</p></div>
-      <!-- Static Playbook Guide -->
-      <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
-        <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
-          <span>📖</span> Playbook Guide
-        </summary>
-        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
-          <div><strong>Purpose:</strong> Captures price reversals at futures leverage funding cost extremes.</div>
-          <div><strong>Activation:</strong> Triggers when Market State is `RANGING` and the annualized funding rate exceeds +/- 1.0%.</div>
-        </div>
-      </details>
-    </div>
-    <div class="card" id="card-pb-volbrk" style="border-left: 3px solid var(--green)">
-      <h3 class="card-title">📊 Volume Breakout <span style="font-size:0.7em;color:var(--muted)">TRENDING</span></h3>
-      <div id="pb-volbrk-content"><p style="font-size:0.75em;color:var(--muted)">Volume surge + CVD — idle</p></div>
-      <!-- Static Playbook Guide -->
-      <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
-        <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
-          <span>📖</span> Playbook Guide
-        </summary>
-        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
-          <div><strong>Purpose:</strong> Tracks heavy buying or selling volume spikes breaking out of consolidation.</div>
-          <div><strong>Activation:</strong> Triggers when Market State is `TRENDING` and trading volume/CVD spikes significantly above average.</div>
-        </div>
-      </details>
-    </div>
-    <div class="card" id="card-pb-macro" style="border-left: 3px solid var(--red)">
-      <h3 class="card-title">🌐 Cross-Asset Macro <span style="font-size:0.7em;color:var(--muted)">DISTR/RISK_OFF</span></h3>
-      <div id="pb-macro-content"><p style="font-size:0.75em;color:var(--muted)">DXY/VIX/SPY defense — idle</p></div>
-      <!-- Static Playbook Guide -->
-      <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
-        <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
-          <span>📖</span> Playbook Guide
-        </summary>
-        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
-          <div><strong>Purpose:</strong> Defensive model reacting to stocks, volatility, and US dollar indices.</div>
-          <div><strong>Activation:</strong> Triggers when Market State is `RISK_OFF` or `DISTRIBUTION` and TradFi market stress (VIX/DXY) is elevated.</div>
-        </div>
-      </details>
+        </details>
+      </div>
+      <div class="card" id="card-pb-meanrev" style="border-left: 3px solid var(--blue)">
+        <h3 class="card-title">📉 Mean Reversion <span style="font-size:0.7em;color:var(--muted)">RANGING</span></h3>
+        <div id="pb-meanrev-content"><p style="font-size:0.75em;color:var(--muted)">RSI/BB reversion — idle</p></div>
+        <!-- Static Playbook Guide -->
+        <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
+          <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
+            <span>📖</span> Playbook Guide
+          </summary>
+          <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
+            <div><strong>Purpose:</strong> Identifies price exhaustion to catch bounces in sideways markets.</div>
+            <div><strong>Activation:</strong> Triggers when Market State is `RANGING` and price touches outer limits of volatility bands (Bollinger/RSI).</div>
+          </div>
+        </details>
+      </div>
+      <div class="card" id="card-pb-liqmo" style="border-left: 3px solid var(--orange)">
+        <h3 class="card-title">💧 Liq Momentum <span style="font-size:0.7em;color:var(--muted)">CASCADE</span></h3>
+        <div id="pb-liqmo-content"><p style="font-size:0.75em;color:var(--muted)">OI decline + taker weakness — idle</p></div>
+        <!-- Static Playbook Guide -->
+        <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
+          <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
+            <span>📖</span> Playbook Guide
+          </summary>
+          <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
+            <div><strong>Purpose:</strong> Captures rapid price moves driven by futures contract forced liquidations.</div>
+            <div><strong>Activation:</strong> Triggers when Market State is in a highly volatile `CASCADE` and leverage (Open Interest) declines rapidly.</div>
+          </div>
+        </details>
+      </div>
+      <div class="card" id="card-pb-fundmr" style="border-left: 3px solid var(--blue)">
+        <h3 class="card-title">💰 Funding Rate MR <span style="font-size:0.7em;color:var(--muted)">RANGING</span></h3>
+        <div id="pb-fundmr-content"><p style="font-size:0.75em;color:var(--muted)">0.01% hysteresis gate — idle</p></div>
+        <!-- Static Playbook Guide -->
+        <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
+          <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
+            <span>📖</span> Playbook Guide
+          </summary>
+          <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
+            <div><strong>Purpose:</strong> Captures price reversals at futures leverage funding cost extremes.</div>
+            <div><strong>Activation:</strong> Triggers when Market State is `RANGING` and the annualized funding rate exceeds +/- 1.0%.</div>
+          </div>
+        </details>
+      </div>
+      <div class="card" id="card-pb-volbrk" style="border-left: 3px solid var(--green)">
+        <h3 class="card-title">📊 Volume Breakout <span style="font-size:0.7em;color:var(--muted)">TRENDING</span></h3>
+        <div id="pb-volbrk-content"><p style="font-size:0.75em;color:var(--muted)">Volume surge + CVD — idle</p></div>
+        <!-- Static Playbook Guide -->
+        <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
+          <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
+            <span>📖</span> Playbook Guide
+          </summary>
+          <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
+            <div><strong>Purpose:</strong> Tracks heavy buying or selling volume spikes breaking out of consolidation.</div>
+            <div><strong>Activation:</strong> Triggers when Market State is `TRENDING` and trading volume/CVD spikes significantly above average.</div>
+          </div>
+        </details>
+      </div>
+      <div class="card" id="card-pb-macro" style="border-left: 3px solid var(--red)">
+        <h3 class="card-title">🌐 Cross-Asset Macro <span style="font-size:0.7em;color:var(--muted)">DISTR/RISK_OFF</span></h3>
+        <div id="pb-macro-content"><p style="font-size:0.75em;color:var(--muted)">DXY/VIX/SPY defense — idle</p></div>
+        <!-- Static Playbook Guide -->
+        <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
+          <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
+            <span>📖</span> Playbook Guide
+          </summary>
+          <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
+            <div><strong>Purpose:</strong> Defensive model reacting to stocks, volatility, and US dollar indices.</div>
+            <div><strong>Activation:</strong> Triggers when Market State is `RISK_OFF` or `DISTRIBUTION` and TradFi market stress (VIX/DXY) is elevated.</div>
+          </div>
+        </details>
+      </div>
     </div>
   </div>
 </div>
@@ -379,7 +381,7 @@
 <div class="regime-summary" id="regime-card">
   <div class="regime-title">⚡ TRADE CONVICTION</div>
   <div class="regime-verdict" id="regime-verdict">CAUTIOUS NEUTRAL</div>
-  <div class="regime-detail" id="regime-detail">Tightened rules active. 1 bullish / 0 bearish signals. | TA: Price 14.2% below MA50 — medium-term structure bearish</div>
+  <div class="regime-detail" id="regime-detail">Tightened rules active. 1 bullish / 0 bearish signals. | TA: Price 14.3% below MA50 — medium-term structure bearish</div>
   <div class="regime-layers" id="regime-layers"></div>
   <div class="card-narrative" id="nar-regime" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
 </div>
