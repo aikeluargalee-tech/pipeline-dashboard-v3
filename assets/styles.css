@@ -1491,3 +1491,96 @@ body.simple-mode #ta-section {
     margin-bottom: 24px;
   }
 }
+
+/* Block Header & Badge Styling */
+.block-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.block-number-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.7em;
+  font-weight: 800;
+  letter-spacing: 1px;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+}
+.block-title {
+  font-size: 1.1em;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text);
+}
+
+/* Block Accent Color Themes */
+.block-theme-yellow {
+  background: rgba(245, 158, 11, 0.015);
+  border-color: rgba(245, 158, 11, 0.15);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4), 0 8px 32px rgba(245, 158, 11, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.03);
+}
+.block-theme-yellow .block-number-badge {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--yellow);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.block-theme-red {
+  background: rgba(244, 63, 94, 0.015);
+  border-color: rgba(244, 63, 94, 0.15);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4), 0 8px 32px rgba(244, 63, 94, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.03);
+}
+.block-theme-red .block-number-badge {
+  background: rgba(244, 63, 94, 0.1);
+  color: var(--red);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.block-theme-cyan {
+  background: rgba(34, 211, 238, 0.012);
+  border-color: rgba(34, 211, 238, 0.15);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4), 0 8px 32px rgba(34, 211, 238, 0.03), inset 0 1px 1px rgba(255, 255, 255, 0.03);
+}
+.block-theme-cyan .block-number-badge {
+  background: rgba(34, 211, 238, 0.1);
+  color: var(--cyan);
+  border: 1px solid rgba(34, 211, 238, 0.3);
+}
+
+.block-theme-purple {
+  background: rgba(139, 92, 246, 0.015);
+  border-color: rgba(139, 92, 246, 0.15);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4), 0 8px 32px rgba(139, 92, 246, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.03);
+}
+.block-theme-purple .block-number-badge {
+  background: rgba(139, 92, 246, 0.1);
+  color: var(--purple);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.block-theme-gray {
+  background: rgba(136, 136, 147, 0.012);
+  border-color: rgba(136, 136, 147, 0.12);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4), 0 8px 32px rgba(136, 136, 147, 0.02), inset 0 1px 1px rgba(255, 255, 255, 0.03);
+}
+.block-theme-gray .block-number-badge {
+  background: rgba(136, 136, 147, 0.1);
+  color: var(--muted);
+  border: 1px solid rgba(136, 136, 147, 0.25);
+}
+
+.block-theme-green {
+  background: rgba(16, 185, 129, 0.015);
+  border-color: rgba(16, 185, 129, 0.15);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4), 0 8px 32px rgba(16, 185, 129, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.03);
+}
+.block-theme-green .block-number-badge {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--green);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}

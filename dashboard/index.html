@@ -16,17 +16,17 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="Live Bitcoin monitoring: Gate0 status, funding rates, liquidation clusters, on-chain cycle metrics, and derivatives data. Updated every 15 minutes.">
 <meta property="og:site_name" content="BTC Pipeline">
-<meta property="og:updated_time" id="og-updated" content="2026-06-26T09:53:22+00:00">
+<meta property="og:updated_time" id="og-updated" content="2026-06-26T10:07:03+00:00">
 <!-- Google AI Overviews freshness signals -->
 <meta property="article:published_time" content="2024-01-01T00:00:00Z">
-<meta property="article:modified_time" id="article-modified" content="2026-06-26T09:53:22+00:00">
+<meta property="article:modified_time" id="article-modified" content="2026-06-26T10:07:03+00:00">
 <!-- Dublin Core — Perplexity respects these -->
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
 <meta name="DC.title" content="BTC Pipeline Dashboard">
 <meta name="DC.type" content="Dataset">
 <meta name="DC.format" content="text/html">
 <meta name="DC.language" content="en">
-<meta name="DC.date" id="dc-date" content="2026-06-26T09:53:22+00:00">
+<meta name="DC.date" id="dc-date" content="2026-06-26T10:07:03+00:00">
 <!-- Schema.org Dataset markup for AI engines -->
 <script type="application/ld+json" id="schema-dataset">
 {
@@ -39,7 +39,7 @@
   "measurementTechnique": "Automated JSON data pipeline, 15-minute refresh cadence via cron-scheduled collection",
   "creator": { "@type": "Organization", "name": "BTC Pipeline" },
   "license": "https://creativecommons.org/licenses/by/4.0/",
-  "dateModified": "2026-06-26T09:53:23+00:00",
+  "dateModified": "2026-06-26T10:07:04+00:00",
   "distribution": [
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/gate0.json", "name": "Gate0 Signal Data" },
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/macro.json", "name": "Macro Indicator Data" },
@@ -173,8 +173,13 @@
 
 
 
+<!-- Block 1: Global Market Header -->
+<div style="text-align: center; margin-bottom: 12px; margin-top: 20px;">
+  <span class="block-number-badge" style="background: rgba(34, 211, 238, 0.1); color: var(--cyan); border: 1px solid rgba(34, 211, 238, 0.3);">BLOCK 1</span>
+</div>
+
 <!-- BTC Price -->
-<div style="text-align:center; margin-bottom: 20px; margin-top: 20px;">
+<div style="text-align:center; margin-bottom: 20px; margin-top: 0px;">
   <span class="btc-price" id="btc-price" style="font-size: 2em; font-weight: 800; color: var(--cyan); text-shadow: 0 0 20px rgba(34, 211, 238, 0.3);">$59,979</span>
   <span class="btc-change" id="btc-change" style="font-size: 1em; font-weight: 600; margin-left: 10px;"></span>
   <div class="meta" id="btc-range" style="color: var(--muted); font-size: 0.85em; margin-top: 6px;">Loading...</div>
@@ -203,7 +208,11 @@
 <hr style="border: 0; border-top: 1px solid var(--border); margin: 24px 0;">
 
 <!-- ─── Market Context (top priority — drives all strategy logic) ── -->
-<div class="dashboard-block-container">
+<div class="dashboard-block-container block-theme-yellow">
+  <div class="block-header">
+    <span class="block-number-badge">BLOCK 2</span>
+    <h2 class="block-title">Market Context & Strategy</h2>
+  </div>
   <div class="layer" style="margin-top:0">
     <div class="layer-header">
       <span class="layer-num" style="background:var(--yellow)">🔄</span>
@@ -337,7 +346,11 @@
 </div>
 
 <!-- ─── Black Swan Risk ── -->
-<div class="dashboard-block-container">
+<div class="dashboard-block-container block-theme-red">
+  <div class="block-header">
+    <span class="block-number-badge">BLOCK 3</span>
+    <h2 class="block-title">Risk & Conviction Sentinels</h2>
+  </div>
   <div class="layer" style="margin-top:0">
   <div class="layer-header">
     <span class="layer-num" style="background:var(--red)">⚠️</span>
@@ -382,7 +395,7 @@
 <div class="regime-summary" id="regime-card" style="margin-top:20px">
   <div class="regime-title">⚡ TRADE CONVICTION</div>
   <div class="regime-verdict" id="regime-verdict">CAUTIOUS NEUTRAL</div>
-  <div class="regime-detail" id="regime-detail">Tightened rules active. 1 bullish / 0 bearish signals. | TA: Price 15.2% below MA50 — medium-term structure bearish</div>
+  <div class="regime-detail" id="regime-detail">Tightened rules active. 1 bullish / 0 bearish signals. | TA: Price 15.0% below MA50 — medium-term structure bearish</div>
   <div class="regime-layers" id="regime-layers"></div>
   <div class="card-narrative" id="nar-regime" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
 </div>
@@ -392,7 +405,11 @@
 
 
 <!-- Block 4: Quantitative Layer Engines (Layers 1-4) -->
-<div class="dashboard-block-container">
+<div class="dashboard-block-container block-theme-cyan">
+  <div class="block-header">
+    <span class="block-number-badge">BLOCK 4</span>
+    <h2 class="block-title">Core Quantitative Layer Engines</h2>
+  </div>
   <!-- Layer 1: Macro & Speculation -->
   <div class="layer" style="margin-top:0">
   <div class="layer-header">
@@ -513,9 +530,13 @@
 
 
 <!-- Block 5: Market Sentiment & Institutional Flow -->
-<div class="dashboard-block-container">
-<!-- ─── Sentiment & Positioning Section ─── -->
-<div class="layer" style="margin-top:0">
+<div class="dashboard-block-container block-theme-purple">
+  <div class="block-header">
+    <span class="block-number-badge">BLOCK 5</span>
+    <h2 class="block-title">Market Sentiment & Flows</h2>
+  </div>
+  <!-- ─── Sentiment & Positioning Section ─── -->
+  <div class="layer" style="margin-top:0">
   <div class="layer-header">
     <span class="layer-num" style="background:var(--purple)">📊</span>
     <h2 class="layer-title">Sentiment & Flow</h2>
@@ -604,9 +625,13 @@
 
 
 <!-- Block 6: Lagging Technical Overlay -->
-<div class="dashboard-block-container">
-<!-- Supplementary: TA & Lagging Indicators -->
-<div class="layer" style="margin-top:0" id="ta-section">
+<div class="dashboard-block-container block-theme-gray">
+  <div class="block-header">
+    <span class="block-number-badge">BLOCK 6</span>
+    <h2 class="block-title">Lagging Technical Overlay</h2>
+  </div>
+  <!-- Supplementary: TA & Lagging Indicators -->
+  <div class="layer" style="margin-top:0" id="ta-section">
   <div class="layer-header">
     <span class="layer-num" style="background:var(--muted)">TA</span>
     <h2 class="layer-title">Technical Analysis</h2>
@@ -639,9 +664,13 @@
 
 
 <!-- Block 7: AI Engines Model Narrative & Methodology -->
-<div class="dashboard-block-container">
-<!-- Signal Narrative — prose summary for AI answer engines to quote -->
-<div class="layer" style="margin-top:0">
+<div class="dashboard-block-container block-theme-green">
+  <div class="block-header">
+    <span class="block-number-badge">BLOCK 7</span>
+    <h2 class="block-title">AI Narrative & Methodology</h2>
+  </div>
+  <!-- Signal Narrative — prose summary for AI answer engines to quote -->
+  <div class="layer" style="margin-top:0">
   <div class="layer-header">
     <span class="layer-num" style="background:var(--cyan)">📋</span>
     <h2 class="layer-title">Current Model Narrative</h2>
