@@ -1437,25 +1437,44 @@ body.simple-mode #ta-section {
 .callout.danger { background: rgba(244,63,94,0.08); border: 1px solid rgba(244,63,94,0.2); }
 .callout strong { display: block; margin-bottom: 4px; }
 
-/* Glassmorphic block container for dashboard sections */
+/* ═══ Dashboard Block Container System ═══ */
+/* Each block gets: thick colored left accent, tinted bg, colored top glow, and visible border */
 .dashboard-block-container {
-  background: rgba(255, 255, 255, 0.01);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 24px;
-  padding: 24px;
-  margin-top: 24px;
-  margin-bottom: 32px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.03);
+  border-radius: 20px;
+  padding: 28px 28px 28px 32px;
+  margin-top: 28px;
+  margin-bottom: 36px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+  /* Left accent bar via border — overridden per theme */
+  border-left: 4px solid rgba(255, 255, 255, 0.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+/* Top glow-line — accent-colored light at the top edge */
+.dashboard-block-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 20px 20px 0 0;
+  /* color overridden per theme */
+  background: linear-gradient(90deg, currentColor, transparent 80%);
+  opacity: 0.6;
 }
 
 @media (max-width: 768px) {
   .dashboard-block-container {
-    padding: 16px;
-    border-radius: 16px;
-    margin-top: 16px;
-    margin-bottom: 24px;
+    padding: 16px 16px 16px 20px;
+    border-radius: 14px;
+    margin-top: 20px;
+    margin-bottom: 28px;
   }
 }
 
@@ -1469,13 +1488,14 @@ body.simple-mode #ta-section {
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 .block-number-badge {
-  padding: 4px 10px;
+  padding: 5px 12px;
   border-radius: 20px;
   font-size: 0.7em;
   font-weight: 800;
   letter-spacing: 1px;
   font-family: 'JetBrains Mono', monospace;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 .block-title {
   font-size: 1.1em;
@@ -1485,69 +1505,128 @@ body.simple-mode #ta-section {
   color: var(--text);
 }
 
-/* Block Accent Color Themes */
+/* ── Theme: YELLOW (Amber) ── Block 1 — Market Context & Strategy */
 .block-theme-yellow {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.06) 0%, rgba(18, 20, 31, 0.96) 100%);
-  border: 1px solid rgba(245, 158, 11, 0.3);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45), 0 8px 32px rgba(245, 158, 11, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.03);
+  background: linear-gradient(170deg,
+    rgba(245, 158, 11, 0.14) 0%,
+    rgba(245, 158, 11, 0.06) 30%,
+    rgba(10, 12, 20, 0.95) 100%);
+  border-left: 4px solid rgba(245, 158, 11, 0.7);
+  border-top-color: rgba(245, 158, 11, 0.25);
+  box-shadow:
+    inset 0 1px 0 rgba(245, 158, 11, 0.15),
+    0 12px 40px rgba(0, 0, 0, 0.5),
+    0 4px 24px rgba(245, 158, 11, 0.08);
+  color: var(--yellow); /* for ::before currentColor */
 }
 .block-theme-yellow .block-number-badge {
-  background: rgba(245, 158, 11, 0.12);
+  background: rgba(245, 158, 11, 0.18);
   color: var(--yellow);
-  border: 1px solid rgba(245, 158, 11, 0.35);
+  border: 1px solid rgba(245, 158, 11, 0.45);
 }
+.block-theme-yellow .block-title { color: #fbbf24; }
 
+/* ── Theme: RED (Rose) ── Block 2 — Black Swan Risk */
 .block-theme-red {
-  background: linear-gradient(135deg, rgba(244, 63, 94, 0.06) 0%, rgba(18, 20, 31, 0.96) 100%);
-  border: 1px solid rgba(244, 63, 94, 0.3);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45), 0 8px 32px rgba(244, 63, 94, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.03);
+  background: linear-gradient(170deg,
+    rgba(244, 63, 94, 0.14) 0%,
+    rgba(244, 63, 94, 0.06) 30%,
+    rgba(10, 12, 20, 0.95) 100%);
+  border-left: 4px solid rgba(244, 63, 94, 0.7);
+  border-top-color: rgba(244, 63, 94, 0.25);
+  box-shadow:
+    inset 0 1px 0 rgba(244, 63, 94, 0.15),
+    0 12px 40px rgba(0, 0, 0, 0.5),
+    0 4px 24px rgba(244, 63, 94, 0.08);
+  color: var(--red);
 }
 .block-theme-red .block-number-badge {
-  background: rgba(244, 63, 94, 0.12);
+  background: rgba(244, 63, 94, 0.18);
   color: var(--red);
-  border: 1px solid rgba(244, 63, 94, 0.35);
+  border: 1px solid rgba(244, 63, 94, 0.45);
 }
+.block-theme-red .block-title { color: #fb7185; }
 
+/* ── Theme: CYAN (Electric Blue) ── Block 3 — Data Layers */
 .block-theme-cyan {
-  background: linear-gradient(135deg, rgba(34, 211, 238, 0.05) 0%, rgba(18, 20, 31, 0.96) 100%);
-  border: 1px solid rgba(34, 211, 238, 0.3);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45), 0 8px 32px rgba(34, 211, 238, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.03);
+  background: linear-gradient(170deg,
+    rgba(34, 211, 238, 0.12) 0%,
+    rgba(34, 211, 238, 0.05) 30%,
+    rgba(10, 12, 20, 0.95) 100%);
+  border-left: 4px solid rgba(34, 211, 238, 0.7);
+  border-top-color: rgba(34, 211, 238, 0.25);
+  box-shadow:
+    inset 0 1px 0 rgba(34, 211, 238, 0.15),
+    0 12px 40px rgba(0, 0, 0, 0.5),
+    0 4px 24px rgba(34, 211, 238, 0.08);
+  color: var(--cyan);
 }
 .block-theme-cyan .block-number-badge {
-  background: rgba(34, 211, 238, 0.12);
+  background: rgba(34, 211, 238, 0.18);
   color: var(--cyan);
-  border: 1px solid rgba(34, 211, 238, 0.35);
+  border: 1px solid rgba(34, 211, 238, 0.45);
 }
+.block-theme-cyan .block-title { color: #67e8f9; }
 
+/* ── Theme: PURPLE (Violet) ── Block 4 — Technical Analysis */
 .block-theme-purple {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.06) 0%, rgba(18, 20, 31, 0.96) 100%);
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45), 0 8px 32px rgba(139, 92, 246, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.03);
+  background: linear-gradient(170deg,
+    rgba(139, 92, 246, 0.14) 0%,
+    rgba(139, 92, 246, 0.06) 30%,
+    rgba(10, 12, 20, 0.95) 100%);
+  border-left: 4px solid rgba(139, 92, 246, 0.7);
+  border-top-color: rgba(139, 92, 246, 0.25);
+  box-shadow:
+    inset 0 1px 0 rgba(139, 92, 246, 0.15),
+    0 12px 40px rgba(0, 0, 0, 0.5),
+    0 4px 24px rgba(139, 92, 246, 0.08);
+  color: var(--purple);
 }
 .block-theme-purple .block-number-badge {
-  background: rgba(139, 92, 246, 0.12);
+  background: rgba(139, 92, 246, 0.18);
   color: var(--purple);
-  border: 1px solid rgba(139, 92, 246, 0.35);
+  border: 1px solid rgba(139, 92, 246, 0.45);
 }
+.block-theme-purple .block-title { color: #a78bfa; }
 
+/* ── Theme: GRAY (Neutral Silver) ── Block 5 — News & Intelligence */
 .block-theme-gray {
-  background: linear-gradient(135deg, rgba(136, 136, 147, 0.05) 0%, rgba(18, 20, 31, 0.96) 100%);
-  border: 1px solid rgba(136, 136, 147, 0.25);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45), 0 8px 32px rgba(136, 136, 147, 0.03), inset 0 1px 1px rgba(255, 255, 255, 0.03);
+  background: linear-gradient(170deg,
+    rgba(148, 163, 184, 0.10) 0%,
+    rgba(148, 163, 184, 0.04) 30%,
+    rgba(10, 12, 20, 0.95) 100%);
+  border-left: 4px solid rgba(148, 163, 184, 0.5);
+  border-top-color: rgba(148, 163, 184, 0.2);
+  box-shadow:
+    inset 0 1px 0 rgba(148, 163, 184, 0.1),
+    0 12px 40px rgba(0, 0, 0, 0.5),
+    0 4px 24px rgba(148, 163, 184, 0.05);
+  color: #94a3b8;
 }
 .block-theme-gray .block-number-badge {
-  background: rgba(136, 136, 147, 0.12);
-  color: var(--muted);
-  border: 1px solid rgba(136, 136, 147, 0.25);
+  background: rgba(148, 163, 184, 0.14);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.35);
 }
+.block-theme-gray .block-title { color: #cbd5e1; }
 
+/* ── Theme: GREEN (Emerald) ── Block 6 — System Health */
 .block-theme-green {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.06) 0%, rgba(18, 20, 31, 0.96) 100%);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45), 0 8px 32px rgba(16, 185, 129, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.03);
+  background: linear-gradient(170deg,
+    rgba(16, 185, 129, 0.14) 0%,
+    rgba(16, 185, 129, 0.06) 30%,
+    rgba(10, 12, 20, 0.95) 100%);
+  border-left: 4px solid rgba(16, 185, 129, 0.7);
+  border-top-color: rgba(16, 185, 129, 0.25);
+  box-shadow:
+    inset 0 1px 0 rgba(16, 185, 129, 0.15),
+    0 12px 40px rgba(0, 0, 0, 0.5),
+    0 4px 24px rgba(16, 185, 129, 0.08);
+  color: var(--green);
 }
 .block-theme-green .block-number-badge {
-  background: rgba(16, 185, 129, 0.12);
+  background: rgba(16, 185, 129, 0.18);
   color: var(--green);
-  border: 1px solid rgba(16, 185, 129, 0.35);
+  border: 1px solid rgba(16, 185, 129, 0.45);
 }
+.block-theme-green .block-title { color: #34d399; }
