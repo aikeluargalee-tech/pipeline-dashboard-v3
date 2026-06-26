@@ -16,17 +16,17 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="Live Bitcoin monitoring: Gate0 status, funding rates, liquidation clusters, on-chain cycle metrics, and derivatives data. Updated every 15 minutes.">
 <meta property="og:site_name" content="BTC Pipeline">
-<meta property="og:updated_time" id="og-updated" content="2026-06-26T10:51:57+00:00">
+<meta property="og:updated_time" id="og-updated" content="2026-06-26T11:45:56+00:00">
 <!-- Google AI Overviews freshness signals -->
 <meta property="article:published_time" content="2024-01-01T00:00:00Z">
-<meta property="article:modified_time" id="article-modified" content="2026-06-26T10:51:57+00:00">
+<meta property="article:modified_time" id="article-modified" content="2026-06-26T11:45:56+00:00">
 <!-- Dublin Core — Perplexity respects these -->
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
 <meta name="DC.title" content="BTC Pipeline Dashboard">
 <meta name="DC.type" content="Dataset">
 <meta name="DC.format" content="text/html">
 <meta name="DC.language" content="en">
-<meta name="DC.date" id="dc-date" content="2026-06-26T10:51:57+00:00">
+<meta name="DC.date" id="dc-date" content="2026-06-26T11:45:56+00:00">
 <!-- Schema.org Dataset markup for AI engines -->
 <script type="application/ld+json" id="schema-dataset">
 {
@@ -39,7 +39,7 @@
   "measurementTechnique": "Automated JSON data pipeline, 15-minute refresh cadence via cron-scheduled collection",
   "creator": { "@type": "Organization", "name": "BTC Pipeline" },
   "license": "https://creativecommons.org/licenses/by/4.0/",
-  "dateModified": "2026-06-26T10:51:57+00:00",
+  "dateModified": "2026-06-26T11:45:57+00:00",
   "distribution": [
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/gate0.json", "name": "Gate0 Signal Data" },
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/macro.json", "name": "Macro Indicator Data" },
@@ -140,17 +140,17 @@
 <noscript>
 <nav style="background:rgba(5,7,13,0.95);border-bottom:1px solid rgba(255,255,255,0.06);padding:12px 24px">
   <div style="max-width:1200px;margin:0 auto;display:flex;gap:20px;flex-wrap:wrap;align-items:center">
-    <a href="/pipeline-dashboard/" style="color:#f5f5f6;text-decoration:none;font-weight:800">⚡ Pipeline Dashboard</a>
-    <a href="/pipeline-dashboard/dashboard/" style="color:#888893;text-decoration:none;font-size:0.85em">Dashboard</a>
-    <a href="/pipeline-dashboard/methodology/" style="color:#888893;text-decoration:none;font-size:0.85em">Methodology</a>
-    <a href="/pipeline-dashboard/research/" style="color:#888893;text-decoration:none;font-size:0.85em">Research</a>
-    <a href="/pipeline-dashboard/glossary/" style="color:#888893;text-decoration:none;font-size:0.85em">Glossary</a>
-    <a href="/pipeline-dashboard/events-and-disruptions/" style="color:#888893;text-decoration:none;font-size:0.85em">Events</a>
-    <a href="/pipeline-dashboard/verdicts/" style="color:#888893;text-decoration:none;font-size:0.85em">Verdicts</a>
-    <a href="/pipeline-dashboard/track-record/" style="color:#888893;text-decoration:none;font-size:0.85em">Track Record</a>
-    <a href="/pipeline-dashboard/compare/" style="color:#888893;text-decoration:none;font-size:0.85em">Compare</a>
-    <a href="/pipeline-dashboard/faq/" style="color:#888893;text-decoration:none;font-size:0.85em">FAQ</a>
-    <a href="/pipeline-dashboard/dashboard/" style="background:var(--cyan);color:#05070d;text-decoration:none;font-size:0.82em;padding:6px 16px;border-radius:8px;font-weight:700">Live Dashboard →</a>
+    <a href="../" style="color:#f5f5f6;text-decoration:none;font-weight:800">⚡ Pipeline Dashboard</a>
+    <a href="../dashboard/" style="color:#888893;text-decoration:none;font-size:0.85em">Dashboard</a>
+    <a href="../methodology/" style="color:#888893;text-decoration:none;font-size:0.85em">Methodology</a>
+    <a href="../research/" style="color:#888893;text-decoration:none;font-size:0.85em">Research</a>
+    <a href="../glossary/" style="color:#888893;text-decoration:none;font-size:0.85em">Glossary</a>
+    <a href="../events-and-disruptions/" style="color:#888893;text-decoration:none;font-size:0.85em">Events</a>
+    <a href="../verdicts/" style="color:#888893;text-decoration:none;font-size:0.85em">Verdicts</a>
+    <a href="../track-record/" style="color:#888893;text-decoration:none;font-size:0.85em">Track Record</a>
+    <a href="../compare/" style="color:#888893;text-decoration:none;font-size:0.85em">Compare</a>
+    <a href="../faq/" style="color:#888893;text-decoration:none;font-size:0.85em">FAQ</a>
+    <a href="../dashboard/" style="background:var(--cyan);color:#05070d;text-decoration:none;font-size:0.82em;padding:6px 16px;border-radius:8px;font-weight:700">Live Dashboard →</a>
   </div>
 </nav>
 <div style="max-width:1200px;margin:20px auto;padding:20px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;color:#a1a1aa">
@@ -360,58 +360,112 @@
   </div>
   <div class="layer-grid">
     <div class="card" id="card-blackswan" style="border-left: 3px solid var(--red)">
-      <h3 class="card-title">🛡️ Systemic Risk Score</h3>
+      <h3 class="card-title">🛡️ Systemic Risk Monitor</h3>
       <div id="blackswan-content"></div>
       <!-- Static AEO Model Guide -->
       <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
         <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
           <span>📖</span> Model Methodology
         </summary>
-        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
-          <div><h3 style="color:var(--text);font-size:1em;margin-bottom:0px;font-weight:600;">What metrics compose the systemic risk score?</h3></div>
-          <div><p style="margin:0;">The score aggregates eight distinct macro variables including implied volatility indices, stablecoin peg deviations, and structural leverage ratios to measure overall market vulnerability.</p></div>
+        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 6px;">
+          <div><h3 style="color:var(--text);font-size:1.05em;margin-bottom:2px;font-weight:600;">What is the Systemic Risk Monitor?</h3></div>
+          <div><p style="margin:0;">It measures the vulnerability of the cryptocurrency market by tracking seven key stability metrics, including stablecoin peg deviations, broad equity market panic, and major currency trends.</p></div>
+          <div><h3 style="color:var(--text);font-size:1.05em;margin-top:4px;margin-bottom:2px;font-weight:600;">What do the status levels mean?</h3></div>
+          <div><p style="margin:0;">Green (NORMAL) represents low systemic risk. Yellow (CAUTION) or Orange (ELEVATED) indicates moderate structural stress. Red (CRITICAL) warns of extreme market vulnerability.</p></div>
         </div>
       </details>
     </div>
     <div class="card" id="card-crash" style="border-left: 3px solid var(--red)">
-      <h3 class="card-title">⚠️ High-Volatility Precursors</h3>
+      <h3 class="card-title">⚠️ Market Instability Precursors</h3>
       <div id="crash-content"><p style="font-size:0.8em;color:var(--muted)">Real-time volatility observations: taker aggression, bid wall decay, funding stress, OI implosion, divergence.</p></div>
+      <!-- Static AEO Model Guide -->
+      <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
+        <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
+          <span>📖</span> Model Methodology
+        </summary>
+        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 6px;">
+          <div><h3 style="color:var(--text);font-size:1.05em;margin-bottom:2px;font-weight:600;">What are Market Instability Precursors?</h3></div>
+          <div><p style="margin:0;">These are early-warning signs that highlight when short-term conditions are becoming unstable. When multiple warning indicators fire together, it indicates an increased likelihood of a sudden, sharp price movement.</p></div>
+          <div><h3 style="color:var(--text);font-size:1.05em;margin-top:4px;margin-bottom:2px;font-weight:600;">What do the individual warning metrics track?</h3></div>
+          <div><p style="margin:0;">Aggressive selling measures immediate sell volume imbalances. Support wall retreat tracks large buyers pulling orders. Leverage fees show cost spikes for holding futures. Leverage flushes monitor forced liquidations, and momentum disconnect tracks price-to-indicator deviations.</p></div>
+        </div>
+      </details>
     </div>
     <div class="card" id="card-gate0" style="border-left: 3px solid var(--cyan)">
-      <h3 class="card-title">🚦 Gate 0 Threat Monitors</h3>
+      <h3 class="card-title">🚦 Gate 0 System Safety Switches</h3>
       <div id="gate0-modules-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-top: 12px;"></div>
+      <!-- Static AEO Model Guide -->
+      <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
+        <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
+          <span>📖</span> Model Methodology
+        </summary>
+        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 6px;">
+          <div><h3 style="color:var(--text);font-size:1.05em;margin-bottom:2px;font-weight:600;">What are the Gate 0 System Safety Switches?</h3></div>
+          <div><p style="margin:0;">Gate 0 acts as a real-time safety filter. If any safety switch flags high risk, the system moves to a cautious state (like TIGHTENED or PAUSE) to highlight unstable cross-market conditions.</p></div>
+          <div><h3 style="color:var(--text);font-size:1.05em;margin-top:4px;margin-bottom:2px;font-weight:600;">Why are these specific modules monitored?</h3></div>
+          <div><p style="margin:0;">They track external risks like macroeconomic panic (VIX), tech stock bubbles, regulatory updates, social media volatility, and quantum cybersecurity parameters.</p></div>
+        </div>
+      </details>
     </div>
     <div class="card" id="card-amt" style="border-left: 3px solid var(--blue)">
-      <h2 class="card-title" style="font-size: 1.1em;">📡 Automated Market Tracker (AMT) Observations</h2>
+      <h3 class="card-title">📡 Automated Market Tracker (AMT)</h3>
       <div id="amt-content"></div>
       
       <!-- Educational FAQ / Methodology Section for AEO & AdSense Compliance -->
-      <div style="margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; display: flex; flex-direction: column; gap: 12px; font-size: 0.8em; color: var(--muted); line-height: 1.5;">
-        <h3 style="color: var(--text); font-size: 0.95em; margin-bottom: 2px;">How is the AMT metric calculated?</h3>
-        <p style="margin: 0;">The AMT metric mathematically calculates convergence points by tracking the relationship between <strong>on-chain volume profiles</strong> and <strong>historical liquidity nodes</strong> across distributed ledgers.</p>
+      <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
+        <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
+          <span>📖</span> Model Methodology
+        </summary>
+        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 6px;">
+          <div><h3 style="color:var(--text);font-size:1.05em;margin-bottom:2px;font-weight:600;">What does the AMT monitor?</h3></div>
+          <div><p style="margin:0;">It tracks how large transaction volumes interact with historical price zones where significant quantities of assets have previously changed hands.</p></div>
+          
+          <div><h3 style="color:var(--text);font-size:1.05em;margin-top:4px;margin-bottom:2px;font-weight:600;">What is a Whale Pivot?</h3></div>
+          <div><p style="margin:0;">It is an observational point in price history where large-scale market participants historically concentrated their transactions, highlighting potential support or resistance areas.</p></div>
 
-        <h3 style="color: var(--text); font-size: 0.95em; margin-bottom: 2px;">What do Whale Pivots indicate?</h3>
-        <p style="margin: 0;">Whale pivots represent aggregated transaction density where large-scale participants historically structured block orders, serving as an observational data point for systemic market flow analysis.</p>
+          <div><h3 style="color:var(--text);font-size:1.05em;margin-top:4px;margin-bottom:2px;font-weight:600;">What is the Data Collection Warmup?</h3></div>
+          <div><p style="margin:0;">When the tracking system restarts, it requires 96 intervals of data to establish baseline calculations. The progress bar visualizes this collection status.</p></div>
+        </div>
+      </details>
 
-        <h3 style="color: var(--text); font-size: 0.95em; margin-bottom: 2px;">Does AMT predict future price action?</h3>
-        <p style="margin: 0;">No. The dashboard strictly visualizes historical network states and present mathematical models. It does not predict future price action or constitute financial forecasting.</p>
-      </div>
-
-      <div style="margin-top: 14px; font-size: 0.78em;">
+      <div style="margin-top: 10px; font-size: 0.75em;">
         <a href="https://aikeluargalee-tech.github.io/btc-amt-viewer/" target="_blank" style="color: var(--cyan); text-decoration: none; font-weight: 600;">View Full AMT Data Models →</a>
       </div>
-
     </div>
     <div class="card" id="card-sigma" style="border-left: 3px solid var(--purple)">
-      <h3 class="card-title">⚡ SIGMA Data Model</h3>
+      <h3 class="card-title">⚡ SIGMA Cycle Model</h3>
       <div id="sigma-content"></div>
-      <div style="font-size: 0.72em; color: var(--muted); margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 6px;">
+      <!-- Static AEO Model Guide -->
+      <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
+        <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
+          <span>📖</span> Model Methodology
+        </summary>
+        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 6px;">
+          <div><h3 style="color:var(--text);font-size:1.05em;margin-bottom:2px;font-weight:600;">What is the SIGMA Cycle Model?</h3></div>
+          <div><p style="margin:0;">It is a quantitative structural model that analyzes institutional order flow and macro cycle transitions to assess whether the market is in an accumulation or distribution phase.</p></div>
+          <div><h3 style="color:var(--text);font-size:1.05em;margin-top:4px;margin-bottom:2px;font-weight:600;">Why is this model updated manually?</h3></div>
+          <div><p style="margin:0;">To ensure data integrity, key cycle calculations are performed and verified offline by analysts before being published to the dashboard.</p></div>
+        </div>
+      </details>
+      <div style="font-size: 0.68em; color: var(--muted); margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 6px;">
         Updated manually by Milo after GetClaw Sigma BTC run.
       </div>
     </div>
     <div class="card" id="card-trp" style="border-left: 3px solid var(--orange)">
-      <h3 class="card-title">📰 TRP Status</h3>
+      <h3 class="card-title">📰 Geopolitical News Alert Monitor (TRP)</h3>
       <div id="trp-content"></div>
+      <!-- Static AEO Model Guide -->
+      <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
+        <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
+          <span>📖</span> Model Methodology
+        </summary>
+        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 6px;">
+          <div><h3 style="color:var(--text);font-size:1.05em;margin-bottom:2px;font-weight:600;">What does the Geopolitical News Alert Monitor track?</h3></div>
+          <div><p style="margin:0;">It scans policy announcements, regulatory changes, and geopolitical events that could affect digital assets, classifying their potential market impact.</p></div>
+          <div><h3 style="color:var(--text);font-size:1.05em;margin-top:4px;margin-bottom:2px;font-weight:600;">What do the Alert Severity Levels represent?</h3></div>
+          <div><p style="margin:0;">Tier 1 indicates direct policy actions or major events. Tier 2 indicates regulatory discussions or minor policy shifts. None or Tier 3 represents a normal, calm news environment.</p></div>
+        </div>
+      </details>
     </div>
   </div>
 </div>
@@ -420,7 +474,7 @@
 <div class="regime-summary" id="regime-card" style="margin-top:20px">
   <div class="regime-title">⚡ MARKET STATE AGGREGATION</div>
   <div class="regime-verdict" id="regime-verdict">CAUTIOUS NEUTRAL</div>
-  <div class="regime-detail" id="regime-detail">Tightened rules active. 1 bullish / 0 bearish signals. | TA: Price 15.5% below MA50 — medium-term structure bearish</div>
+  <div class="regime-detail" id="regime-detail">Tightened rules active. 1 bullish / 0 bearish signals. | TA: Price 15.4% below MA50 — medium-term structure bearish</div>
   <div class="regime-layers" id="regime-layers"></div>
   <div class="card-narrative" id="nar-regime" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
 </div>
@@ -836,26 +890,42 @@
       },
       {
         "@type": "Question",
-        "name": "What metrics compose the systemic risk score?",
+        "name": "What is the Systemic Risk Monitor?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "The score aggregates eight distinct macro variables including implied volatility indices, stablecoin peg deviations, and structural leverage ratios to measure overall market vulnerability."
+          "text": "It measures the vulnerability of the cryptocurrency market by tracking seven key stability metrics, including stablecoin peg deviations, broad equity market panic, and major currency trends."
         }
       },
       {
         "@type": "Question",
-        "name": "How is the AMT metric calculated?",
+        "name": "What are Market Instability Precursors?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "The AMT metric mathematically calculates convergence points by tracking the relationship between on-chain volume profiles and historical liquidity nodes across distributed ledgers."
+          "text": "These are early-warning signs that highlight when short-term conditions are becoming unstable. When multiple warning indicators fire together, it indicates an increased likelihood of a sudden, sharp price movement."
         }
       },
       {
         "@type": "Question",
-        "name": "What do Whale Pivots indicate?",
+        "name": "What are the Gate 0 System Safety Switches?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Whale pivots represent aggregated transaction density where large-scale participants historically structured block orders, serving as an observational data point for systemic market flow analysis."
+          "text": "Gate 0 acts as a real-time safety filter. If any safety switch flags high risk, the system moves to a cautious state (like TIGHTENED or PAUSE) to highlight unstable cross-market conditions."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does the Automated Market Tracker (AMT) monitor?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It tracks how large transaction volumes interact with historical price zones where significant quantities of assets have previously changed hands."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a Whale Pivot?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It is an observational point in price history where large-scale market participants historically concentrated their transactions, highlighting potential support or resistance areas."
         }
       },
       {
@@ -864,6 +934,22 @@
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "No. The dashboard strictly visualizes historical network states and present mathematical models. It does not predict future price action or constitute financial forecasting."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the SIGMA Cycle Model?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It is a quantitative structural model that analyzes institutional order flow and macro cycle transitions to assess whether the market is in an accumulation or distribution phase."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does the Geopolitical News Alert Monitor (TRP) track?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It scans policy announcements, regulatory changes, and geopolitical events that could affect digital assets, classifying their potential market impact."
         }
       },
       {
@@ -2507,9 +2593,17 @@ function renderBlackSwan(d) {
   const pct = max > 0 ? Math.round((score / max) * 100) : 0;
 
   let statusColor = 'var(--green)';
-  if (status === 'CRITICAL') statusColor = 'var(--red)';
-  else if (status === 'ELEVATED') statusColor = 'var(--orange)';
-  else if (status === 'CAUTION') statusColor = 'var(--yellow)';
+  let desc = 'Systemic risk is low. Key volatility and peg health metrics show no signs of structural distress.';
+  if (status === 'CRITICAL') {
+    statusColor = 'var(--red)';
+    desc = 'Systemic risk is critical. Multiple market metrics show severe stress. Heightened caution is advised.';
+  } else if (status === 'ELEVATED') {
+    statusColor = 'var(--orange)';
+    desc = 'Systemic risk is elevated. One or more volatility metrics show moderate to high market stress.';
+  } else if (status === 'CAUTION') {
+    statusColor = 'var(--yellow)';
+    desc = 'Systemic risk is caution level. Keep an eye on volatility index spikes and dollar strength trends.';
+  }
 
   let html = `<div class="metric-row"><span class="metric-label">Status</span><span class="metric-value" style="color:${statusColor};font-weight:600">${status}</span></div>`;
   html += `<div class="metric-row"><span class="metric-label">Score</span><span class="metric-value">${score}/${max} (${pct}%)</span></div>`;
@@ -2519,16 +2613,28 @@ function renderBlackSwan(d) {
     <div style="width:${pct}%;height:100%;background:${statusColor};border-radius:4px;transition:width 0.5s"></div>
   </div>`;
 
+  // Brief text description for beginners
+  html += `<p style="font-size:0.75em;color:var(--muted);line-height:1.45;margin:8px 0 12px 0">${desc}</p>`;
+
   // Factors
   const factors = d.factors || {};
   if (Object.keys(factors).length > 0) {
+    const factorLabels = {
+      fng: 'Sentiment (Fear & Greed)',
+      vix: 'Equity Volatility (VIX)',
+      stablecoin: 'Stablecoin Pegs',
+      dxy: 'US Dollar (DXY)',
+      yield: 'US 10Y Treasury',
+      whale: 'Whale Activity',
+      crash: 'Crash Signals'
+    };
     html += '<div class="gate-modules" style="margin-top:14px">';
     for (const [key, val] of Object.entries(factors)) {
       const valStr = String(val);
       const isOk = valStr.indexOf('✅') !== -1 || valStr.indexOf('Healthy') !== -1 || valStr.indexOf('Balanced') !== -1 || valStr.indexOf('Normal') !== -1;
       const valColor = isOk ? 'var(--green)' : 'var(--orange)';
       const cleanVal = valStr.replace('✅', '').replace('❌', '').trim();
-      const label = key.toUpperCase();
+      const label = factorLabels[key] || key.toUpperCase();
       html += `
         <div class="gate-module">
           <div class="label">${esc(label)}</div>
@@ -2568,23 +2674,50 @@ function renderCrashPrecursor(d) {
       const ageMin = (Date.now() - ts.getTime()) / 60000;
       if (ageMin > 90) {
         const ageStr = ageMin > 1440 ? Math.round(ageMin/1440) + 'd' : Math.round(ageMin/60) + 'h';
-        staleBanner = '<div style="text-align:center;margin-bottom:8px;padding:5px 8px;background:rgba(210,153,34,0.12);border:1px solid var(--yellow);border-radius:4px;font-size:0.72em;color:var(--yellow)">⚠️ Stale — data is ' + ageStr + ' old. Crash signals may not reflect current conditions.</div>';
+        staleBanner = '<div style="text-align:center;margin-bottom:8px;padding:5px 8px;background:rgba(210,153,34,0.12);border:1px solid var(--yellow);border-radius:4px;font-size:0.72em;color:var(--yellow)">⚠️ Stale — data is ' + ageStr + ' old. Precursor observations may not reflect current conditions.</div>';
         if (card) card.style.borderLeftColor = 'var(--yellow)';
       }
     } catch(e) {}
   }
 
-  let html = staleBanner;
-  html += metricRow('Status', statusEmoji[status] + ' ' + status, color === 'var(--green)' ? 'positive' : 'negative');
-  html += metricRow('Composite', comp + '/5');
-  html += metricRow('Alert', d.alert_fired ? '⚠ Yes' : 'No');
-
-  if (activeSignals.length > 0) {
-    html += '<div style="margin-top:6px;font-size:0.78em;color:var(--orange)">Active: ' + esc(activeSignals.join(', ')) + '</div>';
+  let desc = 'Market is structurally stable. Warning indicators are quiet.';
+  if (status === 'DANGER') {
+    desc = 'Extreme instability warning. High selling pressure or leverage flushes detected.';
+  } else if (status === 'ELEVATED') {
+    desc = 'Elevated market instability. Multiple warning metrics are active.';
+  } else if (status === 'CAUTION') {
+    desc = 'Caution advised. Early instability flags are appearing in order books or fees.';
   }
 
-  // Individual signal breakdown
-  const signalNames = {taker: 'Taker', bid_wall: 'Bid Wall', funding: 'Funding', oi_implosion: 'OI Implosion', divergence: 'Divergence'};
+  let html = staleBanner;
+  html += metricRow('Status', statusEmoji[status] + ' ' + status, color === 'var(--green)' ? 'positive' : 'negative');
+  html += metricRow('Composite Score', comp + '/5 (Warning level based on 5 metrics)');
+  html += metricRow('Active Alert', d.alert_fired ? '⚠ Yes' : 'No');
+
+  // Text explanation
+  html += `<p style="font-size:0.75em;color:var(--muted);line-height:1.45;margin:8px 0">${desc}</p>`;
+
+  if (activeSignals.length > 0) {
+    const activeLabels = activeSignals.map(s => {
+      const sLower = s.toLowerCase();
+      if (sLower.includes('taker')) return 'Aggressive Sell Orders';
+      if (sLower.includes('bid')) return 'Support Wall Retreat';
+      if (sLower.includes('funding')) return 'Futures Holding Fees';
+      if (sLower.includes('oi') || sLower.includes('implosion')) return 'Leverage Flushes';
+      if (sLower.includes('divergence')) return 'Momentum Divergence';
+      return s;
+    });
+    html += '<div style="margin-top:6px;font-size:0.78em;color:var(--orange)">Active Warnings: ' + esc(activeLabels.join(', ')) + '</div>';
+  }
+
+  // Individual precursor breakdown
+  const signalNames = {
+    taker: 'Aggressive Sell Orders',
+    bid_wall: 'Support Wall Retreat',
+    funding: 'Futures Holding Fees',
+    oi_implosion: 'Leverage Flushes',
+    divergence: 'Momentum Divergence'
+  };
   let signalHtml = '<div style="margin-top:8px;font-size:0.75em;display:flex;gap:8px;flex-wrap:wrap">';
   for (const [key, label] of Object.entries(signalNames)) {
     const val = signals[key] || 0;
@@ -2628,6 +2761,20 @@ function renderGate0Full(gate) {
     'trp_check', 'mstr', 'elon', 'ai_bubble', 'quantum', 'geopolitical'
   ];
 
+  const moduleLabels = {
+    black_swan: 'Systemic Risk',
+    vix_spx: 'S&P500 & VIX Panic',
+    ai3_wave: 'Wave Model',
+    stablecoins: 'Stablecoin Pegs',
+    session: 'Market Session',
+    trp_check: 'Institutional Alert',
+    mstr: 'MicroStrategy Alerts',
+    elon: 'Social Media Noise',
+    ai_bubble: 'US Tech Stocks',
+    quantum: 'Quantum Threats',
+    geopolitical: 'Geopolitical Risk'
+  };
+
   let html = '';
   allModuleKeys.forEach(key => {
     const mod = gate.modules[key] || { state: 'Offline', detail: 'Offline' };
@@ -2642,7 +2789,7 @@ function renderGate0Full(gate) {
     else if (state === 'ABORT') dotColor = 'var(--red)';
     else if (state === 'Offline') dotColor = 'gray';
 
-    const cleanLabel = key.replace('_', ' ').toUpperCase();
+    const cleanLabel = moduleLabels[key] || key.replace('_', ' ').toUpperCase();
     
     html += `
       <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:0.78em;display:flex;flex-direction:column;gap:4px;" title="${esc(detail)}">
@@ -2706,7 +2853,7 @@ function renderAmtStatus(d) {
     </div>
   `;
 
-  html += metricRow('1D Layer', isOnline ? 'ONLINE' : 'OFFLINE', isOnline ? 'positive' : 'warn');
+  html += metricRow('1D Layer Filter', isOnline ? 'ONLINE' : 'OFFLINE', isOnline ? 'positive' : 'warn');
 
   if (d.latest_signal) {
     const ls = d.latest_signal;
@@ -2738,7 +2885,7 @@ function renderSigmaStatus(d) {
   const soCard = document.getElementById('so-sigma');
 
   if (!d) {
-    if (el) el.innerHTML = '<p style="font-size:0.8em;color:var(--muted)">No data</p>';
+    if (el) el.innerHTML = '<p style="font-size:0.8em;color:var(--muted)">No data available</p>';
     if (soVal) {
       soVal.textContent = 'No data';
       soVal.style.color = 'var(--muted)';
@@ -2757,8 +2904,8 @@ function renderSigmaStatus(d) {
   }
 
   let html = '';
-  html += metricRow('Conviction', d.conviction || '—');
-  html += metricRow('Direction', dir, dir === 'BULLISH' ? 'positive' : dir === 'BEARISH' ? 'negative' : 'neutral');
+  html += metricRow('Model Status', d.conviction || '—');
+  html += metricRow('Current Trend Cycle', dir, dir === 'BULLISH' ? 'positive' : dir === 'BEARISH' ? 'negative' : 'neutral');
   
   if (el) el.innerHTML = html;
 }
@@ -2769,9 +2916,9 @@ function renderTrpStatus(d) {
   const soCard = document.getElementById('so-trp');
 
   if (!d) {
-    if (el) el.innerHTML = '<p style="font-size:0.8em;color:var(--muted)">No data</p>';
+    if (el) el.innerHTML = '<p style="font-size:0.8em;color:var(--muted)">No data available</p>';
     if (soVal) {
-      soVal.textContent = 'No data';
+      soVal.textContent = 'Offline';
       soVal.style.color = 'var(--muted)';
     }
     return;
@@ -2785,7 +2932,7 @@ function renderTrpStatus(d) {
   }
 
   let html = '';
-  let pollStr = '—';
+  let pollStr = 'No recent news polls';
   if (d.last_poll) {
     try {
       const dt = new Date(d.last_poll);
@@ -2794,11 +2941,16 @@ function renderTrpStatus(d) {
       pollStr = d.last_poll;
     }
   }
-  html += metricRow('Last Poll', pollStr);
-  html += metricRow('Signals Today', sigToday, sigToday > 0 ? 'positive' : 'neutral');
-  html += metricRow('Last Tier', d.last_tier || 'None', d.last_tier ? 'warn' : 'neutral');
-  html += metricRow('Last Details', d.last_classification || 'None');
-  html += metricRow('Cron Status', d.cron_active ? 'ACTIVE' : 'INACTIVE', d.cron_active ? 'positive' : 'warn');
+  
+  const lastTier = d.last_tier || 'None (Normal)';
+  const lastDetails = d.last_classification || 'No alerts active';
+  const cronStatus = d.cron_active ? 'ACTIVE' : 'INACTIVE';
+
+  html += metricRow('Latest News Poll', pollStr);
+  html += metricRow('News Alerts Today', sigToday, sigToday > 0 ? 'positive' : 'neutral');
+  html += metricRow('Alert Severity Level', lastTier, d.last_tier ? 'warn' : 'neutral');
+  html += metricRow('Alert Classification', lastDetails);
+  html += metricRow('Monitor Status', cronStatus, d.cron_active ? 'positive' : 'warn');
 
   if (el) el.innerHTML = html;
 }
@@ -3106,18 +3258,18 @@ const METRIC_TOOLTIPS = {
 
 // Card-to-glossary mapping for "Learn more" links
 const CARD_GLOSSARY_LINKS = {
-  'card-onchain': '/pipeline-dashboard/glossary/#mvrv-z-score',
-  'card-deriv': '/pipeline-dashboard/glossary/#funding-rate',
-  'card-oi': '/pipeline-dashboard/glossary/#open-interest',
-  'card-macro': '/pipeline-dashboard/glossary/#dxy',
-  'card-risk': '/pipeline-dashboard/glossary/#vix',
-  'card-magnets': '/pipeline-dashboard/glossary/#liquidation-magnet',
-  'card-sr': '/pipeline-dashboard/glossary/#sr-bands',
-  'card-vol': '/pipeline-dashboard/glossary/#volume-profile',
-  'card-ma': '/pipeline-dashboard/glossary/#atr',
-  'card-rsi': '/pipeline-dashboard/glossary/#rsi',
-  'card-bb': '/pipeline-dashboard/glossary/#bollinger-bands',
-  'card-options': '/pipeline-dashboard/glossary/#options-skew',
+  'card-onchain': '../glossary/#mvrv-z-score',
+  'card-deriv': '../glossary/#funding-rate',
+  'card-oi': '../glossary/#open-interest',
+  'card-macro': '../glossary/#dxy',
+  'card-risk': '../glossary/#vix',
+  'card-magnets': '../glossary/#liquidation-magnet',
+  'card-sr': '../glossary/#sr-bands',
+  'card-vol': '../glossary/#volume-profile',
+  'card-ma': '../glossary/#atr',
+  'card-rsi': '../glossary/#rsi',
+  'card-bb': '../glossary/#bollinger-bands',
+  'card-options': '../glossary/#options-skew',
 };
 
 function enhanceDashboard() {
@@ -3181,7 +3333,7 @@ function showOnboarding() {
         </div>
       </div>
       <div style="display:flex;gap:8px;justify-content:center">
-        <a href="/pipeline-dashboard/methodology/" style="padding:10px 20px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid var(--border-hover);color:var(--text);text-decoration:none;font-size:0.85em;font-weight:600">Read Methodology</a>
+        <a href="../methodology/" style="padding:10px 20px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid var(--border-hover);color:var(--text);text-decoration:none;font-size:0.85em;font-weight:600">Read Methodology</a>
         <button id="onboarding-dismiss" style="padding:10px 20px;border-radius:8px;background:var(--cyan);color:#05070d;border:none;font-weight:700;font-size:0.85em;cursor:pointer">Got it →</button>
       </div>
     </div>
