@@ -16,17 +16,17 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="Live Bitcoin monitoring: Gate0 status, funding rates, liquidation clusters, on-chain cycle metrics, and derivatives data. Updated every 15 minutes.">
 <meta property="og:site_name" content="BTC Pipeline">
-<meta property="og:updated_time" id="og-updated" content="2026-06-26T06:21:22+00:00">
+<meta property="og:updated_time" id="og-updated" content="2026-06-26T06:26:09+00:00">
 <!-- Google AI Overviews freshness signals -->
 <meta property="article:published_time" content="2024-01-01T00:00:00Z">
-<meta property="article:modified_time" id="article-modified" content="2026-06-26T06:21:22+00:00">
+<meta property="article:modified_time" id="article-modified" content="2026-06-26T06:26:09+00:00">
 <!-- Dublin Core — Perplexity respects these -->
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
 <meta name="DC.title" content="BTC Pipeline Dashboard">
 <meta name="DC.type" content="Dataset">
 <meta name="DC.format" content="text/html">
 <meta name="DC.language" content="en">
-<meta name="DC.date" id="dc-date" content="2026-06-26T06:21:22+00:00">
+<meta name="DC.date" id="dc-date" content="2026-06-26T06:26:09+00:00">
 <!-- Schema.org Dataset markup for AI engines -->
 <script type="application/ld+json" id="schema-dataset">
 {
@@ -39,7 +39,7 @@
   "measurementTechnique": "Automated JSON data pipeline, 15-minute refresh cadence via cron-scheduled collection",
   "creator": { "@type": "Organization", "name": "BTC Pipeline" },
   "license": "https://creativecommons.org/licenses/by/4.0/",
-  "dateModified": "2026-06-26T06:21:23+00:00",
+  "dateModified": "2026-06-26T06:26:10+00:00",
   "distribution": [
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/gate0.json", "name": "Gate0 Signal Data" },
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/macro.json", "name": "Macro Indicator Data" },
@@ -172,18 +172,9 @@
 <main id="dashboard" role="main" aria-label="BTC Pipeline Dashboard — Real-time quantitative market intelligence">
 
 
-<div class="header" style="justify-content: center; text-align: center;">
-  <div>
-    <h1>⚡ Pipeline Dashboard</h1>
-    <p class="dashboard-summary" style="font-size:0.88em;color:var(--muted);line-height:1.5;max-width:650px;margin-top:4px; margin-left: auto; margin-right: auto;">
-      A real-time Bitcoin data aggregator tracking macroeconomic indicators, derivative positioning, and on-chain metrics — providing an objective, raw view of market conditions updated every 15 minutes.
-    </p>
-    <div class="meta" id="meta">Loading...</div>
-  </div>
-</div>
 
 <!-- BTC Price -->
-<div style="text-align:center; margin-bottom: 20px;">
+<div style="text-align:center; margin-bottom: 20px; margin-top: 20px;">
   <span class="btc-price" id="btc-price" style="font-size: 2em; font-weight: 800; color: var(--cyan); text-shadow: 0 0 20px rgba(34, 211, 238, 0.3);">$59,979</span>
   <span class="btc-change" id="btc-change" style="font-size: 1em; font-weight: 600; margin-left: 10px;"></span>
   <div class="meta" id="btc-range" style="color: var(--muted); font-size: 0.85em; margin-top: 6px;">Loading...</div>
@@ -197,6 +188,16 @@
   <div class="clock-item" id="clock-dubai"><span class="clock-city">Dubai</span><span class="clock-time">--:--</span></div>
   <div class="clock-item" id="clock-singapore"><span class="clock-city">Singapore</span><span class="clock-time">--:--</span></div>
   <div class="clock-item" id="clock-tokyo"><span class="clock-city">Tokyo</span><span class="clock-time">--:--</span></div>
+</div>
+
+<div class="header" style="justify-content: center; text-align: center; margin-top: 20px; margin-bottom: 20px;">
+  <div>
+    <h1>⚡ Pipeline Dashboard</h1>
+    <p class="dashboard-summary" style="font-size:0.88em;color:var(--muted);line-height:1.5;max-width:650px;margin-top:4px; margin-left: auto; margin-right: auto;">
+      A real-time Bitcoin data aggregator tracking macroeconomic indicators, derivative positioning, and on-chain metrics — providing an objective, raw view of market conditions updated every 15 minutes.
+    </p>
+    <div class="meta" id="meta">Loading...</div>
+  </div>
 </div>
 
 <hr style="border: 0; border-top: 1px solid var(--border); margin: 24px 0;">
@@ -288,7 +289,7 @@
 <div class="regime-summary" id="regime-card">
   <div class="regime-title">⚡ TRADE CONVICTION</div>
   <div class="regime-verdict" id="regime-verdict">CAUTIOUS NEUTRAL</div>
-  <div class="regime-detail" id="regime-detail">Tightened rules active. 1 bullish / 0 bearish signals. | TA: Price 14.8% below MA50 — medium-term structure bearish</div>
+  <div class="regime-detail" id="regime-detail">Tightened rules active. 1 bullish / 0 bearish signals. | TA: Price 14.6% below MA50 — medium-term structure bearish</div>
   <div class="regime-layers" id="regime-layers"></div>
   <div class="card-narrative" id="nar-regime" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
 </div>
