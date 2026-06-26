@@ -2664,7 +2664,30 @@ function renderCrashPrecursor(d) {
   const card = document.getElementById('card-crash');
   if (!el) return;
   if (!d || !d.composite && d.composite !== 0) {
-    el.innerHTML = '<p style="font-size:0.8em;color:var(--muted)">Crash monitor offline — no recent data.</p>';
+    el.innerHTML = '<p style="font-size:0.8em;color:var(--muted)">Crash monitor offline — waiting for recent market data.</p>';
+    return;
+  }
+
+  // ── Staleness check ── data older than 90 minutes = stale
+  let isStale = false;
+  if (d.timestamp) {
+    try {
+      const ts = new Date(d.timestamp);
+      const ageMin = (Date.now() - ts.getTime()) / 60000;
+      if (ageMin > 90) {
+        isStale = true;
+      }
+    } catch(e) {}
+  }
+
+  if (isStale) {
+    el.innerHTML = `
+      <div style="text-align:center; padding:16px 8px; color:var(--muted); font-size:0.85em;">
+        <span style="font-size:1.5em; display:block; margin-bottom:8px;">⏳</span>
+        Monitoring paused.<br>Waiting for the latest market data to resume instability checks.
+      </div>
+    `;
+    if (card) card.style.borderLeftColor = 'var(--muted)';
     return;
   }
 
@@ -2677,19 +2700,7 @@ function renderCrashPrecursor(d) {
   const statusEmoji = {NORMAL: '🟢', CAUTION: '🟡', ELEVATED: '🟠', DANGER: '🔴'};
   const color = statusColors[status] || 'var(--muted)';
 
-  // ── Staleness check ── data older than 90 minutes = stale
-  let staleBanner = '';
-  if (d.timestamp) {
-    try {
-      const ts = new Date(d.timestamp);
-      const ageMin = (Date.now() - ts.getTime()) / 60000;
-      if (ageMin > 90) {
-        const ageStr = ageMin > 1440 ? Math.round(ageMin/1440) + 'd' : Math.round(ageMin/60) + 'h';
-        staleBanner = '<div style="text-align:center;margin-bottom:8px;padding:5px 8px;background:rgba(210,153,34,0.12);border:1px solid var(--yellow);border-radius:4px;font-size:0.72em;color:var(--yellow)">⚠️ Stale — data is ' + ageStr + ' old. Precursor observations may not reflect current conditions.</div>';
-        if (card) card.style.borderLeftColor = 'var(--yellow)';
-      }
-    } catch(e) {}
-  }
+  if (card) card.style.borderLeftColor = color;
 
   let desc = 'Market is structurally stable. Warning indicators are quiet.';
   if (status === 'DANGER') {
@@ -2700,28 +2711,15 @@ function renderCrashPrecursor(d) {
     desc = 'Caution advised. Early instability flags are appearing in order books or fees.';
   }
 
-  let html = staleBanner;
+  let html = '';
   html += metricRow('Status', statusEmoji[status] + ' ' + status, color === 'var(--green)' ? 'positive' : 'negative');
-  html += metricRow('Composite Score', comp + '/5 (Warning level based on 5 metrics)');
+  html += metricRow('Warning Score', comp + '/5');
   html += metricRow('Active Alert', d.alert_fired ? '⚠ Yes' : 'No');
 
   // Text explanation
   html += `<p style="font-size:0.75em;color:var(--muted);line-height:1.45;margin:8px 0">${desc}</p>`;
 
-  if (activeSignals.length > 0) {
-    const activeLabels = activeSignals.map(s => {
-      const sLower = s.toLowerCase();
-      if (sLower.includes('taker')) return 'Aggressive Sell Orders';
-      if (sLower.includes('bid')) return 'Support Wall Retreat';
-      if (sLower.includes('funding')) return 'Futures Holding Fees';
-      if (sLower.includes('oi') || sLower.includes('implosion')) return 'Leverage Flushes';
-      if (sLower.includes('divergence')) return 'Momentum Divergence';
-      return s;
-    });
-    html += '<div style="margin-top:6px;font-size:0.78em;color:var(--orange)">Active Warnings: ' + esc(activeLabels.join(', ')) + '</div>';
-  }
-
-  // Individual precursor breakdown
+  // Individual precursor breakdown (Beginner friendly list)
   const signalNames = {
     taker: 'Aggressive Sell Orders',
     bid_wall: 'Support Wall Retreat',
@@ -2729,10 +2727,18 @@ function renderCrashPrecursor(d) {
     oi_implosion: 'Leverage Flushes',
     divergence: 'Momentum Divergence'
   };
-  let signalHtml = '<div style="margin-top:8px;font-size:0.75em;display:flex;gap:8px;flex-wrap:wrap">';
+  
+  let signalHtml = '<div style="margin-top:12px;font-size:0.78em;display:flex;gap:6px;flex-direction:column;">';
+  signalHtml += '<div style="color:var(--text);font-weight:600;margin-bottom:2px;">Precursor Checks:</div>';
   for (const [key, label] of Object.entries(signalNames)) {
     const val = signals[key] || 0;
-    signalHtml += '<span style="padding:2px 6px;border-radius:4px;background:' + (val > 0 ? 'rgba(255,83,112,0.15)' : 'rgba(255,255,255,0.04)') + ';color:' + (val > 0 ? 'var(--red)' : 'var(--muted)') + '">' + esc(label) + ': ' + val + '</span>';
+    const isActive = val > 0;
+    signalHtml += `
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 10px; border-radius:6px; background:${isActive ? 'rgba(255,83,112,0.1)' : 'rgba(255,255,255,0.02)'}; color:${isActive ? 'var(--red)' : 'var(--muted)'};">
+        <span>${esc(label)}</span>
+        <span style="font-weight:600;">${isActive ? '⚠ Active' : 'Normal'}</span>
+      </div>
+    `;
   }
   signalHtml += '</div>';
 
@@ -3291,13 +3297,48 @@ const CARD_GLOSSARY_LINKS = {
 };
 
 function enhanceDashboard() {
-  // Add tooltips to metric labels
-  document.querySelectorAll('.metric-label, .gate-module .label').forEach(label => {
+  // Add mobile-friendly click tooltips to metric labels
+  document.querySelectorAll('.metric-label:not([data-tooltip-init]), .gate-module .label:not([data-tooltip-init])').forEach(label => {
+    label.setAttribute('data-tooltip-init', 'true');
     const text = label.textContent.trim();
     if (METRIC_TOOLTIPS[text]) {
-      label.setAttribute('data-tooltip', METRIC_TOOLTIPS[text]);
-      label.style.cursor = 'help';
-      label.style.borderBottom = '1px dotted var(--muted)';
+      // Create arrow indicator
+      const arrow = document.createElement('span');
+      arrow.textContent = ' ▾';
+      arrow.style.fontSize = '0.8em';
+      arrow.style.color = 'var(--cyan)';
+      label.appendChild(arrow);
+      label.style.cursor = 'pointer';
+      
+      // Create description div
+      const desc = document.createElement('div');
+      desc.textContent = METRIC_TOOLTIPS[text];
+      desc.style.display = 'none';
+      desc.style.fontSize = '0.75em';
+      desc.style.color = 'var(--muted)';
+      desc.style.marginTop = '4px';
+      desc.style.padding = '8px 10px';
+      desc.style.background = 'rgba(255,255,255,0.02)';
+      desc.style.borderLeft = '2px solid var(--cyan)';
+      desc.style.borderRadius = '0 6px 6px 0';
+      desc.style.lineHeight = '1.45';
+      desc.style.fontWeight = '400';
+      
+      // Insert description in the right place
+      const parent = label.parentElement;
+      if (parent.style.display === 'flex') {
+         parent.insertAdjacentElement('afterend', desc);
+      } else {
+         parent.appendChild(desc);
+      }
+
+      // Toggle mechanism
+      label.onclick = (e) => {
+        e.preventDefault();
+        const isHidden = desc.style.display === 'none';
+        desc.style.display = isHidden ? 'block' : 'none';
+        arrow.textContent = isHidden ? ' ▴' : ' ▾';
+      };
     }
   });
 
