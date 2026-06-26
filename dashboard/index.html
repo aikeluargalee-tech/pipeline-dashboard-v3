@@ -16,17 +16,17 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="Live Bitcoin monitoring: Gate0 status, funding rates, liquidation clusters, on-chain cycle metrics, and derivatives data. Updated every 15 minutes.">
 <meta property="og:site_name" content="BTC Pipeline">
-<meta property="og:updated_time" id="og-updated" content="2026-06-26T06:33:42+00:00">
+<meta property="og:updated_time" id="og-updated" content="2026-06-26T06:51:36+00:00">
 <!-- Google AI Overviews freshness signals -->
 <meta property="article:published_time" content="2024-01-01T00:00:00Z">
-<meta property="article:modified_time" id="article-modified" content="2026-06-26T06:33:42+00:00">
+<meta property="article:modified_time" id="article-modified" content="2026-06-26T06:51:36+00:00">
 <!-- Dublin Core — Perplexity respects these -->
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
 <meta name="DC.title" content="BTC Pipeline Dashboard">
 <meta name="DC.type" content="Dataset">
 <meta name="DC.format" content="text/html">
 <meta name="DC.language" content="en">
-<meta name="DC.date" id="dc-date" content="2026-06-26T06:33:42+00:00">
+<meta name="DC.date" id="dc-date" content="2026-06-26T06:51:36+00:00">
 <!-- Schema.org Dataset markup for AI engines -->
 <script type="application/ld+json" id="schema-dataset">
 {
@@ -39,7 +39,7 @@
   "measurementTechnique": "Automated JSON data pipeline, 15-minute refresh cadence via cron-scheduled collection",
   "creator": { "@type": "Organization", "name": "BTC Pipeline" },
   "license": "https://creativecommons.org/licenses/by/4.0/",
-  "dateModified": "2026-06-26T06:33:43+00:00",
+  "dateModified": "2026-06-26T06:51:37+00:00",
   "distribution": [
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/gate0.json", "name": "Gate0 Signal Data" },
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/macro.json", "name": "Macro Indicator Data" },
@@ -250,26 +250,86 @@
     <div class="card" id="card-pb-turtle" style="border-left: 3px solid var(--green)">
       <h3 class="card-title">🐢 Turtle Breakout <span style="font-size:0.7em;color:var(--muted)">TRENDING</span></h3>
       <div id="pb-turtle-content"><p style="font-size:0.75em;color:var(--muted)">Donchian 20H breakout — idle</p></div>
+      <!-- Static Playbook Guide -->
+      <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
+        <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
+          <span>📖</span> Playbook Guide
+        </summary>
+        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
+          <div><strong>Purpose:</strong> Identifies long-term trends by tracking price breakouts.</div>
+          <div><strong>Activation:</strong> Triggers when Market State is `TRENDING` and price crosses the 20-hour high or low boundary.</div>
+        </div>
+      </details>
     </div>
     <div class="card" id="card-pb-meanrev" style="border-left: 3px solid var(--blue)">
       <h3 class="card-title">📉 Mean Reversion <span style="font-size:0.7em;color:var(--muted)">RANGING</span></h3>
       <div id="pb-meanrev-content"><p style="font-size:0.75em;color:var(--muted)">RSI/BB reversion — idle</p></div>
+      <!-- Static Playbook Guide -->
+      <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
+        <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
+          <span>📖</span> Playbook Guide
+        </summary>
+        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
+          <div><strong>Purpose:</strong> Identifies price exhaustion to catch bounces in sideways markets.</div>
+          <div><strong>Activation:</strong> Triggers when Market State is `RANGING` and price touches outer limits of volatility bands (Bollinger/RSI).</div>
+        </div>
+      </details>
     </div>
     <div class="card" id="card-pb-liqmo" style="border-left: 3px solid var(--orange)">
       <h3 class="card-title">💧 Liq Momentum <span style="font-size:0.7em;color:var(--muted)">CASCADE</span></h3>
       <div id="pb-liqmo-content"><p style="font-size:0.75em;color:var(--muted)">OI decline + taker weakness — idle</p></div>
+      <!-- Static Playbook Guide -->
+      <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
+        <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
+          <span>📖</span> Playbook Guide
+        </summary>
+        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
+          <div><strong>Purpose:</strong> Captures rapid price moves driven by futures contract forced liquidations.</div>
+          <div><strong>Activation:</strong> Triggers when Market State is in a highly volatile `CASCADE` and leverage (Open Interest) declines rapidly.</div>
+        </div>
+      </details>
     </div>
     <div class="card" id="card-pb-fundmr" style="border-left: 3px solid var(--blue)">
       <h3 class="card-title">💰 Funding Rate MR <span style="font-size:0.7em;color:var(--muted)">RANGING</span></h3>
       <div id="pb-fundmr-content"><p style="font-size:0.75em;color:var(--muted)">0.01% hysteresis gate — idle</p></div>
+      <!-- Static Playbook Guide -->
+      <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
+        <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
+          <span>📖</span> Playbook Guide
+        </summary>
+        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
+          <div><strong>Purpose:</strong> Captures price reversals at futures leverage funding cost extremes.</div>
+          <div><strong>Activation:</strong> Triggers when Market State is `RANGING` and the annualized funding rate exceeds +/- 1.0%.</div>
+        </div>
+      </details>
     </div>
     <div class="card" id="card-pb-volbrk" style="border-left: 3px solid var(--green)">
       <h3 class="card-title">📊 Volume Breakout <span style="font-size:0.7em;color:var(--muted)">TRENDING</span></h3>
       <div id="pb-volbrk-content"><p style="font-size:0.75em;color:var(--muted)">Volume surge + CVD — idle</p></div>
+      <!-- Static Playbook Guide -->
+      <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
+        <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
+          <span>📖</span> Playbook Guide
+        </summary>
+        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
+          <div><strong>Purpose:</strong> Tracks heavy buying or selling volume spikes breaking out of consolidation.</div>
+          <div><strong>Activation:</strong> Triggers when Market State is `TRENDING` and trading volume/CVD spikes significantly above average.</div>
+        </div>
+      </details>
     </div>
     <div class="card" id="card-pb-macro" style="border-left: 3px solid var(--red)">
       <h3 class="card-title">🌐 Cross-Asset Macro <span style="font-size:0.7em;color:var(--muted)">DISTR/RISK_OFF</span></h3>
       <div id="pb-macro-content"><p style="font-size:0.75em;color:var(--muted)">DXY/VIX/SPY defense — idle</p></div>
+      <!-- Static Playbook Guide -->
+      <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
+        <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
+          <span>📖</span> Playbook Guide
+        </summary>
+        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
+          <div><strong>Purpose:</strong> Defensive model reacting to stocks, volatility, and US dollar indices.</div>
+          <div><strong>Activation:</strong> Triggers when Market State is `RISK_OFF` or `DISTRIBUTION` and TradFi market stress (VIX/DXY) is elevated.</div>
+        </div>
+      </details>
     </div>
   </div>
 </div>
@@ -319,7 +379,7 @@
 <div class="regime-summary" id="regime-card">
   <div class="regime-title">⚡ TRADE CONVICTION</div>
   <div class="regime-verdict" id="regime-verdict">CAUTIOUS NEUTRAL</div>
-  <div class="regime-detail" id="regime-detail">Tightened rules active. 1 bullish / 0 bearish signals. | TA: Price 14.6% below MA50 — medium-term structure bearish</div>
+  <div class="regime-detail" id="regime-detail">Tightened rules active. 1 bullish / 0 bearish signals. | TA: Price 14.2% below MA50 — medium-term structure bearish</div>
   <div class="regime-layers" id="regime-layers"></div>
   <div class="card-narrative" id="nar-regime" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
 </div>
