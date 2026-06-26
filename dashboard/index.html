@@ -2231,25 +2231,55 @@ function renderRegime(d) {
   verdict.textContent = verdictText;
   verdict.style.color = color;
 
-  detail.textContent = s.detail || '';
+  // Simplify the main detail text for beginners
+  let friendlyDetail = s.detail || '';
+  friendlyDetail = friendlyDetail.replace(/TA:/g, 'Trend:');
+  friendlyDetail = friendlyDetail.replace(/MA50/g, '50-Day Average');
+  friendlyDetail = friendlyDetail.replace(/medium-term structure bearish/g, 'market momentum is currently weak');
+  friendlyDetail = friendlyDetail.replace(/medium-term structure bullish/g, 'market momentum is currently strong');
+  friendlyDetail = friendlyDetail.replace(/Tightened rules active/g, 'Safety limits are active due to market risks');
+  
+  detail.innerHTML = `<div style="padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; font-size: 0.9em; margin-bottom: 12px; line-height: 1.5; color: var(--muted);">${esc(friendlyDetail)}</div>`;
 
-  // Layer chips — flat inline text (no nested cards)
+  // Layer chips — Stacked vertically for mobile readability and beginner friendly text
   let parts = [];
   const layerNames = [
-    { key: 'gate', label: 'Gate' },
-    { key: 'macro', label: 'Macro' },
-    { key: 'structure', label: 'Structure' },
-    { key: 'derivatives', label: 'Derivatives' },
-    { key: 'cycle', label: 'Cycle' },
+    { key: 'gate', label: 'System Safety' },
+    { key: 'macro', label: 'Global Economy' },
+    { key: 'structure', label: 'Price Structure' },
+    { key: 'derivatives', label: 'Futures Market' },
+    { key: 'cycle', label: 'Long-term Cycle' },
   ];
+  
   for (const l of layerNames) {
     const layer = d[l.key];
     if (!layer) continue;
     const layerVer = layer.verdict || '—';
-    const translatedVer = layerVer;
-    parts.push(`${esc(String(layer.emoji || ''))} ${esc(l.label)} <strong style="color:var(--text)">${esc(translatedVer)}</strong> ${esc(String(layer.detail || ''))}`);
+    
+    // Clean up jargon in the layer details
+    let cleanDetail = String(layer.detail || '');
+    cleanDetail = cleanDetail.replace(/FR /g, 'Funding Fee ');
+    cleanDetail = cleanDetail.replace(/L\/S /g, 'Long/Short Ratio ');
+    cleanDetail = cleanDetail.replace(/CVD /g, 'Buy/Sell Volume ');
+    cleanDetail = cleanDetail.replace(/MVRV-Z /g, 'Valuation Score ');
+    cleanDetail = cleanDetail.replace(/netflow /g, 'Exchange Flows ');
+    cleanDetail = cleanDetail.replace(/ai3_wave/g, 'AI Cycle Model');
+    cleanDetail = cleanDetail.replace(/VIX /g, 'Stock Panic (VIX) ');
+    cleanDetail = cleanDetail.replace(/timeframes active/g, 'price levels holding');
+
+    parts.push(`
+      <div style="display:flex; flex-direction:column; background:rgba(255,255,255,0.015); border:1px solid var(--border); border-radius:6px; padding:10px 14px; margin-bottom:8px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <strong style="color:var(--text); font-size:0.95em;">${esc(String(layer.emoji || ''))} ${esc(l.label)}</strong>
+          <span style="font-size:0.8em; font-weight:700; padding:3px 8px; border-radius:4px; background:rgba(255,255,255,0.05); color:var(--text);">${esc(layerVer)}</span>
+        </div>
+        <div style="font-size:0.85em; color:var(--muted); line-height: 1.4;">${esc(cleanDetail)}</div>
+      </div>
+    `);
   }
-  layers.innerHTML = parts.join(' <span style="color:var(--muted);margin:0 6px">|</span> ');
+  
+  layers.style.display = 'block'; // Ensure block layout
+  layers.innerHTML = parts.join('');
 }
 
 // ─── Trading Session Clocks ───
@@ -3091,7 +3121,7 @@ function populateCardNarratives(gate, regime, macro, structural, derivatives, cy
 
   // Regime
   if (regime && regime.synthesis) {
-    nar('nar-regime', 'Composite verdict across all layers: ' + regime.synthesis.verdict + '. ' + (regime.synthesis.detail || '') + ' Multi-layer weighted synthesis.');
+    nar('nar-regime', 'Overall Market Direction: ' + regime.synthesis.verdict + '. Synthesized from all 5 quantitative layers.');
   }
 
   // Macro
