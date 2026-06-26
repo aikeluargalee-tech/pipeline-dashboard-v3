@@ -16,17 +16,17 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="Live Bitcoin monitoring: Gate0 status, funding rates, liquidation clusters, on-chain cycle metrics, and derivatives data. Updated every 15 minutes.">
 <meta property="og:site_name" content="BTC Pipeline">
-<meta property="og:updated_time" id="og-updated" content="2026-06-26T06:26:09+00:00">
+<meta property="og:updated_time" id="og-updated" content="2026-06-26T06:33:42+00:00">
 <!-- Google AI Overviews freshness signals -->
 <meta property="article:published_time" content="2024-01-01T00:00:00Z">
-<meta property="article:modified_time" id="article-modified" content="2026-06-26T06:26:09+00:00">
+<meta property="article:modified_time" id="article-modified" content="2026-06-26T06:33:42+00:00">
 <!-- Dublin Core — Perplexity respects these -->
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
 <meta name="DC.title" content="BTC Pipeline Dashboard">
 <meta name="DC.type" content="Dataset">
 <meta name="DC.format" content="text/html">
 <meta name="DC.language" content="en">
-<meta name="DC.date" id="dc-date" content="2026-06-26T06:26:09+00:00">
+<meta name="DC.date" id="dc-date" content="2026-06-26T06:33:42+00:00">
 <!-- Schema.org Dataset markup for AI engines -->
 <script type="application/ld+json" id="schema-dataset">
 {
@@ -39,7 +39,7 @@
   "measurementTechnique": "Automated JSON data pipeline, 15-minute refresh cadence via cron-scheduled collection",
   "creator": { "@type": "Organization", "name": "BTC Pipeline" },
   "license": "https://creativecommons.org/licenses/by/4.0/",
-  "dateModified": "2026-06-26T06:26:10+00:00",
+  "dateModified": "2026-06-26T06:33:43+00:00",
   "distribution": [
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/gate0.json", "name": "Gate0 Signal Data" },
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/macro.json", "name": "Macro Indicator Data" },
@@ -213,6 +213,36 @@
     <div class="card" id="card-regime-switch" style="border-left: 3px solid var(--yellow); grid-column: 1 / -1;">
       <h3 class="card-title">🔄 Current Market State</h3>
       <div id="regime-switch-content"><p style="font-size:0.8em;color:var(--muted)">Detecting market regime from live signals — DISTRIBUTION / RISK_OFF / CASCADE / TRENDING / RANGING / UNCERTAIN</p></div>
+      
+      <!-- Static Beginner & AEO Guide -->
+      <details style="margin-top: 16px; border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 12px; background: rgba(255,255,255,0.01); text-align: left;">
+        <summary style="font-size: 0.82em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 6px; user-select: none;">
+          <span>📖</span> How are Market States derived and what do they mean?
+        </summary>
+        <div style="margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; display: flex; flex-direction: column; gap: 14px; font-size: 0.78em; line-height: 1.5; color: var(--muted);">
+          <div>
+            <h4 style="color: var(--text); font-size: 0.9em; margin-bottom: 6px; font-weight: 600;">The Six Market States Explained</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 8px 16px;">
+              <div><strong>📈 TRENDING:</strong> Price is moving consistently in one direction (up or down) with strong momentum.</div>
+              <div><strong>🔄 RANGING:</strong> Price is consolidating, fluctuating within a stable horizontal range.</div>
+              <div><strong>💥 CASCADE:</strong> Sudden high-speed liquidation sweeps causing rapid, high-volatility price swings.</div>
+              <div><strong>🛡️ RISK_OFF:</strong> Panic in traditional equity markets causing capital flight out of high-risk assets like BTC.</div>
+              <div><strong>📥 DISTRIBUTION:</strong> Selling pressure near local cycle tops, representing a transitional top-out phase.</div>
+              <div><strong>❓ UNCERTAIN:</strong> Conflicting data indicators, indicating no clear trend direction.</div>
+            </div>
+          </div>
+          <div>
+            <h4 style="color: var(--text); font-size: 0.9em; margin-bottom: 6px; font-weight: 600;">How the State is Mathematically Derived</h4>
+            <p style="margin-bottom: 8px;">Every 15 minutes, the automated pipeline computes these four objective quantitative inputs to classify the market state without human bias:</p>
+            <ol style="margin-left: 16px; display: flex; flex-direction: column; gap: 4px;">
+              <li><strong>Trend Filter (MA50):</strong> Measures current price deviations against the 50-period moving average.</li>
+              <li><strong>Volatility Expansion (ATR):</strong> Uses Average True Range to detect expansion (trending) or compression (ranging).</li>
+              <li><strong>Leverage Sweeps:</strong> Scans perpetual futures Open Interest (OI) and CVD to capture liquidation liquidities.</li>
+              <li><strong>Systemic TradFi Spreads:</strong> Monitors VIX (stock volatility index) and DXY (dollar strength) to spot macro panics.</li>
+            </ol>
+          </div>
+        </div>
+      </details>
     </div>
   </div>
   <!-- Playbook Status Cards — 2 rows × 3 columns -->
