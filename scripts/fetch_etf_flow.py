@@ -693,9 +693,9 @@ def main():
 
         if stale_data and stale_data.get("card") == "A6" and not stale_data.get("error"):
             # Keep stale data but mark it as old
-            stale_data["lag_warning"] = f"⚠️ Data is stale (last updated: {stale_data.get('timestamp', 'unknown')}). All sources failed."
+            stale_data["lag_warning"] = f"⚠️ Monitoring paused (last updated: {stale_data.get('timestamp', 'unknown')}). All sources failed."
             stale_data["confirmed"] = False
-            stale_data["source"] = stale_data.get("source", "") + " (STALE - refresh failed)"
+            stale_data["source"] = stale_data.get("source", "") + " (Monitoring paused - refresh failed)"
             write_output(stale_data)
             log("  Kept existing stale data with warning")
         else:

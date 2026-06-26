@@ -130,7 +130,7 @@ def main():
                     validity = "invalidated"
                     validity_reason = f"Price rose above pivot ({pivot_price:,.0f})"
                 elif age_minutes > 120:
-                    validity = "stale"
+                    validity = "paused"
                     validity_reason = f"No follow-through after {int(age_hours)}h — still ranging"
                 elif age_minutes > 30:
                     validity = "monitoring"
