@@ -16,17 +16,17 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="Live Bitcoin monitoring: Gate0 status, funding rates, liquidation clusters, on-chain cycle metrics, and derivatives data. Updated every 15 minutes.">
 <meta property="og:site_name" content="BTC Pipeline">
-<meta property="og:updated_time" id="og-updated" content="2026-06-26T11:45:56+00:00">
+<meta property="og:updated_time" id="og-updated" content="2026-06-26T12:01:20+00:00">
 <!-- Google AI Overviews freshness signals -->
 <meta property="article:published_time" content="2024-01-01T00:00:00Z">
-<meta property="article:modified_time" id="article-modified" content="2026-06-26T11:45:56+00:00">
+<meta property="article:modified_time" id="article-modified" content="2026-06-26T12:01:20+00:00">
 <!-- Dublin Core — Perplexity respects these -->
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
 <meta name="DC.title" content="BTC Pipeline Dashboard">
 <meta name="DC.type" content="Dataset">
 <meta name="DC.format" content="text/html">
 <meta name="DC.language" content="en">
-<meta name="DC.date" id="dc-date" content="2026-06-26T11:45:56+00:00">
+<meta name="DC.date" id="dc-date" content="2026-06-26T12:01:20+00:00">
 <!-- Schema.org Dataset markup for AI engines -->
 <script type="application/ld+json" id="schema-dataset">
 {
@@ -39,7 +39,7 @@
   "measurementTechnique": "Automated JSON data pipeline, 15-minute refresh cadence via cron-scheduled collection",
   "creator": { "@type": "Organization", "name": "BTC Pipeline" },
   "license": "https://creativecommons.org/licenses/by/4.0/",
-  "dateModified": "2026-06-26T11:45:57+00:00",
+  "dateModified": "2026-06-26T12:01:22+00:00",
   "distribution": [
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/gate0.json", "name": "Gate0 Signal Data" },
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/macro.json", "name": "Macro Indicator Data" },
@@ -372,6 +372,16 @@
           <div><p style="margin:0;">It measures the vulnerability of the cryptocurrency market by tracking seven key stability metrics, including stablecoin peg deviations, broad equity market panic, and major currency trends.</p></div>
           <div><h3 style="color:var(--text);font-size:1.05em;margin-top:4px;margin-bottom:2px;font-weight:600;">What do the status levels mean?</h3></div>
           <div><p style="margin:0;">Green (NORMAL) represents low systemic risk. Yellow (CAUTION) or Orange (ELEVATED) indicates moderate structural stress. Red (CRITICAL) warns of extreme market vulnerability.</p></div>
+          <div><h3 style="color:var(--text);font-size:1.05em;margin-top:4px;margin-bottom:2px;font-weight:600;">What do the seven metrics monitor?</h3></div>
+          <div style="display:flex;flex-direction:column;gap:4px;margin:0;padding-left:4px;">
+            <div><strong>• Sentiment (Fear & Greed):</strong> The emotional state of crowd sentiment (Fear = panic; Greed = FOMO; Normal = calm).</div>
+            <div><strong>• Equity Volatility (VIX):</strong> Traditional stock market fear index. Calm stock markets equal normal VIX.</div>
+            <div><strong>• Stablecoin Pegs:</strong> Verifies if dollar-pegged digital coins are holding their stable $1.00 USD value.</div>
+            <div><strong>• US Dollar (DXY):</strong> Measures global dollar strength. A surging dollar historically pressures Bitcoin.</div>
+            <div><strong>• US 10Y Treasury:</strong> Tracks benchmark interest rates for signs of borrowing cost spikes or stress.</div>
+            <div><strong>• Whale Activity:</strong> Observes transaction behaviors of massive holders (Dumping = selling pressure; Balanced = normal).</div>
+            <div><strong>• Crash Signals:</strong> Real-time scan of futures leverage and order book retreat flags before sudden price drops.</div>
+          </div>
         </div>
       </details>
     </div>
@@ -3242,6 +3252,13 @@ const METRIC_TOOLTIPS = {
   '10Y Yield': '10-year Treasury yield. < 4% = risk-on, > 5% = risk-off.',
   'M2 Supply': 'Broad money supply. Expanding = liquidity positive for BTC.',
   'VIX': 'Equity volatility index. > 30 = stress, > 40 = panic.',
+  'Sentiment (Fear & Greed)': 'Tracks crowd emotion. Fear = panic selling; Greed = FOMO buying; Normal = balanced.',
+  'Equity Volatility (VIX)': 'S&P 500 stock market panic index. High volatility = stock market stress.',
+  'Stablecoin Pegs': 'Verifies if $1-pegged digital coins are holding their stable $1.00 USD value.',
+  'US Dollar (DXY)': 'Global strength of the US Dollar. A spiking dollar generally pressures Bitcoin.',
+  'US 10Y Treasury': 'Interest rate paid on 10-year US government bonds; tracks global borrowing costs.',
+  'Whale Activity': 'Tracks large-scale transactors. Dumping = selling pressure; Balanced = normal activity.',
+  'Crash Signals': 'Checks for fast technical instabilities right before sudden price drops.',
   'MA50 (Daily)': '50-day moving average. Price above = bullish trend.',
   'MA60 (Daily)': '60-day moving average.',
   'ATR (14d)': 'Average True Range — volatility measure over 14 days.',
@@ -3274,7 +3291,7 @@ const CARD_GLOSSARY_LINKS = {
 
 function enhanceDashboard() {
   // Add tooltips to metric labels
-  document.querySelectorAll('.metric-label').forEach(label => {
+  document.querySelectorAll('.metric-label, .gate-module .label').forEach(label => {
     const text = label.textContent.trim();
     if (METRIC_TOOLTIPS[text]) {
       label.setAttribute('data-tooltip', METRIC_TOOLTIPS[text]);
