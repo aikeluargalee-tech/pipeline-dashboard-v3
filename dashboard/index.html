@@ -206,13 +206,13 @@
 <div class="dashboard-block-container block-theme-yellow">
   <div class="block-header">
     <span class="block-number-badge">BLOCK 1</span>
-    <h2 class="block-title">Market Context & Strategy</h2>
+    <h2 class="block-title">Market Context & Observation</h2>
   </div>
   <div class="layer" style="margin-top:0">
     <div class="layer-header">
       <span class="layer-num" style="background:var(--yellow)">🔄</span>
       <h2 class="layer-title">Market Context</h2>
-      <span class="layer-subtitle">Market regime detection — classifies conditions, activates strategy</span>
+      <span class="layer-subtitle">Market regime detection — classifies conditions, visualizes structural models</span>
     </div>
     <div class="layer-grid">
       <div class="card" id="card-regime-switch" style="border-left: 3px solid var(--yellow); grid-column: 1 / -1;">
@@ -250,89 +250,95 @@
         </details>
       </div>
     </div>
-    <!-- Playbook Status Cards — 2 rows × 3 columns -->
+    <!-- Model Status Cards — 2 rows × 3 columns -->
     <div class="playbook-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px">
       <div class="card" id="card-pb-turtle" style="border-left: 3px solid var(--green)">
-        <h3 class="card-title">🐢 Turtle Breakout <span style="font-size:0.7em;color:var(--muted)">TRENDING</span></h3>
-        <div id="pb-turtle-content"><p style="font-size:0.75em;color:var(--muted)">Donchian 20H breakout — idle</p></div>
-        <!-- Static Playbook Guide -->
+        <h3 class="card-title">🐢 Volatility Expansion Model <span style="font-size:0.7em;color:var(--muted)">TRENDING</span></h3>
+        <div id="pb-turtle-content"><p style="font-size:0.75em;color:var(--muted)">Donchian 20H tracking — idle</p></div>
+        <!-- Static AEO Model Guide -->
         <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
           <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
-            <span>📖</span> Playbook Guide
+            <span>📖</span> Model Methodology
           </summary>
           <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
-            <div><strong>Purpose:</strong> Identifies long-term trends by tracking price breakouts.</div>
-            <div><strong>Activation:</strong> Triggers when Market State is `TRENDING` and price crosses the 20-hour high or low boundary.</div>
+            <div><h3 style="color:var(--text);font-size:1em;margin-bottom:0px;font-weight:600;">How does the volatility expansion model work?</h3></div>
+            <div><p style="margin:0;">It identifies directional velocity by mathematically tracking structural price deviations across historical 20-hour volatility boundaries.</p></div>
+            <div><strong>Observation Activation:</strong> Logs state changes when Market State is `TRENDING` and price crosses empirical historical deviation limits.</div>
           </div>
         </details>
       </div>
       <div class="card" id="card-pb-meanrev" style="border-left: 3px solid var(--blue)">
-        <h3 class="card-title">📉 Mean Reversion <span style="font-size:0.7em;color:var(--muted)">RANGING</span></h3>
+        <h3 class="card-title">📉 Statistical Reversion Model <span style="font-size:0.7em;color:var(--muted)">RANGING</span></h3>
         <div id="pb-meanrev-content"><p style="font-size:0.75em;color:var(--muted)">RSI/BB reversion — idle</p></div>
-        <!-- Static Playbook Guide -->
+        <!-- Static AEO Model Guide -->
         <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
           <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
-            <span>📖</span> Playbook Guide
+            <span>📖</span> Model Methodology
           </summary>
           <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
-            <div><strong>Purpose:</strong> Identifies price exhaustion to catch bounces in sideways markets.</div>
-            <div><strong>Activation:</strong> Triggers when Market State is `RANGING` and price touches outer limits of volatility bands (Bollinger/RSI).</div>
+            <div><h3 style="color:var(--text);font-size:1em;margin-bottom:0px;font-weight:600;">What is the statistical reversion model?</h3></div>
+            <div><p style="margin:0;">It visualizes price exhaustion probabilities by tracking mean reversion tendencies within established lateral volatility limits.</p></div>
+            <div><strong>Observation Activation:</strong> Logs state changes when Market State is `RANGING` and assets touch outer limits of defined statistical bands (Bollinger/RSI).</div>
           </div>
         </details>
       </div>
       <div class="card" id="card-pb-liqmo" style="border-left: 3px solid var(--orange)">
-        <h3 class="card-title">💧 Liq Momentum <span style="font-size:0.7em;color:var(--muted)">CASCADE</span></h3>
+        <h3 class="card-title">💧 Liquidity Cascade Model <span style="font-size:0.7em;color:var(--muted)">CASCADE</span></h3>
         <div id="pb-liqmo-content"><p style="font-size:0.75em;color:var(--muted)">OI decline + taker weakness — idle</p></div>
-        <!-- Static Playbook Guide -->
+        <!-- Static AEO Model Guide -->
         <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
           <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
-            <span>📖</span> Playbook Guide
+            <span>📖</span> Model Methodology
           </summary>
           <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
-            <div><strong>Purpose:</strong> Captures rapid price moves driven by futures contract forced liquidations.</div>
-            <div><strong>Activation:</strong> Triggers when Market State is in a highly volatile `CASCADE` and leverage (Open Interest) declines rapidly.</div>
+            <div><h3 style="color:var(--text);font-size:1em;margin-bottom:0px;font-weight:600;">How is a liquidity cascade defined?</h3></div>
+            <div><p style="margin:0;">A cascade mathematically represents rapid de-leveraging events, observed through forced derivative liquidations and sharp declines in aggregate Open Interest.</p></div>
+            <div><strong>Observation Activation:</strong> Logs state changes when Market State is in a highly volatile `CASCADE` and derivative Open Interest exhibits sharp declines.</div>
           </div>
         </details>
       </div>
       <div class="card" id="card-pb-fundmr" style="border-left: 3px solid var(--blue)">
-        <h3 class="card-title">💰 Funding Rate MR <span style="font-size:0.7em;color:var(--muted)">RANGING</span></h3>
+        <h3 class="card-title">💰 Cost of Leverage Model <span style="font-size:0.7em;color:var(--muted)">RANGING</span></h3>
         <div id="pb-fundmr-content"><p style="font-size:0.75em;color:var(--muted)">0.01% hysteresis gate — idle</p></div>
-        <!-- Static Playbook Guide -->
+        <!-- Static AEO Model Guide -->
         <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
           <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
-            <span>📖</span> Playbook Guide
+            <span>📖</span> Model Methodology
           </summary>
           <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
-            <div><strong>Purpose:</strong> Captures price reversals at futures leverage funding cost extremes.</div>
-            <div><strong>Activation:</strong> Triggers when Market State is `RANGING` and the annualized funding rate exceeds +/- 1.0%.</div>
+            <div><h3 style="color:var(--text);font-size:1em;margin-bottom:0px;font-weight:600;">What does the cost of leverage monitor?</h3></div>
+            <div><p style="margin:0;">It observes systemic funding imbalances by tracking the mathematical extremes of derivative holding costs (funding rates) across central exchanges.</p></div>
+            <div><strong>Observation Activation:</strong> Logs state changes when Market State is `RANGING` and the annualized funding rate structurally deviates beyond +/- 1.0%.</div>
           </div>
         </details>
       </div>
       <div class="card" id="card-pb-volbrk" style="border-left: 3px solid var(--green)">
-        <h3 class="card-title">📊 Volume Breakout <span style="font-size:0.7em;color:var(--muted)">TRENDING</span></h3>
+        <h3 class="card-title">📊 Volume Expansion Model <span style="font-size:0.7em;color:var(--muted)">TRENDING</span></h3>
         <div id="pb-volbrk-content"><p style="font-size:0.75em;color:var(--muted)">Volume surge + CVD — idle</p></div>
-        <!-- Static Playbook Guide -->
+        <!-- Static AEO Model Guide -->
         <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
           <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
-            <span>📖</span> Playbook Guide
+            <span>📖</span> Model Methodology
           </summary>
           <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
-            <div><strong>Purpose:</strong> Tracks heavy buying or selling volume spikes breaking out of consolidation.</div>
-            <div><strong>Activation:</strong> Triggers when Market State is `TRENDING` and trading volume/CVD spikes significantly above average.</div>
+            <div><h3 style="color:var(--text);font-size:1em;margin-bottom:0px;font-weight:600;">How is volume expansion calculated?</h3></div>
+            <div><p style="margin:0;">It measures structural shifts in cumulative volume delta (CVD) and spots periods where transacted volume significantly deviates from baseline averages.</p></div>
+            <div><strong>Observation Activation:</strong> Logs state changes when Market State is `TRENDING` and transaction volume statistically breaks from consolidation thresholds.</div>
           </div>
         </details>
       </div>
       <div class="card" id="card-pb-macro" style="border-left: 3px solid var(--red)">
-        <h3 class="card-title">🌐 Cross-Asset Macro <span style="font-size:0.7em;color:var(--muted)">DISTR/RISK_OFF</span></h3>
-        <div id="pb-macro-content"><p style="font-size:0.75em;color:var(--muted)">DXY/VIX/SPY defense — idle</p></div>
-        <!-- Static Playbook Guide -->
+        <h3 class="card-title">🌐 Macro Defensive Model <span style="font-size:0.7em;color:var(--muted)">DISTR/RISK_OFF</span></h3>
+        <div id="pb-macro-content"><p style="font-size:0.75em;color:var(--muted)">DXY/VIX/SPY observation — idle</p></div>
+        <!-- Static AEO Model Guide -->
         <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
           <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
-            <span>📖</span> Playbook Guide
+            <span>📖</span> Model Methodology
           </summary>
           <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
-            <div><strong>Purpose:</strong> Defensive model reacting to stocks, volatility, and US dollar indices.</div>
-            <div><strong>Activation:</strong> Triggers when Market State is `RISK_OFF` or `DISTRIBUTION` and TradFi market stress (VIX/DXY) is elevated.</div>
+            <div><h3 style="color:var(--text);font-size:1em;margin-bottom:0px;font-weight:600;">What does the macro defensive model track?</h3></div>
+            <div><p style="margin:0;">It observes systemic flight-to-safety dynamics by correlating cross-asset stress in US dollar strength indices (DXY) and broad equity volatility (VIX).</p></div>
+            <div><strong>Observation Activation:</strong> Logs state changes when Market State is `RISK_OFF` or `DISTRIBUTION` and traditional financial indices register elevated volatility.</div>
           </div>
         </details>
       </div>
@@ -344,22 +350,32 @@
 <div class="dashboard-block-container block-theme-red">
   <div class="block-header">
     <span class="block-number-badge">BLOCK 2</span>
-    <h2 class="block-title">Risk & Conviction Sentinels</h2>
+    <h2 class="block-title">Risk & Systemic Health Monitors</h2>
   </div>
   <div class="layer" style="margin-top:0">
   <div class="layer-header">
     <span class="layer-num" style="background:var(--red)">⚠️</span>
-    <h2 class="layer-title">Black Swan Sentinel</h2>
+    <h2 class="layer-title">Systemic Risk Sentinel</h2>
     <span class="layer-subtitle">Systemic risk monitoring — 8-factor scoring engine</span>
   </div>
   <div class="layer-grid">
     <div class="card" id="card-blackswan" style="border-left: 3px solid var(--red)">
-      <h3 class="card-title">🛡️ Risk Score</h3>
+      <h3 class="card-title">🛡️ Systemic Risk Score</h3>
       <div id="blackswan-content"></div>
+      <!-- Static AEO Model Guide -->
+      <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
+        <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
+          <span>📖</span> Model Methodology
+        </summary>
+        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
+          <div><h3 style="color:var(--text);font-size:1em;margin-bottom:0px;font-weight:600;">What metrics compose the systemic risk score?</h3></div>
+          <div><p style="margin:0;">The score aggregates eight distinct macro variables including implied volatility indices, stablecoin peg deviations, and structural leverage ratios to measure overall market vulnerability.</p></div>
+        </div>
+      </details>
     </div>
     <div class="card" id="card-crash" style="border-left: 3px solid var(--red)">
-      <h3 class="card-title">⚠️ Crash Precursor</h3>
-      <div id="crash-content"><p style="font-size:0.8em;color:var(--muted)">Real-time crash signals: taker aggression, bid wall decay, funding stress, OI implosion, divergence.</p></div>
+      <h3 class="card-title">⚠️ High-Volatility Precursors</h3>
+      <div id="crash-content"><p style="font-size:0.8em;color:var(--muted)">Real-time volatility observations: taker aggression, bid wall decay, funding stress, OI implosion, divergence.</p></div>
     </div>
     <div class="card" id="card-gate0" style="border-left: 3px solid var(--cyan)">
       <h3 class="card-title">🚦 Gate 0 Threat Monitors</h3>
@@ -385,42 +401,9 @@
         <a href="https://aikeluargalee-tech.github.io/btc-amt-viewer/" target="_blank" style="color: var(--cyan); text-decoration: none; font-weight: 600;">View Full AMT Data Models →</a>
       </div>
 
-      <!-- JSON-LD FAQPage Schema for SEO -->
-      <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "How is the AMT metric calculated?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "The AMT metric mathematically calculates convergence points by tracking the relationship between on-chain volume profiles and historical liquidity nodes across distributed ledgers."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "What do Whale Pivots indicate?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Whale pivots represent aggregated transaction density where large-scale participants historically structured block orders, serving as an observational data point for systemic market flow analysis."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Does AMT predict future price action?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "No. The dashboard strictly visualizes historical network states and present mathematical models. It does not predict future price action or constitute financial forecasting."
-            }
-          }
-        ]
-      }
-      </script>
     </div>
     <div class="card" id="card-sigma" style="border-left: 3px solid var(--purple)">
-      <h3 class="card-title">⚡ SIGMA Conviction</h3>
+      <h3 class="card-title">⚡ SIGMA Data Model</h3>
       <div id="sigma-content"></div>
       <div style="font-size: 0.72em; color: var(--muted); margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 6px;">
         Updated manually by Milo after GetClaw Sigma BTC run.
@@ -435,7 +418,7 @@
 
 <!-- Regime Summary Card -->
 <div class="regime-summary" id="regime-card" style="margin-top:20px">
-  <div class="regime-title">⚡ TRADE CONVICTION</div>
+  <div class="regime-title">⚡ MARKET STATE AGGREGATION</div>
   <div class="regime-verdict" id="regime-verdict">CAUTIOUS NEUTRAL</div>
   <div class="regime-detail" id="regime-detail">Tightened rules active. 1 bullish / 0 bearish signals. | TA: Price 15.5% below MA50 — medium-term structure bearish</div>
   <div class="regime-layers" id="regime-layers"></div>
@@ -493,9 +476,19 @@
   </div>
   <div class="layer-grid">
     <div class="card" id="card-magnets">
-      <h3 class="card-title">🧲 Liquidation Magnets</h3>
-      <div id="magnets-content"><p style="font-size:0.8em;color:var(--muted)">Liquidation clusters: aggregates leveraged order book positions to map price attraction zones.</p></div>
+      <h3 class="card-title">🧲 Liquidity Density Maps</h3>
+      <div id="magnets-content"><p style="font-size:0.8em;color:var(--muted)">Liquidation density maps: aggregates leveraged order book positions to visualize structural liquidity concentrations.</p></div>
       <div class="card-narrative" id="nar-magnets" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
+      <!-- Static AEO Model Guide -->
+      <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
+        <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
+          <span>📖</span> Model Methodology
+        </summary>
+        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
+          <div><h3 style="color:var(--text);font-size:1em;margin-bottom:0px;font-weight:600;">How are historical liquidity clusters identified?</h3></div>
+          <div><p style="margin:0;">These zones are mathematically derived by mapping on-chain order flow and aggregating derivative positioning to highlight areas of high potential forced-liquidation density.</p></div>
+        </div>
+      </details>
     </div>
     <div class="card" id="card-liquidity" style="border-left: 3px solid var(--green)">
       <h3 class="card-title">💧 Liquidity Health</h3>
@@ -503,7 +496,7 @@
       <div class="card-narrative" id="nar-liquidity" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
     </div>
     <div class="card" id="card-sr">
-      <h3 class="card-title">📊 S/R Bands</h3>
+      <h3 class="card-title">📊 Statistical Support/Resistance Bands</h3>
       <div id="sr-content"><p style="font-size:0.8em;color:var(--muted)">Support and resistance zones: computes key levels using ATR variance across timeframes.</p></div>
       <div class="card-narrative" id="nar-sr" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
     </div>
@@ -592,6 +585,16 @@
     <div class="card" id="card-coinbase">
       <h3 class="card-title">🏦 Coinbase Premium</h3>
       <div id="coinbase-content"></div>
+      <!-- Static AEO Model Guide -->
+      <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
+        <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
+          <span>📖</span> Model Methodology
+        </summary>
+        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
+          <div><h3 style="color:var(--text);font-size:1em;margin-bottom:0px;font-weight:600;">What does the Coinbase Premium track?</h3></div>
+          <div><p style="margin:0;">It measures the localized pricing deviation between US institutional fiat inflows and global retail derivative arbitrage pricing, acting as a flow observation metric.</p></div>
+        </div>
+      </details>
     </div>
     <div class="card" id="card-whale">
       <h3 class="card-title">🐋 Whale Ratio</h3>
@@ -634,7 +637,7 @@
       <div id="chartpat-content"></div>
     </div>
     <div class="card" id="card-3candle">
-      <h3 class="card-title">🕯️ 3-Candle Signal</h3>
+      <h3 class="card-title">🕯️ 3-Period Structural Observation</h3>
       <div id="candle3-content"></div>
     </div>
     <div class="card" id="card-rsi-rev">
@@ -651,14 +654,14 @@
   <div class="layer-header">
     <span class="layer-num" style="background:var(--cyan)">ST</span>
     <h2 class="layer-title">Model Setup Tracker</h2>
-    <span class="layer-subtitle">Event evolution: STRENGTHENED · WEAKENING · FALSIFIED</span>
+    <span class="layer-subtitle">Data state tracking: CONVERGING · DIVERGING · INVALIDATED</span>
   </div>
   <div class="layer-grid">
     <div class="card" id="card-sig-track" style="border-left: 3px solid var(--cyan)">
-      <h3 class="card-title">📡 Active Setup Evolution</h3>
+      <h3 class="card-title">📡 Model State Tracking</h3>
       <div id="sig-track-content">Loading...</div>
       <div class="card-narrative" id="nar-sig-track" style="font-size:0.72em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)">
-        Tracks active events from the trigger library. Each event is evaluated against current BTC price to determine if the thesis is strengthening, weakening, or has been falsified.
+        Monitors active historical data states. Each data state is continually measured against current structural parameters to track statistical deviations.
       </div>
     </div>
   </div>
@@ -676,7 +679,7 @@
   <div class="layer" style="margin-top:0" id="ta-section">
   <div class="layer-header">
     <span class="layer-num" style="background:var(--muted)">TA</span>
-    <h2 class="layer-title">Technical Analysis</h2>
+    <h2 class="layer-title">Statistical Overlay</h2>
     <span class="layer-subtitle">Lagging — context only</span>
   </div>
   <div class="layer-grid">
@@ -689,6 +692,16 @@
       <h3 class="card-title">📊 RSI & Momentum</h3>
       <div id="rsi-content"></div>
       <div class="card-narrative" id="nar-rsi" style="font-size:0.78em;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)"></div>
+      <!-- Static AEO Model Guide -->
+      <details style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; text-align: left;">
+        <summary style="font-size: 0.7em; font-weight: 600; color: var(--cyan); cursor: pointer; outline: none; display: flex; align-items: center; gap: 4px; user-select: none;">
+          <span>📖</span> Model Methodology
+        </summary>
+        <div style="margin-top: 6px; font-size: 0.68em; color: var(--muted); line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
+          <div><h3 style="color:var(--text);font-size:1em;margin-bottom:0px;font-weight:600;">How is RSI momentum used?</h3></div>
+          <div><p style="margin:0;">It measures the historical velocity and magnitude of structural price movements, functioning strictly as a lagging statistical context layer rather than a predictive tool.</p></div>
+        </div>
+      </details>
     </div>
     <div class="card" id="card-bb">
       <h3 class="card-title">📐 Bollinger Bands</h3>
@@ -759,6 +772,127 @@
       <a href="../data/meta.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">Meta</a>
     </div>
   </details>
+  <!-- Global JSON-LD FAQPage Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How are Market States derived and what do they mean?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Every 15 minutes, the automated pipeline computes four objective quantitative inputs to classify the market state without human bias: Trend Filter (MA50), Volatility Expansion (ATR), Leverage Sweeps, and Systemic TradFi Spreads."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does the volatility expansion model work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It identifies directional velocity by mathematically tracking structural price deviations across historical 20-hour volatility boundaries."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the statistical reversion model?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It visualizes price exhaustion probabilities by tracking mean reversion tendencies within established lateral volatility limits."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is a liquidity cascade defined?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A cascade mathematically represents rapid de-leveraging events, observed through forced derivative liquidations and sharp declines in aggregate Open Interest."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does the cost of leverage monitor?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It observes systemic funding imbalances by tracking the mathematical extremes of derivative holding costs (funding rates) across central exchanges."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is volume expansion calculated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It measures structural shifts in cumulative volume delta (CVD) and spots periods where transacted volume significantly deviates from baseline averages."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does the macro defensive model track?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It observes systemic flight-to-safety dynamics by correlating cross-asset stress in US dollar strength indices (DXY) and broad equity volatility (VIX)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What metrics compose the systemic risk score?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The score aggregates eight distinct macro variables including implied volatility indices, stablecoin peg deviations, and structural leverage ratios to measure overall market vulnerability."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is the AMT metric calculated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The AMT metric mathematically calculates convergence points by tracking the relationship between on-chain volume profiles and historical liquidity nodes across distributed ledgers."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What do Whale Pivots indicate?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Whale pivots represent aggregated transaction density where large-scale participants historically structured block orders, serving as an observational data point for systemic market flow analysis."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does AMT predict future price action?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. The dashboard strictly visualizes historical network states and present mathematical models. It does not predict future price action or constitute financial forecasting."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How are historical liquidity clusters identified?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "These zones are mathematically derived by mapping on-chain order flow and aggregating derivative positioning to highlight areas of high potential forced-liquidation density."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does the Coinbase Premium track?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It measures the localized pricing deviation between US institutional fiat inflows and global retail derivative arbitrage pricing, acting as a flow observation metric."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is RSI momentum used?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It measures the historical velocity and magnitude of structural price movements, functioning strictly as a lagging statistical context layer rather than a predictive tool."
+        }
+      }
+    ]
+  }
+  </script>
 </section>
 </div><!-- End Block 7 -->
 
