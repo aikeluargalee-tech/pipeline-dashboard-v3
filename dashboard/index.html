@@ -46,7 +46,7 @@
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/structural.json", "name": "Structural Liquidity Data" },
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/derivatives.json", "name": "Derivatives Data" },
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/cycle.json", "name": "Cycle Context Data" },
-    { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/regime.json", "name": "Trade Conviction Data" }
+    { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/regime.json", "name": "Market State Data" }
   ],
   "variableMeasured": [
     { "@type": "PropertyValue", "name": "Gate0 Status", "description": "Composite pass/fail signal aggregating black swan scoring, VIX/SPX correlation, AI-3 wave detection, stablecoin health, and trading session" },
@@ -121,7 +121,7 @@
 <!-- Link to raw data files for AI crawler discovery -->
 <link rel="alternate" type="application/json" href="../data/gate0.json" title="Gate0 Signal Data">
 <link rel="alternate" type="application/json" href="../data/macro.json" title="Macro Indicator Data">
-<link rel="alternate" type="application/json" href="../data/regime.json" title="Trade Conviction Data">
+<link rel="alternate" type="application/json" href="../data/regime.json" title="Market State Data">
 <link rel="alternate" type="application/json" href="../data/structural.json" title="Structural Liquidity Data">
 <link rel="alternate" type="application/json" href="../data/derivatives.json" title="Derivatives Data">
 <link rel="alternate" type="application/json" href="../data/cycle.json" title="Cycle Context Data">
@@ -823,7 +823,7 @@
       <a href="../data/structural.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">Structural</a>
       <a href="../data/derivatives.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">Derivatives</a>
       <a href="../data/cycle.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">Cycle</a>
-      <a href="../data/regime.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">Conviction</a>
+      <a href="../data/regime.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">Market State</a>
       <a href="../data/btc_price.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">BTC Price</a>
       <a href="../data/meta.json" style="font-size:0.75em;color:var(--cyan);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px">Meta</a>
     </div>
@@ -3254,7 +3254,13 @@ const METRIC_TOOLTIPS = {
   'Timeframe': 'The time interval this pattern was detected on (e.g., 1h, 4h, 1d).',
   'State': 'Current phase of the pattern: forming, confirmed, or invalidated.',
   'Cycle Score': 'Composite of MVRV, SOPR, Puell on 0-100 scale.',
-  'Score': 'Overall composite score for this metric.'
+  'Score': 'Overall composite score for this metric.',
+  '1D Layer Filter': 'Indicates if the longer-term daily models have enough data and are online.',
+  'Latest Observation': 'The most recent notable activity or volume surge detected by the tracker.',
+  'Historical Pivot Node': 'A past price level where large volumes of Bitcoin were traded, often acting as support or resistance.',
+  'Model Status': 'The current reliability or conviction level of this model based on recent data.',
+  'Current Trend Cycle': 'Whether the broader market cycle is currently trending upwards (Bullish) or downwards (Bearish).',
+  'Alert Severity Level': 'How impactful the recent geopolitical or regulatory news is likely to be (Tier 1 = High Impact).'
 };
 
 // Card-to-glossary mapping for "Learn more" links
