@@ -2202,77 +2202,7 @@ function renderSignalTracker(d) {
   el.innerHTML = html;
 }
 
-// ─── Regime Summary ───
-function renderRegime(d) {
-  if (!d || !d.synthesis) return;
-  const s = d.synthesis;
-  const verdict = document.getElementById('regime-verdict');
-  const detail = document.getElementById('regime-detail');
-  const layers = document.getElementById('regime-layers');
-  if (!verdict || !detail || !layers) return;
 
-  // Color the verdict
-  const verdictText = s.verdict || 'LOADING';
-  let color = 'var(--yellow)';
-  if (s.manual_override && s.manual_override.active) {
-    color = s.manual_override.status === 'ABORT' ? 'var(--red)' : 'var(--orange)';
-  } else if (verdictText.includes('BULL')) color = 'var(--green)';
-  else if (verdictText.includes('BEAR') || verdictText.includes('DO NOT')) color = 'var(--red)';
-  else if (verdictText.includes('STAND')) color = 'var(--orange)';
-
-  verdict.textContent = verdictText;
-  verdict.style.color = color;
-
-  // Simplify the main detail text for beginners
-  let friendlyDetail = s.detail || '';
-  friendlyDetail = friendlyDetail.replace(/TA:/g, 'Trend:');
-  friendlyDetail = friendlyDetail.replace(/MA50/g, '50-Day Average');
-  friendlyDetail = friendlyDetail.replace(/medium-term structure bearish/g, 'market momentum is currently weak');
-  friendlyDetail = friendlyDetail.replace(/medium-term structure bullish/g, 'market momentum is currently strong');
-  friendlyDetail = friendlyDetail.replace(/Tightened rules active/g, 'Safety limits are active due to market risks');
-  
-  detail.innerHTML = `<div style="padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; font-size: 0.9em; margin-bottom: 12px; line-height: 1.5; color: var(--muted);">${esc(friendlyDetail)}</div>`;
-
-  // Layer chips — Stacked vertically for mobile readability and beginner friendly text
-  let parts = [];
-  const layerNames = [
-    { key: 'gate', label: 'System Safety' },
-    { key: 'macro', label: 'Global Economy' },
-    { key: 'structure', label: 'Price Structure' },
-    { key: 'derivatives', label: 'Futures Market' },
-    { key: 'cycle', label: 'Long-term Cycle' },
-  ];
-  
-  for (const l of layerNames) {
-    const layer = d[l.key];
-    if (!layer) continue;
-    const layerVer = layer.verdict || '—';
-    
-    // Clean up jargon in the layer details
-    let cleanDetail = String(layer.detail || '');
-    cleanDetail = cleanDetail.replace(/FR /g, 'Funding Fee ');
-    cleanDetail = cleanDetail.replace(/L\/S /g, 'Long/Short Ratio ');
-    cleanDetail = cleanDetail.replace(/CVD /g, 'Buy/Sell Volume ');
-    cleanDetail = cleanDetail.replace(/MVRV-Z /g, 'Valuation Score ');
-    cleanDetail = cleanDetail.replace(/netflow /g, 'Exchange Flows ');
-    cleanDetail = cleanDetail.replace(/ai3_wave/g, 'AI Cycle Model');
-    cleanDetail = cleanDetail.replace(/VIX /g, 'Stock Panic (VIX) ');
-    cleanDetail = cleanDetail.replace(/timeframes active/g, 'price levels holding');
-
-    parts.push(`
-      <div style="display:flex; flex-direction:column; background:rgba(255,255,255,0.015); border:1px solid var(--border); border-radius:6px; padding:10px 14px; margin-bottom:8px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-          <strong style="color:var(--text); font-size:0.95em;">${esc(String(layer.emoji || ''))} ${esc(l.label)}</strong>
-          <span style="font-size:0.8em; font-weight:700; padding:3px 8px; border-radius:4px; background:rgba(255,255,255,0.05); color:var(--text);">${esc(layerVer)}</span>
-        </div>
-        <div style="font-size:0.85em; color:var(--muted); line-height: 1.4;">${esc(cleanDetail)}</div>
-      </div>
-    `);
-  }
-  
-  layers.style.display = 'block'; // Ensure block layout
-  layers.innerHTML = parts.join('');
-}
 
 // ─── Trading Session Clocks ───
 function updateClocks() {
@@ -2419,7 +2349,7 @@ async function refresh() {
   // TOP — DISRUPTION
   renderBlackSwan(blackSwan);
   renderCrashPrecursor(crashPrecursor);
-  renderRegime(regime);
+
   renderGate0Full(gate);
   renderAmtStatus(amtStatus);
   renderSigmaStatus(sigmaStatus);
@@ -3414,15 +3344,15 @@ function showOnboarding() {
       <div style="text-align:left;margin-bottom:24px;display:flex;flex-direction:column;gap:12px">
         <div style="display:flex;gap:12px;align-items:flex-start">
           <span style="color:var(--cyan);font-size:1.2em;flex-shrink:0">1.</span>
-          <div><strong>Check Trade Conviction</strong> at the top — it's the directional verdict (BULLISH, BEARISH, NEUTRAL) from 5-layer synthesis.</div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:flex-start">
-          <span style="color:var(--cyan);font-size:1.2em;flex-shrink:0">2.</span>
           <div><strong>Check Gate0</strong> — the risk gate. PROCEED = normal parameters, ABORT = extreme risk overlay.</div>
         </div>
         <div style="display:flex;gap:12px;align-items:flex-start">
-          <span style="color:var(--cyan);font-size:1.2em;flex-shrink:0">3.</span>
+          <span style="color:var(--cyan);font-size:1.2em;flex-shrink:0">2.</span>
           <div><strong>Check Simulation Monitors</strong> — VAL Absorption, Breakout-Retest, Breakdown-Retest show active setups.</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="color:var(--cyan);font-size:1.2em;flex-shrink:0">3.</span>
+          <div><strong>Explore the Layers</strong> — Dig into Macro, Structure, Derivatives, and Cycle data by expanding the tooltips.</div>
         </div>
       </div>
       <div style="display:flex;gap:8px;justify-content:center">
