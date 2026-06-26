@@ -16,17 +16,17 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="Live Bitcoin monitoring: Gate0 status, funding rates, liquidation clusters, on-chain cycle metrics, and derivatives data. Updated every 15 minutes.">
 <meta property="og:site_name" content="BTC Pipeline">
-<meta property="og:updated_time" id="og-updated" content="2026-06-26T16:55:00+00:00">
+<meta property="og:updated_time" id="og-updated" content="2026-06-26T17:03:50+00:00">
 <!-- Google AI Overviews freshness signals -->
 <meta property="article:published_time" content="2024-01-01T00:00:00Z">
-<meta property="article:modified_time" id="article-modified" content="2026-06-26T16:55:00+00:00">
+<meta property="article:modified_time" id="article-modified" content="2026-06-26T17:03:50+00:00">
 <!-- Dublin Core — Perplexity respects these -->
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
 <meta name="DC.title" content="BTC Pipeline Dashboard">
 <meta name="DC.type" content="Dataset">
 <meta name="DC.format" content="text/html">
 <meta name="DC.language" content="en">
-<meta name="DC.date" id="dc-date" content="2026-06-26T16:55:00+00:00">
+<meta name="DC.date" id="dc-date" content="2026-06-26T17:03:50+00:00">
 <!-- Schema.org Dataset markup for AI engines -->
 <script type="application/ld+json" id="schema-dataset">
 {
@@ -39,7 +39,7 @@
   "measurementTechnique": "Automated JSON data pipeline, 15-minute refresh cadence via cron-scheduled collection",
   "creator": { "@type": "Organization", "name": "BTC Pipeline" },
   "license": "https://creativecommons.org/licenses/by/4.0/",
-  "dateModified": "2026-06-26T16:55:01+00:00",
+  "dateModified": "2026-06-26T17:03:51+00:00",
   "distribution": [
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/gate0.json", "name": "Gate0 Signal Data" },
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/macro.json", "name": "Macro Indicator Data" },
@@ -210,6 +210,42 @@
       A real-time Bitcoin data aggregator tracking macroeconomic indicators, derivative positioning, and on-chain metrics — providing an objective, raw view of market conditions updated every 15 minutes.
     </p>
     <div class="meta" id="meta">Loading...</div>
+    
+    <!-- Grid explaining the 6 Blocks of the Pipeline -->
+    <div class="blocks-overview" style="margin: 24px auto 12px auto; max-width: 800px; text-align: left; padding: 16px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px;">
+      <h3 style="font-size: 0.95em; font-weight: 700; color: var(--cyan); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+        <span>🧱</span> Dashboard Framework (6 Strategic Blocks)
+      </h3>
+      <p style="font-size: 0.8em; color: var(--muted); line-height: 1.5; margin-bottom: 16px;">
+        To maintain an objective, multi-layered view of market conditions without relying on single-metric predictions, the dashboard is organized into 6 distinct analytical blocks:
+      </p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; font-size: 0.78em; line-height: 1.45;">
+        <div style="padding: 10px; background: rgba(255,255,255,0.01); border-radius: 6px; border-left: 3px solid var(--yellow);">
+          <strong style="color: var(--text); display: block; margin-bottom: 4px;">1. Market Context & Observation</strong>
+          <span style="color: var(--muted);">Classifies the current macro regime (Ranging, Trending, Cascade, etc.) using key volatility and price action models.</span>
+        </div>
+        <div style="padding: 10px; background: rgba(255,255,255,0.01); border-radius: 6px; border-left: 3px solid var(--red);">
+          <strong style="color: var(--text); display: block; margin-bottom: 4px;">2. Risk & Systemic Health Monitors</strong>
+          <span style="color: var(--muted);">Tracks systemic risk parameters (Gate0, Black Swan indicators, and D2 Crash precursors) to detect market stress.</span>
+        </div>
+        <div style="padding: 10px; background: rgba(255,255,255,0.01); border-radius: 6px; border-left: 3px solid var(--blue);">
+          <strong style="color: var(--text); display: block; margin-bottom: 4px;">3. Market Data Layers</strong>
+          <span style="color: var(--muted);">Aggregates core metrics across layers: Macroeconomics (VIX, DXY), Structural Liquidity (Heatmaps, Support/Resistance), and Derivatives (OI, Funding Rates).</span>
+        </div>
+        <div style="padding: 10px; background: rgba(255,255,255,0.01); border-radius: 6px; border-left: 3px solid var(--purple);">
+          <strong style="color: var(--text); display: block; margin-bottom: 4px;">4. Market Sentiment & Flows</strong>
+          <span style="color: var(--muted);">Tracks crowd emotion and capital movements using indices (Fear & Greed), Coinbase Premium, and stablecoin pegs.</span>
+        </div>
+        <div style="padding: 10px; background: rgba(255,255,255,0.01); border-radius: 6px; border-left: 3px solid var(--green);">
+          <strong style="color: var(--text); display: block; margin-bottom: 4px;">5. Historical Stats & Indicators</strong>
+          <span style="color: var(--muted);">Observes daily moving averages, RSI oversold/overbought states, Bollinger Bands, and options market metrics.</span>
+        </div>
+        <div style="padding: 10px; background: rgba(255,255,255,0.01); border-radius: 6px; border-left: 3px solid var(--cyan);">
+          <strong style="color: var(--text); display: block; margin-bottom: 4px;">6. AI Narrative & Methodology</strong>
+          <span style="color: var(--muted);">Summarizes all technical data into plain-language prose and logs recent signal tracking metrics for transparency.</span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
