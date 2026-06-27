@@ -54,9 +54,35 @@ def get_coinbase_premium():
     return None, None
 
 def get_etf_flows():
-    """Try Glassnode MCP for ETF issuer balances. Returns daily_flow_usd or None."""
+    """Read local ETF flow cache produced by fetch_etf_flow.py, with Glassnode MCP fallback."""
+    # 1. Try reading the local collector cache first (highly reliable, scrapes Farside/news)
+    cache_path = "/tmp/btc_etf_flow.json"
+    if os.path.exists(cache_path):
+        try:
+            with open(cache_path, "r") as f:
+                data = json.load(f)
+            flows = data.get("flows", [])
+            if flows:
+                # Find the latest non-zero flow (on weekends, the absolute latest entry is 0.0,
+                # so we scan backwards to find the last active trading day's net flow).
+                target_flow = None
+                for entry in reversed(flows):
+                    val = float(entry.get("total", 0.0))
+                    if val != 0.0:
+                        target_flow = val
+                        break
+                if target_flow is None and flows:
+                    target_flow = float(flows[-1].get("total", 0.0))
+                
+                if target_flow is not None:
+                    # Convert from Millions of USD to raw USD
+                    return int(target_flow * 1_000_000)
+        except Exception as e:
+            print(f"Error parsing local ETF flow cache: {e}")
+
+    # 2. Fallback to Glassnode MCP tool if cache is missing
     try:
-        # Try sigma_collector style Glassnode call
+        # Try Glassnode style MCP call
         import asyncio
         from mcp import ClientSession
         from mcp.client.streamable_http import streamablehttp_client
