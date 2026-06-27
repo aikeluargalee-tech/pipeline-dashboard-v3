@@ -429,13 +429,25 @@ body.simple-mode #ta-section {
 /* Methodology Toggle Arrow styling */
 .methodology-arrow {
   display: inline-block;
-  margin-left: 4px;
-  font-size: 1.35em;
+  margin-left: 6px;
+  font-size: 18px; /* Fixed size to ensure high visibility on mobile */
   color: var(--cyan);
+  vertical-align: -2px; /* Center it with the text line */
+  line-height: 1;
   transition: transform 0.2s ease;
 }
 details[open] .methodology-arrow {
   transform: rotate(180deg);
+}
+
+/* Metric dropdown arrow styling */
+.metric-arrow {
+  display: inline-block;
+  margin-left: 5px;
+  font-size: 13px; /* High visibility size on mobile screens */
+  color: var(--cyan);
+  vertical-align: -1px;
+  line-height: 1;
 }
 
 /* Volume Profile Chart */
