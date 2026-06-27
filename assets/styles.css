@@ -1714,3 +1714,198 @@ details[open] .methodology-arrow {
 }
 /* Badge inherits glassmorphic black style from .block-number-badge */
 .block-theme-green .block-title { color: #34d399; }
+/* ── VP Card — mobile-first ──────────────────── */
+.vp-card {
+  background: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 12px;
+  padding: 16px;
+  font-family: 'Inter', monospace, sans-serif;
+  color: #f9fafb;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.vp-card___header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.vp-cardtitle {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #6b7280;
+}
+
+.vp-card___updated {
+  font-size: 10px;
+  color: #4b5563;
+}
+
+/* Shape badge */
+.vp-shape-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin-bottom: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.vp-shape-badge .shape-label { font-size: 13px; font-weight: 500; }
+.vp-shape-badge .shape-desc  { font-size: 11px; opacity: 0.75; margin-left: auto; }
+
+.shape--D { background: #1e2d40; color: #60a5fa; }
+.shape--P { background: #14291f; color: #34d399; }
+.shape--b { background: #2d1515; color: #f87171; }
+.shape--B { background: #2a1f3d; color: #c084fc; }
+
+/* State row */
+.vp-state-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.vp-pill {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.pill--acceptance  { background: #14291f; color: #34d399; }
+.pill--rejection-up   { background: #14291f; color: #34d399; }
+.pill--rejection-down { background: #2d1515; color: #f87171; }
+.pill--fade    { background: #1e2d40; color: #60a5fa; }
+.pill--follow  { background: #14291f; color: #34d399; }
+.pill--wait    { background: #2a1f3d; color: #c084fc; }
+.pill--lockout { background: #3b1f08; color: #fb923c; }
+.pill--clear   { background: #14291f; color: #34d399; }
+.pill--high       { background: #1e2d40; color: #60a5fa; }
+.pill--very-high  { background: #14291f; color: #34d399; }
+.pill--reinforced { background: #2a1f3d; color: #c084fc; }
+.pill--baseline   { background: #1f2937; color: #9ca3af; }
+
+/* Levels grid */
+.vp-levels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.vp-level-item {
+  background: #1f2937;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.vp-level-item .level-label {
+  font-size: 10px;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 3px;
+}
+
+.vp-level-item .level-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #f9fafb;
+}
+
+.vp-level-item .level-sub {
+  font-size: 10px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.level-poc .level-value { color: #facc15; }
+.level-vah .level-value { color: #f87171; }
+.level-val .level-value { color: #34d399; }
+.level-hvn .level-value { color: #a78bfa; font-size: 13px; }
+
+/* Trade setup */
+.vp-trade-block {
+  background: #1a2235;
+  border: 1px solid #1f2937;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 14px;
+}
+
+.vp-trade-block .block-title {
+  font-size: 10px;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+
+.vp-trade-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px solid #1f2937;
+  font-size: 12px;
+}
+.vp-trade-row:last-child { border-bottom: none; }
+.vp-trade-row .trade-label { color: #9ca3af; }
+.vp-trade-row .trade-value { font-weight: 600; color: #f9fafb; }
+.vp-trade-row .trade-rr { font-size: 10px; color: #6b7280; margin-left: 6px; }
+
+.trade-entry { color: #60a5fa !important; }
+.trade-t1    { color: #34d399 !important; }
+.trade-t2    { color: #34d399 !important; }
+.trade-stop  { color: #f87171 !important; }
+.trade-size  { color: #fb923c !important; }
+
+/* Links */
+.vp-links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.vp-link-btn {
+  flex: 1;
+  min-width: 120px;
+  text-align: center;
+  background: #1f2937;
+  color: #9ca3af;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+.vp-link-btn:hover { background: #374151; color: #f9fafb; }
+
+/* Desktop scale-up */
+@media (min-width: 640px) {
+  .vp-card { padding: 20px; }
+  .vp-levels { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .vp-shape-badge { font-size: 26px; }
+}
+
+/* Volume Profile chart */
+.vp-chart {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-top: 12px;
+  background: #111827;
+}
