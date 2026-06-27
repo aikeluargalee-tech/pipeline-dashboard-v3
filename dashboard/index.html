@@ -16,17 +16,17 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="Live Bitcoin monitoring: Gate0 status, funding rates, liquidation clusters, on-chain cycle metrics, and derivatives data. Updated every 15 minutes.">
 <meta property="og:site_name" content="BTC Pipeline">
-<meta property="og:updated_time" id="og-updated" content="2026-06-27T05:21:13+00:00">
+<meta property="og:updated_time" id="og-updated" content="2026-06-27T05:29:34+00:00">
 <!-- Google AI Overviews freshness signals -->
 <meta property="article:published_time" content="2024-01-01T00:00:00Z">
-<meta property="article:modified_time" id="article-modified" content="2026-06-27T05:21:13+00:00">
+<meta property="article:modified_time" id="article-modified" content="2026-06-27T05:29:34+00:00">
 <!-- Dublin Core — Perplexity respects these -->
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
 <meta name="DC.title" content="BTC Pipeline Dashboard">
 <meta name="DC.type" content="Dataset">
 <meta name="DC.format" content="text/html">
 <meta name="DC.language" content="en">
-<meta name="DC.date" id="dc-date" content="2026-06-27T05:21:13+00:00">
+<meta name="DC.date" id="dc-date" content="2026-06-27T05:29:34+00:00">
 <!-- Schema.org Dataset markup for AI engines -->
 <script type="application/ld+json" id="schema-dataset">
 {
@@ -39,7 +39,7 @@
   "measurementTechnique": "Automated JSON data pipeline, 15-minute refresh cadence via cron-scheduled collection",
   "creator": { "@type": "Organization", "name": "BTC Pipeline" },
   "license": "https://creativecommons.org/licenses/by/4.0/",
-  "dateModified": "2026-06-27T05:21:13+00:00",
+  "dateModified": "2026-06-27T05:29:35+00:00",
   "distribution": [
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/gate0.json", "name": "Gate0 Signal Data" },
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/macro.json", "name": "Macro Indicator Data" },
@@ -128,7 +128,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/styles.css?v=8">
+<link rel="stylesheet" href="../assets/styles.css?v=9">
 <link rel="icon" type="image/png" href="../assets/favicon.png">
 <link rel="apple-touch-icon" href="../assets/logo.png">
 <meta name="theme-color" content="#05070d">
@@ -1098,7 +1098,7 @@
 </script>
 
 <div id="footer-placeholder"></div>
-<script src="../assets/nav.js?v=8"></script>
+<script src="../assets/nav.js?v=9"></script>
 <script>
 // --- Beginner Mode State Management ---
 let currentMode = 'advanced';
@@ -1658,16 +1658,36 @@ function renderStructural(d, v7, gate) {
           <div class="vp-chart-horizontal">
       `;
 
-      for (let i = 0; i < sortedBins.length; i++) {
-        const b = sortedBins[i];
-        const pct = Math.max(2, (Number(b.volume) / maxVol) * 100);
+      const maxBars = 35; // Target around 35 bars to fit comfortably on any mobile device
+      const step = Math.max(1, Math.ceil(sortedBins.length / maxBars));
+      
+      for (let i = 0; i < sortedBins.length; i += step) {
+        // Find the maximum volume in this step range to represent the level
+        let stepVol = 0;
+        let stepPrice = 0;
+        let isPoc = false;
+        let isVa = false;
+        
+        for (let j = 0; j < step && (i + j) < sortedBins.length; j++) {
+          const binIdx = i + j;
+          const b = sortedBins[binIdx];
+          const volVal = Number(b.volume);
+          if (volVal > stepVol) {
+            stepVol = volVal;
+            stepPrice = Number(b.price);
+          }
+          if (binIdx === pocIdx) isPoc = true;
+          if (binIdx >= valIdx && binIdx <= vahIdx) isVa = true;
+        }
+        
+        const pct = Math.max(2, (stepVol / maxVol) * 100);
         let barClass = 'normal';
-        if (i === pocIdx) {
+        if (isPoc) {
           barClass = 'poc';
-        } else if (i >= valIdx && i <= vahIdx) {
+        } else if (isVa) {
           barClass = 'va';
         }
-        chartHtml += `<div class="vp-bar-horizontal ${barClass}" style="height: ${pct}%" title="$${Number(b.price).toLocaleString()}: ${(Number(b.volume)/1000).toFixed(1)}K BTC"></div>`;
+        chartHtml += `<div class="vp-bar-horizontal ${barClass}" style="height: ${pct}%" title="$${stepPrice.toLocaleString()}: ${(stepVol/1000).toFixed(1)}K BTC"></div>`;
       }
 
       chartHtml += `
