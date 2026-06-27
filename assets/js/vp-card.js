@@ -5,7 +5,7 @@ const VP_JSON_PATH = '../data/vp_card.json'; // adjust to your path
 
 // ── Shape config ─────────────────────────────────
 const SHAPE_CONFIG = {
-  D: { cls: 'shape--D', label: 'D-Shape', desc: 'Balance — Fade Extremes' },
+  D: { cls: 'shape--D', label: 'Range (D)', desc: 'Sideways — buy low, sell high' },
   P: { cls: 'shape--P', label: 'P-Shape', desc: 'Bulls In Control — Follow' },
   b: { cls: 'shape--b', label: 'b-Shape', desc: 'Bears In Control — Follow' },
   B: { cls: 'shape--B', label: 'B-Shape', desc: 'Dual Auction — Respect Both POCs' },
