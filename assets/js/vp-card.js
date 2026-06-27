@@ -5,10 +5,10 @@ const VP_JSON_PATH = '../data/vp_card.json'; // adjust to your path
 
 // ── Shape config ─────────────────────────────────
 const SHAPE_CONFIG = {
-  D: { cls: 'shape--D', label: 'Range (D)', desc: 'Sideways — buy low, sell high' },
-  P: { cls: 'shape--P', label: 'P-Shape', desc: 'Bulls In Control — Follow' },
-  b: { cls: 'shape--b', label: 'b-Shape', desc: 'Bears In Control — Follow' },
-  B: { cls: 'shape--B', label: 'B-Shape', desc: 'Dual Auction — Respect Both POCs' },
+  D: { cls: 'shape--D', label: 'Range (D)',    desc: 'Sideways — buy low, sell high' },
+  P: { cls: 'shape--P', label: 'Trend Up (P)',  desc: 'Bulls in control — follow the trend' },
+  b: { cls: 'shape--b', label: 'Trend Down (b)', desc: 'Bears in control — don\'t fight it' },
+  B: { cls: 'shape--B', label: 'Dual Zone (B)',  desc: 'Two trading zones — wait for direction' },
 };
 
 // ── Auto-compute shape from pipeline data ─────────
@@ -30,6 +30,12 @@ function computeState(d) {
 
 // ── Probability tier pill ─────────────────────────
 function probPill(tier) {
+  const tips = {
+    VERY_HIGH:  'Very strong — multiple indicators aligned',
+    HIGH:       'Strong signal confidence',
+    REINFORCED: 'Reinforced by additional factors',
+    BASELINE:   'Standard signal confidence',
+  };
   const map = {
     VERY_HIGH:  ['pill--very-high',  'VERY HIGH'],
     HIGH:       ['pill--high',       'HIGH'],
@@ -37,29 +43,42 @@ function probPill(tier) {
     BASELINE:   ['pill--baseline',   'BASELINE'],
   };
   const [cls, label] = map[tier] || ['pill--baseline', tier];
-  return `<span class="vp-pill ${cls}">${label}</span>`;
+  const tip = tips[tier] || '';
+  return `<span class="vp-pill ${cls}" title="${tip}">${label}</span>`;
 }
 
 // ── Strategy bias pill ────────────────────────────
 function biasPill(bias) {
+  const tips = {
+    FADE:   'Fade the extremes — buy at VAL, sell at VAH (range strategy)',
+    FOLLOW: 'Follow the trend — buy pullbacks in uptrend, sell bounces in downtrend',
+    WAIT:   'No clear signal — wait for confirmation before entering',
+  };
   const map = {
     FADE:   ['pill--fade',   'FADE'],
     FOLLOW: ['pill--follow', 'FOLLOW'],
     WAIT:   ['pill--wait',   'WAIT'],
   };
   const [cls, label] = map[bias] || ['pill--wait', bias];
-  return `<span class="vp-pill ${cls}">${label}</span>`;
+  const tip = tips[bias] || '';
+  return `<span class="vp-pill ${cls}" title="${tip}">${label}</span>`;
 }
 
 // ── State pill ────────────────────────────────────
 function statePill(state) {
+  const tips = {
+    ACCEPTANCE:     'Price is inside Value Area — normal, no breakout',
+    REJECTION_UP:   'Price broke above VAH and stayed there — bullish breakout',
+    REJECTION_DOWN: 'Price broke below VAL and stayed there — bearish breakdown',
+  };
   const map = {
     ACCEPTANCE:     ['pill--acceptance',     'ACCEPTANCE'],
     REJECTION_UP:   ['pill--rejection-up',   'REJECTION ↑'],
     REJECTION_DOWN: ['pill--rejection-down', 'REJECTION ↓'],
   };
   const [cls, label] = map[state] || ['pill--baseline', state];
-  return `<span class="vp-pill ${cls}">${label}</span>`;
+  const tip = tips[state] || '';
+  return `<span class="vp-pill ${cls}" title="${tip}">${label}</span>`;
 }
 
 // ── Format price ──────────────────────────────────
@@ -79,8 +98,8 @@ function renderVPCard(raw, mountId = 'vp-card-mount') {
   const state = computeState(d);
   const sc = SHAPE_CONFIG[shape];
   const lockoutPill = d.amt_lockout
-    ? `<span class="vp-pill pill--lockout">AMT LOCKOUT</span>`
-    : `<span class="vp-pill pill--clear">AMT CLEAR</span>`;
+    ? `<span class="vp-pill pill--lockout" title="Aggressive Market Tape bot active — trade with caution">AMT LOCKOUT</span>`
+    : `<span class="vp-pill pill--clear" title="AMT bot not active — normal trading">AMT CLEAR</span>`;
 
   const html = `
 <div class="vp-card">
@@ -90,7 +109,7 @@ function renderVPCard(raw, mountId = 'vp-card-mount') {
     <span class="vp-card___updated">Updated ${fmtTime(d.last_updated)}</span>
   </div>
 
-  <div class="vp-shape-badge ${sc.cls}">
+  <div class="vp-shape-badge ${sc.cls}" title="Market structure: ${sc.label} — ${sc.desc}">
     <span class="shape-label">${sc.label}</span>
     <span class="shape-desc">${sc.desc}</span>
   </div>
@@ -103,59 +122,63 @@ function renderVPCard(raw, mountId = 'vp-card-mount') {
   </div>
 
   <div class="vp-levels">
-    <div class="vp-level-item level-poc">
+    <div class="vp-level-item level-poc"
+         title="Point of Control: the busiest price. Acts as a magnet — price often returns here.">
       <div class="level-label">POC</div>
       <div class="level-value">${fmt(d.poc)}</div>
       <div class="level-sub">Primary magnet</div>
     </div>
-    <div class="vp-level-item level-vah">
+    <div class="vp-level-item level-vah"
+         title="Value Area High: ceiling of fair value. Resistance and bullish breakout point.">
       <div class="level-label">VAH</div>
       <div class="level-value">${fmt(d.vah)}</div>
       <div class="level-sub">Touches: ${d.touch_count_vah}</div>
     </div>
-    <div class="vp-level-item level-val">
+    <div class="vp-level-item level-val"
+         title="Value Area Low: floor of fair value. Support and bearish breakdown point.">
       <div class="level-label">VAL</div>
       <div class="level-value">${fmt(d.val)}</div>
       <div class="level-sub">Touches: ${d.touch_count_val}</div>
     </div>
-    <div class="vp-level-item level-hvn">
+    <div class="vp-level-item level-hvn"
+         title="High Volume Node: thick trading zone. Strong support or resistance.">
       <div class="level-label">HVN</div>
-      <div class="level-value">${d.hvn_range ? '$' + String(d.hvn_range).replace('-', '–$') : '—'}</div>
+      <div class="level-value">${d.hvn_range ? '$' + d.hvn_range.replace('-', '–$') : '—'}</div>
       <div class="level-sub">Magnet zone</div>
     </div>
   </div>
 
   <div class="vp-trade-block">
-    <div class="block-title">Trade Setup — ${d.session || 'N/A'} Session</div>
-    <div class="vp-trade-row">
+    <div class="block-title">Trade Setup — ${d.session || ''} Session</div>
+    <div class="vp-trade-row" title="Suggested entry price for the current strategy">
       <span class="trade-label">Entry</span>
       <span class="trade-value trade-entry">${fmt(d.entry_level)}</span>
     </div>
-    <div class="vp-trade-row">
+    <div class="vp-trade-row" title="First profit target — POC level (primary magnet)">
       <span class="trade-label">T1 — POC</span>
       <span class="trade-value trade-t1">
         ${fmt(d.t1)}
         ${d.rr_t1 ? `<span class="trade-rr">${d.rr_t1}:1</span>` : ''}
       </span>
     </div>
-    <div class="vp-trade-row">
+    <div class="vp-trade-row" title="Second profit target — VAH level (value area ceiling)">
       <span class="trade-label">T2 — VAH</span>
       <span class="trade-value trade-t2">
         ${fmt(d.t2)}
         ${d.rr_t2 ? `<span class="trade-rr">${d.rr_t2}:1</span>` : ''}
       </span>
     </div>
-    <div class="vp-trade-row">
+    <div class="vp-trade-row" title="Stop loss — exit trade if price reaches this level">
       <span class="trade-label">Stop</span>
       <span class="trade-value trade-stop">${fmt(d.stop_loss)}</span>
     </div>
-    <div class="vp-trade-row">
+    <div class="vp-trade-row" title="Recommended position size for this setup">
       <span class="trade-label">Size</span>
       <span class="trade-value trade-size">
         ${(d.size_recommendation || '—').replace('_', ' ')}
       </span>
     </div>
-    <div class="vp-trade-row">
+    <div class="vp-trade-row" title="If price reaches this level, the trade thesis is invalid">
       <span class="trade-label">Invalidation</span>
       <span class="trade-value" style="color:#6b7280">${fmt(d.invalidation)}</span>
     </div>
@@ -173,8 +196,8 @@ function renderVPCard(raw, mountId = 'vp-card-mount') {
   const mount = document.getElementById(mountId);
   if (mount) mount.innerHTML = html;
 
-  // Render chart if chart_data present and renderVPChart is loaded
-  if (raw.chart_data && raw.chart_data.bins && typeof renderVPChart === 'function') {
+  // Render chart if chart_data present
+  if (raw.chart_data && raw.chart_data.bins) {
     renderVPChart(raw.chart_data, 'vp-chart-canvas');
   }
 }
@@ -195,11 +218,4 @@ async function loadVPCard(mountId = 'vp-card-mount') {
 
 // ── Auto-refresh every 60s ────────────────────────
 loadVPCard();
-const _vpRefreshId = setInterval(() => loadVPCard(), 60_000);
-
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden) clearInterval(_vpRefreshId);
-});
-window.addEventListener('beforeunload', () => {
-  clearInterval(_vpRefreshId);
-});
+setInterval(() => loadVPCard(), 60_000);
