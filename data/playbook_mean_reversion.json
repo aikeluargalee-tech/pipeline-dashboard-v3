@@ -1,41 +1,5 @@
 {
-  "strategy": "Mean Reversion + Vol Filter",
-  "version": "1.0.0",
-  "mode": "LOOSE",
-  "signal": "NO_SIGNAL",
-  "timestamp": "2026-06-27T04:46:56.435815+00:00",
-  "btc_price": 60351.99,
-  "mean_20h": 59898.1,
-  "atr_pct": null,
-  "atr_data_valid": false,
-  "atr_price": 1207.04,
-  "rsi_14": 54.9,
-  "confidence": "LOW",
-  "position_size_pct": 0.3,
-  "max_hold_hours": 8,
-  "stop_distance_usd": 2414.08,
-  "entry_price": null,
-  "stop_loss": null,
-  "tp_primary": null,
-  "tp_partial": null,
-  "tp_partial_pct": 0.5,
-  "rr_ratio": null,
-  "long_checks": {
-    "rsi": false,
-    "taker_ratio": false,
-    "cvd": true,
-    "oi_delta": true,
-    "funding": true,
-    "liquidity": true
-  },
-  "short_checks": {
-    "rsi": false,
-    "taker_ratio": false,
-    "cvd": false,
-    "oi_delta": true,
-    "funding": true,
-    "liquidity": true
-  },
-  "invalidation_triggers": [],
-  "regime": "RANGING"
+  "status": "offline",
+  "reason": "Klines unavailable",
+  "timestamp": "2026-06-27T05:16:20.679310+00:00"
 }
