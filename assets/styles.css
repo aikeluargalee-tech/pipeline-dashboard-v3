@@ -426,6 +426,18 @@ body.simple-mode #ta-section {
 .supplementary { margin-top: 32px; }
 .supplementary summary { cursor: pointer; color: var(--muted); font-size: 0.85em; padding: 8px 0; }
 
+/* Methodology Toggle Arrow styling */
+.methodology-arrow {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 1.35em;
+  color: var(--cyan);
+  transition: transform 0.2s ease;
+}
+details[open] .methodology-arrow {
+  transform: rotate(180deg);
+}
+
 /* Volume Profile Chart */
 /* Horizontal Volume Profile Chart */
 .vp-chart-container-horizontal {
