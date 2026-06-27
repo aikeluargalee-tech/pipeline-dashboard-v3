@@ -666,6 +666,7 @@ def collect_macro():
     news = read_json("/tmp/btc_news_state.json")
     etf = read_json("/tmp/btc_etf_flow.json")
     poly = read_json("/tmp/btc_polymarket.json")
+    beginner = read_json("/tmp/btc_beginner_metrics.json")
 
     result = {}
 
@@ -675,6 +676,12 @@ def collect_macro():
         result["us_10y_yield"] = macro.get("us_10y_yield_percent")
         result["m2_supply"] = macro.get("us_m2_billions")
         result["regime"] = macro.get("regime")
+
+    # Beginner metrics
+    if beginner:
+        result["fear_and_greed_value"] = beginner.get("fear_and_greed_value")
+        result["fear_and_greed_class"] = beginner.get("fear_and_greed_class")
+        result["btc_dominance"] = beginner.get("btc_dominance")
 
     # Risk assets — with Yahoo Finance fallback for NaN/missing prices
     if risk:

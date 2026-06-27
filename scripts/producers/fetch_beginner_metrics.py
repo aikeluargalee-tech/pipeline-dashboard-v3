@@ -8,6 +8,7 @@ Writes to /tmp/btc_beginner_metrics.json
 
 import json
 import os
+import tempfile
 import requests
 from datetime import datetime, timezone
 
@@ -53,8 +54,12 @@ def main():
         "btc_dominance": btc_dominance
     }
     
-    with open(OUTPUT_PATH, "w") as f:
+    with tempfile.NamedTemporaryFile(mode='w', dir='/tmp', delete=False, suffix='.json') as f:
         json.dump(payload, f, indent=2)
+        f.flush()
+        os.fsync(f.fileno())
+        tmpname = f.name
+    os.replace(tmpname, OUTPUT_PATH)
         
     print(f"✅ Saved to {OUTPUT_PATH}")
     print(json.dumps(payload, indent=2))

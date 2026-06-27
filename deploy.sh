@@ -109,6 +109,7 @@ run_pipeline "mean_reversion" "$SITE/playbooks/mean_reversion/playbook.py"
 run_pipeline "liq_momentum" "$SITE/playbooks/liquidation_momentum/playbook.py"
 run_pipeline "funding_mr" "$SITE/playbooks/funding_rate_mr/playbook.py"
 run_pipeline "cross_asset" "$SITE/playbooks/cross_asset_macro/playbook.py"
+run_pipeline "beginner"      "$SITE/scripts/producers/fetch_beginner_metrics.py"
 
 echo "── Production complete: $PASSED passed, $FAILED failed ──"
 
