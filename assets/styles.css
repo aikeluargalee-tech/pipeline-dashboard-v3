@@ -427,20 +427,95 @@ body.simple-mode #ta-section {
 .supplementary summary { cursor: pointer; color: var(--muted); font-size: 0.85em; padding: 8px 0; }
 
 /* Volume Profile Chart */
-.vp-chart { margin: 8px 0; }
-.vp-row { display: flex; align-items: center; gap: 6px; margin: 1px 0; font-size: 0.72em; }
-.vp-price { width: 62px; text-align: right; font-family: 'JetBrains Mono', monospace; color: var(--muted); font-size: 0.9em; flex-shrink: 0; }
-.vp-bar-wrap { flex: 1; height: 14px; position: relative; }
-.vp-bar { height: 100%; border-radius: 2px; min-width: 2px; transition: width 0.3s ease; }
-.vp-bar.poc { background: var(--cyan); box-shadow: 0 0 8px rgba(34,211,238,0.4); }
-.vp-bar.va { background: rgba(139, 92, 246, 0.5); }
-.vp-bar.normal { background: rgba(59, 130, 246, 0.3); }
-.vp-vol { width: 40px; font-family: 'JetBrains Mono', monospace; color: var(--muted); font-size: 0.85em; flex-shrink: 0; }
+/* Horizontal Volume Profile Chart */
+.vp-chart-container-horizontal {
+  position: relative;
+  margin: 12px 0 4px 0;
+  padding: 0 10px;
+}
+.vp-now-track-horizontal {
+  position: relative;
+  height: 18px;
+  margin-bottom: 2px;
+}
+.vp-now-marker {
+  position: absolute;
+  transform: translateX(-50%);
+  color: var(--yellow);
+  font-size: 0.7em;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  white-space: nowrap;
+  background: rgba(251, 191, 36, 0.15);
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  z-index: 10;
+}
+.vp-chart-horizontal {
+  display: flex;
+  align-items: flex-end;
+  height: 110px;
+  gap: 1px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+.vp-bar-horizontal {
+  flex: 1;
+  min-width: 2px;
+  border-radius: 1px 1px 0 0;
+  transition: height 0.3s ease;
+}
+.vp-bar-horizontal.normal {
+  background: rgba(59, 130, 246, 0.25);
+}
+.vp-bar-horizontal.va {
+  background: rgba(139, 92, 246, 0.55);
+}
+.vp-bar-horizontal.poc {
+  background: var(--cyan);
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+}
+.vp-labels-row-horizontal {
+  position: relative;
+  height: 38px;
+  margin-top: 4px;
+}
+.vp-x-label {
+  position: absolute;
+  transform: translateX(-50%);
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7em;
+  line-height: 1.3;
+}
+.vp-x-label.val { color: var(--red); }
+.vp-x-label.poc { color: var(--cyan); }
+.vp-x-label.vah { color: var(--green); }
+
+.vp-label-title {
+  font-weight: 800;
+  font-size: 0.95em;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+.vp-x-label.val .vp-label-title { background: rgba(239, 68, 68, 0.15); }
+.vp-x-label.poc .vp-label-title { background: rgba(34, 211, 238, 0.15); }
+.vp-x-label.vah .vp-label-title { background: rgba(16, 185, 129, 0.15); }
+
+.vp-line-dashed {
+  position: absolute;
+  bottom: 34px;
+  left: 50%;
+  height: 116px;
+  border-left: 1px dashed;
+  pointer-events: none;
+  opacity: 0.35;
+}
+.val-line { border-left-color: var(--red); }
+.poc-line { border-left-color: var(--cyan); }
+.vah-line { border-left-color: var(--green); }
 .vp-label { font-size: 0.75em; color: var(--muted); margin-top: 2px; }
-.vp-marker { display: inline-block; font-size: 0.65em; font-weight: 700; margin-left: 4px; padding: 1px 5px; border-radius: 3px; }
-.vp-marker.poc-m { background: rgba(34,211,238,0.2); color: var(--cyan); }
-.vp-marker.vah-m { background: rgba(16,185,129,0.2); color: var(--green); }
-.vp-marker.val-m { background: rgba(239,68,68,0.2); color: var(--red); }
 
 /* Heatmap images */
 .heatmap-img { width: 100%; border-radius: 8px; border: 1px solid var(--border); margin-top: 8px; cursor: pointer; transition: transform 0.2s; }
@@ -800,9 +875,8 @@ body.simple-mode #ta-section {
   .magnet-bar { font-size: 0.78em; }
   .magnet-bar .price { min-width: 60px; font-size: 0.88em; }
   .magnet-bar .pct { min-width: 45px; font-size: 0.82em; }
-  .vp-row { font-size: 0.65em; }
-  .vp-price { width: 52px; }
-  .vp-vol { width: 35px; }
+  .vp-chart-horizontal { height: 85px; }
+  .vp-line-dashed { height: 91px; }
   .oi-chart { height: 60px; }
   .val-alert, .brk-alert { padding: 12px 14px; border-radius: 10px; }
   .val-alert-header, .brk-alert-header { gap: 6px; margin-bottom: 8px; }

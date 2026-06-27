@@ -16,17 +16,17 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="Live Bitcoin monitoring: Gate0 status, funding rates, liquidation clusters, on-chain cycle metrics, and derivatives data. Updated every 15 minutes.">
 <meta property="og:site_name" content="BTC Pipeline">
-<meta property="og:updated_time" id="og-updated" content="2026-06-27T03:40:05+00:00">
+<meta property="og:updated_time" id="og-updated" content="2026-06-27T03:46:58+00:00">
 <!-- Google AI Overviews freshness signals -->
 <meta property="article:published_time" content="2024-01-01T00:00:00Z">
-<meta property="article:modified_time" id="article-modified" content="2026-06-27T03:40:05+00:00">
+<meta property="article:modified_time" id="article-modified" content="2026-06-27T03:46:58+00:00">
 <!-- Dublin Core — Perplexity respects these -->
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
 <meta name="DC.title" content="BTC Pipeline Dashboard">
 <meta name="DC.type" content="Dataset">
 <meta name="DC.format" content="text/html">
 <meta name="DC.language" content="en">
-<meta name="DC.date" id="dc-date" content="2026-06-27T03:40:05+00:00">
+<meta name="DC.date" id="dc-date" content="2026-06-27T03:46:58+00:00">
 <!-- Schema.org Dataset markup for AI engines -->
 <script type="application/ld+json" id="schema-dataset">
 {
@@ -39,7 +39,7 @@
   "measurementTechnique": "Automated JSON data pipeline, 15-minute refresh cadence via cron-scheduled collection",
   "creator": { "@type": "Organization", "name": "BTC Pipeline" },
   "license": "https://creativecommons.org/licenses/by/4.0/",
-  "dateModified": "2026-06-27T03:40:06+00:00",
+  "dateModified": "2026-06-27T03:47:00+00:00",
   "distribution": [
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/gate0.json", "name": "Gate0 Signal Data" },
     { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/data/macro.json", "name": "Macro Indicator Data" },
@@ -128,7 +128,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/styles.css?v=4">
+<link rel="stylesheet" href="../assets/styles.css?v=5">
 <link rel="icon" type="image/png" href="../assets/favicon.png">
 <link rel="apple-touch-icon" href="../assets/logo.png">
 <meta name="theme-color" content="#05070d">
@@ -1098,7 +1098,7 @@
 </script>
 
 <div id="footer-placeholder"></div>
-<script src="../assets/nav.js?v=4"></script>
+<script src="../assets/nav.js?v=5"></script>
 <script>
 // --- Beginner Mode State Management ---
 let currentMode = 'advanced';
@@ -1601,41 +1601,88 @@ function renderStructural(d, v7, gate) {
 
     // Chart
     if (vp.bins && vp.bins.length > 0) {
-      const vols = vp.bins.map(b => Number(b.volume)).filter(v => Number.isFinite(v) && v > 0);
-        const maxVol = vols.length ? Math.max(...vols) : 1;
+      const sortedBins = [...vp.bins].sort((a, b) => Number(a.price) - Number(b.price));
+      const vols = sortedBins.map(b => Number(b.volume)).filter(v => Number.isFinite(v) && v > 0);
+      const maxVol = vols.length ? Math.max(...vols) : 1;
       const btcNow = d.magnets?.btc_price || null;
-      // Show every other bin on mobile to avoid clutter, all on desktop
-      const step = vp.bins.length > 30 ? 2 : 1;
-      let chart = '<div class="vp-chart">';
-      // Reverse so highest price is on top
-      const sortedBins = [...vp.bins].reverse();
-      for (let i = 0; i < sortedBins.length; i += step) {
+      
+      const minPrice = Number(sortedBins[0].price);
+      const maxPrice = Number(sortedBins[sortedBins.length - 1].price);
+      const range = (maxPrice - minPrice) || 1;
+
+      // Find bins closest to VAL, POC, VAH to color them properly
+      let pocIdx = -1, vahIdx = -1, valIdx = -1;
+      let minPocDiff = Infinity, minVahDiff = Infinity, minValDiff = Infinity;
+      for (let i = 0; i < sortedBins.length; i++) {
+        const p = Number(sortedBins[i].price);
+        const pocDiff = Math.abs(p - Number(vp.poc));
+        const vahDiff = Math.abs(p - Number(vp.vah));
+        const valDiff = Math.abs(p - Number(vp.val));
+        if (pocDiff < minPocDiff) { minPocDiff = pocDiff; pocIdx = i; }
+        if (vahDiff < minVahDiff) { minVahDiff = vahDiff; vahIdx = i; }
+        if (valDiff < minValDiff) { minValDiff = valDiff; valIdx = i; }
+      }
+
+      // Render NOW pointer if price is within range
+      let nowHtml = '';
+      if (btcNow && btcNow >= minPrice && btcNow <= maxPrice) {
+        const nowPct = ((btcNow - minPrice) / range) * 100;
+        nowHtml = `
+          <div class="vp-now-marker" style="left: ${nowPct}%">
+            ▼ NOW ($${Math.round(btcNow).toLocaleString()})
+          </div>
+        `;
+      }
+
+      let chartHtml = `
+        <div class="vp-chart-container-horizontal">
+          <div class="vp-now-track-horizontal">${nowHtml}</div>
+          <div class="vp-chart-horizontal">
+      `;
+
+      for (let i = 0; i < sortedBins.length; i++) {
         const b = sortedBins[i];
-        const pct = Math.max(2, (b.volume / maxVol) * 100);
+        const pct = Math.max(2, (Number(b.volume) / maxVol) * 100);
         let barClass = 'normal';
-        let marker = '';
-        if (b.price === vp.poc) { barClass = 'poc'; marker = '<span class="vp-marker poc-m">POC</span>'; }
-        else if (b.price >= vp.val && b.price <= vp.vah) { barClass = 'va'; }
-        // Mark VAH/VAL edges
-        if (b.price === vp.vah) marker += '<span class="vp-marker vah-m">VAH</span>';
-        if (b.price === vp.val) marker += '<span class="vp-marker val-m">VAL</span>';
-        // Current price marker
-        if (btcNow && Math.abs(b.price - btcNow) < (vp.bin_step || 50)) {
-          marker += '<span class="vp-marker" style="background:rgba(251,191,36,0.2);color:var(--yellow)">NOW</span>';
+        if (i === pocIdx) {
+          barClass = 'poc';
+        } else if (i >= valIdx && i <= vahIdx) {
+          barClass = 'va';
         }
-        const v = Number(b.volume);
-        const volK = v >= 1000 ? (v / 1000).toFixed(1) + 'K' : v;
-        chart += `<div class="vp-row">
-          <span class="vp-price">$${Number(b.price).toLocaleString()}${marker}</span>
-          <div class="vp-bar-wrap"><div class="vp-bar ${barClass}" style="width:${pct}%"></div></div>
-          <span class="vp-vol">${volK}</span>
-        </div>`;
+        chartHtml += `<div class="vp-bar-horizontal ${barClass}" style="height: ${pct}%" title="$${Number(b.price).toLocaleString()}: ${(Number(b.volume)/1000).toFixed(1)}K BTC"></div>`;
       }
-      chart += '</div>';
+
+      chartHtml += `
+          </div>
+      `;
+
+      // Absolute positioned labels
+      const valPct = ((Number(vp.val) - minPrice) / range) * 100;
+      const pocPct = ((Number(vp.poc) - minPrice) / range) * 100;
+      const vahPct = ((Number(vp.vah) - minPrice) / range) * 100;
+
+      chartHtml += `
+          <div class="vp-labels-row-horizontal">
+            <div class="vp-x-label val" style="left: ${valPct}%">
+              <div class="vp-line-dashed val-line"></div>
+              <span class="vp-label-title">VAL</span><br>$${Number(vp.val).toLocaleString()}
+            </div>
+            <div class="vp-x-label poc" style="left: ${pocPct}%">
+              <div class="vp-line-dashed poc-line"></div>
+              <span class="vp-label-title">POC</span><br>$${Number(vp.poc).toLocaleString()}
+            </div>
+            <div class="vp-x-label vah" style="left: ${vahPct}%">
+              <div class="vp-line-dashed vah-line"></div>
+              <span class="vp-label-title">VAH</span><br>$${Number(vp.vah).toLocaleString()}
+            </div>
+          </div>
+        </div>
+      `;
+
       if (vp.candles_used) {
-        chart += `<div class="vp-label">${vp.candles_used}h candles · $${vp.bin_step} bins · ${(vp.total_volume/1000).toFixed(0)}K BTC total</div>`;
+        chartHtml += `<div class="vp-label" style="text-align: center; margin-top: 12px; font-size: 0.72em;">${vp.candles_used}h candles · $${vp.bin_step} bins · ${(vp.total_volume/1000).toFixed(0)}K BTC total</div>`;
       }
-      vhtml += chart;
+      vhtml += chartHtml;
     }
   }
   var el=document.getElementById('vol-content');if(el)el.innerHTML = vhtml || metricRow('No volume data', '', 'neutral');
