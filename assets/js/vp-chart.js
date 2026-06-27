@@ -26,13 +26,14 @@ function renderVPChart(chartData, canvasId = 'vp-chart-canvas') {
   const n = bins.length;
   if (n === 0) return;
 
-  // Layout
+  // Layout — generous right padding for reference labels
   const W = canvas.clientWidth;
-  const H = Math.max(300, n * 16); // dynamic height per bin count
-  const pad = { top: 12, right: 70, bottom: 12, left: 8 };
+  const pad = { top: 12, right: 130, bottom: 12, left: 8 };
   const chartW = W - pad.left - pad.right;
-  const chartH = H - pad.top - pad.bottom;
-  const barH = Math.max(6, Math.floor(chartH / n) - 1);
+  const gap = 2;
+  const barH = Math.max(3, Math.floor((280 / n)) - gap); // cap chart ~280px tall
+  const chartH = n * (barH + gap);
+  const H = chartH + pad.top + pad.bottom;
 
   // Resize for HiDPI
   canvas.width = W * dpr;
@@ -45,7 +46,7 @@ function renderVPChart(chartData, canvasId = 'vp-chart-canvas') {
   ctx.fillStyle = '#111827';
   ctx.fillRect(0, 0, W, H);
 
-  // VAH/VAL/POC horizontal reference lines
+  // Helper: price → y position
   const yForPrice = (p) => {
     if (n === 0) return pad.top;
     const topPrice = bins[0].price + bin_size / 2;
@@ -54,7 +55,7 @@ function renderVPChart(chartData, canvasId = 'vp-chart-canvas') {
     return pad.top + frac * chartH;
   };
 
-  // Draw reference lines
+  // Collect reference lines (VAH/VAL/POC)
   const refLines = [];
   for (const bin of bins) {
     if (bin.type === 'vah' || bin.type === 'val' || bin.type === 'poc') {
@@ -64,16 +65,19 @@ function renderVPChart(chartData, canvasId = 'vp-chart-canvas') {
     }
   }
 
-  // Dedupe (multiple bins may have same type)
+  // Dedupe and draw reference lines with staggered labels
   const seen = {};
+  const labelSlots = []; // track used y-positions for labels
   for (const r of refLines) {
     if (seen[r.type]) continue;
     seen[r.type] = true;
     const c = VP_CHART_COLORS[r.type];
+
+    // Dashed line across chart area
     ctx.strokeStyle = c.text;
-    ctx.globalAlpha = 0.5;
+    ctx.globalAlpha = 0.35;
     ctx.lineWidth = 1;
-    ctx.setLineDash([4, 4]);
+    ctx.setLineDash([3, 5]);
     ctx.beginPath();
     ctx.moveTo(pad.left, r.y);
     ctx.lineTo(pad.left + chartW, r.y);
@@ -81,14 +85,36 @@ function renderVPChart(chartData, canvasId = 'vp-chart-canvas') {
     ctx.setLineDash([]);
     ctx.globalAlpha = 1;
 
-    // Label
+    // Label position — stagger if too close to another label
+    let labelY = r.y - 2;
+    const minGap = 13;
+    let overlaps = true;
+    while (overlaps) {
+      overlaps = false;
+      for (const slot of labelSlots) {
+        if (Math.abs(labelY - slot) < minGap) {
+          labelY = slot + minGap;
+          overlaps = true;
+          break;
+        }
+      }
+    }
+    labelSlots.push(labelY);
+
+    // Label background
+    const label = r.type.toUpperCase() + ' $' + (r.price != null ? r.price.toLocaleString() : '—');
+    ctx.font = 'bold 10px monospace';
+    const tw = ctx.measureText(label).width;
+    const lx = W - tw - 10;
+    ctx.fillStyle = '#111827';
+    ctx.globalAlpha = 0.85;
+    ctx.fillRect(lx - 3, labelY - 9, tw + 6, 13);
+    ctx.globalAlpha = 1;
+
+    // Label text
     ctx.fillStyle = c.text;
-    ctx.font = '10px monospace';
-    ctx.textAlign = 'right';
-    ctx.fillText(
-      r.type.toUpperCase() + ' $' + (r.price != null ? r.price.toLocaleString() : '—'),
-      W - 4, r.y - 3
-    );
+    ctx.textAlign = 'left';
+    ctx.fillText(label, lx, labelY + 1);
   }
 
   // Draw bars
@@ -97,7 +123,7 @@ function renderVPChart(chartData, canvasId = 'vp-chart-canvas') {
     const c = VP_CHART_COLORS[bin.type] || VP_CHART_COLORS.normal;
     const barW = Math.max(2, (bin.volume / max_volume) * chartW);
     const x = pad.left;
-    const y = pad.top + i * (barH + 1);
+    const y = pad.top + i * (barH + gap);
 
     // Bar
     ctx.fillStyle = c.bar;
@@ -105,22 +131,23 @@ function renderVPChart(chartData, canvasId = 'vp-chart-canvas') {
     ctx.fillRect(x, y, barW, barH);
     ctx.globalAlpha = 1;
 
-    // Volume text on bar
-    if (barW > 40) {
+    // Volume text on wide bars only
+    if (barW > 55) {
       ctx.fillStyle = '#fff';
       ctx.font = '9px monospace';
       ctx.textAlign = 'left';
-      ctx.fillText(bin.volume.toLocaleString(), x + 4, y + barH - 3);
+      ctx.fillText(bin.volume.toLocaleString(), x + 4, y + barH - 2);
     }
   }
 
-  // Price labels on Y axis
+  // Price labels on left — only every 5th + key levels
   ctx.textAlign = 'left';
-  ctx.font = '9px monospace';
+  ctx.font = '8px monospace';
   for (let i = 0; i < n; i++) {
-    if (i % 3 === 0 || bins[i].type !== 'normal') {
-      const y = pad.top + i * (barH + 1) + barH / 2 + 3;
-      ctx.fillStyle = bins[i].type !== 'normal'
+    const isKey = bins[i].type !== 'normal' && bins[i].type !== 'lvn';
+    if (i % 5 === 0 || isKey) {
+      const y = pad.top + i * (barH + gap) + barH / 2 + 3;
+      ctx.fillStyle = isKey
         ? (VP_CHART_COLORS[bins[i].type] || VP_CHART_COLORS.normal).text
         : '#6b7280';
       ctx.fillText('$' + (bins[i].price != null ? bins[i].price.toLocaleString() : '—'), 4, y);
