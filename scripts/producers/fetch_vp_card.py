@@ -10,7 +10,6 @@ import tempfile
 from datetime import datetime, timezone
 
 
-
 def load_state():
     if os.path.exists(VP_STATE):
         try:
@@ -53,6 +52,134 @@ def update_consecutive_closes(vp_state, price, vah, val, current_state):
        current_state != vp_state.get("last_state"):
         return 1  # first close outside
     return prev
+
+
+def compute_trade_setup(shape, btc_price, vah, val, poc, tick_size, amt_lockout):
+    """GetClaw V3.0 directional trade setup.
+    Returns (direction, trade_setups[], primary_setup_dict).
+    D-shape: bidirectional via POC midpoint
+    P-shape: LONG only — buy pullback to VA
+    b-shape: SHORT only — sell rally to VA
+    B-shape: DUAL — LONG at lower POC, SHORT at upper POC (WAIT bias)
+    """
+    range_va = vah - val
+    mid = (vah + val) / 2
+
+    def rr_long(t, entry, stop):
+        return round(abs((t - entry) / (entry - stop)), 2) if entry != stop else 0
+
+    def rr_short(t, entry, stop):
+        return round(abs((entry - t) / (stop - entry)), 2) if stop != entry else 0
+
+    if shape == "D":
+        if btc_price <= mid:
+            direction = "LONG"
+            entry = val - tick_size * 2
+            t1, t2 = poc, vah
+            stop = val - range_va * 0.15
+            invalidation = val - range_va * 0.25
+        else:
+            direction = "SHORT"
+            entry = vah + tick_size * 2
+            t1, t2 = poc, val
+            stop = vah + range_va * 0.15
+            invalidation = vah + range_va * 0.25
+
+        setup = {
+            "direction": direction,
+            "entry": int(entry),
+            "t1": int(t1),
+            "t2": int(t2),
+            "stop_loss": int(stop),
+            "invalidation": int(invalidation),
+        }
+        if direction == "LONG":
+            setup["rr_t1"] = rr_long(t1, entry, stop)
+            setup["rr_t2"] = rr_long(t2, entry, stop)
+        else:
+            setup["rr_t1"] = rr_short(t1, entry, stop)
+            setup["rr_t2"] = rr_short(t2, entry, stop)
+        return direction, [setup], setup
+
+    elif shape == "P":
+        direction = "LONG"
+        entry = val - tick_size * 2
+        t1 = poc
+        t2 = vah + range_va  # extension target in trend
+        stop = val - range_va * 0.15
+        invalidation = val - range_va * 0.25
+
+        setup = {
+            "direction": direction,
+            "entry": int(entry),
+            "t1": int(t1),
+            "t2": int(t2),
+            "stop_loss": int(stop),
+            "invalidation": int(invalidation),
+            "rr_t1": rr_long(t1, entry, stop),
+            "rr_t2": rr_long(t2, entry, stop),
+        }
+        return direction, [setup], setup
+
+    elif shape == "b":
+        direction = "SHORT"
+        entry = vah + tick_size * 2
+        t1 = poc
+        t2 = val
+        stop = vah + range_va * 0.20
+        invalidation = vah + range_va * 0.40
+
+        setup = {
+            "direction": direction,
+            "entry": int(entry),
+            "t1": int(t1),
+            "t2": int(t2),
+            "stop_loss": int(stop),
+            "invalidation": int(invalidation),
+            "rr_t1": rr_short(t1, entry, stop),
+            "rr_t2": rr_short(t2, entry, stop),
+        }
+        return direction, [setup], setup
+
+    elif shape == "B":
+        direction = "DUAL"
+        # Placeholder dual POC — upstream footprint needs to detect two POC clusters
+        poc_lower = val + range_va * 0.25
+        poc_upper = vah - range_va * 0.25
+
+        long_setup = {
+            "direction": "LONG",
+            "poc_ref": "lower",
+            "entry": int(poc_lower - tick_size * 2),
+            "t1": int(poc_upper),
+            "t2": int(vah),
+            "stop_loss": int(val - range_va * 0.10),
+            "invalidation": int(val - range_va * 0.25),
+            "status": "PENDING",
+        }
+        long_setup["rr_t1"] = rr_long(long_setup["t1"], long_setup["entry"], long_setup["stop_loss"])
+        long_setup["rr_t2"] = rr_long(long_setup["t2"], long_setup["entry"], long_setup["stop_loss"])
+
+        short_setup = {
+            "direction": "SHORT",
+            "poc_ref": "upper",
+            "entry": int(poc_upper + tick_size * 2),
+            "t1": int(poc_lower),
+            "t2": int(val),
+            "stop_loss": int(vah + range_va * 0.10),
+            "invalidation": int(vah + range_va * 0.25),
+            "status": "PENDING",
+        }
+        short_setup["rr_t1"] = rr_short(short_setup["t1"], short_setup["entry"], short_setup["stop_loss"])
+        short_setup["rr_t2"] = rr_short(short_setup["t2"], short_setup["entry"], short_setup["stop_loss"])
+
+        trade_setups = [long_setup, short_setup]
+        primary = long_setup  # default LONG as primary
+        return direction, trade_setups, primary
+
+    # Fallback — should never reach here
+    return "LONG", [], {}
+
 
 AMT_FEED = "/tmp/amt_feed.json"
 VP_OUTPUT = "/tmp/btc_vp_card.json"
@@ -159,20 +286,22 @@ def compute_vp(feed):
     amt_verdict = feed.get("meta", {}).get("verdict", "NO_TRADE")
     amt_lockout = amt_verdict == "NO_TRADE" or regime == "BEARISH"
 
-    # 7. Trade setup
-    entry = val - tick_size * 2 if shape in ("D", "b") else vah + tick_size * 2
-    t1 = poc
-    t2 = vah if strategy == "FADE" else vah + (vah - val)
-    stop = val - (vah - val) * 0.3 if strategy == "FADE" else val
+    # 7. Trade setup — GetClaw V3.0 bidirectional logic
+    direction, trade_setups, primary = compute_trade_setup(
+        shape, btc_price, vah, val, poc, tick_size, amt_lockout
+    )
 
-    rr_t1 = round(abs((t1 - entry) / (entry - stop)), 2) if entry != stop else 0
-    rr_t2 = round(abs((t2 - entry) / (entry - stop)), 2) if entry != stop else 0
+    # Override strategy for B-shape
+    display_strategy = strategy
+    if shape == "B":
+        display_strategy = "WAIT"
 
     size = "SKIP" if amt_lockout else "STANDARD"
 
     return {
         "vp_card": {
             "shape": shape,
+            "direction": direction,
             "poc": int(poc),
             "vah": int(vah),
             "val": int(val),
@@ -185,18 +314,21 @@ def compute_vp(feed):
             "consecutive_closes_outside_va": consecutive,
             "confirmation_status": "PENDING",
             "active_pattern": "POC_MAGNET",
-            "strategy_bias": strategy,
+            "strategy_bias": display_strategy,
             "amt_lockout": amt_lockout,
             "amt_verdict": amt_verdict,
             "adx": adx,
-            "entry_level": int(entry),
-            "t1": int(t1),
-            "t2": int(t2),
-            "stop_loss": int(stop),
-            "invalidation": int(vah + (vah - val) * 0.1),
-            "rr_t1": rr_t1,
-            "rr_t2": rr_t2,
+            # Flat fields — backward compat, mirror primary setup
+            "entry_level": primary.get("entry"),
+            "t1": primary.get("t1"),
+            "t2": primary.get("t2"),
+            "stop_loss": primary.get("stop_loss"),
+            "invalidation": primary.get("invalidation"),
+            "rr_t1": primary.get("rr_t1"),
+            "rr_t2": primary.get("rr_t2"),
             "size_recommendation": size,
+            # Canonical trade setups array
+            "trade_setups": trade_setups,
             "btc_price": int(btc_price),
             "session": "LONDON",  # TODO: detect from time
             "last_updated": datetime.now(timezone.utc).isoformat()
@@ -283,7 +415,7 @@ def main():
 
     atomic_write(VP_OUTPUT, result)
     s = result["vp_card"]
-    print(f"[vp_producer] Shape={s['shape']} POC=${s['poc']} "
+    print(f"[vp_producer] Shape={s['shape']} Dir={s['direction']} POC=${s['poc']} "
           f"VAH=${s['vah']} VAL=${s['val']} "
           f"Bias={s['strategy_bias']} Lockout={s['amt_lockout']}")
 

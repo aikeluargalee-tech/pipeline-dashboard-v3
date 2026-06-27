@@ -81,6 +81,33 @@ function statePill(state) {
   return `<span class="vp-pill ${cls}" title="${tip}">${label}</span>`;
 }
 
+// ── Direction badge ──────────────────────────────
+function directionBadge(dir) {
+  const map = {
+    LONG:  ['dir--long',  'LONG',  'Buy — entry below, targets above'],
+    SHORT: ['dir--short', 'SHORT', 'Sell — entry above, targets below'],
+    DUAL:  ['dir--dual',  'DUAL',  'Two trade setups — see below'],
+  };
+  const [cls, label, tip] = map[dir] || ['dir--long', dir, ''];
+  return `<span class="vp-pill vp-dir-badge ${cls}" title="${tip}">${label}</span>`;
+}
+
+// ── Primary trade setup from data ──────────────────
+function getPrimarySetup(d) {
+  if (d.trade_setups && d.trade_setups.length > 0) return d.trade_setups[0];
+  // Fallback to flat fields (backward compat)
+  return {
+    direction: d.direction || 'LONG',
+    entry: d.entry_level,
+    t1: d.t1,
+    t2: d.t2,
+    stop_loss: d.stop_loss,
+    invalidation: d.invalidation,
+    rr_t1: d.rr_t1,
+    rr_t2: d.rr_t2,
+  };
+}
+
 // ── Format price ──────────────────────────────────
 const fmt = (n) => n ? `$${Number(n).toLocaleString()}` : '—';
 const fmtTime = (iso) => {
@@ -91,15 +118,83 @@ const fmtTime = (iso) => {
   } catch { return iso; }
 };
 
+// ── Trade setup block HTML (for one setup) ─────────
+function renderTradeSetup(setup, label, session) {
+  const dir = setup.direction || 'LONG';
+  const t2Label = dir === 'SHORT' ? 'VAL' : 'VAH';
+  const rrClass1 = setup.rr_t1 != null ? `<span class="trade-rr">${setup.rr_t1}:1</span>` : '';
+  const rrClass2 = setup.rr_t2 != null ? `<span class="trade-rr">${setup.rr_t2}:1</span>` : '';
+  const isPending = setup.status === 'PENDING';
+  const dimClass = isPending ? ' style="opacity:0.5"' : '';
+
+  return `
+  <div class="vp-trade-setup"${dimClass}>
+    <div class="block-title">${label} — ${session || ''} Session</div>
+    <div class="vp-trade-row" title="Suggested entry price for the current strategy">
+      <span class="trade-label">Entry</span>
+      <span class="trade-value trade-entry">${fmt(setup.entry)}</span>
+    </div>
+    <div class="vp-trade-row" title="First profit target — POC level (primary magnet)">
+      <span class="trade-label">T1 — POC</span>
+      <span class="trade-value trade-t1">
+        ${fmt(setup.t1)}
+        ${rrClass1}
+      </span>
+    </div>
+    <div class="vp-trade-row" title="Second profit target">
+      <span class="trade-label">T2 — ${t2Label}</span>
+      <span class="trade-value trade-t2">
+        ${fmt(setup.t2)}
+        ${rrClass2}
+      </span>
+    </div>
+    <div class="vp-trade-row" title="Stop loss — exit trade if price reaches this level">
+      <span class="trade-label">Stop</span>
+      <span class="trade-value trade-stop">${fmt(setup.stop_loss)}</span>
+    </div>
+    ${setup.invalidation != null ? `
+    <div class="vp-trade-row" title="If price reaches this level, the trade thesis is invalid">
+      <span class="trade-label">Invalidation</span>
+      <span class="trade-value" style="color:#6b7280">${fmt(setup.invalidation)}</span>
+    </div>` : ''}
+  </div>`;
+}
+
 // ── Render card ───────────────────────────────────
 function renderVPCard(raw, mountId = 'vp-card-mount') {
   const d = raw.vp_card;
   const shape = computeShape(d);
   const state = computeState(d);
   const sc = SHAPE_CONFIG[shape];
+  const direction = d.direction || 'LONG';
+  const setups = d.trade_setups || [];
+  const isDual = direction === 'DUAL' && setups.length === 2;
+  const primary = getPrimarySetup(d);
+
   const lockoutPill = d.amt_lockout
     ? `<span class="vp-pill pill--lockout" title="Aggressive Market Tape bot active — trade with caution">AMT LOCKOUT</span>`
     : `<span class="vp-pill pill--clear" title="AMT bot not active — normal trading">AMT CLEAR</span>`;
+
+  // Trade block HTML
+  let tradeBlock = '';
+  if (isDual) {
+    tradeBlock = `
+  <div class="vp-trade-block">
+    ${renderTradeSetup(setups[0], '🔵 LONG Setup', d.session)}
+    ${renderTradeSetup(setups[1], '🔴 SHORT Setup', d.session)}
+  </div>`;
+  } else if (setups.length > 0) {
+    tradeBlock = `
+  <div class="vp-trade-block">
+    ${renderTradeSetup(setups[0], `${direction} Setup`, d.session)}
+  </div>`;
+  } else {
+    // Backward compat — no trade_setups array
+    tradeBlock = `
+  <div class="vp-trade-block">
+    ${renderTradeSetup(primary, `${direction} Setup`, d.session)}
+  </div>`;
+  }
 
   const html = `
 <div class="vp-card">
@@ -115,6 +210,7 @@ function renderVPCard(raw, mountId = 'vp-card-mount') {
   </div>
 
   <div class="vp-state-row">
+    ${directionBadge(direction)}
     ${statePill(state)}
     ${biasPill(d.strategy_bias)}
     ${probPill(d.probability_tier)}
@@ -148,40 +244,13 @@ function renderVPCard(raw, mountId = 'vp-card-mount') {
     </div>
   </div>
 
-  <div class="vp-trade-block">
-    <div class="block-title">Trade Setup — ${d.session || ''} Session</div>
-    <div class="vp-trade-row" title="Suggested entry price for the current strategy">
-      <span class="trade-label">Entry</span>
-      <span class="trade-value trade-entry">${fmt(d.entry_level)}</span>
-    </div>
-    <div class="vp-trade-row" title="First profit target — POC level (primary magnet)">
-      <span class="trade-label">T1 — POC</span>
-      <span class="trade-value trade-t1">
-        ${fmt(d.t1)}
-        ${d.rr_t1 ? `<span class="trade-rr">${d.rr_t1}:1</span>` : ''}
-      </span>
-    </div>
-    <div class="vp-trade-row" title="Second profit target — VAH level (value area ceiling)">
-      <span class="trade-label">T2 — VAH</span>
-      <span class="trade-value trade-t2">
-        ${fmt(d.t2)}
-        ${d.rr_t2 ? `<span class="trade-rr">${d.rr_t2}:1</span>` : ''}
-      </span>
-    </div>
-    <div class="vp-trade-row" title="Stop loss — exit trade if price reaches this level">
-      <span class="trade-label">Stop</span>
-      <span class="trade-value trade-stop">${fmt(d.stop_loss)}</span>
-    </div>
-    <div class="vp-trade-row" title="Recommended position size for this setup">
-      <span class="trade-label">Size</span>
-      <span class="trade-value trade-size">
-        ${(d.size_recommendation || '—').replace('_', ' ')}
-      </span>
-    </div>
-    <div class="vp-trade-row" title="If price reaches this level, the trade thesis is invalid">
-      <span class="trade-label">Invalidation</span>
-      <span class="trade-value" style="color:#6b7280">${fmt(d.invalidation)}</span>
-    </div>
+  ${tradeBlock}
+
+  <div class="vp-card-row" style="display:flex;gap:6px;margin-top:4px">
+    <span class="trade-label">Size</span>
+    <span class="trade-value trade-size">
+      ${(d.size_recommendation || '—').replace('_', ' ')}
+    </span>
   </div>
 
   <div class="vp-links">
