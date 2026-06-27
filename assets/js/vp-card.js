@@ -91,7 +91,6 @@ function renderVPCard(raw, mountId = 'vp-card-mount') {
   </div>
 
   <div class="vp-shape-badge ${sc.cls}">
-    <span>${shape}</span>
     <span class="shape-label">${sc.label}</span>
     <span class="shape-desc">${sc.desc}</span>
   </div>
