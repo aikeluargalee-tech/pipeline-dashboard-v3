@@ -9,8 +9,52 @@ import os
 import tempfile
 from datetime import datetime, timezone
 
+
+
+def load_state():
+    if os.path.exists(VP_STATE):
+        try:
+            with open(VP_STATE) as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {"consecutive_closes_outside_va": 0, "last_price": None,
+            "last_state": None, "last_vah": None, "last_val": None}
+
+
+def save_state(s):
+    fd, tmp = tempfile.mkstemp(dir=os.path.dirname(VP_STATE), suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w") as f:
+            json.dump(s, f)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, VP_STATE)
+    except Exception:
+        os.unlink(tmp)
+        raise
+
+
+def update_consecutive_closes(vp_state, price, vah, val, current_state):
+    """Increment/decrement consecutive closes based on compared to VA."""
+    prev = vp_state.get("consecutive_closes_outside_va", 0)
+
+    # Same state as before → increment
+    if current_state == vp_state.get("last_state"):
+        if current_state in ("REJECTION_UP", "REJECTION_DOWN"):
+            return prev + 1
+        return prev
+    # State changed → could be same direction or reset
+    if current_state == "ACCEPTANCE":
+        return 0  # reset when back inside
+    if current_state in ("REJECTION_UP", "REJECTION_DOWN") and \
+       current_state != vp_state.get("last_state"):
+        return 1  # first close outside
+    return prev
+
 AMT_FEED = "/tmp/amt_feed.json"
 VP_OUTPUT = "/tmp/btc_vp_card.json"
+VP_STATE = "/tmp/btc_vp_state.json"  # persists consecutive_closes across runs
 VA_PCT = 0.70  # 70% of volume = value area
 
 
@@ -88,6 +132,22 @@ def compute_vp(feed):
     btc_price = feed.get("btc_spot", levels[0]["price"])
     shape, strategy, state = detect_shape(bins, btc_price, vah, val, poc)
 
+    # 5a. State persistence — track consecutive closes across runs
+    vp_state = load_state()
+    consecutive = update_consecutive_closes(vp_state, btc_price, vah, val, state)
+    vp_state["consecutive_closes_outside_va"] = consecutive
+    vp_state["last_price"] = btc_price
+    vp_state["last_state"] = state
+    vp_state["last_vah"] = vah
+    vp_state["last_val"] = val
+    save_state(vp_state)
+
+    # Re-detect shape with corrected consecutive count
+    if consecutive >= 2 and btc_price > vah:
+        shape, strategy = "P", "FOLLOW"
+    elif consecutive >= 2 and btc_price < val:
+        shape, strategy = "b", "FOLLOW"
+
     # 6. AMT layer check
     regime = feed.get("meta", {}).get("regime", "UNKNOWN")
     adx = feed.get("meta", {}).get("adx", 0)
@@ -117,7 +177,7 @@ def compute_vp(feed):
             "probability_tier": "HIGH" if touch_val >= 2 else "BASELINE",
             "acceptance_rejection_state": state,
             "rejection_direction": None,
-            "consecutive_closes_outside_va": 0,
+            "consecutive_closes_outside_va": consecutive,
             "confirmation_status": "PENDING",
             "active_pattern": "POC_MAGNET",
             "strategy_bias": strategy,
