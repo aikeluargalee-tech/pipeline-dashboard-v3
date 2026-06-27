@@ -32,6 +32,7 @@ echo "════════════════════════�
 run_pipeline() {
     local label="$1"
     local script="$2"
+    local timeout_sec="${3:-120}"
     echo -n "  $label ... "
     # If script arg contains a space, it has its own interpreter
     if [[ "$script" == *" "* ]]; then
@@ -39,7 +40,7 @@ run_pipeline() {
     else
         cmd="$PYTHON $script"
     fi
-    if $cmd >> "$ERROR_LOG" 2>&1; then
+    if timeout $timeout_sec $cmd >> "$ERROR_LOG" 2>&1; then
         echo "✅"
         PASSED=$((PASSED + 1))
     else
@@ -89,8 +90,8 @@ run_pipeline "polymarket"    "$SITE/scripts/producers/markets.py"
 run_pipeline "market_data"   "$SITE/scripts/fetch_market_data.py"
 run_pipeline "btc_dist"      "$SITE/scripts/fetch_btc_distribution.py"
 run_pipeline "skew"          "$SITE/scripts/fetch_skew.py"
-run_pipeline "cot"           "/usr/bin/python3 $SITE/scripts/fetch_cot.py"
-run_pipeline "options_full"  "/usr/bin/python3 $SITE/scripts/fetch_options_full.py"
+run_pipeline "cot"           "/usr/bin/python3 $SITE/scripts/fetch_cot.py" 180
+run_pipeline "options_full"  "/usr/bin/python3 $SITE/scripts/fetch_options_full.py" 180
 run_pipeline "gamma"         "python3 $SITE/scripts/fetch_gamma.py"
 run_pipeline "etf_flow"      "$SITE/scripts/fetch_etf_flow.py"
 run_pipeline "gate0"         "$SITE/scripts/fetch_gate0.py"
@@ -113,6 +114,13 @@ run_pipeline "beginner"      "$SITE/scripts/producers/fetch_beginner_metrics.py"
 
 echo "── Production complete: $PASSED passed, $FAILED failed ──"
 
+# Abort if excessive producer failures (threshold: >5)
+if [ $FAILED -gt 5 ]; then
+    echo "❌ Too many producer failures ($FAILED) — aborting deploy"
+    echo "CRASH_ALERT:excessive_producer_failures:${FAILED}:$(date -u '+%Y-%m-%d %H:%M UTC')" >> /tmp/pipeline_alerts_v3.log
+    exit 1
+fi
+
 # ─── 2. Run collector ───
 echo "── Collecting data ──"
 COLLECT_OUTPUT=$(timeout 95 $PYTHON collect.py 2>&1) || COLLECT_EXIT=$?
@@ -120,7 +128,15 @@ COLLECT_EXIT=${COLLECT_EXIT:-0}
 echo "$COLLECT_OUTPUT"
 
 if [ $COLLECT_EXIT -eq 124 ]; then
-    echo "⚠️  Collector timed out (95s) — deploying whatever data exists"
+    echo "⚠️  Collector timed out (95s) — validating JSON integrity"
+    # Remove any partial/corrupted JSON files left by mid-write kill
+    for f in data/*.json data/gate0.json data/amt_status.json data/sigma_status.json data/trp_status.json data/run_status.json; do
+        if [ -f "$f" ] && ! python3 -m json.tool "$f" >/dev/null 2>&1; then
+            echo "  ❌ Corrupted: $(basename "$f") — removing"
+            rm -f "$f"
+        fi
+    done
+    echo "⚠️  Deploying whichever JSON files survived"
 elif [ $COLLECT_EXIT -ne 0 ]; then
     echo "❌ Collector failed — aborting deploy"
     echo "CRASH_ALERT:collector_crashed:$(date -u '+%Y-%m-%d %H:%M UTC')" >> /tmp/pipeline_alerts_v3.log
@@ -156,10 +172,12 @@ echo "── Checking for changes ──"
 # Inject current deploy timestamp into HTML meta/schema tags
 NOW_ISO=$(date -u '+%Y-%m-%dT%H:%M:%S+00:00')
 echo "  Injecting deploy timestamp: ${NOW_ISO}"
-sed -i "s|content=\"[0-9T:+Z-]*\" id=\"og-updated\"|content=\"${NOW_ISO}\" id=\"og-updated\"|g" dashboard/index.html
-sed -i "s|content=\"[0-9T:+Z-]*\" id=\"article-modified\"|content=\"${NOW_ISO}\" id=\"article-modified\"|g" dashboard/index.html
-sed -i "s|content=\"[0-9T:+Z-]*\" id=\"dc-date\"|content=\"${NOW_ISO}\" id=\"dc-date\"|g" dashboard/index.html
-sed -i "s|\"dateModified\": \"[^\"]*\"|\"dateModified\": \"${NOW_ISO}\"|g" dashboard/index.html
+sed -i \
+  -e "s|content=\"[0-9T:+Z-]*\" id=\"og-updated\"|content=\"${NOW_ISO}\" id=\"og-updated\"|g" \
+  -e "s|content=\"[0-9T:+Z-]*\" id=\"article-modified\"|content=\"${NOW_ISO}\" id=\"article-modified\"|g" \
+  -e "s|content=\"[0-9T:+Z-]*\" id=\"dc-date\"|content=\"${NOW_ISO}\" id=\"dc-date\"|g" \
+  -e "s|\"dateModified\": \"[^\"]*\"|\"dateModified\": \"${NOW_ISO}\"|g" \
+  dashboard/index.html
 
 if ! git add data/*.json data/gate0.json data/amt_status.json data/sigma_status.json data/trp_status.json data/run_status.json assets/v7_long.png assets/v7_short.png assets/styles.css assets/nav.js assets/favicon.png assets/logo.png assets/social-card.png index.html dashboard/index.html methodology/index.html glossary/index.html about/index.html faq/index.html contact/index.html research/ compare/ privacy/index.html terms/index.html verdicts/ track-record/ docs/ events-and-disruptions/ sitemap.xml robots.txt manifest.json scripts/ 2>/dev/null; then
     echo "⚠ git add had errors — some files may not exist yet (OK for first deploy)"
