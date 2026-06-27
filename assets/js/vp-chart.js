@@ -1,156 +1,176 @@
-// vp-chart.js — Volume Profile Histogram (Canvas)
-// Reads chart_data from vp_card.json, renders as horizontal bar chart
+// vp-chart.js — Volume Profile Histogram (HTML/CSS Div-based)
+// Reads chart_data and vp_card from vp_card.json, renders as vertical column chart
 
-const VP_CHART_COLORS = {
-  poc:    { bar: '#facc15', text: '#facc15', alpha: 0.9 },
-  vah:    { bar: '#f87171', text: '#f87171', alpha: 0.7 },
-  val:    { bar: '#34d399', text: '#34d399', alpha: 0.7 },
-  hvn:    { bar: '#a78bfa', text: '#a78bfa', alpha: 0.6 },
-  lvn:    { bar: '#374151', text: '#6b7280', alpha: 0.3 },
-  normal: { bar: '#4b5563', text: '#9ca3af', alpha: 0.4 },
+const TYPE_PRIORITY = {
+  poc: 5,
+  vah: 4,
+  val: 3,
+  hvn: 2,
+  normal: 1,
+  lvn: 0
 };
 
-function renderVPChart(chartData, canvasId = 'vp-chart-canvas') {
-  const canvas = document.getElementById(canvasId);
-  if (!canvas) return;
+function renderVPChart(raw, containerId = 'vp-chart-container') {
+  const container = document.getElementById(containerId);
+  if (!container) return;
 
-  if (canvas.clientWidth < 1) {
-    requestAnimationFrame(() => renderVPChart(chartData, canvasId));
+  const chartData = raw.chart_data;
+  const vpCard = raw.vp_card;
+  if (!chartData || !chartData.bins || chartData.bins.length === 0) {
+    container.innerHTML = `<div style="padding: 12px; color: #6b7280;">No chart bins available</div>`;
     return;
   }
 
-  const ctx = canvas.getContext('2d');
-  const dpr = window.devicePixelRatio || 1;
+  const { bins, bin_size } = chartData;
 
-  const { bins, bin_size, max_volume } = chartData;
-  const n = bins.length;
-  if (n === 0) return;
+  // Sort bins ascending by price (left = lowest price, right = highest price)
+  const sortedBins = [...bins].sort((a, b) => Number(a.price) - Number(b.price));
+  const minPrice = Number(sortedBins[0].price);
+  const maxPrice = Number(sortedBins[sortedBins.length - 1].price);
+  const range = (maxPrice - minPrice) || 1;
 
-  // Layout — generous right padding for reference labels
-  const W = canvas.clientWidth;
-  const pad = { top: 12, right: 130, bottom: 12, left: 8 };
-  const chartW = W - pad.left - pad.right;
-  const gap = 2;
-  const barH = Math.max(3, Math.floor((280 / n)) - gap); // cap chart ~280px tall
-  const chartH = n * (barH + gap);
-  const H = chartH + pad.top + pad.bottom;
+  // Compact — Group bins into a maximum number of bars (e.g., 35) to keep it clean
+  const maxBars = 35;
+  const step = Math.max(1, Math.ceil(sortedBins.length / maxBars));
+  const groupedBars = [];
 
-  // Resize for HiDPI
-  canvas.width = W * dpr;
-  canvas.height = H * dpr;
-  canvas.style.width = W + 'px';
-  canvas.style.height = H + 'px';
-  ctx.scale(dpr, dpr);
+  for (let i = 0; i < sortedBins.length; i += step) {
+    let stepVol = 0;
+    let stepPrice = 0;
+    let highestPriorityType = 'lvn';
+    let highestPriority = -1;
 
-  // Clear
-  ctx.fillStyle = '#111827';
-  ctx.fillRect(0, 0, W, H);
-
-  // Helper: price → y position
-  const yForPrice = (p) => {
-    if (n === 0) return pad.top;
-    const topPrice = bins[0].price + bin_size / 2;
-    const botPrice = bins[n - 1].price - bin_size / 2;
-    const frac = (topPrice - p) / (topPrice - botPrice);
-    return pad.top + frac * chartH;
-  };
-
-  // Collect reference lines (VAH/VAL/POC)
-  const refLines = [];
-  for (const bin of bins) {
-    if (bin.type === 'vah' || bin.type === 'val' || bin.type === 'poc') {
-      if (bin.price == null) continue;
-      const y = yForPrice(bin.price + bin_size / 2);
-      refLines.push({ y, type: bin.type, price: bin.price });
+    for (let j = 0; j < step && (i + j) < sortedBins.length; j++) {
+      const bin = sortedBins[i + j];
+      const vol = Number(bin.volume);
+      if (vol > stepVol) {
+        stepVol = vol;
+        stepPrice = Number(bin.price);
+      }
+      
+      const type = bin.type || 'normal';
+      const priority = TYPE_PRIORITY[type] || 0;
+      if (priority > highestPriority) {
+        highestPriority = priority;
+        highestPriorityType = type;
+      }
     }
+
+    groupedBars.push({
+      volume: stepVol,
+      price: stepPrice,
+      type: highestPriorityType
+    });
   }
 
-  // Dedupe and draw reference lines with staggered labels
-  const seen = {};
-  const labelSlots = []; // track used y-positions for labels
-  for (const r of refLines) {
-    if (seen[r.type]) continue;
-    seen[r.type] = true;
-    const c = VP_CHART_COLORS[r.type];
+  // Find max volume in grouped bars to normalize height
+  const vols = groupedBars.map(b => b.volume).filter(v => Number.isFinite(v) && v > 0);
+  const maxVol = vols.length ? Math.max(...vols) : 1;
 
-    // Dashed line across chart area
-    ctx.strokeStyle = c.text;
-    ctx.globalAlpha = 0.35;
-    ctx.lineWidth = 1;
-    ctx.setLineDash([3, 5]);
-    ctx.beginPath();
-    ctx.moveTo(pad.left, r.y);
-    ctx.lineTo(pad.left + chartW, r.y);
-    ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.globalAlpha = 1;
+  // Render NOW marker/pointer if btc_price is within range
+  const btcNow = vpCard?.btc_price || null;
+  const getBoundedPct = (price) => {
+    const rawPct = ((Number(price) - minPrice) / range) * 100;
+    return Math.max(3, Math.min(97, rawPct));
+  };
 
-    // Label position — stagger if too close to another label
-    let labelY = r.y - 2;
-    const minGap = 13;
-    let overlaps = true;
-    while (overlaps) {
-      overlaps = false;
-      for (const slot of labelSlots) {
-        if (Math.abs(labelY - slot) < minGap) {
-          labelY = slot + minGap;
-          overlaps = true;
+  let nowHtml = '';
+  if (btcNow && btcNow >= minPrice && btcNow <= maxPrice) {
+    const nowPct = getBoundedPct(btcNow);
+    nowHtml = `
+      <div class="vp-now-marker" style="left: ${nowPct}%">
+        ▼ NOW ($${Math.round(btcNow).toLocaleString()})
+      </div>
+    `;
+  }
+
+  let chartHtml = `
+    <div class="vp-chart-container-horizontal">
+      <div class="vp-now-track-horizontal">${nowHtml}</div>
+      <div class="vp-chart-horizontal">
+  `;
+
+  // Draw vertical column bars
+  for (const bar of groupedBars) {
+    const pct = Math.max(2, (bar.volume / maxVol) * 100);
+    const barClass = bar.type; // poc, vah, val, hvn, lvn, normal
+    chartHtml += `
+      <div class="vp-bar-horizontal ${barClass}" style="height: ${pct}%" title="$${bar.price.toLocaleString()} — Vol: ${bar.volume.toFixed(2)}"></div>
+    `;
+  }
+
+  chartHtml += `
+    </div>
+  `;
+
+  // Position levels: VAH, VAL, POC
+  const labels = [];
+  if (vpCard?.val != null) {
+    labels.push({ name: 'VAL', pct: getBoundedPct(vpCard.val), colorClass: 'val', price: vpCard.val });
+  }
+  if (vpCard?.poc != null) {
+    labels.push({ name: 'POC', pct: getBoundedPct(vpCard.poc), colorClass: 'poc', price: vpCard.poc });
+  }
+  if (vpCard?.vah != null) {
+    labels.push({ name: 'VAH', pct: getBoundedPct(vpCard.vah), colorClass: 'vah', price: vpCard.vah });
+  }
+
+  // Sort labels left-to-right to staggered assignment
+  labels.sort((a, b) => a.pct - b.pct);
+
+  // Stagger overlapping labels horizontally (using vertical rows)
+  const minPctGap = 16;
+  const rows = [];
+  let maxRow = 0;
+
+  for (let i = 0; i < labels.length; i++) {
+    const lbl = labels[i];
+    let assignedRow = 0;
+    while (true) {
+      let overlap = false;
+      const rowPcts = rows[assignedRow] || [];
+      for (const pct of rowPcts) {
+        if (Math.abs(lbl.pct - pct) < minPctGap) {
+          overlap = true;
           break;
         }
       }
+      if (!overlap) break;
+      assignedRow++;
     }
-    labelSlots.push(labelY);
-
-    // Label background
-    const label = r.type.toUpperCase() + ' $' + (r.price != null ? r.price.toLocaleString() : '—');
-    ctx.font = 'bold 10px monospace';
-    const tw = ctx.measureText(label).width;
-    const lx = W - tw - 10;
-    ctx.fillStyle = '#111827';
-    ctx.globalAlpha = 0.85;
-    ctx.fillRect(lx - 3, labelY - 9, tw + 6, 13);
-    ctx.globalAlpha = 1;
-
-    // Label text
-    ctx.fillStyle = c.text;
-    ctx.textAlign = 'left';
-    ctx.fillText(label, lx, labelY + 1);
+    if (!rows[assignedRow]) rows[assignedRow] = [];
+    rows[assignedRow].push(lbl.pct);
+    lbl.row = assignedRow;
+    if (assignedRow > maxRow) maxRow = assignedRow;
   }
 
-  // Draw bars
-  for (let i = 0; i < n; i++) {
-    const bin = bins[i];
-    const c = VP_CHART_COLORS[bin.type] || VP_CHART_COLORS.normal;
-    const barW = Math.max(2, (bin.volume / max_volume) * chartW);
-    const x = pad.left;
-    const y = pad.top + i * (barH + gap);
+  // Render labels row
+  chartHtml += `
+    <div class="vp-labels-row-horizontal" style="height: ${38 + maxRow * 16}px">
+  `;
 
-    // Bar
-    ctx.fillStyle = c.bar;
-    ctx.globalAlpha = c.alpha;
-    ctx.fillRect(x, y, barW, barH);
-    ctx.globalAlpha = 1;
-
-    // Volume text on wide bars only
-    if (barW > 55) {
-      ctx.fillStyle = '#fff';
-      ctx.font = '9px monospace';
-      ctx.textAlign = 'left';
-      ctx.fillText(bin.volume.toLocaleString(), x + 4, y + barH - 2);
-    }
+  for (const lbl of labels) {
+    const dashedLineHeight = 116 + lbl.row * 16;
+    chartHtml += `
+      <div class="vp-x-label ${lbl.colorClass}" style="left: ${lbl.pct}%; top: ${lbl.row * 16}px">
+        <div class="vp-line-dashed ${lbl.colorClass}-line" style="height: ${dashedLineHeight}px"></div>
+        <span class="vp-label-title">${lbl.name}</span><br>$${Number(lbl.price).toLocaleString()}
+      </div>
+    `;
   }
 
-  // Price labels on left — only every 5th + key levels
-  ctx.textAlign = 'left';
-  ctx.font = '8px monospace';
-  for (let i = 0; i < n; i++) {
-    const isKey = bins[i].type !== 'normal' && bins[i].type !== 'lvn';
-    if (i % 5 === 0 || isKey) {
-      const y = pad.top + i * (barH + gap) + barH / 2 + 3;
-      ctx.fillStyle = isKey
-        ? (VP_CHART_COLORS[bins[i].type] || VP_CHART_COLORS.normal).text
-        : '#6b7280';
-      ctx.fillText('$' + (bins[i].price != null ? bins[i].price.toLocaleString() : '—'), 4, y);
-    }
-  }
+  chartHtml += `
+      </div>
+    </div>
+  `;
+
+  // Info label
+  const totalVol = bins.reduce((sum, b) => sum + Number(b.volume), 0);
+  chartHtml += `
+    <div class="vp-chart-info-label">
+      ${bins.length} bins · bin size $${bin_size} · ${(totalVol / 1000).toFixed(1)}K total volume
+    </div>
+  `;
+
+  container.innerHTML = chartHtml;
 }
