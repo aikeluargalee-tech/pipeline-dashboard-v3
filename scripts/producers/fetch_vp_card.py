@@ -16,7 +16,7 @@ def load_state():
         try:
             with open(VP_STATE) as f:
                 return json.load(f)
-        except Exception:
+        except (json.JSONDecodeError, FileNotFoundError):
             pass
     return {"consecutive_closes_outside_va": 0, "last_price": None,
             "last_state": None, "last_vah": None, "last_val": None}
@@ -36,7 +36,9 @@ def save_state(s):
 
 
 def update_consecutive_closes(vp_state, price, vah, val, current_state):
-    """Increment/decrement consecutive closes based on compared to VA."""
+    """Track consecutive closes outside Value Area.
+    Increments on same-state rejection; resets to 0 on acceptance;
+    starts at 1 on first rejection outside VA."""
     prev = vp_state.get("consecutive_closes_outside_va", 0)
 
     # Same state as before → increment
@@ -61,14 +63,17 @@ VA_PCT = 0.70  # 70% of volume = value area
 def load_feed():
     if not os.path.exists(AMT_FEED):
         return None
-    with open(AMT_FEED) as f:
-        return json.load(f)
+    try:
+        with open(AMT_FEED) as f:
+            return json.load(f)
+    except (json.JSONDecodeError, FileNotFoundError):
+        return None
 
 
 def compute_vp(feed):
     """Extract footprint levels and compute VP metrics."""
-    fp = feed.get("footprint", {})
-    levels = fp.get("levels", [])
+    fp = feed.get("footprint") or {}
+    levels = fp.get("levels") or []
     tick_size = fp.get("tick_size", 8)
 
     if not levels or len(levels) < 5:
@@ -79,7 +84,7 @@ def compute_vp(feed):
 
     # Compute total volume per level
     for lvl in levels:
-        lvl["total_vol"] = lvl["buy"] + lvl["sell"]
+        lvl["total_vol"] = (lvl.get("buy") or 0) + (lvl.get("sell") or 0)
 
     total_volume = sum(l["total_vol"] for l in levels)
     if total_volume == 0:
@@ -125,11 +130,11 @@ def compute_vp(feed):
     bins = build_chart_bins(levels, poc, vah, val, tick_size)
 
     # 4. Touch counts (from feed metadata or default)
-    touch_val = feed.get("footprint", {}).get("touch_val", 0)
-    touch_vah = feed.get("footprint", {}).get("touch_vah", 0)
+    touch_val = (feed.get("footprint") or {}).get("touch_val", 0)
+    touch_vah = (feed.get("footprint") or {}).get("touch_vah", 0)
 
     # 5. Shape detection
-    btc_price = feed.get("btc_spot", levels[0]["price"])
+    btc_price = feed.get("btc_spot") or levels[0]["price"]
     shape, strategy, state = detect_shape(bins, btc_price, vah, val, poc)
 
     # 5a. State persistence — track consecutive closes across runs
@@ -238,7 +243,7 @@ def detect_shape(bins, price, vah, val, poc):
     top_vol = sum(b["volume"] for b in bins if b["price"] > poc)
     bot_vol = sum(b["volume"] for b in bins if b["price"] < poc)
 
-    ratio = top_vol / bot_vol if bot_vol > 0 else 999
+    ratio = top_vol / bot_vol if bot_vol > 0 else (1 if top_vol == 0 else 999)
 
     if price > vah:
         return "P", "FOLLOW", "REJECTION_UP"

@@ -13,6 +13,12 @@ const VP_CHART_COLORS = {
 function renderVPChart(chartData, canvasId = 'vp-chart-canvas') {
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
+
+  if (canvas.clientWidth < 1) {
+    requestAnimationFrame(() => renderVPChart(chartData, canvasId));
+    return;
+  }
+
   const ctx = canvas.getContext('2d');
   const dpr = window.devicePixelRatio || 1;
 
@@ -52,6 +58,7 @@ function renderVPChart(chartData, canvasId = 'vp-chart-canvas') {
   const refLines = [];
   for (const bin of bins) {
     if (bin.type === 'vah' || bin.type === 'val' || bin.type === 'poc') {
+      if (bin.price == null) continue;
       const y = yForPrice(bin.price + bin_size / 2);
       refLines.push({ y, type: bin.type, price: bin.price });
     }
@@ -79,7 +86,7 @@ function renderVPChart(chartData, canvasId = 'vp-chart-canvas') {
     ctx.font = '10px monospace';
     ctx.textAlign = 'right';
     ctx.fillText(
-      r.type.toUpperCase() + ' $' + r.price.toLocaleString(),
+      r.type.toUpperCase() + ' $' + (r.price != null ? r.price.toLocaleString() : '—'),
       W - 4, r.y - 3
     );
   }
@@ -116,7 +123,7 @@ function renderVPChart(chartData, canvasId = 'vp-chart-canvas') {
       ctx.fillStyle = bins[i].type !== 'normal'
         ? (VP_CHART_COLORS[bins[i].type] || VP_CHART_COLORS.normal).text
         : '#6b7280';
-      ctx.fillText('$' + bins[i].price.toLocaleString(), 4, y);
+      ctx.fillText('$' + (bins[i].price != null ? bins[i].price.toLocaleString() : '—'), 4, y);
     }
   }
 }

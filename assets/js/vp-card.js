@@ -121,13 +121,13 @@ function renderVPCard(raw, mountId = 'vp-card-mount') {
     </div>
     <div class="vp-level-item level-hvn">
       <div class="level-label">HVN</div>
-      <div class="level-value">${d.hvn_range ? '$' + d.hvn_range.replace('-', '–$') : '—'}</div>
+      <div class="level-value">${d.hvn_range ? '$' + String(d.hvn_range).replace('-', '–$') : '—'}</div>
       <div class="level-sub">Magnet zone</div>
     </div>
   </div>
 
   <div class="vp-trade-block">
-    <div class="block-title">Trade Setup — ${d.session || ''} Session</div>
+    <div class="block-title">Trade Setup — ${d.session || 'N/A'} Session</div>
     <div class="vp-trade-row">
       <span class="trade-label">Entry</span>
       <span class="trade-value trade-entry">${fmt(d.entry_level)}</span>
@@ -174,8 +174,8 @@ function renderVPCard(raw, mountId = 'vp-card-mount') {
   const mount = document.getElementById(mountId);
   if (mount) mount.innerHTML = html;
 
-  // Render chart if chart_data present
-  if (raw.chart_data && raw.chart_data.bins) {
+  // Render chart if chart_data present and renderVPChart is loaded
+  if (raw.chart_data && raw.chart_data.bins && typeof renderVPChart === 'function') {
     renderVPChart(raw.chart_data, 'vp-chart-canvas');
   }
 }
@@ -196,4 +196,11 @@ async function loadVPCard(mountId = 'vp-card-mount') {
 
 // ── Auto-refresh every 60s ────────────────────────
 loadVPCard();
-setInterval(() => loadVPCard(), 60_000);
+const _vpRefreshId = setInterval(() => loadVPCard(), 60_000);
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) clearInterval(_vpRefreshId);
+});
+window.addEventListener('beforeunload', () => {
+  clearInterval(_vpRefreshId);
+});

@@ -20,7 +20,7 @@ export TWITTER_CT0="${TWITTER_CT0:-}"
 
 # Lockfile — flock prevents race conditions
 exec 9>/tmp/pipeline-deploy-v3.lock
-flock -n 9 || { echo "⚠️  Another deploy is running — skipping"; exit 0; }
+flock -n 9 || { echo "⚠️  Another deploy is running — skipping"; exit 1; }
 
 cd "$SITE"
 
@@ -33,14 +33,16 @@ run_pipeline() {
     local label="$1"
     local script="$2"
     local timeout_sec="${3:-120}"
+    : > "${ERROR_LOG}.append"
     echo -n "  $label ... "
+    local cmd
     # If script arg contains a space, it has its own interpreter
     if [[ "$script" == *" "* ]]; then
         cmd="$script"
     else
         cmd="$PYTHON $script"
     fi
-    if timeout $timeout_sec $cmd >> "$ERROR_LOG" 2>&1; then
+    if timeout $timeout_sec eval "$cmd" >> "$ERROR_LOG" 2>&1; then
         echo "✅"
         PASSED=$((PASSED + 1))
     else
@@ -116,7 +118,7 @@ run_pipeline "vp_card"       "$SITE/scripts/producers/fetch_vp_card.py"
 echo "── Production complete: $PASSED passed, $FAILED failed ──"
 
 # Abort if excessive producer failures (threshold: >5)
-if [ $FAILED -gt 5 ]; then
+if [ "$FAILED" -gt 5 ]; then
     echo "❌ Too many producer failures ($FAILED) — aborting deploy"
     echo "CRASH_ALERT:excessive_producer_failures:${FAILED}:$(date -u '+%Y-%m-%d %H:%M UTC')" >> /tmp/pipeline_alerts_v3.log
     exit 1
