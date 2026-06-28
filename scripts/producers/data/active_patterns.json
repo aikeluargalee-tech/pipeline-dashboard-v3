@@ -1,6 +1,50 @@
 {
-  "updated": "2026-06-28T09:46:33.002487+00:00",
-  "active": [],
+  "updated": "2026-06-28T10:46:38.168395+00:00",
+  "active": [
+    {
+      "pattern_name": "DOUBLE_BOTTOM",
+      "tf": "4H",
+      "direction": "bullish",
+      "state": "FORMING",
+      "confidence": 45,
+      "candles_span": 119,
+      "volume_confirmed": false,
+      "key_levels": {
+        "trough1": 59087.3,
+        "trough2": 58061.3,
+        "neckline": 67268.7,
+        "target": 75963.1,
+        "stop": 57480.7
+      },
+      "description": "Double bottom forming \u2014 second trough at $58,061",
+      "invalidation_price": 57480.7,
+      "timestamp": "2026-06-28T10:46:38.153080+00:00",
+      "btc_price": 60192.2,
+      "pattern_id": "DBOT_4H_403"
+    },
+    {
+      "pattern_name": "BEAR_FLAG",
+      "tf": "4H",
+      "direction": "bearish",
+      "state": "FORMING",
+      "confidence": 50,
+      "candles_span": 34,
+      "volume_confirmed": true,
+      "key_levels": {
+        "pole_top": 64810.3,
+        "pole_bottom": 60252.4,
+        "flag_upper": 61251.2,
+        "flag_lower": 59071.4,
+        "target": 57289.8,
+        "stop": 61863.7
+      },
+      "description": "Bear flag forming \u2014 consolidating after 7.0% drop",
+      "invalidation_price": 61863.7,
+      "timestamp": "2026-06-28T10:46:38.155608+00:00",
+      "btc_price": 60192.2,
+      "pattern_id": "BFLAG_4H_504"
+    }
+  ],
   "archived": [
     "DTOP_4H_416",
     "DTOP_4H_417"
