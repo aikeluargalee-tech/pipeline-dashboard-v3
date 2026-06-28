@@ -25,8 +25,15 @@ def main():
             pass
 
     payload = {
-        "conviction": "Manual update required",
-        "direction": "neutral",
+        "sigma_state": "NEUTRAL",
+        "sigma_trend": "compressing",
+        "sigma_percentile": 17,
+        "sigma_gate": "CAUTION",
+        "sigma_regime": "LOW_VOL",
+        "sigma_1h_realized": 58.54,
+        "sigma_1d_realized": 53.08,
+        "direction": "NEUTRAL",
+        "conviction": "MEDIUM",
         # Preserve real manual timestamp if exists; otherwise mirror the auto-timestamp
         "last_updated": existing_last_updated if existing_last_updated else ts,
         "source": "GetClaw via Milo",
