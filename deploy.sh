@@ -42,7 +42,7 @@ run_pipeline() {
     else
         cmd="$PYTHON $script"
     fi
-    if timeout $timeout_sec eval "$cmd" >> "$ERROR_LOG" 2>&1; then
+    if timeout $timeout_sec bash -c "$cmd" >> "$ERROR_LOG" 2>&1; then
         echo "✅"
         PASSED=$((PASSED + 1))
     else
