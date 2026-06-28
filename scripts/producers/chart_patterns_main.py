@@ -14,12 +14,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Dict
 
-# Add project root and scripts dir
+# Add project root and old chart-patterns scripts dir (modules live there)
 _ROOT = Path(__file__).parent.parent
 _scripts = Path(__file__).parent
-for _d in [_ROOT, _scripts]:
+_old_scripts = Path("/home/maswilee/btc-chart-patterns/scripts")
+for _d in [_ROOT, _scripts, _old_scripts]:
     if str(_d) not in sys.path:
-        # sys.path fixed for V2 standalone
+        sys.path.insert(0, str(_d))
 
 from state import PatternState, PatternDetection
 from pivots import find_pivots_adaptive

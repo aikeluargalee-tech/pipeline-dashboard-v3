@@ -6,8 +6,15 @@ import sys
 import json
 import logging
 from datetime import datetime, timezone
+from pathlib import Path
 
-# sys.path fixed for V2 standalone
+# Add scripts, project root, and parent dirs for V2 standalone imports
+_scripts_dir = Path(__file__).parent          # .../scripts/producers/
+_project_scripts = Path(__file__).parent.parent # .../scripts/
+_project_root = Path(__file__).parent.parent.parent  # .../pipeline-dashboard-v3/
+for _d in [_scripts_dir, _project_scripts, _project_root]:
+    if str(_d) not in sys.path:
+        sys.path.insert(0, str(_d))
 
 from market_data import (
     fetch_candles,
@@ -128,36 +135,8 @@ def run_pipeline() -> dict:
 def main():
     result = run_pipeline()
     
-    # Print card to stdout (for cron capture)
-    from scripts.card import generate_card
-    from candles import Candle as _C
-    
-    # Reconstruct patterns for card generation
-    df_15m = fetch_candles(timeframe="15m", limit=30)
-    df_4h = fetch_candles(timeframe="4h", limit=55)
-    indicators = fetch_indicators_4h()
-    
-    pattern_15m = compute_three_candle_pattern(df_15m, "15m")
-    pattern_4h = compute_three_candle_pattern(df_4h, "4H")
-    
-    regime = classify_regime(
-        df_4h, indicators["rsi"], indicators["histogram"],
-        indicators["ema50"], get_funding_rate(),
-    )
-    
-    card = generate_card(
-        price=result["price"],
-        pattern_15m=pattern_15m,
-        pattern_4h=pattern_4h,
-        regime=regime,
-        bias=result["bias"],
-        confidence=result["confidence"],
-        confluence=result["confluence_score"],
-        range_signal=result["range_signal"],
-        is_4h_close=result["4h_close"],
-    )
-    
-    print(card)
+    # Print result as JSON (card generator not yet ported to V3)
+    print(json.dumps(result, default=str))
     
     # Log to reads.jsonl
     import os
