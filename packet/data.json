@@ -1,26 +1,46 @@
 {
   "header": {
-    "generated_timestamp": "2026-06-29T11:34:36Z",
+    "generated_timestamp": "2026-06-29T11:46:29Z",
     "btc_price": 60108.0,
     "change_24h": -0.093,
-    "bid": 59963.6,
-    "ask": 59956.01,
+    "bid": 59886.88,
+    "ask": 59872.3,
     "spread": 0.01,
-    "volume_24h": 765120024.55
+    "volume_24h": 767764607.07
   },
   "critical": {
+    "btc_price": 60108.0,
     "amt_adx": 22.6,
     "amt_mtf": "1D BULLISH | 4H BEARISH | 1H BEARISH",
-    "amt_delta": -23.3,
-    "amt_cvd_1h": -114.38,
-    "amt_oi_24h": "0.0351",
-    "taker_ratio": 0.93,
+    "candle_delta": -23.3,
+    "candle_deltas_6": [
+      -97.67,
+      -145.12,
+      -181.75,
+      152.92,
+      -165.19,
+      -23.3
+    ],
+    "cvd_per_tf": {
+      "1D": 4065.78,
+      "4H": -74.53,
+      "1H": -114.38
+    },
+    "oi_per_tf": {
+      "1D": 0.0351,
+      "4H": 0.0448,
+      "1H": 0.0946
+    },
+    "session_cvd": -1353.14,
+    "oi_absolute_usd_billions": 6.27,
+    "taker_ratio_24h": 0.93,
     "vp_poc": 60108,
     "vp_vah": 60142,
     "vp_val": 60075,
     "vp_shape": "P",
     "vp_state": "ACCEPTANCE",
-    "balance": "TIGHT_BALANCE",
+    "balance_state": "TIGHT_BALANCE",
+    "balance_width_pct": 2.6,
     "adx_regime": "TRANSITIONING"
   },
   "context": {
@@ -38,7 +58,56 @@
     "cvd_24h": -3427.65,
     "black_swan_score": "0/17",
     "correlation_r": 0.374,
-    "liq_clusters": "Long: $59,950, $59,850, $59,750, $58,900 | Short: $60,100, $60,150, $60,350, $60,550"
+    "liq_clusters": "Long: $59,950, $59,850, $59,750, $58,900 | Short: $60,100, $60,150, $60,350, $60,550",
+    "perp_basis_pct": -0.0456,
+    "order_book_top5": {
+      "bids": [
+        {
+          "price": 59875.99,
+          "size": 1.9468
+        },
+        {
+          "price": 59875.98,
+          "size": 0.00098
+        },
+        {
+          "price": 59875.97,
+          "size": 0.00017
+        },
+        {
+          "price": 59875.48,
+          "size": 0.0002
+        },
+        {
+          "price": 59875.47,
+          "size": 0.2014
+        }
+      ],
+      "asks": [
+        {
+          "price": 59876.0,
+          "size": 0.94171
+        },
+        {
+          "price": 59876.01,
+          "size": 0.00125
+        },
+        {
+          "price": 59876.02,
+          "size": 0.00017
+        },
+        {
+          "price": 59876.68,
+          "size": 0.02258
+        },
+        {
+          "price": 59876.69,
+          "size": 0.03738
+        }
+      ]
+    },
+    "realized_vol_1h_pct": 58.54,
+    "realized_vol_1d_pct": 53.08
   },
   "reference": {
     "sr_1h": "S: $59,375 / $58,872 / $58,375 | R: $60,263 / $60,586 / $60,925",
