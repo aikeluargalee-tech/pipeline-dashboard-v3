@@ -1,5 +1,41 @@
 {
-  "status": "inactive",
-  "reason": "Regime only 1min old \u2014 wait for stabilization",
-  "timestamp": "2026-06-29T02:20:58.038795+00:00"
+  "strategy": "Mean Reversion + Vol Filter",
+  "version": "1.0.0",
+  "mode": "LOOSE",
+  "signal": "NO_SIGNAL",
+  "timestamp": "2026-06-29T02:48:06.245505+00:00",
+  "btc_price": 59758.01,
+  "mean_20h": 59831.74,
+  "atr_pct": null,
+  "atr_data_valid": false,
+  "atr_price": 1195.16,
+  "rsi_14": 48.9,
+  "confidence": "LOW",
+  "position_size_pct": 0.3,
+  "max_hold_hours": 8,
+  "stop_distance_usd": 2390.32,
+  "entry_price": null,
+  "stop_loss": null,
+  "tp_primary": null,
+  "tp_partial": null,
+  "tp_partial_pct": 0.5,
+  "rr_ratio": null,
+  "long_checks": {
+    "rsi": false,
+    "taker_ratio": false,
+    "cvd": true,
+    "oi_delta": true,
+    "funding": true,
+    "liquidity": true
+  },
+  "short_checks": {
+    "rsi": false,
+    "taker_ratio": false,
+    "cvd": false,
+    "oi_delta": true,
+    "funding": true,
+    "liquidity": true
+  },
+  "invalidation_triggers": [],
+  "regime": "RANGING"
 }

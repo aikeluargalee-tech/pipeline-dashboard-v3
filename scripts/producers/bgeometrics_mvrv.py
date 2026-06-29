@@ -55,6 +55,16 @@ def get_puell_multiple():
     return float(fetch_bg("puell-multiple/1")["puellMultiple"])
 
 
+def get_sth_realized_price():
+    """STH Realized Price (90-day). Shows what short-term holders paid on average."""
+    return float(fetch_bg("realizedPriceSth90ds/1")["realizedPriceSth90ds"])
+
+
+def get_sth_net_position():
+    """STH Net Position Change in USD. Positive = buying, Negative = selling."""
+    return float(fetch_bg("sthNetPositionChangeUsds/1")["sthNetPositionChangeUsds"])
+
+
 def get_exchange_netflow_7d():
     """
     7-day sum of BTC exchange netflow from GitHub crypto-market-data.
@@ -101,6 +111,7 @@ def classify_regime(mvrv_z, netflow_data):
 def main():
     errors = []
     mvrv = mvrv_z = sopr = puell = None
+    sth_price = sth_position = None
     netflow_data = None
 
     # BGeometrics metrics
@@ -109,6 +120,8 @@ def main():
         mvrv_z = get_mvrv_zscore()
         sopr = get_sopr()
         puell = get_puell_multiple()
+        sth_price = get_sth_realized_price()
+        sth_position = get_sth_net_position()
     except Exception as e:
         errors.append(f"BGeometrics: {e}")
 
@@ -133,6 +146,8 @@ def main():
         "exchange_netflow_latest_daily_btc": (
             netflow_data["latest_daily_btc"] if netflow_data else None
         ),
+        "sth_realized_price": sth_price,
+        "sth_net_position_change": sth_position,
         "onchain_regime": regime,
         "errors": errors if errors else None,
         "note": (
