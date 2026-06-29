@@ -3,17 +3,17 @@
   "version": "1.0.0",
   "mode": "LOOSE",
   "signal": "NO_SIGNAL",
-  "timestamp": "2026-06-29T12:47:56.484410+00:00",
-  "btc_price": 60026.0,
-  "mean_20h": 59767.42,
+  "timestamp": "2026-06-29T13:48:32.883645+00:00",
+  "btc_price": 59445.99,
+  "mean_20h": 59756.56,
   "atr_pct": null,
   "atr_data_valid": false,
-  "atr_price": 1200.52,
-  "rsi_14": 52.4,
+  "atr_price": 1188.92,
+  "rsi_14": 40.4,
   "confidence": "LOW",
   "position_size_pct": 0.3,
   "max_hold_hours": 8,
-  "stop_distance_usd": 2401.04,
+  "stop_distance_usd": 2377.84,
   "entry_price": null,
   "stop_loss": null,
   "tp_primary": null,
@@ -23,18 +23,18 @@
   "long_checks": {
     "rsi": false,
     "taker_ratio": false,
-    "cvd": true,
-    "oi_delta": false,
+    "cvd": false,
+    "oi_delta": true,
     "funding": true,
-    "liquidity": false
+    "liquidity": true
   },
   "short_checks": {
     "rsi": false,
     "taker_ratio": false,
-    "cvd": false,
-    "oi_delta": false,
+    "cvd": true,
+    "oi_delta": true,
     "funding": true,
-    "liquidity": false
+    "liquidity": true
   },
   "invalidation_triggers": [],
   "regime": "RANGING"
