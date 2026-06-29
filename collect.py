@@ -1261,6 +1261,8 @@ def collect_cycle():
         "sopr": None,
         "puell_multiple": None,
         "netflow_7d": None,
+        "sth_realized_price": None,
+        "sth_net_position_change": None,
         "regime": None,
         "composite_score": None,
         "cycle_phase": None,
@@ -1277,6 +1279,8 @@ def collect_cycle():
         result["sopr"] = sopr
         result["puell_multiple"] = puell
         result["netflow_7d"] = onchain.get("exchange_netflow_7d_btc")
+        result["sth_realized_price"] = onchain.get("sth_realized_price")
+        result["sth_net_position_change"] = onchain.get("sth_net_position_change")
         result["regime"] = onchain.get("regime") or onchain.get("onchain_regime")
 
     # Compute regime from MVRV Z if not provided upstream

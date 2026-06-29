@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Real-Time BTC Data Packet — Live Trading Signals & Gating | Pipeline Dashboard</title>
+<meta name="description" content="Access the consolidated BTC Data Packet: a 4-tier quantitative brief updated every 15 minutes detailing entry conditions, orderflow imbalance, liquidation clusters, and macro indicators.">
+<link rel="canonical" href="https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/packet/">
+
+<!-- Open Graph -->
+<meta property="og:title" content="BTC Quantitative Data Packet — Live Trading Signals">
+<meta property="og:type" content="website">
+<meta property="og:description" content="Consolidated 4-tier quantitative analysis brief with Gate0 pre-trade entry checks, liquidation magnets, and derivatives sentiment. Updated every 15 minutes.">
+<meta property="og:url" content="https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/packet/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css?v=11">
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+<link rel="apple-touch-icon" href="../assets/logo.png">
+<meta name="theme-color" content="#05070d">
+
+<style>
+/* --- Custom Styles for BTC Data Packet Sub-page --- */
+
+/* Color-coded variables and text shadow styling */
+.val-positive {
+  color: var(--green) !important;
+  text-shadow: 0 0 12px rgba(16, 185, 129, 0.35);
+}
+.val-negative {
+  color: var(--red) !important;
+  text-shadow: 0 0 12px rgba(244, 63, 94, 0.35);
+}
+.val-warning {
+  color: var(--yellow) !important;
+  text-shadow: 0 0 12px rgba(245, 158, 11, 0.35);
+}
+
+/* Page structure and margins */
+.packet-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+@media (max-width: 600px) {
+  .packet-container {
+    padding: 24px 12px;
+  }
+}
+
+/* Header & Hero Area */
+.packet-hero {
+  background: rgba(18, 20, 31, 0.55);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+}
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.btc-price-val {
+  font-size: 2.6em;
+  font-weight: 900;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: -1px;
+  color: var(--cyan);
+  text-shadow: 0 0 20px rgba(34, 211, 238, 0.25);
+}
+.btc-change-val {
+  font-size: 1.25em;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+.timestamp-row {
+  font-size: 0.85em;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+.hero-right {
+  display: flex;
+  gap: 24px 40px;
+  flex-wrap: wrap;
+}
+.hero-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.hero-metric-label {
+  font-size: 0.72em;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+.hero-metric-val {
+  font-size: 1.25em;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text);
+}
+
+/* Controls row (Refresh countdown, View Switcher) */
+.controls-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.refresh-panel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.refresh-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.78em;
+  color: var(--muted);
+}
+.refresh-countdown-bar {
+  width: 50px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.refresh-countdown-progress {
+  height: 100%;
+  width: 100%;
+  background: var(--cyan);
+  transition: width 1s linear;
+}
+.refresh-spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--cyan);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: none;
+}
+.refresh-spinner.active {
+  display: inline-block;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Interactive elements styles */
+.action-btn {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.76em;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+.action-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  border-color: var(--border-hover);
+}
+.action-btn:active {
+  transform: translateY(1px);
+}
+
+/* Tab/View contents */
+.view-panel {
+  display: none;
+}
+.view-panel.active {
+  display: block;
+}
+
+/* Section Gating Cards (Tiers) */
+.tier-section {
+  position: relative;
+  margin-bottom: 36px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(18, 20, 31, 0.25);
+  border: 1px solid var(--border);
+}
+.tier-header {
+  position: sticky;
+  top: 57px; /* Sits cleanly beneath sticky .site-nav (height is ~57px) */
+  z-index: 100;
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 6px 16px rgba(5, 7, 13, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.tier-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-size: 0.95em;
+}
+.tier-tag {
+  font-size: 0.65em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 900;
+  color: #05070d;
+}
+
+/* Tier specific accent colors */
+.tier-section.critical { border-color: rgba(244, 63, 94, 0.15); }
+.tier-section.critical .tier-header {
+  color: var(--red);
+  background: rgba(244, 63, 94, 0.08);
+  border-bottom-color: rgba(244, 63, 94, 0.2);
+}
+.tier-section.critical .tier-tag { background-color: var(--red); }
+
+.tier-section.context { border-color: rgba(59, 130, 246, 0.15); }
+.tier-section.context .tier-header {
+  color: var(--blue);
+  background: rgba(59, 130, 246, 0.08);
+  border-bottom-color: rgba(59, 130, 246, 0.2);
+}
+.tier-section.context .tier-tag { background-color: var(--blue); }
+
+.tier-section.reference { border-color: rgba(136, 136, 147, 0.15); }
+.tier-section.reference .tier-header {
+  color: var(--muted);
+  background: rgba(136, 136, 147, 0.08);
+  border-bottom-color: rgba(136, 136, 147, 0.2);
+}
+.tier-section.reference .tier-tag { background-color: var(--muted); color: #fff; }
+
+.tier-section.status { border-color: rgba(16, 185, 129, 0.15); }
+.tier-section.status .tier-header {
+  color: var(--green);
+  background: rgba(16, 185, 129, 0.08);
+  border-bottom-color: rgba(16, 185, 129, 0.2);
+}
+.tier-section.status .tier-tag { background-color: var(--green); }
+
+/* Grid of Metrics */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  padding: 20px;
+}
+.metric-card {
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+.metric-card:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.09);
+  transform: translateY(-1px);
+}
+.metric-key {
+  font-size: 0.72em;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.metric-val {
+  font-size: 1.05em;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  word-break: break-all;
+}
+
+/* Raw Terminal Block View */
+.terminal-wrapper {
+  position: relative;
+  background: #02040a;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.9);
+}
+.terminal-controls {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+.terminal-block {
+  margin: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85em;
+  line-height: 1.6;
+  color: #38bdf8;
+  white-space: pre;
+  overflow-x: auto;
+  padding-top: 10px;
+}
+
+/* Mobile Responsiveness Rules */
+@media (max-width: 768px) {
+  .metrics-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 8px;
+    padding: 12px;
+  }
+  .metric-card {
+    padding: 10px 12px;
+  }
+  .metric-val {
+    font-size: 0.95em;
+  }
+  .tier-header {
+    padding: 10px 14px;
+  }
+  .tier-title {
+    font-size: 0.88em;
+  }
+  .terminal-block {
+    font-size: 0.78em;
+  }
+}
+@media (max-width: 480px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+
+<div id="nav-placeholder"></div>
+
+<noscript>
+<nav style="background:rgba(5,7,13,0.95);border-bottom:1px solid rgba(255,255,255,0.06);padding:12px 24px">
+  <div style="max-width:1200px;margin:0 auto;display:flex;gap:20px;flex-wrap:wrap;align-items:center">
+    <a href="../" style="color:#f5f5f6;text-decoration:none;font-weight:800">⚡ Pipeline Dashboard</a>
+    <a href="../dashboard/" style="color:#888893;text-decoration:none;font-size:0.85em">Dashboard</a>
+    <a href="../methodology/" style="color:#888893;text-decoration:none;font-size:0.85em">Methodology</a>
+    <a href="../research/" style="color:#888893;text-decoration:none;font-size:0.85em">Research</a>
+    <a href="../glossary/" style="color:#888893;text-decoration:none;font-size:0.85em">Glossary</a>
+    <a href="../events-and-disruptions/" style="color:#888893;text-decoration:none;font-size:0.85em">Events</a>
+    <a href="../verdicts/" style="color:#888893;text-decoration:none;font-size:0.85em">Verdicts</a>
+    <a href="../track-record/" style="color:#888893;text-decoration:none;font-size:0.85em">Track Record</a>
+    <a href="../compare/" style="color:#888893;text-decoration:none;font-size:0.85em">Compare</a>
+    <a href="../faq/" style="color:#888893;text-decoration:none;font-size:0.85em">FAQ</a>
+    <a href="../dashboard/" style="background:var(--cyan);color:#05070d;text-decoration:none;font-size:0.82em;padding:6px 16px;border-radius:8px;font-weight:700">Live Dashboard →</a>
+  </div>
+</nav>
+</noscript>
+
+<main id="main" class="packet-container" role="main" aria-label="BTC Quantitative Data Packet Viewer">
+  <!-- Breadcrumbs -->
+  <div class="breadcrumb" aria-label="Breadcrumb navigation">
+    <a href="../">Home</a><span>›</span> <a href="../dashboard/">Dashboard</a><span>›</span> Data Packet
+  </div>
+
+  <h1 style="font-size: 2em; font-weight: 900; margin-bottom: 8px; letter-spacing: -0.5px;">BTC Data Packet</h1>
+  <p style="color: var(--muted); margin-bottom: 32px; font-size: 0.95em; line-height: 1.5;">
+    Aggregated trading brief detailing pre-trade risk gating, structural orderflow, heatmap density supports, and on-chain cycles. Refreshed automatically.
+  </p>
+
+  <!-- Market snapshot hero header -->
+  <div class="packet-hero" id="market-hero">
+    <div class="hero-left">
+      <div class="price-row">
+        <span class="btc-price-val" id="hero-price">$--,---.--</span>
+        <span class="btc-change-val" id="hero-change">--.--%</span>
+      </div>
+      <div class="timestamp-row">
+        GENERATED: <span id="hero-timestamp">Loading...</span>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-metric">
+        <span class="hero-metric-label">BID / ASK</span>
+        <span class="hero-metric-val" id="hero-bid-ask">$--,--- / $--,---</span>
+      </div>
+      <div class="hero-metric">
+        <span class="hero-metric-label">SPREAD</span>
+        <span class="hero-metric-val" id="hero-spread">$--.--</span>
+      </div>
+      <div class="hero-metric">
+        <span class="hero-metric-label">VOLUME 24H</span>
+        <span class="hero-metric-val" id="hero-volume">$--,---,---,---</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Controls Area -->
+  <div class="controls-row">
+    <!-- Polling details -->
+    <div class="refresh-panel">
+      <div class="refresh-indicator">
+        <span>Polling data.json</span>
+        <div class="refresh-countdown-bar">
+          <div class="refresh-countdown-progress" id="refresh-progress"></div>
+        </div>
+        <span id="refresh-counter">60s</span>
+        <div class="refresh-spinner" id="refresh-loading"></div>
+      </div>
+      <button class="action-btn" id="manual-refresh-btn" aria-label="Refresh packet data now">Force Sync</button>
+    </div>
+
+    <!-- Layout toggles -->
+    <div class="view-toggle">
+      <span class="mode-label">VIEW FORMAT</span>
+      <div class="mode-switch">
+        <button id="view-dashboard-btn" class="mode-btn active" aria-label="Switch to grid view">Grid</button>
+        <button id="view-text-btn" class="mode-btn" aria-label="Switch to raw text terminal view">Raw Brief</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- View 1: Beautiful Grid Dashboard -->
+  <div id="dashboard-view" class="view-panel active">
+    
+    <!-- Tier 1: CRITICAL -->
+    <section class="tier-section critical" id="sec-critical">
+      <div class="tier-header">
+        <div class="tier-title">
+          <span class="tier-tag">CRITICAL</span>
+          <span>Layer 0 & Layer 2 Core Signals</span>
+        </div>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.72em; opacity: 0.8;">TIER-1 VETO LEVEL</span>
+      </div>
+      <div class="metrics-grid" id="grid-critical">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- Tier 2: CONTEXT -->
+    <section class="tier-section context" id="sec-context">
+      <div class="tier-header">
+        <div class="tier-title">
+          <span class="tier-tag">CONTEXT</span>
+          <span>Layer 1 Macro & Layer 3 Derivatives</span>
+        </div>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.72em; opacity: 0.8;">TIER-2 ANALYSIS</span>
+      </div>
+      <div class="metrics-grid" id="grid-context">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- Tier 3: REFERENCE -->
+    <section class="tier-section reference" id="sec-reference">
+      <div class="tier-header">
+        <div class="tier-title">
+          <span class="tier-tag">REFERENCE</span>
+          <span>Layer 4 Cycle Metrics & Multi-TF Support/Resistance</span>
+        </div>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.72em; opacity: 0.8;">TIER-3 CONFLUENCE</span>
+      </div>
+      <div class="metrics-grid" id="grid-reference">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- Tier 4: STATUS -->
+    <section class="tier-section status" id="sec-status">
+      <div class="tier-header">
+        <div class="tier-title">
+          <span class="tier-tag">STATUS</span>
+          <span>Pipeline Diagnostic & Source Verifications</span>
+        </div>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.72em; opacity: 0.8;">TIER-4 INTEGRITY</span>
+      </div>
+      <div class="metrics-grid" id="grid-status">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+  </div>
+
+  <!-- View 2: Raw Text CRT Terminal View -->
+  <div id="text-view" class="view-panel">
+    <div class="terminal-wrapper">
+      <div class="terminal-controls">
+        <button class="action-btn" id="copy-text-btn" aria-label="Copy terminal text to clipboard">Copy Packet</button>
+      </div>
+      <pre class="terminal-block" id="terminal-pre">Loading terminal brief output...</pre>
+    </div>
+  </div>
+</main>
+
+<div id="footer-placeholder"></div>
+
+<script src="../assets/nav.js?v=11"></script>
+<script>
+// --- Configuration & Constants ---
+const POLLING_INTERVAL_SEC = 60;
+let pollingTimeLeft = POLLING_INTERVAL_SEC;
+let pollingTimer = null;
+let currentPacketData = null;
+
+// Paths to attempt loading data.json from
+const DATA_PATHS = [
+  'data.json',
+  './data.json',
+  (window.location.pathname.startsWith('/pipeline-dashboard-v3') ? '/pipeline-dashboard-v3' : '') + '/packet/data.json',
+  '/packet/data.json'
+];
+
+// --- Value Color Coding Engine ---
+function getValueColorClass(key, val) {
+  if (val === null || val === undefined) return '';
+  const valStr = String(val).toUpperCase();
+  const lowerKey = key.toLowerCase();
+
+  // Numerical value evaluation
+  if (typeof val === 'number') {
+    if (val > 0) {
+      if (lowerKey.includes('change') || lowerKey.includes('flow') || lowerKey.includes('premium') || lowerKey.includes('delta') || lowerKey.includes('ratio') || lowerKey.includes('skew')) {
+        return 'val-positive';
+      }
+    }
+    if (val < 0) {
+      return 'val-negative';
+    }
+  }
+
+  // Explicit percent changes
+  if (valStr.includes('+') || (parseFloat(valStr) > 0 && valStr.includes('%'))) {
+    return 'val-positive';
+  }
+  if (valStr.includes('-') || (parseFloat(valStr) < 0 && valStr.includes('%'))) {
+    return 'val-negative';
+  }
+
+  // Sentiment Words - Positive (Green)
+  const positiveWords = [
+    'BULLISH', 'BULL', 'BULL_ADVANTAGE', 'PROCEED', 'BUY', 'ACCUMULATING', 
+    'ACCUMULATION', 'LOW_RISK', 'ALL_SYSTEMS_OPERATIONAL', 'OPEN', 'UPWARD', 
+    'STRONG_UPTREND', 'BUY_ABSORPTION', 'RISK_ON', 'NO_RESTRICTIONS', 'ACTIVE'
+  ];
+  
+  // Sentiment Words - Negative (Red)
+  const negativeWords = [
+    'BEARISH', 'BEAR', 'BEAR_ADVANTAGE', 'ABORT', 'SELL', 'DISTRIBUTING', 
+    'HIGH_RISK', 'CLOSED', 'DOWNWARD', 'STRONG_DOWNTREND', 'SELL_ABSORPTION', 
+    'RISK_OFF', 'CRITICAL', 'WARNING', 'FAIL'
+  ];
+
+  // Sentiment Words - Neutral/Warning (Yellow)
+  const warningWords = [
+    'TIGHTENED', 'PAUSE', 'NEUTRAL', 'CAUTIOUS', 'STANDBY', 'WARNING', 
+    'HIGH_VOLATILITY', 'NORMAL', 'MIXED', 'EXPANDING', 'COMPRESSED', 'VICE_GRIP', 'BALANCED'
+  ];
+
+  if (positiveWords.some(w => valStr === w || valStr.startsWith(w + ' ') || valStr.endsWith(' ' + w) || valStr.includes('_' + w))) {
+    return 'val-positive';
+  }
+  if (negativeWords.some(w => valStr === w || valStr.startsWith(w + ' ') || valStr.endsWith(' ' + w) || valStr.includes('_' + w))) {
+    return 'val-negative';
+  }
+  if (warningWords.some(w => valStr === w || valStr.startsWith(w + ' ') || valStr.endsWith(' ' + w) || valStr.includes('_' + w))) {
+    return 'val-warning';
+  }
+
+  return '';
+}
+
+// --- Value Formatter ---
+function formatMetricValue(key, val) {
+  if (val === null || val === undefined) return 'N/A';
+  
+  if (key === 'generated_timestamp') {
+    return new Date(val).toLocaleString();
+  }
+  
+  if (typeof val === 'number') {
+    if (key.includes('price') || key === 'bid' || key === 'ask' || key === 'sth' || key.includes('vp_poc') || key.includes('vp_vah') || key.includes('vp_val')) {
+      return '$' + val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    if (key.includes('change_24h') || key === 'oi_change' || key === 'options_skew') {
+      const sign = val > 0 ? '+' : '';
+      return sign + val.toFixed(2) + '%';
+    }
+    if (key === 'spread') {
+      return '$' + val.toFixed(2);
+    }
+    if (key.includes('volume') || key === 'etf_flow' || key === 'cvd_24h' || key === 'amt_oi' || key.includes('delta') || key.includes('whale') || key.includes('cvd')) {
+      const prefix = (key.includes('volume') || key.includes('flow')) ? '$' : '';
+      return prefix + val.toLocaleString();
+    }
+    if (key === 'funding') {
+      return val.toFixed(4) + '%';
+    }
+    return val.toLocaleString(undefined, { maximumFractionDigits: 4 });
+  }
+  
+  return String(val);
+}
+
+// --- Generate Raw ASCII Text Brief (~70 lines) ---
+function generateTextBrief(data) {
+  const separator = "========================================================================";
+  const subSeparator = "------------------------------------------------------------------------";
+  
+  let out = `${separator}\n`;
+  out += `⚡ BTC DATA PACKET (GENERATED CADENCE: 15M)\n`;
+  out += `${separator}\n`;
+  out += `TIMESTAMP   : ${new Date(data.header.generated_timestamp).toLocaleString()}\n`;
+  out += `BTC PRICE   : $${data.header.btc_price.toLocaleString(undefined, {minimumFractionDigits:2})} (${data.header.change_24h > 0 ? '+' : ''}${data.header.change_24h.toFixed(2)}%)\n`;
+  out += `BID / ASK   : $${data.header.bid.toLocaleString(undefined, {minimumFractionDigits:2})} / $${data.header.ask.toLocaleString(undefined, {minimumFractionDigits:2})}\n`;
+  out += `SPREAD      : $${data.header.spread.toFixed(2)}\n`;
+  out += `VOLUME 24H  : $${data.header.volume_24h.toLocaleString()}\n`;
+  out += `${separator}\n\n`;
+
+  // Tier 1: CRITICAL
+  out += `[CRITICAL] ${subSeparator.substring(11)}\n`;
+  for (const [k, v] of Object.entries(data.critical)) {
+    const formattedKey = k.toUpperCase().padEnd(16, ' ');
+    out += `${formattedKey}: ${v}\n`;
+  }
+  out += `\n`;
+
+  // Tier 2: CONTEXT
+  out += `[CONTEXT] ${subSeparator.substring(10)}\n`;
+  for (const [k, v] of Object.entries(data.context)) {
+    const formattedKey = k.toUpperCase().padEnd(16, ' ');
+    out += `${formattedKey}: ${v}\n`;
+  }
+  out += `\n`;
+
+  // Tier 3: REFERENCE
+  out += `[REFERENCE] ${subSeparator.substring(12)}\n`;
+  for (const [k, v] of Object.entries(data.reference)) {
+    if (k === 'cycle' && typeof v === 'object') {
+      out += `CYCLE_MVRV_Z    : ${v['mvrv-z']}\n`;
+      out += `CYCLE_SOPR      : ${v['sopr']}\n`;
+      out += `CYCLE_NETFLOW   : ${v['netflow']}\n`;
+      out += `CYCLE_REGIME    : ${v['regime']}\n`;
+    } else {
+      const formattedKey = k.toUpperCase().padEnd(16, ' ');
+      out += `${formattedKey}: ${v}\n`;
+    }
+  }
+  out += `\n`;
+
+  // Tier 4: STATUS
+  out += `[STATUS] ${subSeparator.substring(9)}\n`;
+  out += `GATE_STATUS_SUM : ${data.status.gate_status_summary}\n`;
+  if (data.status.source_timestamps) {
+    for (const [src, ts] of Object.entries(data.status.source_timestamps)) {
+      const formattedKey = `SRC_${src.toUpperCase()}_TIME`.padEnd(16, ' ');
+      out += `${formattedKey}: ${ts}\n`;
+    }
+  }
+  out += `${separator}\n`;
+  
+  return out;
+}
+
+// --- Fetch Data from Paths ---
+async function fetchPacketData() {
+  const loadingSpinner = document.getElementById('refresh-loading');
+  if (loadingSpinner) loadingSpinner.classList.add('active');
+
+  let loadedData = null;
+  let lastError = null;
+
+  for (const path of DATA_PATHS) {
+    try {
+      const res = await fetch(path + '?t=' + Date.now());
+      if (res.ok) {
+        loadedData = await res.json();
+        break;
+      }
+      lastError = `HTTP ${res.status}`;
+    } catch (e) {
+      lastError = e.message;
+    }
+  }
+
+  if (loadingSpinner) loadingSpinner.classList.remove('active');
+
+  if (loadedData) {
+    currentPacketData = loadedData;
+    renderAllViews(loadedData);
+    resetTimer();
+  } else {
+    console.error("Failed to load packet data:", lastError);
+    // Visual indicators of failed fetch
+    document.getElementById('refresh-counter').textContent = 'Sync Err';
+    document.getElementById('refresh-counter').style.color = 'var(--red)';
+  }
+}
+
+// --- Render Core Dashboard ---
+function renderAllViews(data) {
+  // Update Hero Snapshot
+  const priceEl = document.getElementById('hero-price');
+  priceEl.textContent = formatMetricValue('btc_price', data.header.btc_price);
+  
+  const changeEl = document.getElementById('hero-change');
+  changeEl.textContent = formatMetricValue('change_24h', data.header.change_24h);
+  changeEl.className = 'btc-change-val ' + getValueColorClass('change_24h', data.header.change_24h);
+
+  document.getElementById('hero-timestamp').textContent = new Date(data.header.generated_timestamp).toLocaleTimeString();
+  document.getElementById('hero-bid-ask').textContent = 
+    `$${data.header.bid.toLocaleString(undefined, {minimumFractionDigits: 0})} / $${data.header.ask.toLocaleString(undefined, {minimumFractionDigits: 0})}`;
+  document.getElementById('hero-spread').textContent = formatMetricValue('spread', data.header.spread);
+  document.getElementById('hero-volume').textContent = formatMetricValue('volume_24h', data.header.volume_24h);
+
+  // Render Critical Section
+  renderSectionGrid('grid-critical', data.critical);
+
+  // Render Context Section
+  renderSectionGrid('grid-context', data.context);
+
+  // Render Reference Section (Flattened cycle object)
+  const flattenedReference = {};
+  for (const [k, v] of Object.entries(data.reference)) {
+    if (k === 'cycle' && typeof v === 'object') {
+      for (const [subk, subval] of Object.entries(v)) {
+        flattenedReference[`cycle_${subk}`] = subval;
+      }
+    } else {
+      flattenedReference[k] = v;
+    }
+  }
+  renderSectionGrid('grid-reference', flattenedReference);
+
+  // Render Status Section
+  const flattenedStatus = {
+    gate_status_summary: data.status.gate_status_summary
+  };
+  if (data.status.source_timestamps) {
+    for (const [src, ts] of Object.entries(data.status.source_timestamps)) {
+      flattenedStatus[`source_${src}_time`] = ts;
+    }
+  }
+  renderSectionGrid('grid-status', flattenedStatus);
+
+  // Render ASCII terminal view
+  const textBrief = generateTextBrief(data);
+  document.getElementById('terminal-pre').textContent = textBrief;
+}
+
+// --- Render Section Grid Cells ---
+function renderSectionGrid(elementId, metricsObject) {
+  const container = document.getElementById(elementId);
+  if (!container) return;
+
+  container.innerHTML = '';
+  
+  for (const [key, val] of Object.entries(metricsObject)) {
+    const formattedVal = formatMetricValue(key, val);
+    const colorClass = getValueColorClass(key, val);
+    
+    // Create card
+    const card = document.createElement('div');
+    card.className = 'metric-card';
+    
+    const keySpan = document.createElement('span');
+    keySpan.className = 'metric-key';
+    keySpan.textContent = key;
+    
+    const valSpan = document.createElement('span');
+    valSpan.className = 'metric-val ' + colorClass;
+    valSpan.textContent = formattedVal;
+    
+    card.appendChild(keySpan);
+    card.appendChild(valSpan);
+    container.appendChild(card);
+  }
+}
+
+// --- Polling Progress Handlers ---
+function resetTimer() {
+  pollingTimeLeft = POLLING_INTERVAL_SEC;
+  updateTimerUI();
+}
+
+function updateTimerUI() {
+  const counterEl = document.getElementById('refresh-counter');
+  const progressEl = document.getElementById('refresh-progress');
+  
+  counterEl.textContent = pollingTimeLeft + 's';
+  counterEl.style.color = 'var(--muted)';
+  
+  const pct = (pollingTimeLeft / POLLING_INTERVAL_SEC) * 100;
+  progressEl.style.width = pct + '%';
+}
+
+// --- Clipboard Copy Handler ---
+function setupClipboardCopy() {
+  const copyBtn = document.getElementById('copy-text-btn');
+  copyBtn.addEventListener('click', async () => {
+    const text = document.getElementById('terminal-pre').textContent;
+    try {
+      await navigator.clipboard.writeText(text);
+      copyBtn.textContent = 'Copied!';
+      copyBtn.style.color = 'var(--green)';
+      copyBtn.style.borderColor = 'var(--green)';
+      setTimeout(() => {
+        copyBtn.textContent = 'Copy Packet';
+        copyBtn.style.color = '';
+        copyBtn.style.borderColor = '';
+      }, 2000);
+    } catch (err) {
+      console.error("Clipboard copy failed:", err);
+      // Fallback
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+      copyBtn.textContent = 'Copied!';
+      setTimeout(() => { copyBtn.textContent = 'Copy Packet'; }, 2000);
+    }
+  });
+}
+
+// --- Navigation Toggle View Switchers ---
+function setupViewToggles() {
+  const gridBtn = document.getElementById('view-dashboard-btn');
+  const textBtn = document.getElementById('view-text-btn');
+  const gridView = document.getElementById('dashboard-view');
+  const textView = document.getElementById('text-view');
+
+  gridBtn.addEventListener('click', () => {
+    gridBtn.classList.add('active');
+    textBtn.classList.remove('active');
+    gridView.classList.add('active');
+    textView.classList.remove('active');
+  });
+
+  textBtn.addEventListener('click', () => {
+    textBtn.classList.add('active');
+    gridBtn.classList.remove('active');
+    textView.classList.add('active');
+    gridView.classList.remove('active');
+  });
+}
+
+// --- Initialize Page Event Listeners ---
+document.addEventListener('DOMContentLoaded', () => {
+  setupViewToggles();
+  setupClipboardCopy();
+
+  document.getElementById('manual-refresh-btn').addEventListener('click', () => {
+    fetchPacketData();
+  });
+
+  // Initial Fetch & Start Counter
+  fetchPacketData();
+  
+  // Timer ticking
+  if (pollingTimer) clearInterval(pollingTimer);
+  pollingTimer = setInterval(() => {
+    pollingTimeLeft--;
+    if (pollingTimeLeft <= 0) {
+      fetchPacketData();
+    } else {
+      updateTimerUI();
+    }
+  }, 1000);
+});
+</script>
+</body>
+</html>

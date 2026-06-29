@@ -1,0 +1,84 @@
+{
+  "header": {
+    "generated_timestamp": "2026-06-29T10:15:35Z",
+    "btc_price": 60162.0,
+    "change_24h": -0.428,
+    "bid": 60162.0,
+    "ask": null,
+    "spread": null,
+    "volume_24h": 0
+  },
+  "critical": {
+    "amt_verdict": "NO_TRADE",
+    "amt_mtf": "1D BULLISH / 4H BEARISH / 1H BEARISH",
+    "amt_delta": 119.17,
+    "amt_whale": 0.25,
+    "amt_oi": 59927,
+    "amt_cvd": -3566.59,
+    "taker_ratio": 0.948,
+    "vp_poc": 59927,
+    "vp_vah": 59969,
+    "vp_val": 59912,
+    "vp_shape": "P",
+    "vp_direction": "LONG",
+    "vp_tier": "BASELINE",
+    "vp_state": "REJECTION_UP",
+    "vp_pattern": "POC_MAGNET",
+    "vp_strategy": "FOLLOW",
+    "vp_trade": "Entry 59910 \u2192 T1 59927 / T2 60026 | SL 59903",
+    "vp_status": "Lockout=yes | Confirmation: PENDING",
+    "balance": "TIGHT_BALANCE",
+    "heatmap": "neutral"
+  },
+  "context": {
+    "pipeline_gate": "TIGHTENED",
+    "gate_action": "Reduce position size. Tight stops. Wait for conditions to clear.",
+    "regime_synthesis": "N/A",
+    "ta_warning": "",
+    "macro_regime": "mild-risk-off",
+    "fng": 12,
+    "vix": 18.36,
+    "etf_flow": -444.5,
+    "coinbase_premium": -0.154,
+    "equities": "SPY $729 (-2.5%) | QQQ $707 (-4.8%) | GLD $374 (-2.8%)",
+    "dxy": 101.27,
+    "us10y": 4.37,
+    "oi_change": 1.73,
+    "long_short": 2.1309,
+    "funding": 6.867e-05,
+    "cvd_24h": -3566.59,
+    "black_swan": "0/17 (NORMAL)",
+    "trp_state": "NEUTRAL",
+    "gap_risk": "ELEVATED",
+    "absorption_trend": "N/A",
+    "correlation": "EQUITY_LINKED (moderate) (r=0.37)",
+    "liq_clusters": "Long: $60,200, $59,950, $59,900, $59,850, $59,750 | Short: $60,350, $60,550",
+    "sigma_state": "NEUTRAL",
+    "sigma_gate": "CAUTION",
+    "sigma_regime": "LOW_VOL"
+  },
+  "reference": {
+    "sr_1h": "S: $59,375 / $58,872 / $58,379 | R: $60,263 / $60,586 / $60,925",
+    "sr_1h_inverted": "$59,665 / $59,944",
+    "sr_1d": "S: $58,915 | R: $65,000",
+    "cycle": {
+      "mvrv-z": 0.2399,
+      "sopr": 0.9946,
+      "netflow": -3448.33,
+      "regime": "accumulation"
+    },
+    "cycle_composite": 31.6,
+    "sth": null,
+    "options_skew": -9.7,
+    "whale_distribution": "61.50%",
+    "session": "LONDON"
+  },
+  "status": {
+    "gate_status_summary": "10 PROCEED | 1 TIGHTENED",
+    "source_timestamps": {
+      "amt": "2026-06-29T10:02:27.855411+00:00",
+      "vp": "2026-06-29T09:48:08.659003+00:00",
+      "pipeline": "regime=2026-06-29 09:48 UTC | macro=2026-06-29 09:48 UTC"
+    }
+  }
+}
