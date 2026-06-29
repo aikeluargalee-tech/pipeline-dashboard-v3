@@ -448,86 +448,14 @@
       </div>
       <button class="action-btn" id="manual-refresh-btn" aria-label="Refresh packet data now">Force Sync</button>
     </div>
-
-    <!-- Layout toggles -->
-    <div class="view-toggle">
-      <span class="mode-label">VIEW FORMAT</span>
-      <div class="mode-switch">
-        <button id="view-dashboard-btn" class="mode-btn active" aria-label="Switch to grid view">Grid</button>
-        <button id="view-text-btn" class="mode-btn" aria-label="Switch to raw text terminal view">Raw Brief</button>
-      </div>
-    </div>
   </div>
 
-  <!-- View 1: Beautiful Grid Dashboard -->
-  <div id="dashboard-view" class="view-panel active">
-    
-    <!-- Tier 1: CRITICAL -->
-    <section class="tier-section critical" id="sec-critical">
-      <div class="tier-header">
-        <div class="tier-title">
-          <span class="tier-tag">CRITICAL</span>
-          <span>Layer 0 & Layer 2 Core Signals</span>
-        </div>
-        <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.72em; opacity: 0.8;">TIER-1 VETO LEVEL</span>
-      </div>
-      <div class="metrics-grid" id="grid-critical">
-        <!-- Rendered dynamically -->
-      </div>
-    </section>
-
-    <!-- Tier 2: CONTEXT -->
-    <section class="tier-section context" id="sec-context">
-      <div class="tier-header">
-        <div class="tier-title">
-          <span class="tier-tag">CONTEXT</span>
-          <span>Layer 1 Macro & Layer 3 Derivatives</span>
-        </div>
-        <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.72em; opacity: 0.8;">TIER-2 ANALYSIS</span>
-      </div>
-      <div class="metrics-grid" id="grid-context">
-        <!-- Rendered dynamically -->
-      </div>
-    </section>
-
-    <!-- Tier 3: REFERENCE -->
-    <section class="tier-section reference" id="sec-reference">
-      <div class="tier-header">
-        <div class="tier-title">
-          <span class="tier-tag">REFERENCE</span>
-          <span>Layer 4 Cycle Metrics & Multi-TF Support/Resistance</span>
-        </div>
-        <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.72em; opacity: 0.8;">TIER-3 CONFLUENCE</span>
-      </div>
-      <div class="metrics-grid" id="grid-reference">
-        <!-- Rendered dynamically -->
-      </div>
-    </section>
-
-    <!-- Tier 4: STATUS -->
-    <section class="tier-section status" id="sec-status">
-      <div class="tier-header">
-        <div class="tier-title">
-          <span class="tier-tag">STATUS</span>
-          <span>Pipeline Diagnostic & Source Verifications</span>
-        </div>
-        <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.72em; opacity: 0.8;">TIER-4 INTEGRITY</span>
-      </div>
-      <div class="metrics-grid" id="grid-status">
-        <!-- Rendered dynamically -->
-      </div>
-    </section>
-
-  </div>
-
-  <!-- View 2: Raw Text CRT Terminal View -->
-  <div id="text-view" class="view-panel">
-    <div class="terminal-wrapper">
-      <div class="terminal-controls">
-        <button class="action-btn" id="copy-text-btn" aria-label="Copy terminal text to clipboard">Copy Packet</button>
-      </div>
-      <pre class="terminal-block" id="terminal-pre">Loading terminal brief output...</pre>
+  <!-- Raw Text CRT Terminal View (only view) -->
+  <div class="terminal-wrapper">
+    <div class="terminal-controls">
+      <button class="action-btn" id="copy-text-btn" aria-label="Copy terminal text to clipboard">Copy Packet</button>
     </div>
+    <pre class="terminal-block" id="terminal-pre">Loading terminal brief output...</pre>
   </div>
 </main>
 
@@ -725,19 +653,18 @@ async function fetchPacketData() {
 
   if (loadedData) {
     currentPacketData = loadedData;
-    renderAllViews(loadedData);
+    renderPage(loadedData);
     resetTimer();
   } else {
     console.error("Failed to load packet data:", lastError);
-    // Visual indicators of failed fetch
     document.getElementById('refresh-counter').textContent = 'Sync Err';
     document.getElementById('refresh-counter').style.color = 'var(--red)';
   }
 }
 
-// --- Render Core Dashboard ---
-function renderAllViews(data) {
-  // Update Hero Snapshot
+// --- Render Hero + Terminal Brief ---
+function renderPage(data) {
+  // Hero header
   const priceEl = document.getElementById('hero-price');
   priceEl.textContent = formatMetricValue('btc_price', data.header.btc_price);
   
@@ -751,71 +678,12 @@ function renderAllViews(data) {
   document.getElementById('hero-spread').textContent = formatMetricValue('spread', data.header.spread);
   document.getElementById('hero-volume').textContent = formatMetricValue('volume_24h', data.header.volume_24h);
 
-  // Render Critical Section
-  renderSectionGrid('grid-critical', data.critical);
-
-  // Render Context Section
-  renderSectionGrid('grid-context', data.context);
-
-  // Render Reference Section (Flattened cycle object)
-  const flattenedReference = {};
-  for (const [k, v] of Object.entries(data.reference)) {
-    if (k === 'cycle' && typeof v === 'object') {
-      for (const [subk, subval] of Object.entries(v)) {
-        flattenedReference[`cycle_${subk}`] = subval;
-      }
-    } else {
-      flattenedReference[k] = v;
-    }
-  }
-  renderSectionGrid('grid-reference', flattenedReference);
-
-  // Render Status Section
-  const flattenedStatus = {
-    gate_status_summary: data.status.gate_status_summary
-  };
-  if (data.status.source_timestamps) {
-    for (const [src, ts] of Object.entries(data.status.source_timestamps)) {
-      flattenedStatus[`source_${src}_time`] = ts;
-    }
-  }
-  renderSectionGrid('grid-status', flattenedStatus);
-
-  // Render ASCII terminal view
+  // Terminal brief
   const textBrief = generateTextBrief(data);
   document.getElementById('terminal-pre').textContent = textBrief;
 }
 
-// --- Render Section Grid Cells ---
-function renderSectionGrid(elementId, metricsObject) {
-  const container = document.getElementById(elementId);
-  if (!container) return;
-
-  container.innerHTML = '';
-  
-  for (const [key, val] of Object.entries(metricsObject)) {
-    const formattedVal = formatMetricValue(key, val);
-    const colorClass = getValueColorClass(key, val);
-    
-    // Create card
-    const card = document.createElement('div');
-    card.className = 'metric-card';
-    
-    const keySpan = document.createElement('span');
-    keySpan.className = 'metric-key';
-    keySpan.textContent = key;
-    
-    const valSpan = document.createElement('span');
-    valSpan.className = 'metric-val ' + colorClass;
-    valSpan.textContent = formattedVal;
-    
-    card.appendChild(keySpan);
-    card.appendChild(valSpan);
-    container.appendChild(card);
-  }
-}
-
-// --- Polling Progress Handlers ---
+// --- Polling ---
 function resetTimer() {
   pollingTimeLeft = POLLING_INTERVAL_SEC;
   updateTimerUI();
@@ -832,7 +700,7 @@ function updateTimerUI() {
   progressEl.style.width = pct + '%';
 }
 
-// --- Clipboard Copy Handler ---
+// --- Clipboard ---
 function setupClipboardCopy() {
   const copyBtn = document.getElementById('copy-text-btn');
   copyBtn.addEventListener('click', async () => {
@@ -849,7 +717,6 @@ function setupClipboardCopy() {
       }, 2000);
     } catch (err) {
       console.error("Clipboard copy failed:", err);
-      // Fallback
       const textArea = document.createElement("textarea");
       textArea.value = text;
       document.body.appendChild(textArea);
@@ -862,41 +729,16 @@ function setupClipboardCopy() {
   });
 }
 
-// --- Navigation Toggle View Switchers ---
-function setupViewToggles() {
-  const gridBtn = document.getElementById('view-dashboard-btn');
-  const textBtn = document.getElementById('view-text-btn');
-  const gridView = document.getElementById('dashboard-view');
-  const textView = document.getElementById('text-view');
-
-  gridBtn.addEventListener('click', () => {
-    gridBtn.classList.add('active');
-    textBtn.classList.remove('active');
-    gridView.classList.add('active');
-    textView.classList.remove('active');
-  });
-
-  textBtn.addEventListener('click', () => {
-    textBtn.classList.add('active');
-    gridBtn.classList.remove('active');
-    textView.classList.add('active');
-    gridView.classList.remove('active');
-  });
-}
-
-// --- Initialize Page Event Listeners ---
+// --- Init ---
 document.addEventListener('DOMContentLoaded', () => {
-  setupViewToggles();
   setupClipboardCopy();
 
   document.getElementById('manual-refresh-btn').addEventListener('click', () => {
     fetchPacketData();
   });
 
-  // Initial Fetch & Start Counter
   fetchPacketData();
   
-  // Timer ticking
   if (pollingTimer) clearInterval(pollingTimer);
   pollingTimer = setInterval(() => {
     pollingTimeLeft--;
