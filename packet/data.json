@@ -1,39 +1,39 @@
 {
   "header": {
-    "generated_timestamp": "2026-06-30T17:26:05Z",
-    "btc_price": 58452.0,
-    "change_24h": -3.545,
-    "bid": 58413.99,
-    "ask": 58401.4,
+    "generated_timestamp": "2026-06-30T17:42:05Z",
+    "btc_price": 58368.0,
+    "change_24h": -3.408,
+    "bid": 58398.8,
+    "ask": 58386.01,
     "spread": 0.01,
-    "volume_24h": 1132899523.83
+    "volume_24h": 1120997372.66
   },
   "critical": {
-    "btc_price": 58452.0,
-    "amt_adx": 60.1,
-    "amt_mtf": "1D BEARISH [INVALIDATED_CVD=+1,751] | 4H BEARISH | 1H BEARISH",
-    "candle_delta": -208.06,
+    "btc_price": 58368.0,
+    "amt_adx": 40.4,
+    "amt_mtf": "1D BEARISH [INVALIDATED_CVD=+1,664] | 4H BEARISH | 1H BEARISH",
+    "candle_delta": -249.65,
     "candle_deltas_6": [
       -12.45,
       -135.75,
       -467.73,
       -258.96,
       -465.65,
-      -208.06
+      -249.65
     ],
     "cvd_per_tf": {
-      "1D": 1750.88,
-      "4H": -396.97,
-      "1H": -153.47
+      "1D": 1663.79,
+      "4H": -523.46,
+      "1H": -143.76
     },
     "oi_per_tf": {
-      "1D": 0.114,
-      "4H": 0.4828,
-      "1H": 0.3034
+      "1D": 0.1137,
+      "4H": 0.2853,
+      "1H": 0.1497
     },
-    "session_cvd": -607.59,
+    "session_cvd": -649.18,
     "oi_absolute_usd_billions": 6.37,
-    "taker_ratio_24h": 0.836,
+    "taker_ratio_24h": 0.833,
     "vp_poc": 58418,
     "vp_vah": 58440,
     "vp_val": 58304,
@@ -48,61 +48,61 @@
     "vix": 17.57,
     "etf_flow_daily": -231.0,
     "etf_flow_weekly": -1950.0,
-    "coinbase_premium": -0.151,
+    "coinbase_premium": -0.1675,
     "equities": "SPY $741 (+1.0%) | QQQ $724 (+1.2%) | GLD $369 (-2.4%)",
     "dxy": 101.37,
     "us10y": 4.37,
     "oi_change_24h": 5.77,
     "long_short_ratio": 2.885,
-    "funding_rate": 5.42e-05,
+    "funding_rate": 6.247e-05,
     "cvd_24h": -9667.15,
     "black_swan_score": "0/17",
-    "correlation_r": -0.7578,
-    "liq_clusters": "Long: $58,350, $58,300 | Short: $58,400, $58,450, $60,350, $60,700, $60,800",
-    "perp_basis_pct": -0.0664,
+    "correlation_r": -0.7548,
+    "liq_clusters": "Long: $58,400, $58,300 | Short: $58,400, $58,450, $60,350, $60,700, $60,800",
+    "perp_basis_pct": -0.0336,
     "order_book_top5": {
       "bids": [
         {
-          "price": 58423.99,
-          "size": 5.43925
+          "price": 58386.0,
+          "size": 3.045
         },
         {
-          "price": 58423.98,
-          "size": 0.00753
+          "price": 58385.99,
+          "size": 0.00099
         },
         {
-          "price": 58423.97,
+          "price": 58385.98,
           "size": 0.00018
         },
         {
-          "price": 58423.73,
-          "size": 9e-05
+          "price": 58385.89,
+          "size": 0.00018
         },
         {
-          "price": 58423.72,
-          "size": 0.21061
+          "price": 58385.88,
+          "size": 0.26795
         }
       ],
       "asks": [
         {
-          "price": 58424.0,
-          "size": 3.21277
+          "price": 58386.01,
+          "size": 2.94423
         },
         {
-          "price": 58424.01,
-          "size": 0.00054
+          "price": 58386.02,
+          "size": 0.0009
         },
         {
-          "price": 58424.02,
+          "price": 58386.03,
           "size": 0.00018
         },
         {
-          "price": 58424.04,
-          "size": 0.00546
+          "price": 58386.93,
+          "size": 0.00225
         },
         {
-          "price": 58424.1,
-          "size": 0.00208
+          "price": 58386.94,
+          "size": 0.00773
         }
       ]
     },
@@ -114,8 +114,8 @@
     "sr_1h_inverted": "$58,500 / $58,829",
     "sr_1d": "S:  | R: ",
     "cycle": {
-      "mvrv_z": 0.2284,
-      "sopr": 0.9834,
+      "mvrv_z": null,
+      "sopr": null,
       "netflow_7d": 11878.01
     },
     "cycle_composite": 26.8,
@@ -124,12 +124,12 @@
   },
   "status": {
     "source_timestamps": {
-      "amt": "2026-06-30T17:17:57.438881+00:00",
+      "amt": "2026-06-30T17:32:58.006965+00:00",
       "vp": "2026-06-30T16:47:44.222739+00:00",
-      "pipeline": "regime=2026-06-30 17:17 UTC | macro=2026-06-30 17:17 UTC"
+      "pipeline": "regime=2026-06-30 17:40 UTC | macro=2026-06-30 17:40 UTC"
     },
     "staleness_warnings": [
-      "STALE vp: 30m behind AMT"
+      "STALE vp: 45m behind AMT"
     ]
   }
 }
