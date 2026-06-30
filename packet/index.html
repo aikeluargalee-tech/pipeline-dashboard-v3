@@ -472,9 +472,7 @@ let currentPacketData = null;
 // Paths to attempt loading data.json from
 const DATA_PATHS = [
   'data.json',
-  './data.json',
-  (window.location.pathname.startsWith('/pipeline-dashboard-v3') ? '/pipeline-dashboard-v3' : '') + '/packet/data.json',
-  '/packet/data.json'
+  (window.location.pathname.startsWith('/pipeline-dashboard-v3') ? '/pipeline-dashboard-v3' : '') + '/packet/data.json'
 ];
 
 // --- Value Color Coding Engine ---
@@ -572,55 +570,73 @@ function formatMetricValue(key, val) {
 function generateTextBrief(data) {
   const separator = "========================================================================";
   const subSeparator = "------------------------------------------------------------------------";
+  const h = data.header || {};
+  const price = typeof h.btc_price === 'number' ? h.btc_price.toLocaleString(undefined, {minimumFractionDigits:2}) : '--';
+  const change = typeof h.change_24h === 'number' ? ((h.change_24h > 0 ? '+' : '') + h.change_24h.toFixed(2) + '%') : '--';
+  const bid = typeof h.bid === 'number' ? h.bid.toLocaleString(undefined, {minimumFractionDigits:2}) : '--';
+  const ask = typeof h.ask === 'number' ? h.ask.toLocaleString(undefined, {minimumFractionDigits:2}) : '--';
+  const spread = typeof h.spread === 'number' ? h.spread.toFixed(2) : '--';
+  const vol = typeof h.volume_24h === 'number' ? h.volume_24h.toLocaleString() : '--';
   
   let out = `${separator}\n`;
   out += `⚡ BTC DATA PACKET (GENERATED CADENCE: 15M)\n`;
   out += `${separator}\n`;
-  out += `TIMESTAMP   : ${new Date(data.header.generated_timestamp).toLocaleString()}\n`;
-  out += `BTC PRICE   : $${data.header.btc_price.toLocaleString(undefined, {minimumFractionDigits:2})} (${data.header.change_24h > 0 ? '+' : ''}${data.header.change_24h.toFixed(2)}%)\n`;
-  out += `BID / ASK   : $${data.header.bid.toLocaleString(undefined, {minimumFractionDigits:2})} / $${data.header.ask.toLocaleString(undefined, {minimumFractionDigits:2})}\n`;
-  out += `SPREAD      : $${data.header.spread.toFixed(2)}\n`;
-  out += `VOLUME 24H  : $${data.header.volume_24h.toLocaleString()}\n`;
+  out += `TIMESTAMP   : ${h.generated_timestamp ? new Date(h.generated_timestamp).toLocaleString() : 'N/A'}\n`;
+  out += `BTC PRICE   : ${price} (${change})\n`;
+  out += `BID / ASK   : ${bid} / ${ask}\n`;
+  out += `SPREAD      : ${spread}\n`;
+  out += `VOLUME 24H  : ${vol}\n`;
   out += `${separator}\n\n`;
 
   // Tier 1: CRITICAL
   out += `[CRITICAL] ${subSeparator.substring(11)}\n`;
-  for (const [k, v] of Object.entries(data.critical)) {
-    const formattedKey = k.toUpperCase().padEnd(16, ' ');
-    out += `${formattedKey}: ${v}\n`;
+  if (data.critical) {
+    for (const [k, v] of Object.entries(data.critical)) {
+      const formattedKey = k.toUpperCase().padEnd(20, ' ');
+      out += `${formattedKey}: ${v === null || v === undefined ? 'N/A' : (typeof v === 'object' ? JSON.stringify(v) : v)}\n`;
+    }
   }
   out += `\n`;
 
   // Tier 2: CONTEXT
   out += `[CONTEXT] ${subSeparator.substring(10)}\n`;
-  for (const [k, v] of Object.entries(data.context)) {
-    const formattedKey = k.toUpperCase().padEnd(16, ' ');
-    out += `${formattedKey}: ${v}\n`;
+  if (data.context) {
+    for (const [k, v] of Object.entries(data.context)) {
+      const formattedKey = k.toUpperCase().padEnd(20, ' ');
+      out += `${formattedKey}: ${v === null || v === undefined ? 'N/A' : (typeof v === 'object' ? JSON.stringify(v) : v)}\n`;
+    }
   }
   out += `\n`;
 
   // Tier 3: REFERENCE
   out += `[REFERENCE] ${subSeparator.substring(12)}\n`;
-  for (const [k, v] of Object.entries(data.reference)) {
-    if (k === 'cycle' && typeof v === 'object') {
-      out += `CYCLE_MVRV_Z    : ${v['mvrv-z']}\n`;
-      out += `CYCLE_SOPR      : ${v['sopr']}\n`;
-      out += `CYCLE_NETFLOW   : ${v['netflow']}\n`;
-      out += `CYCLE_REGIME    : ${v['regime']}\n`;
-    } else {
-      const formattedKey = k.toUpperCase().padEnd(16, ' ');
-      out += `${formattedKey}: ${v}\n`;
+  if (data.reference) {
+    for (const [k, v] of Object.entries(data.reference)) {
+      if (k === 'cycle' && typeof v === 'object' && v !== null) {
+        out += `CYCLE_MVRV_Z      : ${v.mvrv_z ?? v['mvrv-z'] ?? 'N/A'}\n`;
+        out += `CYCLE_SOPR        : ${v.sopr ?? 'N/A'}\n`;
+        out += `CYCLE_NETFLOW     : ${v.netflow_7d ?? v.netflow ?? 'N/A'}\n`;
+        out += `CYCLE_REGIME      : ${v.regime ?? 'N/A'}\n`;
+      } else {
+        const formattedKey = k.toUpperCase().padEnd(20, ' ');
+        out += `${formattedKey}: ${v === null || v === undefined ? 'N/A' : (typeof v === 'object' ? JSON.stringify(v) : v)}\n`;
+      }
     }
   }
   out += `\n`;
 
   // Tier 4: STATUS
   out += `[STATUS] ${subSeparator.substring(9)}\n`;
-  out += `GATE_STATUS_SUM : ${data.status.gate_status_summary}\n`;
-  if (data.status.source_timestamps) {
-    for (const [src, ts] of Object.entries(data.status.source_timestamps)) {
-      const formattedKey = `SRC_${src.toUpperCase()}_TIME`.padEnd(16, ' ');
-      out += `${formattedKey}: ${ts}\n`;
+  if (data.status) {
+    out += `GATE_STATUS_SUM   : ${data.status.gate_status_summary ?? 'N/A'}\n`;
+    if (data.status.source_timestamps) {
+      for (const [src, ts] of Object.entries(data.status.source_timestamps)) {
+        const formattedKey = `SRC_${src.toUpperCase()}_TIME`.padEnd(20, ' ');
+        out += `${formattedKey}: ${ts}\n`;
+      }
+    }
+    if (data.status.staleness_warnings && data.status.staleness_warnings.length > 0) {
+      out += `STALENESS_WARNINGS: ${data.status.staleness_warnings.join(' | ')}\n`;
     }
   }
   out += `${separator}\n`;
@@ -664,19 +680,171 @@ async function fetchPacketData() {
 
 // --- Render Hero + Terminal Brief ---
 function renderPage(data) {
+  const h = data.header || {};
+  
   // Hero header
   const priceEl = document.getElementById('hero-price');
-  priceEl.textContent = formatMetricValue('btc_price', data.header.btc_price);
+  priceEl.textContent = formatMetricValue('btc_price', h.btc_price);
   
   const changeEl = document.getElementById('hero-change');
-  changeEl.textContent = formatMetricValue('change_24h', data.header.change_24h);
-  changeEl.className = 'btc-change-val ' + getValueColorClass('change_24h', data.header.change_24h);
+  changeEl.textContent = formatMetricValue('change_24h', h.change_24h);
+  changeEl.className = 'btc-change-val ' + getValueColorClass('change_24h', h.change_24h);
 
-  document.getElementById('hero-timestamp').textContent = new Date(data.header.generated_timestamp).toLocaleTimeString();
-  document.getElementById('hero-bid-ask').textContent = 
-    `$${data.header.bid.toLocaleString(undefined, {minimumFractionDigits: 0})} / $${data.header.ask.toLocaleString(undefined, {minimumFractionDigits: 0})}`;
-  document.getElementById('hero-spread').textContent = formatMetricValue('spread', data.header.spread);
-  document.getElementById('hero-volume').textContent = formatMetricValue('volume_24h', data.header.volume_24h);
+  document.getElementById('hero-timestamp').textContent = h.generated_timestamp
+    ? new Date(h.generated_timestamp).toLocaleTimeString()
+    : 'N/A';
+  
+  const bidStr = typeof h.bid === 'number'
+    ? '
+
+// --- Polling ---
+function resetTimer() {
+  pollingTimeLeft = POLLING_INTERVAL_SEC;
+  updateTimerUI();
+}
+
+function updateTimerUI() {
+  const counterEl = document.getElementById('refresh-counter');
+  const progressEl = document.getElementById('refresh-progress');
+  
+  counterEl.textContent = pollingTimeLeft + 's';
+  counterEl.style.color = 'var(--muted)';
+  
+  const pct = (pollingTimeLeft / POLLING_INTERVAL_SEC) * 100;
+  progressEl.style.width = pct + '%';
+}
+
+// --- Clipboard ---
+function setupClipboardCopy() {
+  const copyBtn = document.getElementById('copy-text-btn');
+  copyBtn.addEventListener('click', async () => {
+    const text = document.getElementById('terminal-pre').textContent;
+    try {
+      await navigator.clipboard.writeText(text);
+      copyBtn.textContent = 'Copied!';
+      copyBtn.style.color = 'var(--green)';
+      copyBtn.style.borderColor = 'var(--green)';
+      setTimeout(() => {
+        copyBtn.textContent = 'Copy Packet';
+        copyBtn.style.color = '';
+        copyBtn.style.borderColor = '';
+      }, 2000);
+    } catch (err) {
+      console.error("Clipboard copy failed:", err);
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+      copyBtn.textContent = 'Copied!';
+      setTimeout(() => { copyBtn.textContent = 'Copy Packet'; }, 2000);
+    }
+  });
+}
+
+// --- Init ---
+document.addEventListener('DOMContentLoaded', () => {
+  setupClipboardCopy();
+
+  document.getElementById('manual-refresh-btn').addEventListener('click', () => {
+    fetchPacketData();
+  });
+
+  fetchPacketData();
+  
+  if (pollingTimer) clearInterval(pollingTimer);
+  pollingTimer = setInterval(() => {
+    pollingTimeLeft--;
+    if (pollingTimeLeft <= 0) {
+      fetchPacketData();
+    } else {
+      updateTimerUI();
+    }
+  }, 1000);
+});
+</script>
+</body>
+</html>
+ + h.bid.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})
+    : '$--';
+  const askStr = typeof h.ask === 'number'
+    ? '
+
+// --- Polling ---
+function resetTimer() {
+  pollingTimeLeft = POLLING_INTERVAL_SEC;
+  updateTimerUI();
+}
+
+function updateTimerUI() {
+  const counterEl = document.getElementById('refresh-counter');
+  const progressEl = document.getElementById('refresh-progress');
+  
+  counterEl.textContent = pollingTimeLeft + 's';
+  counterEl.style.color = 'var(--muted)';
+  
+  const pct = (pollingTimeLeft / POLLING_INTERVAL_SEC) * 100;
+  progressEl.style.width = pct + '%';
+}
+
+// --- Clipboard ---
+function setupClipboardCopy() {
+  const copyBtn = document.getElementById('copy-text-btn');
+  copyBtn.addEventListener('click', async () => {
+    const text = document.getElementById('terminal-pre').textContent;
+    try {
+      await navigator.clipboard.writeText(text);
+      copyBtn.textContent = 'Copied!';
+      copyBtn.style.color = 'var(--green)';
+      copyBtn.style.borderColor = 'var(--green)';
+      setTimeout(() => {
+        copyBtn.textContent = 'Copy Packet';
+        copyBtn.style.color = '';
+        copyBtn.style.borderColor = '';
+      }, 2000);
+    } catch (err) {
+      console.error("Clipboard copy failed:", err);
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+      copyBtn.textContent = 'Copied!';
+      setTimeout(() => { copyBtn.textContent = 'Copy Packet'; }, 2000);
+    }
+  });
+}
+
+// --- Init ---
+document.addEventListener('DOMContentLoaded', () => {
+  setupClipboardCopy();
+
+  document.getElementById('manual-refresh-btn').addEventListener('click', () => {
+    fetchPacketData();
+  });
+
+  fetchPacketData();
+  
+  if (pollingTimer) clearInterval(pollingTimer);
+  pollingTimer = setInterval(() => {
+    pollingTimeLeft--;
+    if (pollingTimeLeft <= 0) {
+      fetchPacketData();
+    } else {
+      updateTimerUI();
+    }
+  }, 1000);
+});
+</script>
+</body>
+</html>
+ + h.ask.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})
+    : '$--';
+  document.getElementById('hero-bid-ask').textContent = `${bidStr} / ${askStr}`;
+  document.getElementById('hero-spread').textContent = formatMetricValue('spread', h.spread);
+  document.getElementById('hero-volume').textContent = formatMetricValue('volume_24h', h.volume_24h);
 
   // Terminal brief
   const textBrief = generateTextBrief(data);
