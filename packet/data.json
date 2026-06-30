@@ -1,12 +1,12 @@
 {
   "header": {
-    "generated_timestamp": "2026-06-30T16:43:44Z",
+    "generated_timestamp": "2026-06-30T16:44:47Z",
     "btc_price": 58326.0,
     "change_24h": -2.409,
-    "bid": 58301.4,
-    "ask": 58294.01,
+    "bid": 58321.77,
+    "ask": 58319.8,
     "spread": 0.01,
-    "volume_24h": 1188058775.06
+    "volume_24h": 1187556354.44
   },
   "critical": {
     "btc_price": 58326.0,
@@ -32,12 +32,12 @@
       "1H": 0.5115
     },
     "session_cvd": -463.83,
-    "oi_absolute_usd_billions": 6.35,
+    "oi_absolute_usd_billions": 6.36,
     "taker_ratio_24h": 0.843,
-    "vp_poc": 58700,
-    "vp_vah": 58954,
-    "vp_val": 58602,
-    "vp_shape": "P",
+    "vp_poc": 58418,
+    "vp_vah": 58440,
+    "vp_val": 58304,
+    "vp_shape": "b",
     "vp_state": "ACCEPTANCE",
     "balance_state": "TIGHT_BALANCE",
     "balance_width_pct": 2.94,
@@ -57,52 +57,52 @@
     "funding_rate": 4.17e-05,
     "cvd_24h": -9859.91,
     "black_swan_score": "0/17",
-    "correlation_r": -0.7269,
-    "liq_clusters": "Long: $58,300 | Short: $58,600, $58,700, $58,950, $60,350, $60,700",
-    "perp_basis_pct": -0.0338,
+    "correlation_r": -0.7257,
+    "liq_clusters": "Long: $58,300 | Short: $58,400, $58,450, $60,350, $60,700, $60,800",
+    "perp_basis_pct": -0.0377,
     "order_book_top5": {
       "bids": [
         {
-          "price": 58302.71,
-          "size": 5.38861
+          "price": 58321.77,
+          "size": 3.54187
         },
         {
-          "price": 58302.7,
-          "size": 0.00036
+          "price": 58321.76,
+          "size": 0.0009
         },
         {
-          "price": 58302.69,
+          "price": 58321.75,
           "size": 0.00018
         },
         {
-          "price": 58302.05,
-          "size": 0.00717
+          "price": 58320.99,
+          "size": 0.00987
         },
         {
-          "price": 58302.01,
-          "size": 0.0002
+          "price": 58320.94,
+          "size": 9e-05
         }
       ],
       "asks": [
         {
-          "price": 58302.72,
-          "size": 1.19325
+          "price": 58321.78,
+          "size": 2.50741
         },
         {
-          "price": 58302.73,
-          "size": 0.00108
+          "price": 58321.79,
+          "size": 0.00081
         },
         {
-          "price": 58302.9,
-          "size": 0.004
+          "price": 58321.8,
+          "size": 0.00142
         },
         {
-          "price": 58302.91,
-          "size": 9e-05
+          "price": 58321.93,
+          "size": 0.00163
         },
         {
-          "price": 58303.32,
-          "size": 9e-05
+          "price": 58321.96,
+          "size": 0.00226
         }
       ]
     },
@@ -125,11 +125,9 @@
   "status": {
     "source_timestamps": {
       "amt": "2026-06-30T16:33:13.422402+00:00",
-      "vp": "2026-06-30T14:48:35.748602+00:00",
+      "vp": "2026-06-30T16:41:52.525743+00:00",
       "pipeline": "regime=2026-06-30 16:42 UTC | macro=2026-06-30 16:42 UTC"
     },
-    "staleness_warnings": [
-      "STALE vp: 104m behind AMT"
-    ]
+    "staleness_warnings": []
   }
 }
