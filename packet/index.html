@@ -418,7 +418,7 @@
     <div class="hero-right">
       <div class="hero-metric">
         <span class="hero-metric-label">BID / ASK</span>
-        <span class="hero-metric-val" id="hero-bid-ask">$--,--- / $--,---</span>
+        <span class="hero-metric-val"><span id="hero-bid">$--,---</span> / <span id="hero-ask">$--,---</span></span>
       </div>
       <div class="hero-metric">
         <span class="hero-metric-label">SPREAD</span>
@@ -701,10 +701,12 @@ function renderPage(data) {
     ? '$' + h.ask.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})
     : '$--';
   const spreadStr = typeof h.spread === 'number' ? '$' + h.spread.toFixed(2) : '--';
+  const volumeStr = typeof h.volume_24h === 'number' ? '$' + h.volume_24h.toLocaleString() : '--';
 
   document.getElementById('hero-bid').textContent = bidStr;
   document.getElementById('hero-ask').textContent = askStr;
   document.getElementById('hero-spread').textContent = spreadStr;
+  document.getElementById('hero-volume').textContent = volumeStr;
 }
 
 // --- Polling ---
