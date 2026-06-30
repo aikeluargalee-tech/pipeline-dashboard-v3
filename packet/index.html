@@ -695,160 +695,16 @@ function renderPage(data) {
     : 'N/A';
   
   const bidStr = typeof h.bid === 'number'
-    ? '
-
-// --- Polling ---
-function resetTimer() {
-  pollingTimeLeft = POLLING_INTERVAL_SEC;
-  updateTimerUI();
-}
-
-function updateTimerUI() {
-  const counterEl = document.getElementById('refresh-counter');
-  const progressEl = document.getElementById('refresh-progress');
-  
-  counterEl.textContent = pollingTimeLeft + 's';
-  counterEl.style.color = 'var(--muted)';
-  
-  const pct = (pollingTimeLeft / POLLING_INTERVAL_SEC) * 100;
-  progressEl.style.width = pct + '%';
-}
-
-// --- Clipboard ---
-function setupClipboardCopy() {
-  const copyBtn = document.getElementById('copy-text-btn');
-  copyBtn.addEventListener('click', async () => {
-    const text = document.getElementById('terminal-pre').textContent;
-    try {
-      await navigator.clipboard.writeText(text);
-      copyBtn.textContent = 'Copied!';
-      copyBtn.style.color = 'var(--green)';
-      copyBtn.style.borderColor = 'var(--green)';
-      setTimeout(() => {
-        copyBtn.textContent = 'Copy Packet';
-        copyBtn.style.color = '';
-        copyBtn.style.borderColor = '';
-      }, 2000);
-    } catch (err) {
-      console.error("Clipboard copy failed:", err);
-      const textArea = document.createElement("textarea");
-      textArea.value = text;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textArea);
-      copyBtn.textContent = 'Copied!';
-      setTimeout(() => { copyBtn.textContent = 'Copy Packet'; }, 2000);
-    }
-  });
-}
-
-// --- Init ---
-document.addEventListener('DOMContentLoaded', () => {
-  setupClipboardCopy();
-
-  document.getElementById('manual-refresh-btn').addEventListener('click', () => {
-    fetchPacketData();
-  });
-
-  fetchPacketData();
-  
-  if (pollingTimer) clearInterval(pollingTimer);
-  pollingTimer = setInterval(() => {
-    pollingTimeLeft--;
-    if (pollingTimeLeft <= 0) {
-      fetchPacketData();
-    } else {
-      updateTimerUI();
-    }
-  }, 1000);
-});
-</script>
-</body>
-</html>
- + h.bid.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})
+    ? '$' + h.bid.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})
     : '$--';
   const askStr = typeof h.ask === 'number'
-    ? '
-
-// --- Polling ---
-function resetTimer() {
-  pollingTimeLeft = POLLING_INTERVAL_SEC;
-  updateTimerUI();
-}
-
-function updateTimerUI() {
-  const counterEl = document.getElementById('refresh-counter');
-  const progressEl = document.getElementById('refresh-progress');
-  
-  counterEl.textContent = pollingTimeLeft + 's';
-  counterEl.style.color = 'var(--muted)';
-  
-  const pct = (pollingTimeLeft / POLLING_INTERVAL_SEC) * 100;
-  progressEl.style.width = pct + '%';
-}
-
-// --- Clipboard ---
-function setupClipboardCopy() {
-  const copyBtn = document.getElementById('copy-text-btn');
-  copyBtn.addEventListener('click', async () => {
-    const text = document.getElementById('terminal-pre').textContent;
-    try {
-      await navigator.clipboard.writeText(text);
-      copyBtn.textContent = 'Copied!';
-      copyBtn.style.color = 'var(--green)';
-      copyBtn.style.borderColor = 'var(--green)';
-      setTimeout(() => {
-        copyBtn.textContent = 'Copy Packet';
-        copyBtn.style.color = '';
-        copyBtn.style.borderColor = '';
-      }, 2000);
-    } catch (err) {
-      console.error("Clipboard copy failed:", err);
-      const textArea = document.createElement("textarea");
-      textArea.value = text;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textArea);
-      copyBtn.textContent = 'Copied!';
-      setTimeout(() => { copyBtn.textContent = 'Copy Packet'; }, 2000);
-    }
-  });
-}
-
-// --- Init ---
-document.addEventListener('DOMContentLoaded', () => {
-  setupClipboardCopy();
-
-  document.getElementById('manual-refresh-btn').addEventListener('click', () => {
-    fetchPacketData();
-  });
-
-  fetchPacketData();
-  
-  if (pollingTimer) clearInterval(pollingTimer);
-  pollingTimer = setInterval(() => {
-    pollingTimeLeft--;
-    if (pollingTimeLeft <= 0) {
-      fetchPacketData();
-    } else {
-      updateTimerUI();
-    }
-  }, 1000);
-});
-</script>
-</body>
-</html>
- + h.ask.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})
+    ? '$' + h.ask.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})
     : '$--';
-  document.getElementById('hero-bid-ask').textContent = `${bidStr} / ${askStr}`;
-  document.getElementById('hero-spread').textContent = formatMetricValue('spread', h.spread);
-  document.getElementById('hero-volume').textContent = formatMetricValue('volume_24h', h.volume_24h);
+  const spreadStr = typeof h.spread === 'number' ? '$' + h.spread.toFixed(2) : '--';
 
-  // Terminal brief
-  const textBrief = generateTextBrief(data);
-  document.getElementById('terminal-pre').textContent = textBrief;
+  document.getElementById('hero-bid').textContent = bidStr;
+  document.getElementById('hero-ask').textContent = askStr;
+  document.getElementById('hero-spread').textContent = spreadStr;
 }
 
 // --- Polling ---
