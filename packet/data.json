@@ -1,39 +1,39 @@
 {
   "header": {
-    "generated_timestamp": "2026-06-30T14:11:21Z",
-    "btc_price": 59067.0,
+    "generated_timestamp": "2026-06-30T14:44:24Z",
+    "btc_price": 58984.0,
     "change_24h": -1.51,
-    "bid": 58897.87,
-    "ask": 58896.01,
+    "bid": 58826.94,
+    "ask": 58816.1,
     "spread": 0.01,
-    "volume_24h": 1171807537.98
+    "volume_24h": 1146862177.94
   },
   "critical": {
-    "btc_price": 59067.0,
-    "amt_adx": 17.1,
-    "amt_mtf": "1D BEARISH [INVALIDATED_CVD=+2,104] | 4H BEARISH | 1H BEARISH",
-    "candle_delta": -364.79,
+    "btc_price": 58984.0,
+    "amt_adx": 22.6,
+    "amt_mtf": "1D BEARISH [INVALIDATED_CVD=+2,350] | 4H BEARISH | 1H BULLISH",
+    "candle_delta": -238.15,
     "candle_deltas_6": [
       452.29,
       -12.45,
       -135.75,
       -467.73,
       -258.96,
-      -364.79
+      -238.15
     ],
     "cvd_per_tf": {
-      "1D": 2104.1,
-      "4H": -738.92,
-      "1H": 59.84
+      "1D": 2349.84,
+      "4H": -407.43,
+      "1H": 164.26
     },
     "oi_per_tf": {
-      "1D": 0.0711,
-      "4H": 0.3229,
-      "1H": 1.3074
+      "1D": 0.0651,
+      "4H": 0.355,
+      "1H": 0.0931
     },
-    "session_cvd": 14.43,
-    "oi_absolute_usd_billions": 6.29,
-    "taker_ratio_24h": 0.908,
+    "session_cvd": 141.06,
+    "oi_absolute_usd_billions": 6.25,
+    "taker_ratio_24h": 0.926,
     "vp_poc": 58500,
     "vp_vah": 58660,
     "vp_val": 58481,
@@ -41,7 +41,7 @@
     "vp_state": "REJECTION_DOWN",
     "balance_state": "TIGHT_BALANCE",
     "balance_width_pct": 2.93,
-    "adx_regime": "RANGING"
+    "adx_regime": "TRANSITIONING"
   },
   "context": {
     "fng_value": 15,
@@ -57,52 +57,52 @@
     "funding_rate": 4.584e-05,
     "cvd_24h": -7533.25,
     "black_swan_score": "0/17",
-    "correlation_r": -0.3238,
-    "liq_clusters": "Long: $58,900, $58,650, $58,500 | Short: $60,350, $60,700, $60,800",
-    "perp_basis_pct": -0.052,
+    "correlation_r": -0.4446,
+    "liq_clusters": "Long: $58,800, $58,650, $58,500 | Short: $60,350, $60,700, $60,800",
+    "perp_basis_pct": -0.0976,
     "order_book_top5": {
       "bids": [
         {
-          "price": 58908.85,
-          "size": 2.98904
+          "price": 58867.99,
+          "size": 4.5647
         },
         {
-          "price": 58908.84,
-          "size": 0.00026
+          "price": 58867.98,
+          "size": 0.74421
         },
         {
-          "price": 58908.83,
-          "size": 0.00017
+          "price": 58867.24,
+          "size": 1.03097
         },
         {
-          "price": 58908.71,
-          "size": 9e-05
+          "price": 58866.82,
+          "size": 0.50597
         },
         {
-          "price": 58908.18,
-          "size": 0.00054
+          "price": 58866.69,
+          "size": 0.03461
         }
       ],
       "asks": [
         {
-          "price": 58908.86,
-          "size": 0.09572
+          "price": 58868.0,
+          "size": 0.03523
         },
         {
-          "price": 58908.87,
-          "size": 0.00072
+          "price": 58868.01,
+          "size": 0.00045
         },
         {
-          "price": 58909.38,
+          "price": 58868.84,
+          "size": 9e-05
+        },
+        {
+          "price": 58869.41,
           "size": 0.0002
         },
         {
-          "price": 58910.0,
-          "size": 9e-05
-        },
-        {
-          "price": 58910.13,
-          "size": 9e-05
+          "price": 58869.56,
+          "size": 0.00026
         }
       ]
     },
@@ -124,12 +124,16 @@
   },
   "status": {
     "source_timestamps": {
-      "amt": "2026-06-30T14:02:15.996866+00:00",
+      "amt": "2026-06-30T14:32:44.729376+00:00",
       "vp": "2026-06-30T13:06:21.320528+00:00",
       "pipeline": "regime=2026-06-30 13:49 UTC | macro=2026-06-30 13:49 UTC"
     },
     "staleness_warnings": [
-      "STALE vp: 55m behind AMT"
+      "STALE regime: 43m behind AMT",
+      "STALE macro: 43m behind AMT",
+      "STALE derivs: 43m behind AMT",
+      "STALE cycle: 43m behind AMT",
+      "STALE vp: 86m behind AMT"
     ]
   }
 }
