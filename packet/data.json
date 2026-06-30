@@ -1,12 +1,12 @@
 {
   "header": {
-    "generated_timestamp": "2026-06-30T16:38:01Z",
+    "generated_timestamp": "2026-06-30T16:43:44Z",
     "btc_price": 58326.0,
-    "change_24h": -1.172,
-    "bid": 58319.4,
-    "ask": 58318.01,
+    "change_24h": -2.409,
+    "bid": 58301.4,
+    "ask": 58294.01,
     "spread": 0.01,
-    "volume_24h": 1185519734.06
+    "volume_24h": 1188058775.06
   },
   "critical": {
     "btc_price": 58326.0,
@@ -48,60 +48,60 @@
     "vix": 17.57,
     "etf_flow_daily": -231.0,
     "etf_flow_weekly": -1950.0,
-    "coinbase_premium": -0.1812,
+    "coinbase_premium": -0.1834,
     "equities": "SPY $741 (+1.0%) | QQQ $724 (+1.2%) | GLD $369 (-2.4%)",
     "dxy": 101.37,
     "us10y": 4.37,
-    "oi_change_24h": 3.02,
-    "long_short_ratio": 2.8226,
-    "funding_rate": 3.314e-05,
-    "cvd_24h": -8123.81,
+    "oi_change_24h": 6.69,
+    "long_short_ratio": 2.8506,
+    "funding_rate": 4.17e-05,
+    "cvd_24h": -9859.91,
     "black_swan_score": "0/17",
-    "correlation_r": -0.7215,
+    "correlation_r": -0.7269,
     "liq_clusters": "Long: $58,300 | Short: $58,600, $58,700, $58,950, $60,350, $60,700",
-    "perp_basis_pct": -0.0228,
+    "perp_basis_pct": -0.0338,
     "order_book_top5": {
       "bids": [
         {
-          "price": 58314.0,
-          "size": 2.29205
+          "price": 58302.71,
+          "size": 5.38861
         },
         {
-          "price": 58313.99,
-          "size": 0.00081
+          "price": 58302.7,
+          "size": 0.00036
         },
         {
-          "price": 58313.98,
+          "price": 58302.69,
           "size": 0.00018
         },
         {
-          "price": 58313.42,
-          "size": 0.0002
+          "price": 58302.05,
+          "size": 0.00717
         },
         {
-          "price": 58313.41,
-          "size": 0.09927
+          "price": 58302.01,
+          "size": 0.0002
         }
       ],
       "asks": [
         {
-          "price": 58314.01,
-          "size": 0.80745
+          "price": 58302.72,
+          "size": 1.19325
         },
         {
-          "price": 58314.02,
-          "size": 0.00099
+          "price": 58302.73,
+          "size": 0.00108
         },
         {
-          "price": 58314.03,
-          "size": 0.00018
+          "price": 58302.9,
+          "size": 0.004
         },
         {
-          "price": 58315.74,
+          "price": 58302.91,
           "size": 9e-05
         },
         {
-          "price": 58315.99,
+          "price": 58303.32,
           "size": 9e-05
         }
       ]
@@ -110,29 +110,25 @@
     "realized_vol_1d_pct": 53.08
   },
   "reference": {
-    "sr_1h": "S: $58,250 | R: $59,792 / $60,000 / $60,296",
+    "sr_1h": "S: $58,250 | R: $59,500 / $59,792 / $60,000",
     "sr_1h_inverted": "$58,500 / $58,829",
     "sr_1d": "S:  | R: ",
     "cycle": {
-      "mvrv_z": 0.2284,
-      "sopr": 0.9834,
+      "mvrv_z": null,
+      "sopr": null,
       "netflow_7d": 11878.01
     },
     "cycle_composite": 26.8,
     "sth_realized_price": null,
-    "options_skew_25d": -8.3
+    "options_skew_25d": -10.9
   },
   "status": {
     "source_timestamps": {
       "amt": "2026-06-30T16:33:13.422402+00:00",
       "vp": "2026-06-30T14:48:35.748602+00:00",
-      "pipeline": "regime=2026-06-30 14:48 UTC | macro=2026-06-30 14:48 UTC"
+      "pipeline": "regime=2026-06-30 16:42 UTC | macro=2026-06-30 16:42 UTC"
     },
     "staleness_warnings": [
-      "STALE regime: 105m behind AMT",
-      "STALE macro: 105m behind AMT",
-      "STALE derivs: 105m behind AMT",
-      "STALE cycle: 105m behind AMT",
       "STALE vp: 104m behind AMT"
     ]
   }
