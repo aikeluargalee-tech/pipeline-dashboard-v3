@@ -707,6 +707,10 @@ function renderPage(data) {
   document.getElementById('hero-ask').textContent = askStr;
   document.getElementById('hero-spread').textContent = spreadStr;
   document.getElementById('hero-volume').textContent = volumeStr;
+
+  // Render terminal brief
+  const terminalEl = document.getElementById('terminal-pre');
+  if (terminalEl) terminalEl.textContent = generateTextBrief(data);
 }
 
 // --- Polling ---
