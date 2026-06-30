@@ -6,7 +6,7 @@ set -euo pipefail
 # Cron-safe environment
 export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin"
 SITE="/home/maswilee/projects/pipeline-dashboard-v3"
-PYTHON="/home/maswilee/.hermes/hermes-agent/.venv/bin/python3"
+PYTHON="/usr/bin/python3.12"
 ERROR_LOG="/tmp/pipeline_deploy_v3_errors.log"
 PASSED=0
 FAILED=0
