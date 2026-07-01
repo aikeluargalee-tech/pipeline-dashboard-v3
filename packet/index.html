@@ -598,7 +598,13 @@ function generateTextBrief(data) {
   if (data.critical) {
     for (const [k, v] of Object.entries(data.critical)) {
       const formattedKey = k.toUpperCase().padEnd(20, ' ');
-      out += `${formattedKey}: ${v === null || v === undefined ? 'N/A' : (typeof v === 'object' ? JSON.stringify(v) : v)}\n`;
+      const raw = v === null || v === undefined ? 'N/A' : (typeof v === 'object' ? JSON.stringify(v) : v);
+      if (typeof v === 'object' && v !== null && raw.length > 80) {
+        const pretty = JSON.stringify(v, null, 2);
+        out += `${formattedKey}: ${pretty.replace(/\n/g, '\n' + ' '.repeat(22))}\n`;
+      } else {
+        out += `${formattedKey}: ${raw}\n`;
+      }
     }
   }
   out += `\n`;
@@ -608,7 +614,13 @@ function generateTextBrief(data) {
   if (data.context) {
     for (const [k, v] of Object.entries(data.context)) {
       const formattedKey = k.toUpperCase().padEnd(20, ' ');
-      out += `${formattedKey}: ${v === null || v === undefined ? 'N/A' : (typeof v === 'object' ? JSON.stringify(v) : v)}\n`;
+      const raw = v === null || v === undefined ? 'N/A' : (typeof v === 'object' ? JSON.stringify(v) : v);
+      if (typeof v === 'object' && v !== null && raw.length > 80) {
+        const pretty = JSON.stringify(v, null, 2);
+        out += `${formattedKey}: ${pretty.replace(/\n/g, '\n' + ' '.repeat(22))}\n`;
+      } else {
+        out += `${formattedKey}: ${raw}\n`;
+      }
     }
   }
   out += `\n`;
@@ -624,7 +636,13 @@ function generateTextBrief(data) {
         out += `CYCLE_REGIME      : ${v.regime ?? 'N/A'}\n`;
       } else {
         const formattedKey = k.toUpperCase().padEnd(20, ' ');
-        out += `${formattedKey}: ${v === null || v === undefined ? 'N/A' : (typeof v === 'object' ? JSON.stringify(v) : v)}\n`;
+        const raw = v === null || v === undefined ? 'N/A' : (typeof v === 'object' ? JSON.stringify(v) : v);
+        if (typeof v === 'object' && v !== null && raw.length > 80) {
+          const pretty = JSON.stringify(v, null, 2);
+          out += `${formattedKey}: ${pretty.replace(/\n/g, '\n' + ' '.repeat(22))}\n`;
+        } else {
+          out += `${formattedKey}: ${raw}\n`;
+        }
       }
     }
   }
