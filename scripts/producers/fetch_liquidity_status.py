@@ -47,7 +47,7 @@ def get_coinbase_premium():
         try:
             cb_price = float(cb["data"]["amount"])
             bn_price = float(bn["price"])
-            premium_pct = round((cb_price - bn_price) / bn_price * 100, 2)
+            premium_pct = round((cb_price - bn_price) / bn_price * 100, 4)
             return premium_pct, cb_price
         except (KeyError, ValueError, ZeroDivisionError):
             pass
