@@ -619,7 +619,125 @@ def fetch_news_articles() -> list[dict] | None:
 
 
 # ---------------------------------------------------------------------------
-# Source 5: Static/Hardcoded recent data (last resort)
+# Source 5: Google News RSS feed
+# ---------------------------------------------------------------------------
+
+def fetch_google_news() -> list[dict] | None:
+    """Parse Google News RSS for BTC ETF flow articles — works without Cloudflare."""
+    log("Source 5: Google News RSS (bitcoin etf flow)...")
+    url = "https://news.google.com/rss/search?q=bitcoin+etf+flow&hl=en-US&gl=US&ceid=US:en"
+    xml = http_get(url, headers={"Accept": "application/rss+xml,application/xml,*/*"})
+    if not xml:
+        log("  ❌ Google News RSS: No response")
+        return None
+
+    # Patterns to extract: "$445M", "$4.1B", "+$155M", "-$261M", "($300M)"
+    amount_pattern = re.compile(
+        r'\$?\(?[+-]?\$?\s*(\d+(?:\.\d+)?)\s*([MmBb])?\s*\)?',
+        re.IGNORECASE
+    )
+    outflow_kw = re.compile(r'outflow|out flow|shed|lost|dumped|slash|flee|sell', re.IGNORECASE)
+    inflow_kw = re.compile(r'inflow|in flow|surge|gain|pour|buy', re.IGNORECASE)
+
+    try:
+        root = ET.fromstring(xml)
+        channel = root.find("channel")
+        if channel is None:
+            return None
+
+        items = channel.findall("item")
+        log(f"  Found {len(items)} RSS items")
+
+        results = []
+        for item in items:
+            title = item.findtext("title", "")
+            desc = item.findtext("description", "")
+            pubdate = item.findtext("pubDate", "")
+
+            full = f"{title} {desc}"
+
+            # Filter: must be about BTC ETF flows
+            if not re.search(r'(bitcoin|btc).*(etf|etfs)', full, re.IGNORECASE):
+                continue
+            if not re.search(r'(flow|inflow|outflow|shed|lost|billion|million)', full, re.IGNORECASE):
+                continue
+
+            # Parse date
+            dt = None
+            for fmt in ["%a, %d %b %Y %H:%M:%S %Z", "%a, %d %b %Y %H:%M:%S"]:
+                try:
+                    dt = datetime.strptime(pubdate, fmt)
+                    break
+                except ValueError:
+                    continue
+            if dt is None:
+                continue
+            date_str = dt.strftime("%d %b %Y")
+
+            # Parse amount
+            amounts = amount_pattern.findall(full)
+            if not amounts:
+                continue
+
+            # Take the largest amount found (most specific to ETF flow)
+            best_val = None
+            for val_str, unit in amounts:
+                try:
+                    val = float(val_str)
+                    if unit and unit.lower() == 'b':
+                        val *= 1000
+                    if best_val is None or val > best_val:
+                        best_val = val
+                except ValueError:
+                    continue
+
+            if best_val is None:
+                continue
+
+            # Determine sign from context
+            is_out = bool(outflow_kw.search(full))
+            is_in = bool(inflow_kw.search(full))
+            # Also check for explicit negative sign
+            neg_match = re.search(r'-\$?\s*\d+', full)
+            if neg_match:
+                best_val = -abs(best_val)
+            elif is_out and not is_in:
+                best_val = -abs(best_val)
+            elif is_in and not is_out:
+                best_val = abs(best_val)
+            # else keep as-is
+
+            date_key = dt.strftime("%Y-%m-%d")
+            results.append((date_key, date_str, best_val, full[:100]))
+
+        # Deduplicate by date, keep latest
+        seen = {}
+        for date_key, date_str, val, src in results:
+            if date_key not in seen or dt.strftime("%Y%m%d") > seen[date_key][0]:
+                seen[date_key] = (dt.strftime("%Y%m%d"), date_str, val)
+
+        flows = [{"date": v[1], "total": v[2]} for v in sorted(seen.values(), key=lambda x: x[0])]
+
+        if flows:
+            log(f"  ✅ Google News RSS: Extracted {len(flows)} flow data points")
+            for f in flows[-5:]:
+                log(f"     {f['date']}: ${f['total']:+,.1f}M")
+            return flows[-10:]  # Keep last 10 days
+        else:
+            log("  ⚠️ Google News RSS: No flow numbers extracted from articles")
+            return None
+
+    except ET.ParseError as e:
+        log(f"  ❌ Google News RSS: XML parse error: {e}")
+        return None
+    except Exception as e:
+        log(f"  ❌ Google News RSS: Error: {e}")
+        traceback.print_exc()
+        return None
+
+
+# ---------------------------------------------------------------------------
+# Source 6: Static/Hardcoded recent data (last resort)
 # ---------------------------------------------------------------------------
 
 def fetch_static_fallback() -> list[dict] | None:
