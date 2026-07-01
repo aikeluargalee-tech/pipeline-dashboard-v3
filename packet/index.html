@@ -602,7 +602,7 @@ function generateTextBrief(data) {
     for (const [k, v] of Object.entries(data.critical)) {
       const formattedKey = k.toUpperCase().padEnd(20, ' ');
       const raw = v === null || v === undefined ? 'N/A' : (typeof v === 'object' ? JSON.stringify(v) : v);
-      if (typeof v === 'object' && v !== null && raw.length > 80) {
+      if (typeof v === 'object' && v !== null && raw.length > 48) {
         const pretty = JSON.stringify(v, null, 2);
         out += `${formattedKey}: ${pretty.replace(/\n/g, '\n' + ' '.repeat(22))}\n`;
       } else {
@@ -618,7 +618,7 @@ function generateTextBrief(data) {
     for (const [k, v] of Object.entries(data.context)) {
       const formattedKey = k.toUpperCase().padEnd(20, ' ');
       const raw = v === null || v === undefined ? 'N/A' : (typeof v === 'object' ? JSON.stringify(v) : v);
-      if (typeof v === 'object' && v !== null && raw.length > 80) {
+      if (typeof v === 'object' && v !== null && raw.length > 48) {
         const pretty = JSON.stringify(v, null, 2);
         out += `${formattedKey}: ${pretty.replace(/\n/g, '\n' + ' '.repeat(22))}\n`;
       } else if (typeof v === 'string' && v.length > 48 && v.includes(' | ')) {
@@ -673,7 +673,7 @@ function generateTextBrief(data) {
       } else {
         const formattedKey = k.toUpperCase().padEnd(20, ' ');
         const raw = v === null || v === undefined ? 'N/A' : (typeof v === 'object' ? JSON.stringify(v) : v);
-        if (typeof v === 'object' && v !== null && raw.length > 80) {
+        if (typeof v === 'object' && v !== null && raw.length > 48) {
           const pretty = JSON.stringify(v, null, 2);
           out += `${formattedKey}: ${pretty.replace(/\n/g, '\n' + ' '.repeat(22))}\n`;
         } else if (typeof v === 'string' && v.length > 48 && v.includes(' | ')) {
