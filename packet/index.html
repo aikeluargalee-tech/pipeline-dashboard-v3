@@ -662,6 +662,19 @@ function generateTextBrief(data) {
     for (const [k, v] of Object.entries(data.context)) {
       const formattedKey = k.toUpperCase().padEnd(20, ' ');
       const raw = v === null || v === undefined ? 'N/A' : (typeof v === 'object' ? JSON.stringify(v) : v);
+      // Special case: ORDER_BOOK_TOP5 - compact single-line format
+      if (k.toUpperCase() === 'ORDER_BOOK_TOP5' && typeof v === 'object' && v !== null) {
+        const bestBid = v.bids && v.bids[0];
+        const bestAsk = v.asks && v.asks[0];
+        if (bestBid && bestAsk) {
+          const bidPrice = Number(bestBid.price).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+          const bidSize = Number(bestBid.size).toFixed(2);
+          const askPrice = Number(bestAsk.price).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+          const askSize = Number(bestAsk.size).toFixed(2);
+          out += `${formattedKey}: BID $${bidPrice} (${bidSize} BTC) | ASK $${askPrice} (${askSize} BTC)\n`;
+          continue;
+        }
+      }
       if (typeof v === 'object' && v !== null && raw.length > 30) {
         const pretty = JSON.stringify(v, null, 2);
         out += `${formattedKey}: ${pretty.replace(/\n/g, '\n' + ' '.repeat(22))}\n`;
