@@ -1297,7 +1297,7 @@ function renderLiquidity(d) {
       } else if (label === 'OI Delta') {
         disp = (value > 0 ? '+' : '') + Number(value).toFixed(1) + '%';
       } else if (label === 'Coinbase Premium') {
-        disp = (value > 0 ? '+' : '') + Number(value).toFixed(2) + '%';
+        disp = (value > 0 ? '+' : '') + Number(value).toFixed(3) + '%';
       } else if (label === 'ETF Flow') {
         const num = Number(value);
         if (Math.abs(num) >= 1e6) {
@@ -2021,7 +2021,8 @@ function renderDerivatives(d) {
     if (d.cvd_trend) html += metricRow('CVD Trend', d.cvd_trend, d.cvd_trend === 'strengthening' ? 'positive' : d.cvd_trend === 'weakening' ? 'negative' : 'neutral');
   }
   if (d.coinbase_premium !== null && d.coinbase_premium !== undefined) {
-    html += metricRow('Coinbase Premium', fmtPct(d.coinbase_premium), colorPct(d.coinbase_premium));
+    const cpFormatted = (d.coinbase_premium >= 0 ? '+' : '') + Number(d.coinbase_premium).toFixed(3) + '%';
+    html += metricRow('Coinbase Premium', cpFormatted, colorPct(d.coinbase_premium));
     if (d.cb_label) html += metricRow('Signal', d.cb_label);
   }
   var el=document.getElementById('deriv-content');if(el)el.innerHTML = html || metricRow('No derivatives data available', '', 'neutral');
