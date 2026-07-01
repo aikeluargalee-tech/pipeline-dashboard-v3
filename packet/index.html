@@ -373,6 +373,9 @@
   .metrics-grid {
     grid-template-columns: 1fr;
   }
+  .terminal-block {
+    overflow-x: hidden;
+  }
 }
 </style>
 </head>
@@ -618,13 +621,38 @@ function generateTextBrief(data) {
       if (typeof v === 'object' && v !== null && raw.length > 80) {
         const pretty = JSON.stringify(v, null, 2);
         out += `${formattedKey}: ${pretty.replace(/\n/g, '\n' + ' '.repeat(22))}\n`;
-      } else if (typeof v === 'string' && v.length > 70 && v.includes(' | ')) {
-        // Split long strings on pipe for mobile readability
+      } else if (typeof v === 'string' && v.length > 48 && v.includes(' | ')) {
+        // Split long strings on pipe for mobile readability (>48 chars)
         const indent = ' '.repeat(22);
-        const parts = v.split(' | ');
-        out += `${formattedKey}: ${parts[0]}\n`;
-        for (let p = 1; p < parts.length; p++) {
-          out += `${indent}| ${parts[p]}\n`;
+        // First split on pipe
+        const pipeParts = v.split(' | ');
+        // Helper: render a part, possibly with sub-splitting on /
+        const renderPart = (part, isFirst) => {
+          let text = part.trim();
+          if (text.length > 48 && text.includes(' / ')) {
+            const subParts = text.split(' / ');
+            if (isFirst) {
+              out += `${formattedKey}: ${subParts[0]}\n`;
+              for (let s = 1; s < subParts.length; s++) {
+                out += `${indent}/ ${subParts[s]}\n`;
+              }
+            } else {
+              out += `${indent}| ${subParts[0]}\n`;
+              for (let s = 1; s < subParts.length; s++) {
+                out += `${indent}/ ${subParts[s]}\n`;
+              }
+            }
+          } else {
+            if (isFirst) {
+              out += `${formattedKey}: ${text}\n`;
+            } else {
+              out += `${indent}| ${text}\n`;
+            }
+          }
+        };
+        renderPart(pipeParts[0], true);
+        for (let p = 1; p < pipeParts.length; p++) {
+          renderPart(pipeParts[p], false);
         }
       } else {
         out += `${formattedKey}: ${raw}\n`;
@@ -648,6 +676,36 @@ function generateTextBrief(data) {
         if (typeof v === 'object' && v !== null && raw.length > 80) {
           const pretty = JSON.stringify(v, null, 2);
           out += `${formattedKey}: ${pretty.replace(/\n/g, '\n' + ' '.repeat(22))}\n`;
+        } else if (typeof v === 'string' && v.length > 48 && v.includes(' | ')) {
+          const indent = ' '.repeat(22);
+          const pipeParts = v.split(' | ');
+          const renderPart = (part, isFirst) => {
+            let text = part.trim();
+            if (text.length > 48 && text.includes(' / ')) {
+              const subParts = text.split(' / ');
+              if (isFirst) {
+                out += `${formattedKey}: ${subParts[0]}\n`;
+                for (let s = 1; s < subParts.length; s++) {
+                  out += `${indent}/ ${subParts[s]}\n`;
+                }
+              } else {
+                out += `${indent}| ${subParts[0]}\n`;
+                for (let s = 1; s < subParts.length; s++) {
+                  out += `${indent}/ ${subParts[s]}\n`;
+                }
+              }
+            } else {
+              if (isFirst) {
+                out += `${formattedKey}: ${text}\n`;
+              } else {
+                out += `${indent}| ${text}\n`;
+              }
+            }
+          };
+          renderPart(pipeParts[0], true);
+          for (let p = 1; p < pipeParts.length; p++) {
+            renderPart(pipeParts[p], false);
+          }
         } else {
           out += `${formattedKey}: ${raw}\n`;
         }
