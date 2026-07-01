@@ -1,10 +1,10 @@
 {
-  "verdict": "TIGHTENED",
+  "verdict": "PAUSE",
   "sources": [
-    "ai3_wave"
+    "quantum"
   ],
   "rules": {
-    "action": "Reduce position size. Tight stops. Wait for conditions to clear."
+    "action": "No new positions. Reduce open size. Monitor only."
   },
   "modules": {
     "trp_check": {
@@ -29,11 +29,11 @@
     },
     "ai_bubble": {
       "state": "PROCEED",
-      "detail": "BTC 24h: +2.95%"
+      "detail": "BTC 24h: +2.84%"
     },
     "quantum": {
-      "state": "PROCEED",
-      "detail": "No new quantum+bitcoin news"
+      "state": "PAUSE",
+      "detail": "TIER2: Quantum threat to Bitcoin is real, but manageable, according to Wall Street brok (CoinDesk)"
     },
     "stablecoins": {
       "state": "PROCEED",
@@ -52,6 +52,6 @@
       "detail": "No geopolitical signals detected"
     }
   },
-  "timestamp": "2026-07-01 16:38 UTC",
-  "_collected": "2026-07-01 16:38 UTC"
+  "timestamp": "2026-07-01 16:48 UTC",
+  "_collected": "2026-07-01 16:48 UTC"
 }
