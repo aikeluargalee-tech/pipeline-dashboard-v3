@@ -1,12 +1,508 @@
 {
   "sr_bands": {
+    "1d": {
+      "schema_version": "2.0",
+      "timestamp": "2026-07-01 11:48 UTC",
+      "timeframe": "1d",
+      "current_price": 58658.2,
+      "atr": 2154.84,
+      "atr_pct": 3.674,
+      "cluster_tolerance_pct": 1.837,
+      "candles": 90,
+      "supports": [],
+      "resistances": [],
+      "all_bands": [],
+      "inverted_levels": [
+        {
+          "center": 58915.0,
+          "low": 58750.0,
+          "high": 59080.0,
+          "touches": 2,
+          "types": [
+            "hvn",
+            "swing_low"
+          ],
+          "volume_usdt": 91667350355.51,
+          "strength": 4,
+          "strength_label": "WEAK",
+          "bar_indices": [
+            63
+          ],
+          "touches_decayed": 0.51,
+          "role": "SUPPORT",
+          "distance_pct": 0.44,
+          "status": "INVERTED",
+          "inverted_from": "RESISTANCE"
+        },
+        {
+          "center": 60000.0,
+          "low": 60000.0,
+          "high": 60000.0,
+          "touches": 1,
+          "types": [
+            "round_number"
+          ],
+          "volume_usdt": 0,
+          "strength": 1,
+          "strength_label": "MINOR",
+          "bar_indices": [],
+          "role": "SUPPORT",
+          "distance_pct": 2.29,
+          "status": "INVERTED",
+          "inverted_from": "RESISTANCE"
+        },
+        {
+          "center": 61250.0,
+          "low": 61250.0,
+          "high": 61250.0,
+          "touches": 1,
+          "types": [
+            "hvn"
+          ],
+          "volume_usdt": 106197564287.66,
+          "strength": 3,
+          "strength_label": "WEAK",
+          "bar_indices": [],
+          "role": "SUPPORT",
+          "distance_pct": 4.42,
+          "status": "INVERTED",
+          "inverted_from": "RESISTANCE"
+        },
+        {
+          "center": 62500.0,
+          "low": 62500.0,
+          "high": 62500.0,
+          "touches": 1,
+          "types": [
+            "round_number"
+          ],
+          "volume_usdt": 0,
+          "strength": 1,
+          "strength_label": "MINOR",
+          "bar_indices": [],
+          "role": "SUPPORT",
+          "distance_pct": 6.55,
+          "status": "INVERTED",
+          "inverted_from": "RESISTANCE"
+        },
+        {
+          "center": 63750.0,
+          "low": 63750.0,
+          "high": 63750.0,
+          "touches": 1,
+          "types": [
+            "hvn"
+          ],
+          "volume_usdt": 135236176194.95,
+          "strength": 3,
+          "strength_label": "WEAK",
+          "bar_indices": [],
+          "role": "SUPPORT",
+          "distance_pct": 8.68,
+          "status": "INVERTED",
+          "inverted_from": "RESISTANCE"
+        }
+      ],
+      "regime_flip_levels": {
+        "bullish_flip": null,
+        "bearish_flip": null
+      }
+    },
+    "1h": {
+      "schema_version": "2.0",
+      "timestamp": "2026-07-01 11:48 UTC",
+      "timeframe": "1h",
+      "current_price": 58658.2,
+      "atr": 423.85,
+      "atr_pct": 0.723,
+      "cluster_tolerance_pct": 0.361,
+      "candles": 72,
+      "supports": [
+        {
+          "center": 58500.0,
+          "low": 58500.0,
+          "high": 58500.0,
+          "touches": 1,
+          "types": [
+            "round_number"
+          ],
+          "volume_usdt": 0,
+          "strength": 1,
+          "strength_label": "MINOR",
+          "bar_indices": [],
+          "role": "SUPPORT",
+          "distance_pct": 0.27,
+          "status": "ACTIVE"
+        },
+        {
+          "center": 58350.35,
+          "low": 58250.0,
+          "high": 58450.7,
+          "touches": 2,
+          "types": [
+            "hvn",
+            "swing_low"
+          ],
+          "volume_usdt": 3681349990.83,
+          "strength": 4,
+          "strength_label": "WEAK",
+          "bar_indices": [
+            68
+          ],
+          "touches_decayed": 0.77,
+          "role": "SUPPORT",
+          "distance_pct": 0.52,
+          "status": "ACTIVE"
+        },
+        {
+          "center": 58080.0,
+          "low": 58000.0,
+          "high": 58160.0,
+          "touches": 2,
+          "types": [
+            "round_number",
+            "swing_low"
+          ],
+          "volume_usdt": 1058516650.91,
+          "strength": 4,
+          "strength_label": "WEAK",
+          "bar_indices": [
+            51
+          ],
+          "touches_decayed": 0.25,
+          "role": "SUPPORT",
+          "distance_pct": 0.99,
+          "status": "ACTIVE"
+        }
+      ],
+      "resistances": [
+        {
+          "center": 59347.25,
+          "low": 59250.0,
+          "high": 59444.5,
+          "touches": 2,
+          "types": [
+            "hvn",
+            "swing_high"
+          ],
+          "volume_usdt": 8342481742.82,
+          "strength": 4,
+          "strength_label": "WEAK",
+          "bar_indices": [
+            64
+          ],
+          "touches_decayed": 0.59,
+          "role": "RESISTANCE",
+          "distance_pct": 1.17,
+          "status": "ACTIVE"
+        },
+        {
+          "center": 59500.0,
+          "low": 59500.0,
+          "high": 59500.0,
+          "touches": 1,
+          "types": [
+            "round_number"
+          ],
+          "volume_usdt": 0,
+          "strength": 1,
+          "strength_label": "MINOR",
+          "bar_indices": [],
+          "role": "RESISTANCE",
+          "distance_pct": 1.44,
+          "status": "ACTIVE"
+        },
+        {
+          "center": 59816.6,
+          "low": 59750.0,
+          "high": 59883.2,
+          "touches": 2,
+          "types": [
+            "hvn",
+            "swing_high"
+          ],
+          "volume_usdt": 9907504151.42,
+          "strength": 4,
+          "strength_label": "WEAK",
+          "bar_indices": [
+            10
+          ],
+          "touches_decayed": 0.02,
+          "role": "RESISTANCE",
+          "distance_pct": 1.97,
+          "status": "ACTIVE"
+        }
+      ],
+      "all_bands": [
+        {
+          "center": 58350.35,
+          "low": 58250.0,
+          "high": 58450.7,
+          "touches": 2,
+          "types": [
+            "hvn",
+            "swing_low"
+          ],
+          "volume_usdt": 3681349990.83,
+          "strength": 4,
+          "strength_label": "WEAK",
+          "bar_indices": [
+            68
+          ],
+          "touches_decayed": 0.77,
+          "role": "SUPPORT",
+          "distance_pct": 0.52,
+          "status": "ACTIVE"
+        },
+        {
+          "center": 58080.0,
+          "low": 58000.0,
+          "high": 58160.0,
+          "touches": 2,
+          "types": [
+            "round_number",
+            "swing_low"
+          ],
+          "volume_usdt": 1058516650.91,
+          "strength": 4,
+          "strength_label": "WEAK",
+          "bar_indices": [
+            51
+          ],
+          "touches_decayed": 0.25,
+          "role": "SUPPORT",
+          "distance_pct": 0.99,
+          "status": "ACTIVE"
+        },
+        {
+          "center": 59347.25,
+          "low": 59250.0,
+          "high": 59444.5,
+          "touches": 2,
+          "types": [
+            "hvn",
+            "swing_high"
+          ],
+          "volume_usdt": 8342481742.82,
+          "strength": 4,
+          "strength_label": "WEAK",
+          "bar_indices": [
+            64
+          ],
+          "touches_decayed": 0.59,
+          "role": "RESISTANCE",
+          "distance_pct": 1.17,
+          "status": "ACTIVE"
+        },
+        {
+          "center": 57754.3,
+          "low": 57750.0,
+          "high": 57758.6,
+          "touches": 2,
+          "types": [
+            "hvn",
+            "swing_low"
+          ],
+          "volume_usdt": 2017310677.29,
+          "strength": 4,
+          "strength_label": "WEAK",
+          "bar_indices": [
+            61
+          ],
+          "touches_decayed": 0.48,
+          "role": "SUPPORT",
+          "distance_pct": 1.54,
+          "status": "ACTIVE"
+        },
+        {
+          "center": 59816.6,
+          "low": 59750.0,
+          "high": 59883.2,
+          "touches": 2,
+          "types": [
+            "hvn",
+            "swing_high"
+          ],
+          "volume_usdt": 9907504151.42,
+          "strength": 4,
+          "strength_label": "WEAK",
+          "bar_indices": [
+            10
+          ],
+          "touches_decayed": 0.02,
+          "role": "RESISTANCE",
+          "distance_pct": 1.97,
+          "status": "ACTIVE"
+        },
+        {
+          "center": 60287.5,
+          "low": 60250.0,
+          "high": 60325.0,
+          "touches": 2,
+          "types": [
+            "hvn",
+            "swing_high"
+          ],
+          "volume_usdt": 6278612538.13,
+          "strength": 4,
+          "strength_label": "WEAK",
+          "bar_indices": [
+            18
+          ],
+          "touches_decayed": 0.03,
+          "role": "RESISTANCE",
+          "distance_pct": 2.78,
+          "status": "ACTIVE"
+        },
+        {
+          "center": 60577.4,
+          "low": 60500.0,
+          "high": 60666.6,
+          "touches": 3,
+          "types": [
+            "round_number",
+            "swing_high"
+          ],
+          "volume_usdt": 1223433034.53,
+          "strength": 4,
+          "strength_label": "WEAK",
+          "bar_indices": [
+            33,
+            29
+          ],
+          "touches_decayed": 0.13,
+          "role": "RESISTANCE",
+          "distance_pct": 3.27,
+          "status": "ACTIVE"
+        },
+        {
+          "center": 60754.15,
+          "low": 60750.0,
+          "high": 60758.3,
+          "touches": 2,
+          "types": [
+            "hvn",
+            "swing_high"
+          ],
+          "volume_usdt": 2885394988.05,
+          "strength": 4,
+          "strength_label": "WEAK",
+          "bar_indices": [
+            24
+          ],
+          "touches_decayed": 0.04,
+          "role": "RESISTANCE",
+          "distance_pct": 3.57,
+          "status": "ACTIVE"
+        },
+        {
+          "center": 58500.0,
+          "low": 58500.0,
+          "high": 58500.0,
+          "touches": 1,
+          "types": [
+            "round_number"
+          ],
+          "volume_usdt": 0,
+          "strength": 1,
+          "strength_label": "MINOR",
+          "bar_indices": [],
+          "role": "SUPPORT",
+          "distance_pct": 0.27,
+          "status": "ACTIVE"
+        },
+        {
+          "center": 59500.0,
+          "low": 59500.0,
+          "high": 59500.0,
+          "touches": 1,
+          "types": [
+            "round_number"
+          ],
+          "volume_usdt": 0,
+          "strength": 1,
+          "strength_label": "MINOR",
+          "bar_indices": [],
+          "role": "RESISTANCE",
+          "distance_pct": 1.44,
+          "status": "ACTIVE"
+        },
+        {
+          "center": 60000.0,
+          "low": 60000.0,
+          "high": 60000.0,
+          "touches": 1,
+          "types": [
+            "round_number"
+          ],
+          "volume_usdt": 0,
+          "strength": 1,
+          "strength_label": "MINOR",
+          "bar_indices": [],
+          "role": "RESISTANCE",
+          "distance_pct": 2.29,
+          "status": "ACTIVE"
+        }
+      ],
+      "inverted_levels": [
+        {
+          "center": 58834.5,
+          "low": 58750.0,
+          "high": 58888.0,
+          "touches": 4,
+          "types": [
+            "hvn",
+            "swing_high",
+            "swing_low"
+          ],
+          "volume_usdt": 9661998271.31,
+          "strength": 5,
+          "strength_label": "MODERATE",
+          "bar_indices": [
+            56,
+            14,
+            10
+          ],
+          "touches_decayed": 0.38,
+          "role": "SUPPORT",
+          "distance_pct": 0.3,
+          "status": "INVERTED",
+          "inverted_from": "RESISTANCE"
+        },
+        {
+          "center": 58994.0,
+          "low": 58988.0,
+          "high": 59000.0,
+          "touches": 2,
+          "types": [
+            "round_number",
+            "swing_low"
+          ],
+          "volume_usdt": 1324460082.57,
+          "strength": 4,
+          "strength_label": "WEAK",
+          "bar_indices": [
+            26
+          ],
+          "touches_decayed": 0.05,
+          "role": "SUPPORT",
+          "distance_pct": 0.57,
+          "status": "INVERTED",
+          "inverted_from": "RESISTANCE"
+        }
+      ],
+      "regime_flip_levels": {
+        "bullish_flip": null,
+        "bearish_flip": null
+      }
+    },
     "4h": {
       "schema_version": "2.0",
-      "timestamp": "2026-07-01 10:48 UTC",
+      "timestamp": "2026-07-01 11:48 UTC",
       "timeframe": "4h",
-      "current_price": 58655.4,
+      "current_price": 58658.2,
       "atr": 822.09,
-      "atr_pct": 1.402,
+      "atr_pct": 1.401,
       "cluster_tolerance_pct": 0.701,
       "candles": 100,
       "supports": [
@@ -27,7 +523,7 @@
           ],
           "touches_decayed": 0.3,
           "role": "SUPPORT",
-          "distance_pct": 1.09,
+          "distance_pct": 1.1,
           "status": "ACTIVE"
         },
         {
@@ -82,7 +578,7 @@
           "strength_label": "MINOR",
           "bar_indices": [],
           "role": "RESISTANCE",
-          "distance_pct": 4.0,
+          "distance_pct": 3.99,
           "status": "ACTIVE"
         },
         {
@@ -102,7 +598,7 @@
           ],
           "touches_decayed": 0.2,
           "role": "RESISTANCE",
-          "distance_pct": 5.17,
+          "distance_pct": 5.16,
           "status": "ACTIVE"
         }
       ],
@@ -167,7 +663,7 @@
           ],
           "touches_decayed": 0.3,
           "role": "SUPPORT",
-          "distance_pct": 1.09,
+          "distance_pct": 1.1,
           "status": "ACTIVE"
         },
         {
@@ -187,7 +683,7 @@
           ],
           "touches_decayed": 0.2,
           "role": "RESISTANCE",
-          "distance_pct": 5.17,
+          "distance_pct": 5.16,
           "status": "ACTIVE"
         },
         {
@@ -207,7 +703,7 @@
           ],
           "touches_decayed": 0.07,
           "role": "RESISTANCE",
-          "distance_pct": 5.9,
+          "distance_pct": 5.89,
           "status": "ACTIVE"
         },
         {
@@ -255,7 +751,7 @@
           "strength_label": "WEAK",
           "bar_indices": [],
           "role": "RESISTANCE",
-          "distance_pct": 8.26,
+          "distance_pct": 8.25,
           "status": "ACTIVE"
         },
         {
@@ -287,7 +783,7 @@
           "strength_label": "MINOR",
           "bar_indices": [],
           "role": "RESISTANCE",
-          "distance_pct": 4.0,
+          "distance_pct": 3.99,
           "status": "ACTIVE"
         },
         {
@@ -317,7 +813,7 @@
             "hvn",
             "swing_low"
           ],
-          "volume_usdt": 18252228329.17,
+          "volume_usdt": 18421214970.06,
           "strength": 4,
           "strength_label": "WEAK",
           "bar_indices": [
@@ -342,7 +838,7 @@
           "strength_label": "MINOR",
           "bar_indices": [],
           "role": "SUPPORT",
-          "distance_pct": 0.59,
+          "distance_pct": 0.58,
           "status": "INVERTED",
           "inverted_from": "RESISTANCE"
         },
@@ -354,7 +850,7 @@
           "types": [
             "hvn"
           ],
-          "volume_usdt": 35742610150.28,
+          "volume_usdt": 35764052656.87,
           "strength": 3,
           "strength_label": "WEAK",
           "bar_indices": [],
@@ -383,494 +879,6 @@
       ],
       "regime_flip_levels": {
         "bullish_flip": 60727.67,
-        "bearish_flip": null
-      }
-    },
-    "1h": {
-      "schema_version": "2.0",
-      "timestamp": "2026-07-01 10:48 UTC",
-      "timeframe": "1h",
-      "current_price": 58655.4,
-      "atr": 430.89,
-      "atr_pct": 0.735,
-      "cluster_tolerance_pct": 0.367,
-      "candles": 72,
-      "supports": [
-        {
-          "center": 58500.0,
-          "low": 58500.0,
-          "high": 58500.0,
-          "touches": 1,
-          "types": [
-            "round_number"
-          ],
-          "volume_usdt": 0,
-          "strength": 1,
-          "strength_label": "MINOR",
-          "bar_indices": [],
-          "role": "SUPPORT",
-          "distance_pct": 0.26,
-          "status": "ACTIVE"
-        },
-        {
-          "center": 58250.0,
-          "low": 58250.0,
-          "high": 58250.0,
-          "touches": 1,
-          "types": [
-            "hvn"
-          ],
-          "volume_usdt": 3308854303.24,
-          "strength": 3,
-          "strength_label": "WEAK",
-          "bar_indices": [],
-          "role": "SUPPORT",
-          "distance_pct": 0.69,
-          "status": "ACTIVE"
-        },
-        {
-          "center": 58080.0,
-          "low": 58000.0,
-          "high": 58160.0,
-          "touches": 2,
-          "types": [
-            "round_number",
-            "swing_low"
-          ],
-          "volume_usdt": 1058516650.91,
-          "strength": 4,
-          "strength_label": "WEAK",
-          "bar_indices": [
-            52
-          ],
-          "touches_decayed": 0.26,
-          "role": "SUPPORT",
-          "distance_pct": 0.98,
-          "status": "ACTIVE"
-        }
-      ],
-      "resistances": [
-        {
-          "center": 59347.25,
-          "low": 59250.0,
-          "high": 59444.5,
-          "touches": 2,
-          "types": [
-            "hvn",
-            "swing_high"
-          ],
-          "volume_usdt": 8342481742.82,
-          "strength": 4,
-          "strength_label": "WEAK",
-          "bar_indices": [
-            65
-          ],
-          "touches_decayed": 0.63,
-          "role": "RESISTANCE",
-          "distance_pct": 1.18,
-          "status": "ACTIVE"
-        },
-        {
-          "center": 59500.0,
-          "low": 59500.0,
-          "high": 59500.0,
-          "touches": 1,
-          "types": [
-            "round_number"
-          ],
-          "volume_usdt": 0,
-          "strength": 1,
-          "strength_label": "MINOR",
-          "bar_indices": [],
-          "role": "RESISTANCE",
-          "distance_pct": 1.44,
-          "status": "ACTIVE"
-        },
-        {
-          "center": 59816.6,
-          "low": 59750.0,
-          "high": 59883.2,
-          "touches": 2,
-          "types": [
-            "hvn",
-            "swing_high"
-          ],
-          "volume_usdt": 9907504151.42,
-          "strength": 4,
-          "strength_label": "WEAK",
-          "bar_indices": [
-            11
-          ],
-          "touches_decayed": 0.02,
-          "role": "RESISTANCE",
-          "distance_pct": 1.98,
-          "status": "ACTIVE"
-        }
-      ],
-      "all_bands": [
-        {
-          "center": 58080.0,
-          "low": 58000.0,
-          "high": 58160.0,
-          "touches": 2,
-          "types": [
-            "round_number",
-            "swing_low"
-          ],
-          "volume_usdt": 1058516650.91,
-          "strength": 4,
-          "strength_label": "WEAK",
-          "bar_indices": [
-            52
-          ],
-          "touches_decayed": 0.26,
-          "role": "SUPPORT",
-          "distance_pct": 0.98,
-          "status": "ACTIVE"
-        },
-        {
-          "center": 59347.25,
-          "low": 59250.0,
-          "high": 59444.5,
-          "touches": 2,
-          "types": [
-            "hvn",
-            "swing_high"
-          ],
-          "volume_usdt": 8342481742.82,
-          "strength": 4,
-          "strength_label": "WEAK",
-          "bar_indices": [
-            65
-          ],
-          "touches_decayed": 0.63,
-          "role": "RESISTANCE",
-          "distance_pct": 1.18,
-          "status": "ACTIVE"
-        },
-        {
-          "center": 57754.3,
-          "low": 57750.0,
-          "high": 57758.6,
-          "touches": 2,
-          "types": [
-            "hvn",
-            "swing_low"
-          ],
-          "volume_usdt": 2017310677.29,
-          "strength": 4,
-          "strength_label": "WEAK",
-          "bar_indices": [
-            62
-          ],
-          "touches_decayed": 0.51,
-          "role": "SUPPORT",
-          "distance_pct": 1.54,
-          "status": "ACTIVE"
-        },
-        {
-          "center": 59816.6,
-          "low": 59750.0,
-          "high": 59883.2,
-          "touches": 2,
-          "types": [
-            "hvn",
-            "swing_high"
-          ],
-          "volume_usdt": 9907504151.42,
-          "strength": 4,
-          "strength_label": "WEAK",
-          "bar_indices": [
-            11
-          ],
-          "touches_decayed": 0.02,
-          "role": "RESISTANCE",
-          "distance_pct": 1.98,
-          "status": "ACTIVE"
-        },
-        {
-          "center": 60287.5,
-          "low": 60250.0,
-          "high": 60325.0,
-          "touches": 2,
-          "types": [
-            "hvn",
-            "swing_high"
-          ],
-          "volume_usdt": 6428953781.95,
-          "strength": 4,
-          "strength_label": "WEAK",
-          "bar_indices": [
-            19
-          ],
-          "touches_decayed": 0.03,
-          "role": "RESISTANCE",
-          "distance_pct": 2.78,
-          "status": "ACTIVE"
-        },
-        {
-          "center": 60577.4,
-          "low": 60500.0,
-          "high": 60666.6,
-          "touches": 3,
-          "types": [
-            "round_number",
-            "swing_high"
-          ],
-          "volume_usdt": 1223433034.53,
-          "strength": 4,
-          "strength_label": "WEAK",
-          "bar_indices": [
-            34,
-            30
-          ],
-          "touches_decayed": 0.14,
-          "role": "RESISTANCE",
-          "distance_pct": 3.28,
-          "status": "ACTIVE"
-        },
-        {
-          "center": 60754.15,
-          "low": 60750.0,
-          "high": 60758.3,
-          "touches": 2,
-          "types": [
-            "hvn",
-            "swing_high"
-          ],
-          "volume_usdt": 2885394988.05,
-          "strength": 4,
-          "strength_label": "WEAK",
-          "bar_indices": [
-            25
-          ],
-          "touches_decayed": 0.04,
-          "role": "RESISTANCE",
-          "distance_pct": 3.58,
-          "status": "ACTIVE"
-        },
-        {
-          "center": 58250.0,
-          "low": 58250.0,
-          "high": 58250.0,
-          "touches": 1,
-          "types": [
-            "hvn"
-          ],
-          "volume_usdt": 3308854303.24,
-          "strength": 3,
-          "strength_label": "WEAK",
-          "bar_indices": [],
-          "role": "SUPPORT",
-          "distance_pct": 0.69,
-          "status": "ACTIVE"
-        },
-        {
-          "center": 58500.0,
-          "low": 58500.0,
-          "high": 58500.0,
-          "touches": 1,
-          "types": [
-            "round_number"
-          ],
-          "volume_usdt": 0,
-          "strength": 1,
-          "strength_label": "MINOR",
-          "bar_indices": [],
-          "role": "SUPPORT",
-          "distance_pct": 0.26,
-          "status": "ACTIVE"
-        },
-        {
-          "center": 59500.0,
-          "low": 59500.0,
-          "high": 59500.0,
-          "touches": 1,
-          "types": [
-            "round_number"
-          ],
-          "volume_usdt": 0,
-          "strength": 1,
-          "strength_label": "MINOR",
-          "bar_indices": [],
-          "role": "RESISTANCE",
-          "distance_pct": 1.44,
-          "status": "ACTIVE"
-        },
-        {
-          "center": 60000.0,
-          "low": 60000.0,
-          "high": 60000.0,
-          "touches": 1,
-          "types": [
-            "round_number"
-          ],
-          "volume_usdt": 0,
-          "strength": 1,
-          "strength_label": "MINOR",
-          "bar_indices": [],
-          "role": "RESISTANCE",
-          "distance_pct": 2.29,
-          "status": "ACTIVE"
-        }
-      ],
-      "inverted_levels": [
-        {
-          "center": 58834.5,
-          "low": 58750.0,
-          "high": 58888.0,
-          "touches": 4,
-          "types": [
-            "hvn",
-            "swing_high",
-            "swing_low"
-          ],
-          "volume_usdt": 9471581911.32,
-          "strength": 5,
-          "strength_label": "MODERATE",
-          "bar_indices": [
-            57,
-            15,
-            11
-          ],
-          "touches_decayed": 0.41,
-          "role": "SUPPORT",
-          "distance_pct": 0.31,
-          "status": "INVERTED",
-          "inverted_from": "RESISTANCE"
-        },
-        {
-          "center": 58994.0,
-          "low": 58988.0,
-          "high": 59000.0,
-          "touches": 2,
-          "types": [
-            "round_number",
-            "swing_low"
-          ],
-          "volume_usdt": 1324460082.57,
-          "strength": 4,
-          "strength_label": "WEAK",
-          "bar_indices": [
-            27
-          ],
-          "touches_decayed": 0.05,
-          "role": "SUPPORT",
-          "distance_pct": 0.58,
-          "status": "INVERTED",
-          "inverted_from": "RESISTANCE"
-        }
-      ],
-      "regime_flip_levels": {
-        "bullish_flip": null,
-        "bearish_flip": null
-      }
-    },
-    "1d": {
-      "schema_version": "2.0",
-      "timestamp": "2026-07-01 10:48 UTC",
-      "timeframe": "1d",
-      "current_price": 58647.2,
-      "atr": 2154.84,
-      "atr_pct": 3.674,
-      "cluster_tolerance_pct": 1.837,
-      "candles": 90,
-      "supports": [],
-      "resistances": [],
-      "all_bands": [],
-      "inverted_levels": [
-        {
-          "center": 58915.0,
-          "low": 58750.0,
-          "high": 59080.0,
-          "touches": 2,
-          "types": [
-            "hvn",
-            "swing_low"
-          ],
-          "volume_usdt": 91476170409.12,
-          "strength": 4,
-          "strength_label": "WEAK",
-          "bar_indices": [
-            63
-          ],
-          "touches_decayed": 0.51,
-          "role": "SUPPORT",
-          "distance_pct": 0.46,
-          "status": "INVERTED",
-          "inverted_from": "RESISTANCE"
-        },
-        {
-          "center": 60000.0,
-          "low": 60000.0,
-          "high": 60000.0,
-          "touches": 1,
-          "types": [
-            "round_number"
-          ],
-          "volume_usdt": 0,
-          "strength": 1,
-          "strength_label": "MINOR",
-          "bar_indices": [],
-          "role": "SUPPORT",
-          "distance_pct": 2.31,
-          "status": "INVERTED",
-          "inverted_from": "RESISTANCE"
-        },
-        {
-          "center": 61250.0,
-          "low": 61250.0,
-          "high": 61250.0,
-          "touches": 1,
-          "types": [
-            "hvn"
-          ],
-          "volume_usdt": 106197564287.66,
-          "strength": 3,
-          "strength_label": "WEAK",
-          "bar_indices": [],
-          "role": "SUPPORT",
-          "distance_pct": 4.44,
-          "status": "INVERTED",
-          "inverted_from": "RESISTANCE"
-        },
-        {
-          "center": 62500.0,
-          "low": 62500.0,
-          "high": 62500.0,
-          "touches": 1,
-          "types": [
-            "round_number"
-          ],
-          "volume_usdt": 0,
-          "strength": 1,
-          "strength_label": "MINOR",
-          "bar_indices": [],
-          "role": "SUPPORT",
-          "distance_pct": 6.57,
-          "status": "INVERTED",
-          "inverted_from": "RESISTANCE"
-        },
-        {
-          "center": 63750.0,
-          "low": 63750.0,
-          "high": 63750.0,
-          "touches": 1,
-          "types": [
-            "hvn"
-          ],
-          "volume_usdt": 135236176194.95,
-          "strength": 3,
-          "strength_label": "WEAK",
-          "bar_indices": [],
-          "role": "SUPPORT",
-          "distance_pct": 8.7,
-          "status": "INVERTED",
-          "inverted_from": "RESISTANCE"
-        }
-      ],
-      "regime_flip_levels": {
-        "bullish_flip": null,
         "bearish_flip": null
       }
     }
@@ -920,16 +928,16 @@
     ],
     "lvns": [
       {
-        "price": 63000,
-        "volume": 43
+        "price": 62650,
+        "volume": 57
       },
       {
-        "price": 63050,
-        "volume": 43
+        "price": 62700,
+        "volume": 57
       },
       {
-        "price": 63100,
-        "volume": 43
+        "price": 62750,
+        "volume": 57
       }
     ],
     "bins": [
@@ -995,35 +1003,35 @@
       },
       {
         "price": 58550,
-        "volume": 2015
+        "volume": 2082
       },
       {
         "price": 58600,
-        "volume": 2232
+        "volume": 2308
       },
       {
         "price": 58650,
-        "volume": 2073
+        "volume": 2149
       },
       {
         "price": 58700,
-        "volume": 1803
+        "volume": 1879
       },
       {
         "price": 58750,
-        "volume": 1803
+        "volume": 1879
       },
       {
         "price": 58800,
-        "volume": 1609
+        "volume": 1618
       },
       {
         "price": 58850,
-        "volume": 1384
+        "volume": 1393
       },
       {
         "price": 58900,
-        "volume": 1424
+        "volume": 1433
       },
       {
         "price": 58950,
@@ -1295,103 +1303,83 @@
       },
       {
         "price": 62300,
-        "volume": 142
+        "volume": 99
       },
       {
         "price": 62350,
-        "volume": 142
+        "volume": 99
       },
       {
         "price": 62400,
-        "volume": 142
+        "volume": 99
       },
       {
         "price": 62450,
-        "volume": 142
+        "volume": 99
       },
       {
         "price": 62500,
-        "volume": 142
+        "volume": 99
       },
       {
         "price": 62550,
-        "volume": 199
+        "volume": 157
       },
       {
         "price": 62600,
-        "volume": 199
+        "volume": 157
       },
       {
         "price": 62650,
-        "volume": 100
+        "volume": 57
       },
       {
         "price": 62700,
-        "volume": 100
+        "volume": 57
       },
       {
         "price": 62750,
-        "volume": 100
+        "volume": 57
       },
       {
         "price": 62800,
-        "volume": 100
+        "volume": 57
       },
       {
         "price": 62850,
-        "volume": 100
+        "volume": 57
       },
       {
         "price": 62900,
-        "volume": 100
+        "volume": 57
       },
       {
         "price": 62950,
-        "volume": 100
-      },
-      {
-        "price": 63000,
-        "volume": 43
-      },
-      {
-        "price": 63050,
-        "volume": 43
-      },
-      {
-        "price": 63100,
-        "volume": 43
-      },
-      {
-        "price": 63150,
-        "volume": 43
-      },
-      {
-        "price": 63200,
-        "volume": 43
+        "volume": 57
       }
     ],
     "candles_used": 168,
-    "total_volume": 149115,
+    "total_volume": 148695,
     "bin_step": 50
   },
   "val_absorption": {
-    "timestamp": "2026-07-01 10:48 UTC",
-    "btc_price": 58662.01,
+    "timestamp": "2026-07-01 11:48 UTC",
+    "btc_price": 58682.0,
     "val": 58800.0,
     "vah": 60600.0,
-    "distance_pct": -0.23,
+    "distance_pct": -0.2,
     "position": "below_val",
     "volume_declining": true,
     "volume_expanding": false,
     "cvd_holding": false,
-    "cvd_value": -7818.6,
+    "cvd_value": -8337.25,
     "cvd_trend": "strengthening",
     "target": 60600.0,
-    "early_vol_4h": 2422.0,
-    "late_vol_4h": 1625.3,
+    "early_vol_4h": 2186.4,
+    "late_vol_4h": 1540.7,
     "signal": "VAL_TEST",
     "action": "Price testing VAL \u2014 waiting for volume/CVD confirmation",
     "confidence": "LOW"
   },
-  "_collected": "2026-07-01 10:48 UTC"
+  "_collected": "2026-07-01 11:48 UTC"
 }
