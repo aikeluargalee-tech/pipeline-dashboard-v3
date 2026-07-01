@@ -75,13 +75,14 @@ def main():
     for symbol, name in TICKERS.items():
         try:
             ticker = yf.Ticker(symbol)
-            hist = ticker.history(period="5d")
+            hist = ticker.history(period="3d")
             if hist.empty:
                 errors.append(f"{symbol}: no data")
                 continue
             close = round(float(hist["Close"].iloc[-1]), 2)
-            open_p = round(float(hist["Open"].iloc[0]), 2)
-            change_pct = round(((close - open_p) / open_p) * 100, 2) if open_p else None
+            previous_close = round(float(hist["Close"].iloc[-2]), 2)
+            open_p = round(float(hist["Open"].iloc[-1]), 2)
+            change_pct = round(((close - previous_close) / previous_close) * 100, 2) if previous_close else None
             low = round(float(hist["Low"].iloc[-1]), 2)
             high = round(float(hist["High"].iloc[-1]), 2)
 
