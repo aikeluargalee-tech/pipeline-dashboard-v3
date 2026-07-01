@@ -1,16 +1,16 @@
 {
   "warmup_progress": "96/96",
   "1d_layer": "online",
-  "current_price": 59312.0,
+  "current_price": 59174.0,
   "latest_signal": {
     "type": "Whale Pivot",
-    "timestamp": "2026-06-30T12:32:07.008388+00:00",
-    "summary": "Whale Pivot SHORT at $58,833"
+    "timestamp": "2026-07-01T05:17:18.162972+00:00",
+    "summary": "Whale Pivot SHORT at $59,327"
   },
   "last_whale_pivot": {
     "direction": "SHORT",
-    "price": 58833.0,
-    "timestamp": "2026-06-30T12:32:07.008388+00:00",
+    "price": 59327.0,
+    "timestamp": "2026-07-01T05:17:18.162972+00:00",
     "conviction": 0.75,
     "checklist": {
       "at_key_level": true,
@@ -18,13 +18,13 @@
       "aggression_opposing": false,
       "delta_confirms": true
     },
-    "balance_state": "TIGHT_BALANCE",
-    "age": "16h 45m ago",
-    "distance": "+0.8% ($479)",
-    "distance_pct": 0.81,
-    "current_price": 59312.0,
-    "validity": "invalidated",
-    "validity_reason": "Price rose above pivot (58,833)",
+    "balance_state": "DEVELOPING_BALANCE",
+    "age": "29m ago",
+    "distance": "-0.3% ($153)",
+    "distance_pct": -0.26,
+    "current_price": 59174.0,
+    "validity": "fresh",
+    "validity_reason": "Pivot just fired \u2014 watching for follow-through",
     "checklist_details": [
       {
         "label": "At Key Level",
@@ -45,5 +45,5 @@
     ],
     "checklist_score": "3/4"
   },
-  "timestamp": "2026-07-01 05:17 UTC"
+  "timestamp": "2026-07-01 05:47 UTC"
 }
