@@ -618,7 +618,7 @@ function generateTextBrief(data) {
       if (typeof v === 'object' && v !== null && raw.length > 80) {
         const pretty = JSON.stringify(v, null, 2);
         out += `${formattedKey}: ${pretty.replace(/\n/g, '\n' + ' '.repeat(22))}\n`;
-      } else if (typeof v === 'string' && v.length > 80 && v.includes(' | ')) {
+      } else if (typeof v === 'string' && v.length > 70 && v.includes(' | ')) {
         // Split long strings on pipe for mobile readability
         const indent = ' '.repeat(22);
         const parts = v.split(' | ');
