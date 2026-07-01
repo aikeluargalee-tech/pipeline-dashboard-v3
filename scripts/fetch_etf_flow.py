@@ -678,14 +678,20 @@ def fetch_google_news() -> list[dict] | None:
 
             # Parse amount — try each pattern
             best_val = None
+            best_ctx = ""
             for pat in amount_patterns:
                 for m in pat.finditer(full):
                     try:
                         val = float(m.group(1))
                         if m.lastindex and m.lastindex >= 2 and m.group(2) and m.group(2).lower() == 'b':
                             val *= 1000
+                        ctx = full[max(0, m.start()-40):m.end()+40]
+                        # Reject if context says "weekly" or "monthly" (not daily flow)
+                        if re.search(r'(weekly|monthly|30.day|31.day|streak|record\s)', ctx, re.IGNORECASE):
+                            continue
                         if best_val is None or abs(val) > abs(best_val):
                             best_val = val
+                            best_ctx = ctx
                     except (ValueError, IndexError):
                         continue
 
