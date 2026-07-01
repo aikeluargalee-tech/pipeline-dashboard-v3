@@ -337,8 +337,13 @@
   font-size: 0.85em;
   line-height: 1.6;
   color: #38bdf8;
-  white-space: pre;
-  overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+}
+.terminal-wrapper {
+  max-width: 100%;
 }
 
 /* Mobile Responsiveness Rules */
@@ -362,6 +367,7 @@
   }
   .terminal-block {
     font-size: 0.78em;
+    max-width: 100%;
   }
 }
 @media (max-width: 480px) {
