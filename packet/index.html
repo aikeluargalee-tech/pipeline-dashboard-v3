@@ -618,6 +618,14 @@ function generateTextBrief(data) {
       if (typeof v === 'object' && v !== null && raw.length > 80) {
         const pretty = JSON.stringify(v, null, 2);
         out += `${formattedKey}: ${pretty.replace(/\n/g, '\n' + ' '.repeat(22))}\n`;
+      } else if (typeof v === 'string' && v.length > 80 && v.includes(' | ')) {
+        // Split long strings on pipe for mobile readability
+        const indent = ' '.repeat(22);
+        const parts = v.split(' | ');
+        out += `${formattedKey}: ${parts[0]}\n`;
+        for (let p = 1; p < parts.length; p++) {
+          out += `${indent}| ${parts[p]}\n`;
+        }
       } else {
         out += `${formattedKey}: ${raw}\n`;
       }
@@ -659,7 +667,11 @@ function generateTextBrief(data) {
       }
     }
     if (data.status.staleness_warnings && data.status.staleness_warnings.length > 0) {
-      out += `STALENESS_WARNINGS: ${data.status.staleness_warnings.join(' | ')}\n`;
+      const indent = ' '.repeat(22);
+      out += `STALENESS_WARNINGS: ${data.status.staleness_warnings[0]}\n`;
+      for (let w = 1; w < data.status.staleness_warnings.length; w++) {
+        out += `${indent}| ${data.status.staleness_warnings[w]}\n`;
+      }
     }
   }
   out += `${separator}\n`;
