@@ -606,12 +606,12 @@ function generateTextBrief(data) {
       if (typeof v === 'object' && v !== null && raw.length > 30) {
         const pretty = JSON.stringify(v, null, 2);
         out += `${formattedKey}: ${pretty.replace(/\n/g, '\n' + ' '.repeat(22))}\n`;
-      } else if (typeof v === 'string' && v.length > 30 && v.includes(' | ')) {
+      } else if (typeof v === 'string' && v.length > 29 && v.includes(' | ')) {
         const indent = ' '.repeat(22);
         const pipeParts = v.split(' | ');
         const renderPart = (part, isFirst) => {
           let text = part.trim();
-          if (text.length > 30 && text.includes(' / ')) {
+          if (text.length > 29 && text.includes(' / ')) {
             const subParts = text.split(' / ');
             if (isFirst) {
               out += `${formattedKey}: ${subParts[0]}\n`;
@@ -652,7 +652,7 @@ function generateTextBrief(data) {
       if (typeof v === 'object' && v !== null && raw.length > 30) {
         const pretty = JSON.stringify(v, null, 2);
         out += `${formattedKey}: ${pretty.replace(/\n/g, '\n' + ' '.repeat(22))}\n`;
-      } else if (typeof v === 'string' && v.length > 30 && v.includes(' | ')) {
+      } else if (typeof v === 'string' && v.length > 29 && v.includes(' | ')) {
         // Split long strings on pipe for mobile readability (>48 chars)
         const indent = ' '.repeat(22);
         // First split on pipe
@@ -660,7 +660,7 @@ function generateTextBrief(data) {
         // Helper: render a part, possibly with sub-splitting on /
         const renderPart = (part, isFirst) => {
           let text = part.trim();
-          if (text.length > 30 && text.includes(' / ')) {
+          if (text.length > 29 && text.includes(' / ')) {
             const subParts = text.split(' / ');
             if (isFirst) {
               out += `${formattedKey}: ${subParts[0]}\n`;
@@ -707,12 +707,12 @@ function generateTextBrief(data) {
         if (typeof v === 'object' && v !== null && raw.length > 30) {
           const pretty = JSON.stringify(v, null, 2);
           out += `${formattedKey}: ${pretty.replace(/\n/g, '\n' + ' '.repeat(22))}\n`;
-        } else if (typeof v === 'string' && v.length > 30 && v.includes(' | ')) {
+        } else if (typeof v === 'string' && v.length > 29 && v.includes(' | ')) {
           const indent = ' '.repeat(22);
           const pipeParts = v.split(' | ');
           const renderPart = (part, isFirst) => {
             let text = part.trim();
-            if (text.length > 30 && text.includes(' / ')) {
+            if (text.length > 29 && text.includes(' / ')) {
               const subParts = text.split(' / ');
               if (isFirst) {
                 out += `${formattedKey}: ${subParts[0]}\n`;
@@ -723,6 +723,20 @@ function generateTextBrief(data) {
                 out += `${indent}| ${subParts[0]}\n`;
                 for (let s = 1; s < subParts.length; s++) {
                   out += `${indent}/ ${subParts[s]}\n`;
+                }
+              }
+            } else if (text.length > 29 && text.includes(', ')) {
+              // Split comma-separated values (e.g., price lists)
+              const parts = text.split(', ');
+              if (isFirst) {
+                out += `${formattedKey}: ${parts[0]}\n`;
+                for (let i = 1; i < parts.length; i++) {
+                  out += `${indent}  ${parts[i]}${i < parts.length - 1 ? ',' : ''}\n`;
+                }
+              } else {
+                out += `${indent}| ${parts[0]}\n`;
+                for (let i = 1; i < parts.length; i++) {
+                  out += `${indent}  ${parts[i]}${i < parts.length - 1 ? ',' : ''}\n`;
                 }
               }
             } else {
@@ -753,13 +767,19 @@ function generateTextBrief(data) {
       for (const [src, ts] of Object.entries(data.status.source_timestamps)) {
         const formattedKey = `SRC_${src.toUpperCase()}_TIME`.padEnd(20, ' ');
         const tsStr = String(ts);
-        if (tsStr.length > 48 && tsStr.includes(' | ')) {
+        if (tsStr.length > 29 && tsStr.includes(' | ')) {
           const indent = ' '.repeat(22);
           const parts = tsStr.split(' | ');
           out += `${formattedKey}: ${parts[0]}\n`;
           for (let p = 1; p < parts.length; p++) {
             out += `${indent}| ${parts[p]}\n`;
           }
+        } else if (tsStr.length > 29 && tsStr.includes('T') && tsStr.match(/^\d{4}-\d{2}-\d{2}T/)) {
+          // Split ISO timestamps on T for mobile
+          const indent = ' '.repeat(22);
+          const datePart = tsStr.substring(0, tsStr.indexOf('T'));
+          const timePart = tsStr.substring(tsStr.indexOf('T') + 1);
+          out += `${formattedKey}: ${datePart}\n${indent}  T${timePart}\n`;
         } else {
           out += `${formattedKey}: ${ts}\n`;
         }
