@@ -721,7 +721,17 @@ function generateTextBrief(data) {
     if (data.status.source_timestamps) {
       for (const [src, ts] of Object.entries(data.status.source_timestamps)) {
         const formattedKey = `SRC_${src.toUpperCase()}_TIME`.padEnd(20, ' ');
-        out += `${formattedKey}: ${ts}\n`;
+        const tsStr = String(ts);
+        if (tsStr.length > 48 && tsStr.includes(' | ')) {
+          const indent = ' '.repeat(22);
+          const parts = tsStr.split(' | ');
+          out += `${formattedKey}: ${parts[0]}\n`;
+          for (let p = 1; p < parts.length; p++) {
+            out += `${indent}| ${parts[p]}\n`;
+          }
+        } else {
+          out += `${formattedKey}: ${ts}\n`;
+        }
       }
     }
     if (data.status.staleness_warnings && data.status.staleness_warnings.length > 0) {
