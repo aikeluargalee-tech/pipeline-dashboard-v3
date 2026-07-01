@@ -631,11 +631,13 @@ def fetch_google_news() -> list[dict] | None:
         log("  ❌ Google News RSS: No response")
         return None
 
-    # Patterns to extract: "$445M", "$4.1B", "+$155M", "-$261M", "($300M)"
-    amount_pattern = re.compile(
-        r'\$?\(?[+-]?\$?\s*(\d+(?:\.\d+)?)\s*([MmBb])?\s*\)?',
-        re.IGNORECASE
-    )
+    # Strict patterns: only $XXXM, $X.XB, (XXXM), (+$XXXM), (-$XXXM)
+    # These are actual ETF flow number formats found in article titles
+    amount_patterns = [
+        re.compile(r'\$\(?([+-]?\d+(?:\.\d+)?)\)?\s*([Bb])', re.IGNORECASE),             # $4.1B, $(4.1B)
+        re.compile(r'\$\(?([+-]?\d+(?:\.\d+)?)\)?\s*[Mm]', re.IGNORECASE),                 # $155M, $300M, $(300M), $+155M
+        re.compile(r'\(\$?\s*(\d+(?:\.\d+)?)\s*[Mm]\)'),                                    # ($300M)
+    ]
     outflow_kw = re.compile(r'outflow|out flow|shed|lost|dumped|slash|flee|sell', re.IGNORECASE)
     inflow_kw = re.compile(r'inflow|in flow|surge|gain|pour|buy', re.IGNORECASE)
 
@@ -674,22 +676,18 @@ def fetch_google_news() -> list[dict] | None:
                 continue
             date_str = dt.strftime("%d %b %Y")
 
-            # Parse amount
-            amounts = amount_pattern.findall(full)
-            if not amounts:
-                continue
-
-            # Take the largest amount found (most specific to ETF flow)
+            # Parse amount — try each pattern
             best_val = None
-            for val_str, unit in amounts:
-                try:
-                    val = float(val_str)
-                    if unit and unit.lower() == 'b':
-                        val *= 1000
-                    if best_val is None or val > best_val:
-                        best_val = val
-                except ValueError:
-                    continue
+            for pat in amount_patterns:
+                for m in pat.finditer(full):
+                    try:
+                        val = float(m.group(1))
+                        if m.lastindex and m.lastindex >= 2 and m.group(2) and m.group(2).lower() == 'b':
+                            val *= 1000
+                        if best_val is None or abs(val) > abs(best_val):
+                            best_val = val
+                    except (ValueError, IndexError):
+                        continue
 
             if best_val is None:
                 continue
@@ -710,13 +708,13 @@ def fetch_google_news() -> list[dict] | None:
             date_key = dt.strftime("%Y-%m-%d")
             results.append((date_key, date_str, best_val, full[:100]))
 
-        # Deduplicate by date, keep latest
+        # Deduplicate by date, keep latest extraction
         seen = {}
         for date_key, date_str, val, src in results:
-            if date_key not in seen or dt.strftime("%Y%m%d") > seen[date_key][0]:
-                seen[date_key] = (dt.strftime("%Y%m%d"), date_str, val)
+            if date_key not in seen:
+                seen[date_key] = (date_str, val)
 
-        flows = [{"date": v[1], "total": v[2]} for v in sorted(seen.values(), key=lambda x: x[0])]
+        flows = [{"date": v[0], "total": v[1]} for _, v in sorted(seen.items())]
 
         if flows:
             log(f"  ✅ Google News RSS: Extracted {len(flows)} flow data points")
@@ -773,9 +771,9 @@ def main():
     # Try sources in order
     sources = [
         ("Farside.co.uk (scrape)", fetch_farside),
-        ("blockchain.news (RSS)", fetch_blockchain_news_rss),
-        ("Farside (WP-API)", fetch_farside_api),
+        ("Google News RSS", fetch_google_news),
         ("News articles (broad)", fetch_news_articles),
+        ("Farside (WP-API)", fetch_farside_api),
         ("Static fallback", fetch_static_fallback),
     ]
 
@@ -796,8 +794,22 @@ def main():
 
     # Build and write output
     if flows:
-        data = build_output(flows, source=source_name)
-        write_output(data)
+        # Reject if all data is >7 days stale
+        now = datetime.now(timezone.utc)
+        fresh_flows = []
+        for f in flows:
+            try:
+                fd = datetime.strptime(f["date"], "%d %b %Y").replace(tzinfo=timezone.utc)
+                if (now - fd).days <= 7:
+                    fresh_flows.append(f)
+            except (ValueError, KeyError):
+                continue
+        if len(fresh_flows) >= 1:
+            data = build_output(fresh_flows, source=source_name)
+            write_output(data)
+        else:
+            log("⚠️ All data from sources is >7 days stale. Rejecting.")
+            flows = None
     else:
         log("⚠️ All sources failed. Writing error placeholder.")
         # Check if we have stale data we can extend
