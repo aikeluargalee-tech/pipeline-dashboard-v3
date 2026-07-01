@@ -576,8 +576,8 @@ function formatMetricValue(key, val) {
 
 // --- Generate Raw ASCII Text Brief (~70 lines) ---
 function generateTextBrief(data) {
-  const separator = "========================================================================";
-  const subSeparator = "------------------------------------------------------------------------";
+  const separator = "============================================";
+  const subSeparator = "--------------------------------------------";
   const h = data.header || {};
   const price = typeof h.btc_price === 'number' ? h.btc_price.toLocaleString(undefined, {minimumFractionDigits:2}) : '--';
   const change = typeof h.change_24h === 'number' ? ((h.change_24h > 0 ? '+' : '') + h.change_24h.toFixed(2) + '%') : '--';
