@@ -801,6 +801,21 @@ def collect_macro():
         except Exception:
             pass
 
+    # ── Fallback: fetch US10Y yield directly from Yahoo when /tmp files are missing ──
+    if result.get("us_10y_yield") is None:
+        try:
+            # US 10Y Treasury yield (^TNX) from Yahoo Finance
+            tnx_url = "https://query1.finance.yahoo.com/v8/finance/chart/%5ETNX?interval=1d&range=2d"
+            req = urllib.request.Request(tnx_url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                tnx_data = json.loads(resp.read())
+            tnx_price = tnx_data["chart"]["result"][0]["meta"].get("regularMarketPrice")
+            if tnx_price is not None:
+                result["us_10y_yield"] = tnx_price
+                log.info("US10Y yield fallback (Yahoo direct): %s", tnx_price)
+        except Exception:
+            pass
+
     return result
 
 
