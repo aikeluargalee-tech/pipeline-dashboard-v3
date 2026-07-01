@@ -603,15 +603,15 @@ function generateTextBrief(data) {
     for (const [k, v] of Object.entries(data.critical)) {
       const formattedKey = k.toUpperCase().padEnd(20, ' ');
       const raw = v === null || v === undefined ? 'N/A' : (typeof v === 'object' ? JSON.stringify(v) : v);
-      if (typeof v === 'object' && v !== null && raw.length > 48) {
+      if (typeof v === 'object' && v !== null && raw.length > 30) {
         const pretty = JSON.stringify(v, null, 2);
         out += `${formattedKey}: ${pretty.replace(/\n/g, '\n' + ' '.repeat(22))}\n`;
-      } else if (typeof v === 'string' && v.length > 48 && v.includes(' | ')) {
+      } else if (typeof v === 'string' && v.length > 30 && v.includes(' | ')) {
         const indent = ' '.repeat(22);
         const pipeParts = v.split(' | ');
         const renderPart = (part, isFirst) => {
           let text = part.trim();
-          if (text.length > 48 && text.includes(' / ')) {
+          if (text.length > 30 && text.includes(' / ')) {
             const subParts = text.split(' / ');
             if (isFirst) {
               out += `${formattedKey}: ${subParts[0]}\n`;
@@ -649,10 +649,10 @@ function generateTextBrief(data) {
     for (const [k, v] of Object.entries(data.context)) {
       const formattedKey = k.toUpperCase().padEnd(20, ' ');
       const raw = v === null || v === undefined ? 'N/A' : (typeof v === 'object' ? JSON.stringify(v) : v);
-      if (typeof v === 'object' && v !== null && raw.length > 48) {
+      if (typeof v === 'object' && v !== null && raw.length > 30) {
         const pretty = JSON.stringify(v, null, 2);
         out += `${formattedKey}: ${pretty.replace(/\n/g, '\n' + ' '.repeat(22))}\n`;
-      } else if (typeof v === 'string' && v.length > 48 && v.includes(' | ')) {
+      } else if (typeof v === 'string' && v.length > 30 && v.includes(' | ')) {
         // Split long strings on pipe for mobile readability (>48 chars)
         const indent = ' '.repeat(22);
         // First split on pipe
@@ -660,7 +660,7 @@ function generateTextBrief(data) {
         // Helper: render a part, possibly with sub-splitting on /
         const renderPart = (part, isFirst) => {
           let text = part.trim();
-          if (text.length > 48 && text.includes(' / ')) {
+          if (text.length > 30 && text.includes(' / ')) {
             const subParts = text.split(' / ');
             if (isFirst) {
               out += `${formattedKey}: ${subParts[0]}\n`;
@@ -704,15 +704,15 @@ function generateTextBrief(data) {
       } else {
         const formattedKey = k.toUpperCase().padEnd(20, ' ');
         const raw = v === null || v === undefined ? 'N/A' : (typeof v === 'object' ? JSON.stringify(v) : v);
-        if (typeof v === 'object' && v !== null && raw.length > 48) {
+        if (typeof v === 'object' && v !== null && raw.length > 30) {
           const pretty = JSON.stringify(v, null, 2);
           out += `${formattedKey}: ${pretty.replace(/\n/g, '\n' + ' '.repeat(22))}\n`;
-        } else if (typeof v === 'string' && v.length > 48 && v.includes(' | ')) {
+        } else if (typeof v === 'string' && v.length > 30 && v.includes(' | ')) {
           const indent = ' '.repeat(22);
           const pipeParts = v.split(' | ');
           const renderPart = (part, isFirst) => {
             let text = part.trim();
-            if (text.length > 48 && text.includes(' / ')) {
+            if (text.length > 30 && text.includes(' / ')) {
               const subParts = text.split(' / ');
               if (isFirst) {
                 out += `${formattedKey}: ${subParts[0]}\n`;
