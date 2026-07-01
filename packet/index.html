@@ -624,6 +624,19 @@ function generateTextBrief(data) {
                 out += `${indent}/ ${subParts[s]}\n`;
               }
             }
+          } else if (text.length > 29 && text.includes(', ')) {
+            const parts = text.split(', ');
+            if (isFirst) {
+              out += `${formattedKey}: ${parts[0]}\n`;
+              for (let i = 1; i < parts.length; i++) {
+                out += `${indent}  ${parts[i]}${i < parts.length - 1 ? ',' : ''}\n`;
+              }
+            } else {
+              out += `${indent}| ${parts[0]}\n`;
+              for (let i = 1; i < parts.length; i++) {
+                out += `${indent}  ${parts[i]}${i < parts.length - 1 ? ',' : ''}\n`;
+              }
+            }
           } else {
             if (isFirst) {
               out += `${formattedKey}: ${text}\n`;
@@ -671,6 +684,19 @@ function generateTextBrief(data) {
               out += `${indent}| ${subParts[0]}\n`;
               for (let s = 1; s < subParts.length; s++) {
                 out += `${indent}/ ${subParts[s]}\n`;
+              }
+            }
+          } else if (text.length > 29 && text.includes(', ')) {
+            const parts = text.split(', ');
+            if (isFirst) {
+              out += `${formattedKey}: ${parts[0]}\n`;
+              for (let i = 1; i < parts.length; i++) {
+                out += `${indent}  ${parts[i]}${i < parts.length - 1 ? ',' : ''}\n`;
+              }
+            } else {
+              out += `${indent}| ${parts[0]}\n`;
+              for (let i = 1; i < parts.length; i++) {
+                out += `${indent}  ${parts[i]}${i < parts.length - 1 ? ',' : ''}\n`;
               }
             }
           } else {
