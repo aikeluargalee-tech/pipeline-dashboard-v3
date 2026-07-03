@@ -1,56 +1,56 @@
 {
   "header": {
-    "generated_timestamp": "2026-07-03T04:42:14Z",
-    "btc_price": 61465.0,
-    "change_24h": 0.967,
-    "bid": 61523.17,
-    "ask": 61522.3,
+    "generated_timestamp": "2026-07-03T04:58:13Z",
+    "btc_price": 61435.0,
+    "change_24h": 1.076,
+    "bid": 61509.99,
+    "ask": 61508.55,
     "spread": 0.01,
-    "volume_24h": 1266305887.91
+    "volume_24h": 1283835778.8
   },
   "critical": {
-    "btc_price": 61465.0,
-    "amt_adx": 21.7,
-    "amt_mtf": "1D BEARISH [INVALIDATED_CVD=+1,559] | 4H BULLISH | 1H NEUTRAL [DIVERGES_CVD=+1,657]",
-    "candle_delta": -38.07,
+    "btc_price": 61435.0,
+    "amt_adx": 26.2,
+    "amt_mtf": "1D BEARISH [INVALIDATED_CVD=+1,499] | 4H BULLISH | 1H BEARISH [INVALIDATED_CVD=+1,663]",
+    "candle_delta": -117.75,
     "candle_deltas_6": [
       528.22,
       187.86,
       482.17,
       87.49,
       -192.03,
-      -38.07
+      -117.75
     ],
     "cvd_per_tf": {
-      "1D": 1558.68,
-      "4H": 2957.68,
-      "1H": 1656.8
+      "1D": 1499.37,
+      "4H": 2904.61,
+      "1H": 1662.51
     },
     "oi_per_tf": {
-      "1D": 0.0481,
-      "4H": -0.1312,
-      "1H": -0.01
+      "1D": 0.019,
+      "4H": -0.0973,
+      "1H": -0.0133
     },
-    "session_cvd": 552.97,
-    "oi_absolute_usd_billions": 6.61,
-    "taker_ratio_24h": 1.124,
-    "vp_poc": 60060,
-    "vp_vah": 60133,
-    "vp_val": 60025,
-    "vp_shape": "P",
-    "vp_state": "ACCEPTANCE",
+    "session_cvd": 473.3,
+    "oi_absolute_usd_billions": 6.59,
+    "taker_ratio_24h": 1.112,
+    "vp_poc": 61523,
+    "vp_vah": 61524,
+    "vp_val": 61448,
+    "vp_shape": "b",
+    "vp_state": "REJECTION_DOWN",
     "balance_state": "DEVELOPING_BALANCE",
     "balance_width_pct": 3.83,
-    "adx_regime": "TRANSITIONING"
+    "adx_regime": "TRENDING"
   },
   "context": {
     "fng_value": 21,
     "vix": 16.15,
     "etf_flow_daily": -8950.0,
     "etf_flow_weekly": -9706.0,
-    "coinbase_premium": -0.135,
+    "coinbase_premium": -0.1215,
     "equities": "SPY $745 (-0.1%) | QQQ $713 (-1.7%) | GLD $378 (+2.0%)",
-    "dxy": 100.79,
+    "dxy": 100.781,
     "us10y": 4.485,
     "oi_change_24h": 2.29,
     "long_short_ratio": 1.7571,
@@ -58,51 +58,51 @@
     "cvd_24h": -2086.32,
     "black_swan_score": "0/17",
     "correlation_r": -0.4814,
-    "liq_clusters": "Long: $61,500, $61,250, $61,100, $60,150, $60,100 | Short: $62,200",
-    "perp_basis_pct": -0.0476,
+    "liq_clusters": "Long: $61,450, $61,400, $61,250, $61,100, $60,100 | Short: $61,500, $62,200",
+    "perp_basis_pct": -0.0388,
     "order_book_top5": {
       "bids": [
         {
-          "price": 61518.14,
-          "size": 0.03754
+          "price": 61496.0,
+          "size": 0.20313
         },
         {
-          "price": 61518.13,
-          "size": 0.00107
+          "price": 61495.99,
+          "size": 0.0008
         },
         {
-          "price": 61518.12,
+          "price": 61495.98,
           "size": 0.00017
         },
         {
-          "price": 61518.01,
-          "size": 9e-05
+          "price": 61495.71,
+          "size": 0.00017
         },
         {
-          "price": 61518.0,
-          "size": 0.01118
+          "price": 61495.7,
+          "size": 9e-05
         }
       ],
       "asks": [
         {
-          "price": 61518.15,
-          "size": 2.87075
+          "price": 61496.01,
+          "size": 3.13732
         },
         {
-          "price": 61518.16,
-          "size": 0.00454
+          "price": 61496.02,
+          "size": 0.00035
         },
         {
-          "price": 61518.17,
+          "price": 61496.03,
           "size": 0.00017
         },
         {
-          "price": 61518.27,
-          "size": 0.00231
+          "price": 61496.58,
+          "size": 0.37238
         },
         {
-          "price": 61518.28,
-          "size": 9e-05
+          "price": 61496.59,
+          "size": 1.17073
         }
       ]
     },
@@ -120,16 +120,14 @@
     },
     "cycle_composite": 26.4,
     "sth_realized_price": null,
-    "options_skew_25d": -6.3
+    "options_skew_25d": -7.1
   },
   "status": {
     "source_timestamps": {
-      "amt": "2026-07-03T04:33:04.184361+00:00",
-      "vp": "2026-07-01T16:48:27.401177+00:00",
-      "pipeline": "regime=2026-07-03 04:29 UTC | macro=2026-07-03 04:29 UTC"
+      "amt": "2026-07-03T04:47:05.058207+00:00",
+      "vp": "2026-07-03T04:47:23.272398+00:00",
+      "pipeline": "regime=2026-07-03 04:47 UTC | macro=2026-07-03 04:47 UTC"
     },
-    "staleness_warnings": [
-      "STALE vp: 2144m behind AMT"
-    ]
+    "staleness_warnings": []
   }
 }
