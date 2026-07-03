@@ -1,47 +1,47 @@
 {
   "header": {
-    "generated_timestamp": "2026-07-01T16:59:51Z",
-    "btc_price": 60083.0,
+    "generated_timestamp": "2026-07-03T04:26:11Z",
+    "btc_price": 61416.0,
     "change_24h": 2.766,
-    "bid": 59916.94,
-    "ask": 59912.6,
+    "bid": 61416.1,
+    "ask": 61416.0,
     "spread": 0.01,
-    "volume_24h": 1390868322.26
+    "volume_24h": 1285933347.93
   },
   "critical": {
-    "btc_price": 60083.0,
-    "amt_adx": 19.9,
-    "amt_mtf": "1D BEARISH | 4H NEUTRAL [DIVERGES_CVD=+1,258] | 1H BULLISH",
-    "candle_delta": 95.57,
+    "btc_price": 61416.0,
+    "amt_adx": 22.1,
+    "amt_mtf": "1D BEARISH | 4H BULLISH | 1H NEUTRAL [DIVERGES_CVD=+1,232]",
+    "candle_delta": -35.25,
     "candle_deltas_6": [
-      -151.22,
-      -374.72,
-      -292.55,
-      -80.82,
-      1324.26,
-      95.57
+      528.22,
+      187.86,
+      482.17,
+      87.49,
+      -192.03,
+      -35.25
     ],
     "cvd_per_tf": {
-      "1D": 142.49,
-      "4H": 1258.21,
-      "1H": 1269.83
+      "1D": -106.15,
+      "4H": 1296.21,
+      "1H": 1232.36
     },
     "oi_per_tf": {
-      "1D": 0.0432,
-      "4H": -0.3184,
-      "1H": 0.0796
+      "1D": 0.0456,
+      "4H": -0.2258,
+      "1H": 0.0352
     },
-    "session_cvd": -1109.54,
-    "oi_absolute_usd_billions": 6.29,
-    "taker_ratio_24h": 1.05,
+    "session_cvd": 555.8,
+    "oi_absolute_usd_billions": 6.59,
+    "taker_ratio_24h": 1.125,
     "vp_poc": 60060,
     "vp_vah": 60133,
     "vp_val": 60025,
     "vp_shape": "P",
     "vp_state": "ACCEPTANCE",
     "balance_state": "DEVELOPING_BALANCE",
-    "balance_width_pct": 3.79,
-    "adx_regime": "RANGING"
+    "balance_width_pct": 3.83,
+    "adx_regime": "TRANSITIONING"
   },
   "context": {
     "fng_value": 11,
@@ -57,52 +57,52 @@
     "funding_rate": 7.478e-05,
     "cvd_24h": 2735.87,
     "black_swan_score": "0/17",
-    "correlation_r": -0.4307,
-    "liq_clusters": "Long: $59,900, $58,350, $58,200, $57,800 | Short: $60,000, $60,050, $60,150",
-    "perp_basis_pct": -0.0383,
+    "correlation_r": -0.4814,
+    "liq_clusters": "Long: $61,400, $61,250, $61,100, $60,150, $60,100 | Short: $62,200",
+    "perp_basis_pct": -0.034,
     "order_book_top5": {
       "bids": [
         {
-          "price": 59919.99,
-          "size": 5.29612
+          "price": 61415.99,
+          "size": 2.80733
         },
         {
-          "price": 59919.98,
+          "price": 61415.98,
           "size": 0.00035
         },
         {
-          "price": 59919.97,
+          "price": 61415.97,
           "size": 0.00017
         },
         {
-          "price": 59919.95,
-          "size": 0.05027
+          "price": 61415.73,
+          "size": 9e-05
         },
         {
-          "price": 59919.9,
-          "size": 0.05018
+          "price": 61415.67,
+          "size": 0.01005
         }
       ],
       "asks": [
         {
-          "price": 59920.0,
-          "size": 0.22846
+          "price": 61416.0,
+          "size": 0.14797
         },
         {
-          "price": 59920.01,
-          "size": 0.00098
+          "price": 61416.01,
+          "size": 0.00107
         },
         {
-          "price": 59920.02,
-          "size": 0.00017
+          "price": 61416.02,
+          "size": 0.00034
         },
         {
-          "price": 59920.07,
-          "size": 0.0001
-        },
-        {
-          "price": 59920.4,
+          "price": 61416.55,
           "size": 9e-05
+        },
+        {
+          "price": 61416.56,
+          "size": 0.01646
         }
       ]
     },
@@ -124,10 +124,16 @@
   },
   "status": {
     "source_timestamps": {
-      "amt": "2026-07-01T16:47:43.886225+00:00",
+      "amt": "2026-07-03T04:26:03.753247+00:00",
       "vp": "2026-07-01T16:48:27.401177+00:00",
       "pipeline": "regime=2026-07-01 16:48 UTC | macro=2026-07-01 16:48 UTC"
     },
-    "staleness_warnings": []
+    "staleness_warnings": [
+      "STALE regime: 2138m behind AMT",
+      "STALE macro: 2138m behind AMT",
+      "STALE derivs: 2138m behind AMT",
+      "STALE cycle: 2138m behind AMT",
+      "STALE vp: 2137m behind AMT"
+    ]
   }
 }
