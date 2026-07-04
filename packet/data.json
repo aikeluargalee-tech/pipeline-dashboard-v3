@@ -1,12 +1,12 @@
 {
   "header": {
-    "generated_timestamp": "2026-07-03T06:02:17Z",
+    "generated_timestamp": "2026-07-04T01:36:17Z",
     "btc_price": 61708.0,
-    "change_24h": 1.757,
-    "bid": 61707.99,
-    "ask": 61702.35,
+    "change_24h": 1.695,
+    "bid": 62500.99,
+    "ask": 62500.64,
     "spread": 0.01,
-    "volume_24h": 1272113530.12
+    "volume_24h": 876692141.83
   },
   "critical": {
     "btc_price": 61708.0,
@@ -34,9 +34,9 @@
     "session_cvd": 474.05,
     "oi_absolute_usd_billions": 6.63,
     "taker_ratio_24h": 1.107,
-    "vp_poc": 61667,
-    "vp_vah": 61718,
-    "vp_val": 61612,
+    "vp_poc": 61681,
+    "vp_vah": 61724,
+    "vp_val": 61677,
     "vp_shape": "P",
     "vp_state": "ACCEPTANCE",
     "balance_state": "DEVELOPING_BALANCE",
@@ -44,89 +44,92 @@
     "adx_regime": "TRENDING"
   },
   "context": {
-    "fng_value": 21,
-    "vix": 16.15,
-    "etf_flow_daily": -8950.0,
-    "etf_flow_weekly": -9706.0,
-    "coinbase_premium": -0.1167,
+    "fng_value": 22,
+    "vix": 15.81,
+    "etf_flow_daily": 221.0,
+    "etf_flow_weekly": -535.0,
+    "coinbase_premium": -0.0973,
     "equities": "SPY $745 (-0.1%) | QQQ $713 (-1.7%) | GLD $378 (+2.0%)",
-    "dxy": 100.704,
-    "us10y": 4.485,
-    "oi_change_24h": 1.21,
-    "long_short_ratio": 1.7617,
+    "dxy": 100.857,
+    "us10y": 4.4849997,
+    "oi_change_24h": -0.65,
+    "long_short_ratio": 1.524,
     "funding_rate": 0.0001,
-    "cvd_24h": -163.75,
+    "cvd_24h": 7506.38,
     "black_swan_score": "0/17",
     "correlation_r": -0.4814,
     "liq_clusters": "Long: $61,700, $61,650, $61,600, $61,250, $61,100 | Short: $61,700, $62,200",
-    "perp_basis_pct": -0.0389,
+    "perp_basis_pct": -0.0477,
     "order_book_top5": {
       "bids": [
         {
-          "price": 61735.16,
-          "size": 2.95258
+          "price": 62509.39,
+          "size": 0.82832
         },
         {
-          "price": 61735.15,
-          "size": 0.00035
+          "price": 62509.38,
+          "size": 0.00097
         },
         {
-          "price": 61735.14,
-          "size": 0.00017
+          "price": 62509.37,
+          "size": 0.00016
         },
         {
-          "price": 61734.65,
-          "size": 9e-05
+          "price": 62508.64,
+          "size": 0.00018
         },
         {
-          "price": 61732.17,
-          "size": 9e-05
+          "price": 62508.63,
+          "size": 0.09854
         }
       ],
       "asks": [
         {
-          "price": 61735.17,
-          "size": 0.17477
+          "price": 62509.4,
+          "size": 2.06876
         },
         {
-          "price": 61735.18,
-          "size": 0.00077
+          "price": 62509.41,
+          "size": 0.0007
         },
         {
-          "price": 61735.3,
-          "size": 0.00594
+          "price": 62509.42,
+          "size": 0.00016
         },
         {
-          "price": 61735.32,
-          "size": 0.0001
+          "price": 62509.77,
+          "size": 0.00256
         },
         {
-          "price": 61735.52,
-          "size": 9e-05
+          "price": 62509.83,
+          "size": 0.00018
         }
       ]
     },
     "realized_vol_1h_pct": 58.54,
-    "realized_vol_1d_pct": 53.08
+    "realized_vol_1d_pct": 53.08,
+    "mstr_close": 100.77,
+    "usdjpy": 161.337,
+    "daily_rsi_14": 57.5
   },
   "reference": {
-    "sr_1h": "S: $61,277 / $61,072 / $60,750 | R: $61,739 / $62,090 / $62,250",
-    "sr_1h_inverted": "$61,500",
-    "sr_1d": "S:  | R: $62,500 / $63,750 / $65,000",
+    "sr_1h": "S: $62,090 / $61,739 / $61,545 | R: $62,957",
+    "sr_1h_inverted": "$62,318 / $62,500",
+    "sr_1d": "S:  | R: $63,750 / $65,000 / $66,753",
     "cycle": {
       "mvrv_z": 0.2467,
       "sopr": 0.9949,
-      "netflow_7d": 7596.5
+      "netflow_7d": 3841.26
     },
     "cycle_composite": 26.4,
     "sth_realized_price": null,
-    "options_skew_25d": -8.4
+    "options_skew_25d": -6.9
   },
   "status": {
     "source_timestamps": {
       "amt": "2026-07-03T06:02:07.230255+00:00",
-      "vp": "2026-07-03T05:47:22.572344+00:00",
-      "pipeline": "regime=2026-07-03 05:47 UTC | macro=2026-07-03 05:47 UTC"
+      "vp": "2026-07-04T00:47:42.767965+00:00",
+      "pipeline": "regime=2026-07-04 01:18 UTC | macro=2026-07-04 01:18 UTC"
     },
     "staleness_warnings": []
   }
