@@ -1,7 +1,8 @@
 {
   "verdict": "TIGHTENED",
   "sources": [
-    "ai3_wave"
+    "ai3_wave",
+    "geopolitical"
   ],
   "rules": {
     "action": "Reduce position size. Tight stops. Wait for conditions to clear."
@@ -48,10 +49,10 @@
       "detail": "AI-3 Wave SpaceX active"
     },
     "geopolitical": {
-      "state": "PROCEED",
-      "detail": "No geopolitical signals detected"
+      "state": "TIGHTENED",
+      "detail": "Tier FADE geopolitical signal: long \u2014 2 signals today"
     }
   },
-  "timestamp": "2026-07-04 14:17 UTC",
-  "_collected": "2026-07-04 14:18 UTC"
+  "timestamp": "2026-07-04 14:48 UTC",
+  "_collected": "2026-07-04 14:48 UTC"
 }
