@@ -79,6 +79,7 @@
       <ul class="site-nav-links" role="menubar">
         <li role="none"><a role="menuitem" href="${BASE}/dashboard/">Dashboard</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/packet/">Data Packet</a></li>
+        <li role="none"><a role="menuitem" href="${BASE}/trap-monitor/" style="color:var(--yellow)">Trap Monitor</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/methodology/">Methodology</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/research/">Research</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/glossary/">Glossary</a></li>
@@ -107,6 +108,7 @@
         <ul>
           <li><a href="${BASE}/dashboard/">Live Dashboard</a></li>
           <li><a href="${BASE}/packet/">Data Packet</a></li>
+          <li><a href="${BASE}/trap-monitor/">Trap Monitor</a></li>
           <li><a href="${BASE}/verdicts/">Verdict Archive</a></li>
           <li><a href="${BASE}/track-record/">Track Record</a></li>
           <li><a href="${BASE}/compare/">Comparisons</a></li>

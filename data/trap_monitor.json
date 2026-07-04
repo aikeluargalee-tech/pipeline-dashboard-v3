@@ -1,0 +1,77 @@
+{
+  "composite": 3,
+  "actual_max": 7,
+  "status": "CAUTION",
+  "direction": "LONG_TRAP",
+  "long_trap_signals": 2,
+  "short_trap_signals": 1,
+  "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
+  "signals": {
+    "s1_liq_asymmetry": {
+      "score": 0,
+      "verdict": "CLEAR",
+      "max": 1,
+      "value": "5L/2S",
+      "threshold": "\u22652\u00d7 asymmetry",
+      "note": "Long=5, Short=2 \u2014 balanced"
+    },
+    "s2_oi_divergence": {
+      "score": 1,
+      "verdict": "TRAP",
+      "max": 1,
+      "value": "-0.81%",
+      "threshold": "OI < -0.5% unwinding",
+      "note": "OI -0.8% \u2014 unwinding while price $62703 \u2014 divergence"
+    },
+    "s3_funding": {
+      "score": 0,
+      "verdict": "CLEAR",
+      "max": 1,
+      "value": "0.0100%",
+      "threshold": "|Funding| > 0.01%",
+      "note": "Funding 0.0100% \u2014 neutral"
+    },
+    "s4_bid_ask_absorption": {
+      "score": 0,
+      "verdict": "CLEAR",
+      "max": 1,
+      "value": "Bid:4 Ask:3",
+      "threshold": "Ask/Bid ratio > 2.0",
+      "note": "Bid=4, Ask=3 \u2014 balanced"
+    },
+    "s5_taker_cvd": {
+      "score": 0,
+      "verdict": "CLEAR",
+      "max": 1,
+      "value": "Taker:1.2255 CVD:6423.29",
+      "threshold": "Taker > 1.0 + CVD < 0",
+      "note": "Taker 1.23 + CVD +6423 \u2014 genuine buying"
+    },
+    "s6_exchange_netflow": {
+      "score": 1,
+      "verdict": "TRAP",
+      "max": 1,
+      "value": "6847 BTC",
+      "threshold": "|Netflow| > 2,000 BTC",
+      "note": "Netflow +6847 BTC \u2014 exchange inflow = distribution"
+    },
+    "s7_utxo_bands": {
+      "score": 0,
+      "verdict": "PENDING",
+      "max": 1,
+      "value": "\u2014",
+      "threshold": "Spent Output Age Bands (Glassnode)",
+      "note": "Requires Glassnode API \u2014 coming soon"
+    },
+    "s8_options_skew": {
+      "score": 1,
+      "verdict": "TRAP",
+      "max": 1,
+      "value": "-5.2%",
+      "threshold": "|Skew| > 5%",
+      "note": "Skew -5.2% \u2014 puts richly bid (institutions hedging)"
+    }
+  },
+  "btc_price": 62703.99,
+  "_collected": "2026-07-04 05:00 UTC"
+}

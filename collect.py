@@ -2741,6 +2741,321 @@ def compute_black_swan():
     return result
 
 
+def compute_trap_monitor():
+    """Trap Monitor v1.0 — score 6 signals (S1–S6, S8) from pipeline data.
+
+    Reads from already-written data/*.json and /tmp/btc_liq_clusters.json.
+    S7 (UTXO age bands) is PENDING — external Glassnode API needed.
+
+    Returns dict with:
+      - signals: per-signal details (score, value, threshold, verdict)
+      - composite: total score / max (6)
+      - direction: LONG_TRAP | SHORT_TRAP | NEUTRAL
+      - status: TRAP_ACTIVE | CAUTION | CLEAR
+      - downstream_action: action text for L4
+    """
+    derivatives = read_json(str(DATA / "derivatives.json")) or {}
+    cycle = read_json(str(DATA / "cycle.json")) or {}
+    liq = read_json("/tmp/btc_liq_clusters.json") or {}
+
+    signals = {}
+    trap_count = 0
+    clear_count = 0
+    max_signals = 8  # S1-S8, S7=PENDING
+
+    # S1 — Liq Cluster Asymmetry
+    long_below = len(liq.get("long_clusters", []))
+    short_below = len(liq.get("short_clusters", []))
+    s1_score = 0
+    s1_verdict = "NEUTRAL"
+    s1_note = "No data"
+    if long_below > 0 or short_below > 0:
+        if long_below >= 2 and short_below <= 1:
+            s1_score = 1
+            s1_verdict = "TRAP"
+            trap_count += 1
+            s1_note = f"Long={long_below} below, Short={short_below} — asymmetry favors shorts"
+        elif short_below >= 2 and long_below <= 1:
+            s1_score = 1
+            s1_verdict = "TRAP"
+            trap_count += 1
+            s1_note = f"Short={short_below} below, Long={long_below} — asymmetry favors longs"
+        else:
+            s1_verdict = "CLEAR"
+            clear_count += 1
+            s1_note = f"Long={long_below}, Short={short_below} — balanced"
+    signals["s1_liq_asymmetry"] = {
+        "score": s1_score, "verdict": s1_verdict, "max": 1,
+        "value": f"{long_below}L/{short_below}S", "threshold": "≥2× asymmetry",
+        "note": s1_note,
+    }
+
+    # S2 — OI–Price Divergence (OI declining while price steady/rising = trap)
+    oi_chg = derivatives.get("oi_change_24h")
+    oi_trend = derivatives.get("oi_trend", "stable")
+    price = None
+    try:
+        supp = read_json(str(DATA / "supplementary.json")) or {}
+        price = supp.get("price") or derivatives.get("mark_price")
+    except Exception:
+        pass
+    s2_score = 0
+    s2_verdict = "NEUTRAL"
+    s2_note = "No OI data"
+    if oi_chg is not None:
+        if oi_chg < -0.5 and oi_trend in ("unwinding", "stable"):
+            s2_score = 1
+            s2_verdict = "TRAP"
+            trap_count += 1
+            s2_note = f"OI {oi_chg:.1f}% — unwinding while price{' $'+str(int(price)) if price else ''} — divergence"
+        elif oi_chg > 5.0:
+            s2_score = -1
+            s2_verdict = "CLEAR"
+            clear_count += 1
+            s2_note = f"OI {oi_chg:.1f}% — healthy accumulation"
+        else:
+            s2_verdict = "CLEAR"
+            clear_count += 1
+            s2_note = f"OI {oi_chg:.1f}% — neutral/no divergence"
+    signals["s2_oi_divergence"] = {
+        "score": s2_score, "verdict": s2_verdict, "max": 1,
+        "value": f"{oi_chg}%" if oi_chg is not None else "N/A",
+        "threshold": "OI < -0.5% unwinding",
+        "note": s2_note,
+    }
+
+    # S3 — Funding Level (> 0.01% = crowded)
+    fr = derivatives.get("funding_rate")
+    s3_score = 0
+    s3_verdict = "NEUTRAL"
+    s3_note = "No funding data"
+    if fr is not None:
+        fr_pct = fr * 100  # convert to percentage
+        if fr > 0.0001:  # > 0.01%
+            s3_score = 1
+            s3_verdict = "TRAP"
+            trap_count += 1
+            s3_note = f"Funding {fr_pct:.4f}% — crowded long"
+        elif fr < -0.0001:
+            s3_score = 1
+            s3_verdict = "TRAP"
+            trap_count += 1
+            s3_note = f"Funding {fr_pct:.4f}% — crowded short"
+        else:
+            s3_verdict = "CLEAR"
+            clear_count += 1
+            s3_note = f"Funding {fr_pct:.4f}% — neutral"
+    signals["s3_funding"] = {
+        "score": s3_score, "verdict": s3_verdict, "max": 1,
+        "value": f"{fr_pct:.4f}%" if fr is not None else "N/A",
+        "threshold": "|Funding| > 0.01%",
+        "note": s3_note,
+    }
+
+    # S4 — Bid/Ask Absorption (ask wall / bid wall ratio > 2)
+    bid_walls = liq.get("bid_walls_detected", 0)
+    ask_walls = liq.get("ask_walls_detected", 0)
+    s4_score = 0
+    s4_verdict = "NEUTRAL"
+    s4_note = "No order book data"
+    if bid_walls > 0 or ask_walls > 0:
+        if ask_walls > 0 and bid_walls > 0:
+            ratio = ask_walls / max(bid_walls, 1)
+            if ratio > 2.0:
+                s4_score = 1
+                s4_verdict = "TRAP"
+                trap_count += 1
+                s4_note = f"Ask/Bid wall ratio {ratio:.1f}× — absorption risk"
+            elif bid_walls > 2 * max(ask_walls, 1):
+                s4_score = 1
+                s4_verdict = "TRAP"
+                trap_count += 1
+                s4_note = f"Bid/Ask wall ratio {(bid_walls/max(ask_walls,1)):.1f}× — bid support trap"
+            else:
+                s4_verdict = "CLEAR"
+                clear_count += 1
+                s4_note = f"Bid={bid_walls}, Ask={ask_walls} — balanced"
+        elif ask_walls > bid_walls:
+            s4_score = 1
+            s4_verdict = "TRAP"
+            trap_count += 1
+            s4_note = f"Ask walls ({ask_walls}) > Bid walls ({bid_walls}) — supply pressure"
+        elif bid_walls > ask_walls:
+            s4_score = 1
+            s4_verdict = "TRAP"
+            trap_count += 1
+            s4_note = f"Bid walls ({bid_walls}) > Ask walls ({ask_walls}) — support"
+        else:
+            s4_verdict = "CLEAR"
+            clear_count += 1
+            s4_note = f"Bid={bid_walls}, Ask={ask_walls} — equal"
+    signals["s4_bid_ask_absorption"] = {
+        "score": s4_score, "verdict": s4_verdict, "max": 1,
+        "value": f"Bid:{bid_walls} Ask:{ask_walls}",
+        "threshold": "Ask/Bid ratio > 2.0",
+        "note": s4_note,
+    }
+
+    # S5 — Taker–CVD Split (taker buy ratio > 1.0 + CVD negative)
+    taker = derivatives.get("taker_buy_ratio")
+    cvd = derivatives.get("cvd_24h")
+    cvd_trend = derivatives.get("cvd_trend", "flat")
+    s5_score = 0
+    s5_verdict = "NEUTRAL"
+    s5_note = "No taker/CVD data"
+    if taker is not None and cvd is not None:
+        if taker > 1.0 and cvd < 0:
+            s5_score = 1
+            s5_verdict = "TRAP"
+            trap_count += 1
+            s5_note = f"Taker {taker:.2f} (aggressive buying) + CVD {cvd:.0f} negative — divergence trap"
+        elif taker > 1.0 and cvd > 0:
+            s5_verdict = "CLEAR"
+            clear_count += 1
+            s5_note = f"Taker {taker:.2f} + CVD +{cvd:.0f} — genuine buying"
+        elif taker < 0.5 and cvd > 0:
+            s5_score = 1
+            s5_verdict = "TRAP"
+            trap_count += 1
+            s5_note = f"Taker {taker:.2f} (selling) + CVD positive — bear trap"
+        else:
+            s5_verdict = "CLEAR"
+            clear_count += 1
+            s5_note = f"Taker {taker:.2f}, CVD {cvd:.0f} — mixed"
+    elif taker is not None:
+        s5_note = f"Taker {taker:.2f}, CVD N/A"
+    signals["s5_taker_cvd"] = {
+        "score": s5_score, "verdict": s5_verdict, "max": 1,
+        "value": f"Taker:{taker} CVD:{cvd}" if taker is not None else "N/A",
+        "threshold": "Taker > 1.0 + CVD < 0",
+        "note": s5_note,
+    }
+
+    # S6 — Exchange Netflow (> 2000 BTC inflow = distribution)
+    netflow = cycle.get("netflow_7d")
+    s6_score = 0
+    s6_verdict = "NEUTRAL"
+    s6_note = "No netflow data"
+    if netflow is not None:
+        if netflow > 2000:
+            s6_score = 1
+            s6_verdict = "TRAP"
+            trap_count += 1
+            s6_note = f"Netflow +{netflow:.0f} BTC — exchange inflow = distribution"
+        elif netflow < -2000:
+            s6_score = 1
+            s6_verdict = "TRAP"
+            trap_count += 1
+            s6_note = f"Netflow {netflow:.0f} BTC — large outflow = accumulation trap (FOMO bait)"
+        else:
+            s6_verdict = "CLEAR"
+            clear_count += 1
+            s6_note = f"Netflow {netflow:.0f} BTC — neutral"
+    signals["s6_exchange_netflow"] = {
+        "score": s6_score, "verdict": s6_verdict, "max": 1,
+        "value": f"{netflow:.0f} BTC" if netflow is not None else "N/A",
+        "threshold": "|Netflow| > 2,000 BTC",
+        "note": s6_note,
+    }
+
+    # S7 — UTXO Age Bands [PENDING — external data]
+    signals["s7_utxo_bands"] = {
+        "score": 0, "verdict": "PENDING", "max": 1,
+        "value": "—", "threshold": "Spent Output Age Bands (Glassnode)",
+        "note": "Requires Glassnode API — coming soon",
+    }
+
+    # S8 — Options Skew (25Δ skew < -5 = puts richly bid)
+    skew_data = cycle.get("options_skew", {})
+    skew_25d = skew_data.get("skew_25d") if isinstance(skew_data, dict) else None
+    s8_score = 0
+    s8_verdict = "NEUTRAL"
+    s8_note = "No skew data"
+    if skew_25d is not None:
+        if skew_25d < -5:
+            s8_score = 1
+            s8_verdict = "TRAP"
+            trap_count += 1
+            s8_note = f"Skew {skew_25d}% — puts richly bid (institutions hedging)"
+        elif skew_25d > 5:
+            s8_score = 1
+            s8_verdict = "TRAP"
+            trap_count += 1
+            s8_note = f"Skew +{skew_25d}% — calls richly bid (upward trap)"
+        else:
+            s8_verdict = "CLEAR"
+            clear_count += 1
+            s8_note = f"Skew {skew_25d}% — neutral"
+    signals["s8_options_skew"] = {
+        "score": s8_score, "verdict": s8_verdict, "max": 1,
+        "value": f"{skew_25d}%" if skew_25d is not None else "N/A",
+        "threshold": "|Skew| > 5%",
+        "note": s8_note,
+    }
+
+    # Composite score
+    active_max = 6  # S1-S6, S8 scored (S7 PENDING)
+    composite = sum(s.get("score", 0) for s in signals.values() if s.get("verdict") != "PENDING")
+    actual_max = sum(s.get("max", 1) for s in signals.values() if s.get("verdict") != "PENDING")
+
+    # Status
+    composite_abs = abs(composite)
+    if composite_abs >= 4:
+        status = "TRAP_ACTIVE"
+    elif composite_abs >= 2:
+        status = "CAUTION"
+    else:
+        status = "CLEAR"
+
+    # Direction: LONG_TRAP (higgs), SHORT_TRAP (lows), or NEUTRAL
+    long_trap_count = 0
+    short_trap_count = 0
+    # Scoring direction proxy
+    if fr is not None and fr > 0.0001:
+        long_trap_count += 1
+    if oi_chg is not None and oi_chg < -0.5:
+        short_trap_count += 1
+    if netflow is not None and netflow > 2000:
+        long_trap_count += 1
+    if skew_25d is not None and skew_25d < -5:
+        long_trap_count += 1
+    if taker is not None and taker > 1.0 and cvd is not None and cvd < 0:
+        long_trap_count += 1
+    if ask_walls > bid_walls:
+        short_trap_count += 1
+
+    if long_trap_count > short_trap_count and long_trap_count >= 2:
+        direction = "LONG_TRAP"
+    elif short_trap_count > long_trap_count and short_trap_count >= 2:
+        direction = "SHORT_TRAP"
+    else:
+        direction = "NEUTRAL"
+
+    # Downstream action
+    if status == "TRAP_ACTIVE" and direction == "LONG_TRAP":
+        downstream = "Block L4 longs. Short eligible if setup clears on 1H structure."
+    elif status == "TRAP_ACTIVE" and direction == "SHORT_TRAP":
+        downstream = "Block L4 shorts. Long eligible if bid support confirms."
+    elif status == "CAUTION":
+        downstream = "Reduce position size. Wait for 2+ signals to resolve before L4 entries."
+    else:
+        downstream = "Standard L4 rules apply. No trap override."
+
+    result = {
+        "composite": composite,
+        "actual_max": actual_max,
+        "status": status,
+        "direction": direction,
+        "long_trap_signals": long_trap_count,
+        "short_trap_signals": short_trap_count,
+        "downstream_action": downstream,
+        "signals": signals,
+        "btc_price": price,
+        "_collected": ts(),
+    }
+    return result
+
+
 def main():
     # Acquire shared lock to prevent race with detect_only.py on structural.json
     import fcntl
@@ -2862,6 +3177,14 @@ def main():
     black_swan = compute_black_swan()
     print(f"Black Swan: {black_swan.get('status', '?')} ({black_swan.get('score', 0)}/{black_swan.get('max', 17)})")
     write_json("black_swan.json", black_swan)
+
+    # Trap Monitor v1.0 — read-only analysis over existing data files
+    trap_monitor = compute_trap_monitor()
+    tm_status = trap_monitor.get("status", "?")
+    tm_score = trap_monitor.get("composite", 0)
+    print(f"Trap Monitor: {tm_status} ({tm_score}/{trap_monitor.get('actual_max', 6)})")
+    write_json("trap_monitor.json", trap_monitor)
+
     print(f"\n✅ All layers collected → {DATA}/")
 
     # Regenerate sitemap with current timestamp

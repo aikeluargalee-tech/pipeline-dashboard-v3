@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Trap Monitor v1.0 — Real-Time BTC Market Trap Detection | Pipeline Dashboard</title>
+<meta name="description" content="Real-time BTC market trap detection monitor: 8-signal scoring framework tracking liquidation asymmetry, OI divergence, funding, absorption, taker-CVD split, exchange netflow, UTXO age bands, and options skew.">
+<link rel="canonical" href="https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/trap-monitor/">
+
+<!-- Open Graph -->
+<meta property="og:title" content="BTC Trap Monitor v1.0 — Live Market Trap Detection">
+<meta property="og:type" content="website">
+<meta property="og:description" content="6-signal real-time trap scoring (S1–S6, S8) for Bitcoin markets — identifies crowded trades, divergence traps, and absorption zones before they trigger. Updated every 15 minutes.">
+<meta property="og:url" content="https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/trap-monitor/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css?v=11">
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+<link rel="apple-touch-icon" href="../assets/logo.png">
+<meta name="theme-color" content="#05070d">
+
+<style>
+/* --- Trap Monitor Custom Styles --- */
+:root {
+  --tm-green: #10b981;
+  --tm-red: #ef4444;
+  --tm-yellow: #f59e0b;
+  --tm-cyan: #06b6d4;
+  --tm-bg: #0b0d14;
+  --tm-card: rgba(18, 20, 31, 0.6);
+  --tm-border: rgba(255,255,255,0.06);
+  --tm-text: #a1a1aa;
+  --tm-text-bright: #f5f5f6;
+}
+
+body { background: var(--tm-bg); }
+
+.tm-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+@media (max-width: 600px) {
+  .tm-container { padding: 24px 12px; }
+}
+
+/* Hero Score Card */
+.tm-hero {
+  background: var(--tm-card);
+  border: 1px solid var(--tm-border);
+  border-radius: 16px;
+  padding: 36px;
+  margin-bottom: 28px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.tm-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  transition: background 0.5s ease;
+}
+.tm-hero.status-TRAP_ACTIVE::before { background: var(--tm-red); box-shadow: 0 0 20px var(--tm-red); }
+.tm-hero.status-CAUTION::before { background: var(--tm-yellow); box-shadow: 0 0 20px var(--tm-yellow); }
+.tm-hero.status-CLEAR::before { background: var(--tm-green); }
+
+.tm-score-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.tm-big-score {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1;
+}
+.tm-score-label {
+  font-size: 0.85rem;
+  color: var(--tm-text);
+  margin-top: 4px;
+}
+.tm-status-badge {
+  display: inline-block;
+  padding: 8px 24px;
+  border-radius: 24px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.tm-status-badge.TRAP_ACTIVE {
+  background: rgba(239,68,68,0.15);
+  color: var(--tm-red);
+  border: 1px solid rgba(239,68,68,0.3);
+}
+.tm-status-badge.CAUTION {
+  background: rgba(245,158,11,0.15);
+  color: var(--tm-yellow);
+  border: 1px solid rgba(245,158,11,0.3);
+}
+.tm-status-badge.CLEAR {
+  background: rgba(16,185,129,0.15);
+  color: var(--tm-green);
+  border: 1px solid rgba(16,185,129,0.3);
+}
+.tm-direction {
+  margin-top: 12px;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.tm-direction.LONG_TRAP { color: var(--tm-red); }
+.tm-direction.SHORT_TRAP { color: var(--tm-cyan); }
+.tm-direction.NEUTRAL { color: var(--tm-text); }
+.tm-direction-detail {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: var(--tm-text);
+  font-weight: 400;
+}
+.tm-downstream {
+  margin-top: 16px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  display: inline-block;
+}
+
+/* Signal Cards Grid */
+.tm-signals {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+@media (max-width: 700px) {
+  .tm-signals { grid-template-columns: 1fr; }
+}
+
+.tm-signal-card {
+  background: var(--tm-card);
+  border: 1px solid var(--tm-border);
+  border-radius: 12px;
+  padding: 20px;
+  transition: border-color 0.3s ease;
+}
+.tm-signal-card.trig-TRAP {
+  border-left: 3px solid var(--tm-red);
+}
+.tm-signal-card.trig-CLEAR {
+  border-left: 3px solid var(--tm-green);
+}
+.tm-signal-card.trig-NEUTRAL {
+  border-left: 3px solid var(--tm-border);
+}
+.tm-signal-card.trig-PENDING {
+  border-left: 3px solid #6366f1;
+  opacity: 0.6;
+}
+
+.tm-signal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.tm-signal-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--tm-text-bright);
+}
+.tm-signal-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--tm-text);
+  background: rgba(255,255,255,0.04);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.tm-signal-verdict {
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 3px 10px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.tm-signal-verdict.TRAP { background: rgba(239,68,68,0.12); color: var(--tm-red); }
+.tm-signal-verdict.CLEAR { background: rgba(16,185,129,0.12); color: var(--tm-green); }
+.tm-signal-verdict.NEUTRAL { background: rgba(255,255,255,0.05); color: var(--tm-text); }
+.tm-signal-verdict.PENDING { background: rgba(99,102,241,0.12); color: #818cf8; }
+
+.tm-signal-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.tm-signal-metric {
+  font-size: 0.82rem;
+}
+.tm-signal-metric .label {
+  color: var(--tm-text);
+  display: block;
+  font-size: 0.72rem;
+  margin-bottom: 2px;
+}
+.tm-signal-metric .value {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--tm-text-bright);
+  font-weight: 600;
+}
+.tm-signal-note {
+  font-size: 0.78rem;
+  color: var(--tm-text);
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+/* Meta info */
+.tm-meta {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--tm-text);
+  padding: 16px;
+  border-top: 1px solid var(--tm-border);
+}
+.tm-meta .price {
+  color: var(--tm-text-bright);
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+}
+.tm-meta .timestamp {
+  display: block;
+  margin-top: 4px;
+}
+.tm-freshness {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+.tm-freshness.fresh { background: var(--tm-green); box-shadow: 0 0 6px var(--tm-green); }
+.tm-freshness.stale { background: var(--tm-red); }
+
+/* Signal thresholds table (collapsible) */
+.tm-thresholds-toggle {
+  text-align: center;
+  margin: 20px 0;
+}
+.tm-thresholds-toggle button {
+  background: var(--tm-card);
+  border: 1px solid var(--tm-border);
+  color: var(--tm-text);
+  padding: 8px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+.tm-thresholds-toggle button:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--tm-text-bright);
+}
+.tm-thresholds-table {
+  display: none;
+  margin-top: 12px;
+}
+.tm-thresholds-table.visible {
+  display: block;
+}
+.tm-thresholds-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+.tm-thresholds-table th {
+  text-align: left;
+  padding: 8px 12px;
+  color: var(--tm-text);
+  font-weight: 600;
+  border-bottom: 1px solid var(--tm-border);
+}
+.tm-thresholds-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  color: var(--tm-text-bright);
+}
+.tm-thresholds-table tr:hover td {
+  background: rgba(255,255,255,0.02);
+}
+</style>
+</head>
+<body>
+
+<div id="nav-placeholder"></div>
+
+<noscript>
+<nav style="background:rgba(5,7,13,0.95);border-bottom:1px solid rgba(255,255,255,0.06);padding:12px 24px">
+  <div style="max-width:1200px;margin:0 auto;display:flex;gap:20px;flex-wrap:wrap;align-items:center">
+    <a href="../" style="color:#f5f5f6;text-decoration:none;font-weight:800">⚡ Pipeline Dashboard</a>
+    <a href="../dashboard/" style="color:#888893;text-decoration:none;font-size:0.85em">Dashboard</a>
+    <a href="../packet/" style="color:#888893;text-decoration:none;font-size:0.85em">Data Packet</a>
+    <a href="../trap-monitor/" style="background:var(--cyan);color:#05070d;text-decoration:none;font-size:0.82em;padding:6px 16px;border-radius:8px;font-weight:700">Trap Monitor</a>
+    <a href="../methodology/" style="color:#888893;text-decoration:none;font-size:0.85em">Methodology</a>
+    <a href="../research/" style="color:#888893;text-decoration:none;font-size:0.85em">Research</a>
+    <a href="../events-and-disruptions/" style="color:#888893;text-decoration:none;font-size:0.85em">Events</a>
+  </div>
+</nav>
+</noscript>
+
+<div class="tm-container">
+  <!-- Hero Score Card -->
+  <div class="tm-hero" id="hero-card">
+    <div class="tm-score-display">
+      <div>
+        <div class="tm-big-score" id="big-score">--/6</div>
+        <div class="tm-score-label">Trap Score</div>
+      </div>
+      <div>
+        <div class="tm-status-badge" id="status-badge">LOADING</div>
+      </div>
+    </div>
+    <div class="tm-direction" id="direction-label">—</div>
+    <div class="tm-direction-detail" id="direction-detail"></div>
+    <div id="downstream-container"></div>
+  </div>
+
+  <!-- Signal Cards Grid -->
+  <div class="tm-signals" id="signals-grid"></div>
+
+  <!-- Thresholds Reference -->
+  <div class="tm-thresholds-toggle">
+    <button id="thresholds-btn" onclick="toggleThresholds()">📋 Signal Thresholds</button>
+  </div>
+  <div class="tm-thresholds-table" id="thresholds-table">
+    <table>
+      <thead><tr><th>Signal</th><th>Metric</th><th>Threshold</th><th>Data Source</th></tr></thead>
+      <tbody>
+        <tr><td>S1</td><td>Liq Asymmetry</td><td>Long clusters ≥ 2× short clusters below price</td><td>/tmp/btc_liq_clusters.json</td></tr>
+        <tr><td>S2</td><td>OI Divergence</td><td>OI declining &lt; -0.5% while price steady/rising</td><td>derivatives.json</td></tr>
+        <tr><td>S3</td><td>Funding Level</td><td>|Funding| &gt; 0.01%</td><td>derivatives.json</td></tr>
+        <tr><td>S4</td><td>Bid/Ask Absorption</td><td>Ask/Bid wall ratio &gt; 2.0</td><td>/tmp/btc_liq_clusters.json</td></tr>
+        <tr><td>S5</td><td>Taker–CVD Split</td><td>Taker &gt; 1.0 + CVD &lt; 0 (or reverse)</td><td>derivatives.json</td></tr>
+        <tr><td>S6</td><td>Exchange Netflow</td><td>|Netflow| &gt; 2,000 BTC</td><td>cycle.json</td></tr>
+        <tr><td>S7</td><td>UTXO Age Bands</td><td>1Y+ spend spike &gt; 2× 30D avg</td><td>Glassnode API (PENDING)</td></tr>
+        <tr><td>S8</td><td>Options Skew</td><td>25Δ skew &lt; -5 or &gt; +5</td><td>cycle.json</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.75rem;color:var(--tm-text);margin-top:8px;padding:0 12px">
+      <strong>Scoring:</strong> S1–S6, S8 = 1 point each; S7 = PENDING (external data). 
+      Total ≥4 = 🔴 TRAP ACTIVE, ≥2 = 🟡 CAUTION, &lt;2 = 🟢 CLEAR.
+    </p>
+  </div>
+
+  <!-- Meta -->
+  <div class="tm-meta">
+    <span class="tm-freshness" id="freshness-dot"></span>
+    BTC: <span class="price" id="btc-price">—</span>
+    <span class="timestamp" id="last-update">—</span>
+  </div>
+</div>
+
+<script>
+// Trap Monitor v1.0 — Live data fetcher
+const DATA_URL = '../data/trap_monitor.json';
+const PRICE_URL = '../data/btc_price.json';
+const NAV_URL = '../assets/nav.html';
+
+let pollingTimer = null;
+let pollingTimeLeft = 0;
+const POLL_INTERVAL = 60; // seconds
+
+const SIGNAL_LABELS = {
+  s1_liq_asymmetry:      { id: 'S1', name: 'Liq Cluster Asymmetry' },
+  s2_oi_divergence:      { id: 'S2', name: 'OI–Price Divergence' },
+  s3_funding:            { id: 'S3', name: 'Funding Level' },
+  s4_bid_ask_absorption: { id: 'S4', name: 'Bid/Ask Absorption' },
+  s5_taker_cvd:          { id: 'S5', name: 'Taker–CVD Split' },
+  s6_exchange_netflow:   { id: 'S6', name: 'Exchange Netflow' },
+  s7_utxo_bands:         { id: 'S7', name: 'UTXO Age Bands' },
+  s8_options_skew:       { id: 'S8', name: 'Options Skew' },
+};
+
+function loadNav() {
+  fetch(NAV_URL)
+    .then(r => r.text())
+    .then(html => {
+      document.getElementById('nav-placeholder').innerHTML = html;
+    })
+    .catch(() => {});
+}
+
+function toggleThresholds() {
+  const table = document.getElementById('thresholds-table');
+  table.classList.toggle('visible');
+  const btn = document.getElementById('thresholds-btn');
+  btn.textContent = table.classList.contains('visible') ? '📋 Hide Thresholds' : '📋 Signal Thresholds';
+}
+
+function fetchTrapData() {
+  Promise.all([
+    fetch(DATA_URL).then(r => r.json()).catch(() => null),
+    fetch(PRICE_URL).then(r => r.json()).catch(() => null),
+  ]).then(([data, priceData]) => {
+    if (!data) {
+      document.getElementById('status-badge').textContent = 'NO DATA';
+      document.getElementById('status-badge').className = 'tm-status-badge NEUTRAL';
+      document.getElementById('big-score').textContent = 'ERR';
+      return;
+    }
+
+    const composite = data.composite ?? 0;
+    const actualMax = data.actual_max ?? 6;
+    const status = data.status || 'CLEAR';
+    const direction = data.direction || 'NEUTRAL';
+    const downstream = data.downstream_action || '';
+    const signals = data.signals || {};
+    const btcPrice = data.btc_price || (priceData ? priceData.price : '—');
+    const collected = data._collected || '—';
+    const longCount = data.long_trap_signals ?? 0;
+    const shortCount = data.short_trap_signals ?? 0;
+
+    // Score
+    document.getElementById('big-score').textContent = `${composite}/${actualMax}`;
+    document.getElementById('big-score').style.color = status === 'TRAP_ACTIVE' ? 'var(--tm-red)' : status === 'CAUTION' ? 'var(--tm-yellow)' : 'var(--tm-green)';
+
+    // Status badge
+    const badge = document.getElementById('status-badge');
+    badge.textContent = status;
+    badge.className = 'tm-status-badge ' + status;
+
+    // Hero card glow
+    const hero = document.getElementById('hero-card');
+    hero.className = 'tm-hero status-' + status;
+
+    // Direction
+    const dirLabel = document.getElementById('direction-label');
+    const emoji = direction === 'LONG_TRAP' ? '🔴' : direction === 'SHORT_TRAP' ? '🔵' : '⚪';
+    dirLabel.textContent = `${emoji} ${direction.replace('_', ' ')}`;
+    dirLabel.className = 'tm-direction ' + direction;
+
+    const dirDetail = document.getElementById('direction-detail');
+    dirDetail.textContent = direction === 'LONG_TRAP'
+      ? `${longCount} bullish trap signal(s) — downside risk elevated`
+      : direction === 'SHORT_TRAP'
+      ? `${shortCount} bearish trap signal(s) — upside risk elevated`
+      : 'No directional bias — standard rules apply';
+
+    // Downstream action
+    const downstreamEl = document.getElementById('downstream-container');
+    if (downstream) {
+      downstreamEl.innerHTML = `<div class="tm-downstream">📋 ${downstream}</div>`;
+    } else {
+      downstreamEl.innerHTML = '';
+    }
+
+    // Signal cards
+    const grid = document.getElementById('signals-grid');
+    grid.innerHTML = '';
+
+    Object.entries(SIGNAL_LABELS).forEach(([key, label]) => {
+      const sig = signals[key];
+      if (!sig) return;
+
+      const verdict = sig.verdict || 'NEUTRAL';
+      const score = sig.score ?? 0;
+      const max = sig.max ?? 1;
+      const value = sig.value || '—';
+      const threshold = sig.threshold || '—';
+      const note = sig.note || '';
+
+      const card = document.createElement('div');
+      card.className = `tm-signal-card trig-${verdict}`;
+
+      card.innerHTML = `
+        <div class="tm-signal-header">
+          <div>
+            <div class="tm-signal-name">${label.name}</div>
+            <div class="tm-signal-id">${label.id}</div>
+          </div>
+          <div class="tm-signal-verdict ${verdict}">${score > 0 ? '⚠ ' : ''}${verdict}</div>
+        </div>
+        <div class="tm-signal-metrics">
+          <div class="tm-signal-metric">
+            <span class="label">Current Value</span>
+            <span class="value">${value}</span>
+          </div>
+          <div class="tm-signal-metric">
+            <span class="label">Threshold</span>
+            <span class="value">${threshold}</span>
+          </div>
+        </div>
+        <div class="tm-signal-note">${note}</div>
+      `;
+
+      grid.appendChild(card);
+    });
+
+    // Freshness
+    const dot = document.getElementById('freshness-dot');
+    if (collected !== '—') {
+      const collectedTime = new Date(collected.replace(' UTC', 'Z').replace(' ', 'T'));
+      const ageMin = (Date.now() - collectedTime.getTime()) / 60000;
+      dot.className = 'tm-freshness ' + (ageMin < 20 ? 'fresh' : 'stale');
+    } else {
+      dot.className = 'tm-freshness stale';
+    }
+
+    // Meta
+    document.getElementById('btc-price').textContent = typeof btcPrice === 'number' ? `$${btcPrice.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}` : btcPrice;
+    document.getElementById('last-update').textContent = `Last updated: ${collected}`;
+
+    // Reset poll
+    pollingTimeLeft = POLL_INTERVAL;
+    updateTimerUI();
+  }).catch(() => {});
+}
+
+function updateTimerUI() {
+  const dot = document.getElementById('freshness-dot');
+  if (pollingTimeLeft <= 0) return;
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  loadNav();
+
+  fetchTrapData();
+
+  if (pollingTimer) clearInterval(pollingTimer);
+  pollingTimer = setInterval(() => {
+    pollingTimeLeft--;
+    if (pollingTimeLeft <= 0) {
+      fetchTrapData();
+    }
+  }, 1000);
+});
+</script>
+
+</body>
+</html>
