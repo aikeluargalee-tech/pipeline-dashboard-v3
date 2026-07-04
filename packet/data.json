@@ -1,12 +1,12 @@
 {
   "header": {
-    "generated_timestamp": "2026-07-04T13:00:38Z",
+    "generated_timestamp": "2026-07-04T13:13:03Z",
     "btc_price": 61708.0,
     "change_24h": 1.002,
-    "bid": 62640.3,
-    "ask": 62636.79,
+    "bid": 62595.3,
+    "ask": 62588.4,
     "spread": 0.01,
-    "volume_24h": 662624438.4
+    "volume_24h": 657610543.35
   },
   "critical": {
     "btc_price": 61708.0,
@@ -32,7 +32,7 @@
       "1H": 0.0416
     },
     "session_cvd": 474.05,
-    "oi_absolute_usd_billions": 6.67,
+    "oi_absolute_usd_billions": 6.66,
     "taker_ratio_24h": 1.107,
     "vp_poc": 61681,
     "vp_vah": 61724,
@@ -58,51 +58,51 @@
     "cvd_24h": 4312.75,
     "black_swan_score": "0/17",
     "correlation_r": -0.725,
-    "liq_clusters": "Long: $62,650, $62,600, $62,400, $62,350, $61,700 | Short: $63,000",
-    "perp_basis_pct": -0.0471,
+    "liq_clusters": "Long: $62,550, $62,400, $62,350, $61,700, $61,250 | Short: $63,000",
+    "perp_basis_pct": -0.0473,
     "order_book_top5": {
       "bids": [
         {
-          "price": 62638.01,
-          "size": 1.4576
+          "price": 62595.1,
+          "size": 0.95399
         },
         {
-          "price": 62638.0,
-          "size": 0.02533
+          "price": 62595.09,
+          "size": 0.00079
         },
         {
-          "price": 62637.99,
+          "price": 62595.08,
           "size": 0.00016
         },
         {
-          "price": 62637.71,
-          "size": 0.00613
+          "price": 62595.03,
+          "size": 0.00018
         },
         {
-          "price": 62637.39,
-          "size": 9e-05
+          "price": 62595.02,
+          "size": 0.05391
         }
       ],
       "asks": [
         {
-          "price": 62638.02,
-          "size": 1.85586
+          "price": 62595.11,
+          "size": 3.18739
         },
         {
-          "price": 62638.03,
-          "size": 0.00079
+          "price": 62595.12,
+          "size": 0.02315
         },
         {
-          "price": 62638.04,
+          "price": 62595.13,
           "size": 0.00016
         },
         {
-          "price": 62638.1,
-          "size": 9e-05
+          "price": 62595.15,
+          "size": 8e-05
         },
         {
-          "price": 62638.11,
-          "size": 0.06143
+          "price": 62595.18,
+          "size": 0.00018
         }
       ]
     },
@@ -110,7 +110,7 @@
     "realized_vol_1d_pct": 53.08,
     "mstr_close": 100.77,
     "usdjpy": 161.337,
-    "daily_rsi_14": 58.4
+    "daily_rsi_14": 58.2
   },
   "reference": {
     "sr_1h": "S: $62,330 / $62,090 / $61,739 | R: $62,743 / $62,957",
@@ -150,6 +150,8 @@
       "vp": "2026-07-04T12:47:59.075650+00:00",
       "pipeline": "regime=2026-07-04 12:48 UTC | macro=2026-07-04 12:48 UTC"
     },
-    "staleness_warnings": []
+    "staleness_warnings": [
+      "STALE cycle: missing"
+    ]
   }
 }

@@ -2156,6 +2156,7 @@ function renderCTS(d) {
 function renderCycle(d) {
   if (!d) return;
   let html = '';
+  // ── BRK On-Chain Metrics (17 total) ──
   if (d.mvrv_z != null) {
     const z = d.mvrv_z;
     let cls = 'neutral';
@@ -2163,12 +2164,24 @@ function renderCycle(d) {
     else if (z > 3) cls = 'negative';
     html += metricRow('MVRV Z-Score', fmt(z, 2), cls);
   }
+  if (d.mvrv != null) {
+    html += metricRow('MVRV', fmt(d.mvrv, 3));
+  }
+  if (d.realized_price != null) {
+    html += metricRow('Realized Price', '$' + fmt(d.realized_price, 0));
+  }
   if (d.sopr != null) {
     const s = d.sopr;
     let cls = 'neutral';
     if (s < 0.95) cls = 'positive';
     else if (s > 1.05) cls = 'negative';
     html += metricRow('SOPR', fmt(s, 4), cls);
+  }
+  if (d.lth_sopr_24h != null) {
+    html += metricRow('LTH SOPR', fmt(d.lth_sopr_24h, 4));
+  }
+  if (d.sth_sopr_24h != null) {
+    html += metricRow('STH SOPR', fmt(d.sth_sopr_24h, 4));
   }
   if (d.puell_multiple != null) {
     html += metricRow('Puell Multiple', fmt(d.puell_multiple, 3));
@@ -2186,10 +2199,46 @@ function renderCycle(d) {
   if (d.supply_in_profit_share != null) {
     html += metricRow('Supply in Profit', fmt(d.supply_in_profit_share, 1) + '%');
   }
+  if (d.lth_net_realized_pnl != null) {
+    const pnl = d.lth_net_realized_pnl;
+    const cls = pnl >= 0 ? 'positive' : 'negative';
+    html += metricRow('LTH Net Real. PnL', fmt(pnl, 0), cls);
+  }
+  if (d.sth_net_realized_pnl != null) {
+    const pnl = d.sth_net_realized_pnl;
+    const cls = pnl >= 0 ? 'positive' : 'negative';
+    html += metricRow('STH Net Real. PnL', fmt(pnl, 0), cls);
+  }
+  if (d.utxos_1y_sopr != null) {
+    const u = d.utxos_1y_sopr;
+    let cls = 'neutral';
+    if (u > 1.5) cls = 'negative';
+    else if (u < 1.0) cls = 'positive';
+    html += metricRow('UTXO 1Y+ SOPR', fmt(u, 3), cls);
+  }
   if (d.netflow_7d != null) {
     const nf = d.netflow_7d;
     const cls = nf < 0 ? 'positive' : nf > 0 ? 'negative' : 'neutral';
     html += metricRow('Exchange Netflow (7d)', fmt(nf, 0) + ' BTC', cls);
+  }
+  // ── Network Health ──
+  if (d.hash_rate_ehs != null) {
+    const ehs = d.hash_rate_ehs / 1e18;
+    html += metricRow('Hash Rate', fmt(ehs, 2) + ' EHs');
+  }
+  if (d.hash_rate_drawdown_pct != null) {
+    const dd = d.hash_rate_drawdown_pct;
+    let cls = 'neutral';
+    if (dd < -30) cls = 'negative';
+    else if (dd > -15) cls = 'positive';
+    html += metricRow('Hash Rate Drawdown', fmt(dd, 1) + '%', cls);
+  }
+  if (d.fee_rate_sat_vb != null) {
+    html += metricRow('Fee Rate', fmt(d.fee_rate_sat_vb, 0) + ' sat/vB');
+  }
+  if (d.difficulty != null) {
+    const diff = d.difficulty / 1e12;
+    html += metricRow('Difficulty', fmt(diff, 2) + 'T');
   }
   if (d.composite_score != null) {
     html += metricRow('Cycle Score', d.composite_score + '/100');

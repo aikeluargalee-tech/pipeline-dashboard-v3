@@ -1371,7 +1371,17 @@ def collect_cycle():
         result["nupl"] = brk.get("nupl")
         result["rhodl_ratio"] = brk.get("rhodl_ratio")
         result["lth_sopr_24h"] = brk.get("lth_sopr_24h")
+        result["sth_sopr_24h"] = brk.get("sth_sopr_24h")
         result["supply_in_profit_share"] = brk.get("supply_in_profit_share")
+        result["mvrv"] = brk.get("mvrv")
+        result["realized_price"] = brk.get("realized_price")
+        result["lth_net_realized_pnl"] = brk.get("lth_net_realized_pnl")
+        result["sth_net_realized_pnl"] = brk.get("sth_net_realized_pnl")
+        result["utxos_1y_sopr"] = brk.get("utxos_over_1y_old_sopr_24h")
+        result["hash_rate_ehs"] = brk.get("hash_rate")
+        result["hash_rate_drawdown_pct"] = brk.get("hash_rate_drawdown")
+        result["fee_rate_sat_vb"] = brk.get("fee_rate")
+        result["difficulty"] = brk.get("difficulty")
         result["_brk_fetched_at"] = brk.get("_fetched_at")
 
     return result
