@@ -2761,7 +2761,7 @@ def compute_trap_monitor():
     signals = {}
     trap_count = 0
     clear_count = 0
-    max_signals = 8  # S1-S8, S7=PENDING
+    max_signals = 8  # S1-S8, all scored (S7 = proxy for Glassnode)
 
     # S1 — Liq Cluster Asymmetry
     long_below = len(liq.get("long_clusters", []))
@@ -2958,11 +2958,51 @@ def compute_trap_monitor():
         "note": s6_note,
     }
 
-    # S7 — UTXO Age Bands [PENDING — external data]
+    # S7-PROXY — On-Chain Distribution Check (proxy for Glassnode UTXO Age Bands)
+    # Sub-signals: SOPR > 2.0, MVRV-Z > 1.5, STH net position < 0
+    # ≥2 triggered → TRAP (1pt); 0-1 → CLEAR (0pt); data missing → CLEAR
+    sopr = cycle.get("sopr")
+    mvrv_z = cycle.get("mvrv_z")
+    sth_net = cycle.get("sth_net_position_change")
+    s7_sub_fire = 0
+    s7_note_parts = []
+    if sopr is not None:
+        if sopr > 2.0:
+            s7_sub_fire += 1
+            s7_note_parts.append(f"SOPR {sopr:.2f} > 2.0 — old coins spent at high profit")
+        else:
+            s7_note_parts.append(f"SOPR {sopr:.4f} — below threshold")
+    else:
+        s7_note_parts.append("SOPR unavailable")
+    if mvrv_z is not None:
+        if mvrv_z > 1.5:
+            s7_sub_fire += 1
+            s7_note_parts.append(f"MVRV-Z {mvrv_z:.2f} > 1.5 — above fair value")
+        else:
+            s7_note_parts.append(f"MVRV-Z {mvrv_z:.4f} — below threshold")
+    else:
+        s7_note_parts.append("MVRV-Z unavailable")
+    if sth_net is not None:
+        sth_net_f = float(sth_net)
+        if sth_net_f < 0:
+            s7_sub_fire += 1
+            s7_note_parts.append(f"STH net {sth_net_f:+.0f} — distribution to short-term holders")
+        else:
+            s7_note_parts.append(f"STH net {sth_net_f:+.0f} — accumulation")
+    else:
+        s7_note_parts.append("STH net flow unavailable")
+    s7_score = 1 if s7_sub_fire >= 2 else 0
+    s7_verdict = "TRAP" if s7_sub_fire >= 2 else "CLEAR"
+    if s7_score:
+        trap_count += 1
+    else:
+        clear_count += 1
+    s7_value = f"SOPR:{sopr:.2f}|MVRVZ:{mvrv_z:.2f}|STH:{sth_net}" if sopr is not None and mvrv_z is not None and sth_net is not None else f"{s7_sub_fire}/3 fired"
     signals["s7_utxo_bands"] = {
-        "score": 0, "verdict": "PENDING", "max": 1,
-        "value": "—", "threshold": "Spent Output Age Bands (Glassnode)",
-        "note": "Requires Glassnode API — coming soon",
+        "score": s7_score, "verdict": s7_verdict, "max": 1,
+        "value": s7_value,
+        "threshold": "≥2 of: SOPR>2.0, MVRV-Z>1.5, STH<0",
+        "note": f"{s7_sub_fire}/3 sub-signals — {' | '.join(s7_note_parts)} [proxy — Glassnode pending]",
     }
 
     # S8 — Options Skew (25Δ skew < -5 = puts richly bid)
@@ -2994,15 +3034,15 @@ def compute_trap_monitor():
     }
 
     # Composite score
-    active_max = 6  # S1-S6, S8 scored (S7 PENDING)
-    composite = sum(s.get("score", 0) for s in signals.values() if s.get("verdict") != "PENDING")
-    actual_max = sum(s.get("max", 1) for s in signals.values() if s.get("verdict") != "PENDING")
+    active_max = 7  # S1-S7proxy-S8 all scored (was 6 when S7=PENDING)
+    composite = sum(s.get("score", 0) for s in signals.values())
+    actual_max = active_max
 
-    # Status
+    # Status (proportional to 7 active signals: ≥5=TRAP, ≥3=CAUTION, <3=CLEAR)
     composite_abs = abs(composite)
-    if composite_abs >= 4:
+    if composite_abs >= 5:
         status = "TRAP_ACTIVE"
-    elif composite_abs >= 2:
+    elif composite_abs >= 3:
         status = "CAUTION"
     else:
         status = "CLEAR"

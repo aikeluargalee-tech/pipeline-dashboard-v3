@@ -353,13 +353,14 @@ body { background: var(--tm-bg); }
         <tr><td>S4</td><td>Bid/Ask Absorption</td><td>Ask/Bid wall ratio &gt; 2.0</td><td>/tmp/btc_liq_clusters.json</td></tr>
         <tr><td>S5</td><td>Taker–CVD Split</td><td>Taker &gt; 1.0 + CVD &lt; 0 (or reverse)</td><td>derivatives.json</td></tr>
         <tr><td>S6</td><td>Exchange Netflow</td><td>|Netflow| &gt; 2,000 BTC</td><td>cycle.json</td></tr>
-        <tr><td>S7</td><td>UTXO Age Bands</td><td>1Y+ spend spike &gt; 2× 30D avg</td><td>Glassnode API (PENDING)</td></tr>
+        <tr><td>S7-PROXY</td><td>UTXO Age Bands (proxy via SOPR/MVRV/STH)</td><td>≥2 of 3 sub-signals</td><td>cycle.json</td></tr>
         <tr><td>S8</td><td>Options Skew</td><td>25Δ skew &lt; -5 or &gt; +5</td><td>cycle.json</td></tr>
       </tbody>
     </table>
     <p style="font-size:0.75rem;color:var(--tm-text);margin-top:8px;padding:0 12px">
-      <strong>Scoring:</strong> S1–S6, S8 = 1 point each; S7 = PENDING (external data). 
-      Total ≥4 = 🔴 TRAP ACTIVE, ≥2 = 🟡 CAUTION, &lt;2 = 🟢 CLEAR.
+      <strong>Scoring:</strong> S1–S6, S7-PROXY, S8 = 1 point each. 
+      ≥5 = 🔴 TRAP ACTIVE, ≥3 = 🟡 CAUTION, &lt;3 = 🟢 CLEAR.
+      S7-PROXY uses SOPR/MVRV-Z/STH as proxy for Glassnode UTXO Age Bands (≥2 of 3 sub-signals for TRAP).
     </p>
   </div>
 
@@ -387,7 +388,7 @@ const SIGNAL_LABELS = {
   s4_bid_ask_absorption: { id: 'S4', name: 'Bid/Ask Absorption' },
   s5_taker_cvd:          { id: 'S5', name: 'Taker–CVD Split' },
   s6_exchange_netflow:   { id: 'S6', name: 'Exchange Netflow' },
-  s7_utxo_bands:         { id: 'S7', name: 'UTXO Age Bands' },
+  s7_utxo_bands:         { id: 'S7-PROXY', name: 'UTXO Age Bands*' },
   s8_options_skew:       { id: 'S8', name: 'Options Skew' },
 };
 
@@ -476,7 +477,7 @@ function fetchTrapData() {
       card.innerHTML = `
         <div class="tm-signal-header">
           <div>
-            <div class="tm-signal-name">${label.name}</div>
+            <div class="tm-signal-name">${label.name}${key === 's7_utxo_bands' ? ' <span style="font-size:0.65rem;background:rgba(99,102,241,0.15);color:#818cf8;padding:1px 6px;border-radius:4px;font-weight:600;vertical-align:middle" title="Proxy for Glassnode UTXO Age Bands \u2014 using SOPR/MVRV/STH sub-signals">PROXY</span>' : ''}</div>
             <div class="tm-signal-id">${label.id}</div>
           </div>
           <div class="tm-signal-verdict ${verdict}">${score > 0 ? '⚠ ' : ''}${verdict}</div>
