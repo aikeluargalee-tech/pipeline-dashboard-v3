@@ -1,11 +1,11 @@
 {
   "composite": 4,
   "actual_max": 7,
-  "status": "TRAP_ACTIVE",
+  "status": "CAUTION",
   "direction": "LONG_TRAP",
   "long_trap_signals": 2,
   "short_trap_signals": 1,
-  "downstream_action": "Block L4 longs. Short eligible if setup clears on 1H structure.",
+  "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
   "signals": {
     "s1_liq_asymmetry": {
       "score": 0,
@@ -57,11 +57,11 @@
     },
     "s7_utxo_bands": {
       "score": 0,
-      "verdict": "PENDING",
+      "verdict": "CLEAR",
       "max": 1,
-      "value": "\u2014",
-      "threshold": "Spent Output Age Bands (Glassnode)",
-      "note": "Requires Glassnode API \u2014 coming soon"
+      "value": "0/3 fired",
+      "threshold": "\u22652 of: SOPR>2.0, MVRV-Z>1.5, STH<0",
+      "note": "0/3 sub-signals \u2014 SOPR 0.9998 \u2014 below threshold | MVRV-Z 0.2976 \u2014 below threshold | STH net flow unavailable [proxy \u2014 Glassnode pending]"
     },
     "s8_options_skew": {
       "score": 1,
@@ -73,5 +73,5 @@
     }
   },
   "btc_price": 62515.48,
-  "_collected": "2026-07-04 06:48 UTC"
+  "_collected": "2026-07-04 06:56 UTC"
 }
