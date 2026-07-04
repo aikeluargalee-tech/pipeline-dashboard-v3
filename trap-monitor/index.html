@@ -440,6 +440,16 @@ body { background: var(--tm-bg); }
         <span style="float:right;font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--tm-yellow);" id="accum-sopr">—</span>
         <div style="font-size:0.7rem;color:var(--tm-text);margin-top:2px;" id="accum-sopr-label">—</div>
       </div>
+      <div style="background:rgba(255,255,255,0.02);border-radius:6px;padding:8px 10px;">
+        <span style="color:var(--tm-text);">NUPL</span>
+        <span style="float:right;font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--tm-yellow);" id="accum-nupl">—</span>
+        <div style="font-size:0.7rem;color:var(--tm-text);margin-top:2px;" id="accum-nupl-label">—</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.02);border-radius:6px;padding:8px 10px;">
+        <span style="color:var(--tm-text);">LTH-SOPR</span>
+        <span style="float:right;font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--tm-green);" id="accum-lth-sopr">—</span>
+        <div style="font-size:0.7rem;color:var(--tm-text);margin-top:2px;" id="accum-lth-sopr-label">—</div>
+      </div>
     </div>
     <div style="margin-top:12px;font-size:0.78rem;color:var(--tm-text);line-height:1.45;" id="accum-note">—</div>
   </div>
@@ -724,6 +734,9 @@ function renderAccumulation(cycle) {
   if (!cycle) return;
   const mvrv = cycle.mvrv_z;
   const sopr = cycle.sopr;
+  const nupl = cycle.nupl;
+  const lth_sopr = cycle.lth_sopr_24h;
+  const supply_profit = cycle.supply_in_profit_share;
 
   // MVRV-Z
   const mvrvEl = document.getElementById('accum-mvrv');
@@ -762,6 +775,43 @@ function renderAccumulation(cycle) {
     } else {
       soprEl.style.color = 'var(--tm-text)';
       soprLabel.textContent = 'neutral spending';
+    }
+  }
+
+  // NUPL (BRK)
+  const nuplEl = document.getElementById('accum-nupl');
+  const nuplLabel = document.getElementById('accum-nupl-label');
+  if (nupl != null && nuplEl) {
+    nuplEl.textContent = nupl.toFixed(3);
+    if (nupl < 0) {
+      nuplEl.style.color = 'var(--tm-green)';
+      nuplLabel.textContent = 'capitulation — unrealized losses dominant';
+    } else if (nupl < 0.25) {
+      nuplEl.style.color = 'var(--tm-yellow)';
+      nuplLabel.textContent = 'hope/fear — early cycle';
+    } else if (nupl > 0.5) {
+      nuplEl.style.color = 'var(--tm-red)';
+      nuplLabel.textContent = 'belief/greed — distribution zone';
+    } else {
+      nuplEl.style.color = 'var(--tm-text)';
+      nuplLabel.textContent = 'optimism — mid-cycle';
+    }
+  }
+
+  // LTH-SOPR (BRK)
+  const lthEl = document.getElementById('accum-lth-sopr');
+  const lthLabel = document.getElementById('accum-lth-sopr-label');
+  if (lth_sopr != null && lthEl) {
+    lthEl.textContent = lth_sopr.toFixed(4);
+    if (lth_sopr < 1.0) {
+      lthEl.style.color = 'var(--tm-green)';
+      lthLabel.textContent = 'LTH selling at loss — accumulation signal';
+    } else if (lth_sopr > 1.05) {
+      lthEl.style.color = 'var(--tm-red)';
+      lthLabel.textContent = 'LTH selling at profit — distribution';
+    } else {
+      lthEl.style.color = 'var(--tm-yellow)';
+      lthLabel.textContent = 'LTH near break-even';
     }
   }
 

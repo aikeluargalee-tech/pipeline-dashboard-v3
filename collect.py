@@ -1365,6 +1365,15 @@ def collect_cycle():
     if skew:
         result["options_skew"] = skew
 
+    # ── BRK enrichment (bitview.space — free on-chain data) ──
+    brk = read_json("/tmp/brk_cache.json") or {}
+    if brk:
+        result["nupl"] = brk.get("nupl")
+        result["rhodl_ratio"] = brk.get("rhodl_ratio")
+        result["lth_sopr_24h"] = brk.get("lth_sopr_24h")
+        result["supply_in_profit_share"] = brk.get("supply_in_profit_share")
+        result["_brk_fetched_at"] = brk.get("_fetched_at")
+
     return result
 
 
