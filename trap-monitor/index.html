@@ -13,7 +13,7 @@
 <!-- Open Graph -->
 <meta property="og:title" content="BTC Trap Monitor v1.0 — Live Market Trap Detection">
 <meta property="og:type" content="website">
-<meta property="og:description" content="8-signal real-time trap scoring (S1–S7-PROXY, S8) + Crash Precursor systemic breakdown detection for Bitcoin markets — identifies crowded trades, divergence traps, and absorption zones. Updated every hour.">
+<meta property="og:description" content="8-signal real-time trap scoring (S1–S7, S8) + Crash Precursor systemic breakdown detection for Bitcoin markets — identifies crowded trades, divergence traps, and absorption zones. Updated every hour.">
 <meta property="og:url" content="https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/trap-monitor/">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -480,7 +480,7 @@ body { background: var(--tm-bg); }
         <tr><td>S4</td><td>Bid/Ask Absorption</td><td>Ask/Bid wall ratio &gt; 2.0</td><td>/tmp/btc_liq_clusters.json</td></tr>
         <tr><td>S5</td><td>Taker–CVD Split</td><td>Taker &gt; 1.0 + CVD &lt; 0 (or reverse)</td><td>derivatives.json</td></tr>
         <tr><td>S6</td><td>Exchange Netflow</td><td>|Netflow| &gt; 2,000 BTC</td><td>cycle.json</td></tr>
-        <tr><td>S7-PROXY</td><td>UTXO Age Bands (proxy via SOPR/MVRV/STH)</td><td>≥2 of 3 sub-signals</td><td>cycle.json</td></tr>
+        <tr><td>S7</td><td>UTXO Age Bands (LTH-SOPR, 1Y+ UTXO SOPR, Supply in Profit)</td><td>≥2 of 3 sub-signals</td><td>BRK (bitview.space)</td></tr>
         <tr><td>S8</td><td>Options Skew</td><td>25Δ skew &lt; -5 or &gt; +5</td><td>cycle.json</td></tr>
       </tbody>
     </table>
@@ -608,7 +608,7 @@ function fetchTrapData() {
       card.innerHTML = `
         <div class="tm-signal-header">
           <div>
-            <div class="tm-signal-name">${label.name}${key === 's7_utxo_bands' ? ' <span style="font-size:0.65rem;background:rgba(99,102,241,0.15);color:#818cf8;padding:1px 6px;border-radius:4px;font-weight:600;vertical-align:middle" title="Proxy for Glassnode UTXO Age Bands \u2014 using SOPR/MVRV/STH sub-signals">PROXY</span>' : ''}</div>
+            <div class="tm-signal-name">${label.name}${key === 's7_utxo_bands' ? ' <span style="font-size:0.65rem;background:rgba(99,102,241,0.15);color:#818cf8;padding:1px 6px;border-radius:4px;font-weight:600;vertical-align:middle" title="Real UTXO age band data from BRK / bitview.space">BRK</span>' : ''}</div>
             <div class="tm-signal-id">${label.id}</div>
           </div>
           <div class="tm-signal-verdict ${verdict}">${score > 0 ? '⚠ ' : ''}${verdict}</div>

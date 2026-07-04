@@ -2745,7 +2745,7 @@ def compute_trap_monitor():
     """Trap Monitor v1.0 — score 6 signals (S1–S6, S8) from pipeline data.
 
     Reads from already-written data/*.json and /tmp/btc_liq_clusters.json.
-    S7 (UTXO age bands) is PENDING — external Glassnode API needed.
+    S7 (UTXO age bands) is live — BRK / bitview.space on-chain data.
 
     Returns dict with:
       - signals: per-signal details (score, value, threshold, verdict)
@@ -2761,7 +2761,7 @@ def compute_trap_monitor():
     signals = {}
     trap_count = 0
     clear_count = 0
-    max_signals = 8  # S1-S8, all scored (S7 = proxy for Glassnode)
+    max_signals = 8  # S1-S8, all scored (S7 = BRK on-chain UTXO age bands)
 
     # S1 — Liq Cluster Asymmetry
     long_below = len(liq.get("long_clusters", []))
@@ -2958,51 +2958,52 @@ def compute_trap_monitor():
         "note": s6_note,
     }
 
-    # S7-PROXY — On-Chain Distribution Check (proxy for Glassnode UTXO Age Bands)
-    # Sub-signals: SOPR > 2.0, MVRV-Z > 1.5, STH net position < 0
+    # S7 — On-Chain Distribution Check (BRK — real UTXO age bands)
+    # Sub-signals: LTH-SOPR > 1.02, 1Y+ UTXO SOPR > 1.5, Supply in Profit > 80%
     # ≥2 triggered → TRAP (1pt); 0-1 → CLEAR (0pt); data missing → CLEAR
-    sopr = cycle.get("sopr")
-    mvrv_z = cycle.get("mvrv_z")
-    sth_net = cycle.get("sth_net_position_change")
+    brk = read_json("/tmp/brk_cache.json") or {}
+    lth_sopr = brk.get("lth_sopr_24h")
+    utxo_1y_sopr = brk.get("utxos_over_1y_old_sopr_24h")
+    supply_profit = brk.get("supply_in_profit_share")
     s7_sub_fire = 0
     s7_note_parts = []
-    if sopr is not None:
-        if sopr > 2.0:
+    if lth_sopr is not None:
+        if lth_sopr > 1.02:
             s7_sub_fire += 1
-            s7_note_parts.append(f"SOPR {sopr:.2f} > 2.0 — old coins spent at high profit")
+            s7_note_parts.append(f"LTH-SOPR {lth_sopr:.4f} > 1.02 — LTH selling at profit")
         else:
-            s7_note_parts.append(f"SOPR {sopr:.4f} — below threshold")
+            s7_note_parts.append(f"LTH-SOPR {lth_sopr:.4f} — below threshold (selling at loss)")
     else:
-        s7_note_parts.append("SOPR unavailable")
-    if mvrv_z is not None:
-        if mvrv_z > 1.5:
+        s7_note_parts.append("LTH-SOPR unavailable")
+    if utxo_1y_sopr is not None:
+        if utxo_1y_sopr > 1.5:
             s7_sub_fire += 1
-            s7_note_parts.append(f"MVRV-Z {mvrv_z:.2f} > 1.5 — above fair value")
+            s7_note_parts.append(f"1Y+ UTXO SOPR {utxo_1y_sopr:.3f} > 1.5 — old coins at high profit")
         else:
-            s7_note_parts.append(f"MVRV-Z {mvrv_z:.4f} — below threshold")
+            s7_note_parts.append(f"1Y+ UTXO SOPR {utxo_1y_sopr:.3f} — below threshold")
     else:
-        s7_note_parts.append("MVRV-Z unavailable")
-    if sth_net is not None:
-        sth_net_f = float(sth_net)
-        if sth_net_f < 0:
+        s7_note_parts.append("1Y+ UTXO SOPR unavailable")
+    if supply_profit is not None:
+        if supply_profit > 80:
             s7_sub_fire += 1
-            s7_note_parts.append(f"STH net {sth_net_f:+.0f} — distribution to short-term holders")
+            s7_note_parts.append(f"Supply in Profit {supply_profit:.1f}% > 80% — distribution zone")
         else:
-            s7_note_parts.append(f"STH net {sth_net_f:+.0f} — accumulation")
+            s7_note_parts.append(f"Supply in Profit {supply_profit:.1f}% — not in distribution zone")
     else:
-        s7_note_parts.append("STH net flow unavailable")
+        s7_note_parts.append("Supply in Profit unavailable")
     s7_score = 1 if s7_sub_fire >= 2 else 0
     s7_verdict = "TRAP" if s7_sub_fire >= 2 else "CLEAR"
     if s7_score:
         trap_count += 1
     else:
         clear_count += 1
-    s7_value = f"SOPR:{sopr:.2f}|MVRVZ:{mvrv_z:.2f}|STH:{sth_net}" if sopr is not None and mvrv_z is not None and sth_net is not None else f"{s7_sub_fire}/3 fired"
+    brk_fetched = brk.get("_fetched_at", "N/A")
+    s7_value = f"LTH:{lth_sopr:.2f}|1Y+:{utxo_1y_sopr:.2f}|SiP:{supply_profit:.0f}%" if all(v is not None for v in [lth_sopr, utxo_1y_sopr, supply_profit]) else f"{s7_sub_fire}/3 fired"
     signals["s7_utxo_bands"] = {
         "score": s7_score, "verdict": s7_verdict, "max": 1,
         "value": s7_value,
-        "threshold": "≥2 of: SOPR>2.0, MVRV-Z>1.5, STH<0",
-        "note": f"{s7_sub_fire}/3 sub-signals — {' | '.join(s7_note_parts)} [proxy — Glassnode pending]",
+        "threshold": "≥2 of: LTH-SOPR>1.02, 1Y+UTXO-SOPR>1.5, SiP>80%",
+        "note": f"{s7_sub_fire}/3 sub-signals — {' | '.join(s7_note_parts)} [BRK — bitview.space | fetched {brk_fetched[:16]}]",
     }
 
     # S8 — Options Skew (25Δ skew < -5 = puts richly bid)
