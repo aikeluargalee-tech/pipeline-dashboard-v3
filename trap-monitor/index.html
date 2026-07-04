@@ -424,6 +424,26 @@ body { background: var(--tm-bg); }
     <div id="downstream-container"></div>
   </div>
 
+  <!-- Structural Accumulation Context -->
+  <div class="cp-panel" id="accum-panel" style="background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.12);">
+    <div class="cp-panel-header" style="border-bottom-color:rgba(16,185,129,0.1);">
+      <div class="cp-panel-title" style="color:var(--tm-green);">📊 Structural Backdrop — Accumulation Zone</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:0.82rem;" id="accum-metrics">
+      <div style="background:rgba(255,255,255,0.02);border-radius:6px;padding:8px 10px;">
+        <span style="color:var(--tm-text);">MVRV Z-Score</span>
+        <span style="float:right;font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--tm-green);" id="accum-mvrv">—</span>
+        <div style="font-size:0.7rem;color:var(--tm-text);margin-top:2px;" id="accum-mvrv-label">—</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.02);border-radius:6px;padding:8px 10px;">
+        <span style="color:var(--tm-text);">SOPR</span>
+        <span style="float:right;font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--tm-yellow);" id="accum-sopr">—</span>
+        <div style="font-size:0.7rem;color:var(--tm-text);margin-top:2px;" id="accum-sopr-label">—</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;font-size:0.78rem;color:var(--tm-text);line-height:1.45;" id="accum-note">—</div>
+  </div>
+
   <!-- Signal Cards Grid -->
   <div class="tm-signals" id="signals-grid"></div>
 
@@ -484,6 +504,7 @@ body { background: var(--tm-bg); }
 const DATA_URL = '../data/trap_monitor.json';
 const PRICE_URL = '../data/btc_price.json';
 const CRASH_URL = '../data/crash_precursor.json';
+const CYCLE_URL = '../data/cycle.json';
 
 let pollingTimer = null;
 let pollingTimeLeft = 0;
@@ -512,7 +533,8 @@ function fetchTrapData() {
     fetch(DATA_URL).then(r => r.json()).catch(() => null),
     fetch(PRICE_URL).then(r => r.json()).catch(() => null),
     fetch(CRASH_URL).then(r => r.json()).catch(() => null),
-  ]).then(([data, priceData, crashData]) => {
+    fetch(CYCLE_URL).then(r => r.json()).catch(() => null),
+  ]).then(([data, priceData, crashData, cycleData]) => {
     if (!data) {
       document.getElementById('status-badge').textContent = 'NO DATA';
       document.getElementById('status-badge').className = 'tm-status-badge NEUTRAL';
@@ -625,6 +647,9 @@ function fetchTrapData() {
     renderCrashPrecursor(crashData);
     checkCombinedAlert(status, crashData);
 
+    // Accumulation context
+    renderAccumulation(cycleData);
+
     // Reset poll
     pollingTimeLeft = POLL_INTERVAL;
     updateTimerUI();
@@ -692,6 +717,65 @@ function checkCombinedAlert(tmStatus, crashData) {
     alert.classList.add('show');
   } else {
     alert.classList.remove('show');
+  }
+}
+
+function renderAccumulation(cycle) {
+  if (!cycle) return;
+  const mvrv = cycle.mvrv_z;
+  const sopr = cycle.sopr;
+
+  // MVRV-Z
+  const mvrvEl = document.getElementById('accum-mvrv');
+  const mvrvLabel = document.getElementById('accum-mvrv-label');
+  if (mvrv != null && mvrvEl) {
+    mvrvEl.textContent = mvrv.toFixed(3);
+    if (mvrv < 0) {
+      mvrvEl.style.color = 'var(--tm-green)';
+      mvrvLabel.textContent = 'below zero — historic accumulation';
+    } else if (mvrv < 1) {
+      mvrvEl.style.color = 'var(--tm-green)';
+      mvrvLabel.textContent = 'below 1.0 — undervalued zone';
+    } else if (mvrv > 3) {
+      mvrvEl.style.color = 'var(--tm-red)';
+      mvrvLabel.textContent = 'above 3.0 — cycle top zone';
+    } else {
+      mvrvEl.style.color = 'var(--tm-yellow)';
+      mvrvLabel.textContent = 'mid-cycle — fair value';
+    }
+  }
+
+  // SOPR
+  const soprEl = document.getElementById('accum-sopr');
+  const soprLabel = document.getElementById('accum-sopr-label');
+  if (sopr != null && soprEl) {
+    soprEl.textContent = sopr.toFixed(4);
+    if (sopr < 0.98) {
+      soprEl.style.color = 'var(--tm-green)';
+      soprLabel.textContent = 'capitulation — selling at loss';
+    } else if (sopr < 1.0) {
+      soprEl.style.color = 'var(--tm-yellow)';
+      soprLabel.textContent = 'break-even — nearing capitulation';
+    } else if (sopr > 1.05) {
+      soprEl.style.color = 'var(--tm-red)';
+      soprLabel.textContent = 'profit-taking — distribution zone';
+    } else {
+      soprEl.style.color = 'var(--tm-text)';
+      soprLabel.textContent = 'neutral spending';
+    }
+  }
+
+  // Confluence note
+  const note = document.getElementById('accum-note');
+  if (note && mvrv != null && sopr != null) {
+    const inAccum = mvrv < 1 && sopr < 1.0;
+    if (inAccum) {
+      note.innerHTML = '🟢 <strong>Accumulation zone confirmed.</strong> MVRV-Z near cycle floor + SOPR in capitulation territory. This is not a short signal — structural backdrop favors treating dips toward $58–60K as high-conviction add zones, not breakdowns. Red spikes mark capitulation; they do not mark the exact tick bottom.';
+    } else if (mvrv < 1) {
+      note.innerHTML = '🟡 <strong>MVRV-Z undervalued</strong> but SOPR not yet in capitulation. Watching for convergence.';
+    } else {
+      note.innerHTML = '⚪ MVRV-Z above 1.0 — not in accumulation zone. Standard rules apply.';
+    }
   }
 }
 
