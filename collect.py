@@ -2574,6 +2574,16 @@ def collect_crash_precursor():
     except Exception:
         pass
     result["_collected"] = ts()
+    # ── BRK network health injection (Tier 3) ──
+    brk = read_json("/tmp/brk_cache.json") or {}
+    if brk:
+        result["network_health"] = {
+            "hash_rate_ehs": brk.get("hash_rate"),
+            "hash_rate_drawdown_pct": brk.get("hash_rate_drawdown"),
+            "fee_rate_sat_vb": brk.get("fee_rate"),
+            "difficulty": brk.get("difficulty"),
+            "_brk_fetched_at": brk.get("_fetched_at"),
+        }
     return result
 
 

@@ -474,6 +474,28 @@ body { background: var(--tm-bg); }
     </div>
     <div class="cp-signal-list" id="cp-signals"></div>
     <div style="font-size:0.7rem;color:var(--tm-text);margin-top:10px;text-align:right;" id="cp-timestamp">—</div>
+    <!-- BRK Network Health (Tier 3) -->
+    <div style="border-top:1px solid rgba(255,255,255,0.06);margin-top:10px;padding-top:10px;" id="cp-network" hidden>
+      <div style="font-size:0.75rem;font-weight:600;color:var(--tm-cyan);margin-bottom:8px;">🌐 Network Health — BRK</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:0.75rem;">
+        <div style="background:rgba(255,255,255,0.02);border-radius:4px;padding:6px 8px;">
+          <span style="color:var(--tm-text);">Hashrate (EH/s)</span>
+          <span style="float:right;font-family:'JetBrains Mono',monospace;color:var(--tm-yellow);" id="nh-hashrate">—</span>
+        </div>
+        <div style="background:rgba(255,255,255,0.02);border-radius:4px;padding:6px 8px;">
+          <span style="color:var(--tm-text);">Drawdown from ATH</span>
+          <span style="float:right;font-family:'JetBrains Mono',monospace;color:var(--tm-yellow);" id="nh-drawdown">—</span>
+        </div>
+        <div style="background:rgba(255,255,255,0.02);border-radius:4px;padding:6px 8px;">
+          <span style="color:var(--tm-text);">Fee Rate (sat/vB)</span>
+          <span style="float:right;font-family:'JetBrains Mono',monospace;color:var(--tm-green);" id="nh-feerate">—</span>
+        </div>
+        <div style="background:rgba(255,255,255,0.02);border-radius:4px;padding:6px 8px;">
+          <span style="color:var(--tm-text);">Difficulty (T)</span>
+          <span style="float:right;font-family:'JetBrains Mono',monospace;color:var(--tm-text);" id="nh-difficulty">—</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Thresholds Reference -->
@@ -705,6 +727,24 @@ function renderCrashPrecursor(d) {
   // Timestamp
   const tsEl = document.getElementById('cp-timestamp');
   tsEl.textContent = 'Last updated: ' + collected;
+
+  // Network health (BRK Tier 3)
+  const nh = d.network_health;
+  const nhPanel = document.getElementById('cp-network');
+  if (nh && nhPanel) {
+  nhPanel.hidden = false;
+  const hr = nh.hash_rate_ehs;
+  document.getElementById('nh-hashrate').textContent = hr != null ? (hr / 1e18).toFixed(2) + ' EH/s' : '—';
+  const dd = nh.hash_rate_drawdown_pct;
+  const ddEl = document.getElementById('nh-drawdown');
+  ddEl.textContent = dd != null ? dd.toFixed(1) + '%' : '—';
+  ddEl.style.color = dd != null && dd < -20 ? 'var(--tm-red)' : dd != null && dd < -10 ? 'var(--tm-yellow)' : 'var(--tm-green)';
+  document.getElementById('nh-feerate').textContent = nh.fee_rate_sat_vb != null ? nh.fee_rate_sat_vb.toFixed(3) + ' sat/vB' : '—';
+  const diff = nh.difficulty;
+  document.getElementById('nh-difficulty').textContent = diff != null ? (diff / 1e12).toFixed(1) + ' T' : '—';
+  } else if (nhPanel) {
+  nhPanel.hidden = true;
+  }
 
   // Signals
   const list = document.getElementById('cp-signals');
