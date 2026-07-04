@@ -485,9 +485,9 @@ body { background: var(--tm-bg); }
       </tbody>
     </table>
     <p style="font-size:0.75rem;color:var(--tm-text);margin-top:8px;padding:0 12px">
-      <strong>Scoring:</strong> S1–S6, S7-PROXY, S8 = 1 point each. 
+      <strong>Scoring:</strong> S1–S7, S8 = 1 point each. 
       ≥5 = 🔴 TRAP ACTIVE, ≥3 = 🟡 CAUTION, &lt;3 = 🟢 CLEAR.
-      S7-PROXY uses SOPR/MVRV-Z/STH as proxy for Glassnode UTXO Age Bands (≥2 of 3 sub-signals for TRAP).
+      S7 uses LTH-SOPR, 1Y+ UTXO SOPR, and Supply in Profit from BRK (bitview.space — free, no auth).
     </p>
   </div>
 
@@ -517,7 +517,7 @@ const SIGNAL_LABELS = {
   s4_bid_ask_absorption: { id: 'S4', name: 'Bid/Ask Absorption' },
   s5_taker_cvd:          { id: 'S5', name: 'Taker–CVD Split' },
   s6_exchange_netflow:   { id: 'S6', name: 'Exchange Netflow' },
-  s7_utxo_bands:         { id: 'S7-PROXY', name: 'UTXO Age Bands*' },
+  s7_utxo_bands:         { id: 'S7', name: 'UTXO Age Bands' },
   s8_options_skew:       { id: 'S8', name: 'Options Skew' },
 };
 
