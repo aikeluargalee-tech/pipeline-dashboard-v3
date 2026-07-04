@@ -816,6 +816,53 @@ def collect_macro():
         except Exception:
             pass
 
+    # ── MSTR close from Yahoo ──
+    if result.get("mstr_close") is None:
+        y = fetch_yahoo_price("MSTR")
+        if y and y.get("price"):
+            result["mstr_close"] = y["price"]
+            result["mstr_change_pct"] = y.get("change_pct")
+            log.info("MSTR close (Yahoo direct): %s", y["price"])
+
+    # ── USD/JPY from Yahoo ──
+    if result.get("usdjpy") is None:
+        y = fetch_yahoo_price("USDJPY=X")
+        if y and y.get("price"):
+            result["usdjpy"] = y["price"]
+            log.info("USD/JPY (Yahoo direct): %s", y["price"])
+
+    # ── Daily BTC RSI-14 from Binance ──
+    if result.get("daily_rsi_14") is None:
+        try:
+            import ccxt
+            ex = ccxt.binance({"enableRateLimit": False})
+            ohlcv = ex.fetch_ohlcv("BTC/USDT", "1d", limit=19)
+            closes = [c[4] for c in ohlcv]
+            if len(closes) >= 15:
+                period = 14
+                gains, losses = 0.0, 0.0
+                for i in range(1, period + 1):
+                    diff = closes[-period - 1 + i] - closes[-period - 1 + i - 1]
+                    if diff >= 0:
+                        gains += diff
+                    else:
+                        losses += abs(diff)
+                avg_gain = gains / period
+                avg_loss = losses / period
+                for i in range(period + 1, len(closes)):
+                    diff = closes[i] - closes[i - 1]
+                    if diff >= 0:
+                        avg_gain = (avg_gain * (period - 1) + diff) / period
+                        avg_loss = (avg_loss * (period - 1)) / period
+                    else:
+                        avg_gain = (avg_gain * (period - 1)) / period
+                        avg_loss = (avg_loss * (period - 1) + abs(diff)) / period
+                rsi = 100.0 - (100.0 / (1.0 + avg_gain / avg_loss)) if avg_loss > 0 else 100.0
+                result["daily_rsi_14"] = round(rsi, 1)
+                log.info("Daily RSI-14 (Binance klines): %s", result["daily_rsi_14"])
+        except Exception:
+            pass
+
     return result
 
 

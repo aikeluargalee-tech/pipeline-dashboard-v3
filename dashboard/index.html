@@ -1216,6 +1216,9 @@ function renderMacro(d) {
     html += metricRow('Fear & Greed Index', `${fng_val} / 100 (${d.fear_and_greed_class || 'Unknown'})`, fng_color);
   }
   if (d.btc_dominance) html += metricRow('BTC Dominance', fmt(d.btc_dominance, 2) + '%');
+  if (d.mstr_close) html += metricRow('MSTR Close', '$' + fmt(d.mstr_close, 2), (d.mstr_change_pct && d.mstr_change_pct < 0) ? 'negative' : 'positive');
+  if (d.usdjpy) html += metricRow('USD/JPY', fmt(d.usdjpy, 3));
+  if (d.daily_rsi_14) html += metricRow('BTC RSI(14)', fmt(d.daily_rsi_14, 1), d.daily_rsi_14 > 70 ? 'positive' : d.daily_rsi_14 < 30 ? 'negative' : 'neutral');
   if (d.regime) html += metricRow('Regime', d.regime, 'warn');
   var el=document.getElementById('macro-metrics');if(el)el.innerHTML = html || metricRow('Status', 'No data', 'neutral');
 
