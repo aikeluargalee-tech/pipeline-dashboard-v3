@@ -281,6 +281,9 @@ def main():
         "previous_regime": previous_regime,
         "regime_changed": regime_changed,
         "btc_price": amt.get("btc_spot") if amt else None,
+        "atr_normalized": signals.get("atr_normalized"),
+        "price_vs_20h_high": signals.get("price_vs_20h_high"),
+        "price_vs_20h_low": signals.get("price_vs_20h_low"),
         "timestamp": now.isoformat(),
         "generated_at": now.isoformat(),  # Explicit freshness field for stale-check
         "data_age_minutes": 0,
