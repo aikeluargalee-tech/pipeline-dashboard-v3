@@ -375,7 +375,6 @@ body { background: var(--tm-bg); }
 // Trap Monitor v1.0 — Live data fetcher
 const DATA_URL = '../data/trap_monitor.json';
 const PRICE_URL = '../data/btc_price.json';
-const NAV_URL = '../assets/nav.js';
 
 let pollingTimer = null;
 let pollingTimeLeft = 0;
@@ -391,15 +390,6 @@ const SIGNAL_LABELS = {
   s7_utxo_bands:         { id: 'S7', name: 'UTXO Age Bands' },
   s8_options_skew:       { id: 'S8', name: 'Options Skew' },
 };
-
-function loadNav() {
-  fetch(NAV_URL)
-    .then(r => r.text())
-    .then(html => {
-      document.getElementById('nav-placeholder').innerHTML = html;
-    })
-    .catch(() => {});
-}
 
 function toggleThresholds() {
   const table = document.getElementById('thresholds-table');
@@ -534,8 +524,6 @@ function updateTimerUI() {
 
 // Init
 document.addEventListener('DOMContentLoaded', () => {
-  loadNav();
-
   fetchTrapData();
 
   if (pollingTimer) clearInterval(pollingTimer);
@@ -547,6 +535,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 1000);
 });
 </script>
+
+<script src="../assets/nav.js?v=12"></script>
 
 </body>
 </html>
