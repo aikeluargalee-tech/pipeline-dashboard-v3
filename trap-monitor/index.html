@@ -299,6 +299,94 @@ body { background: var(--tm-bg); }
 .tm-thresholds-table tr:hover td {
   background: rgba(255,255,255,0.02);
 }
+
+/* Crash Precursor panel */
+.cp-panel {
+  background: var(--tm-card);
+  border: 1px solid var(--tm-border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 28px;
+}
+.cp-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--tm-border);
+}
+.cp-panel-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--tm-text-bright);
+}
+.cp-panel-badge {
+  padding: 3px 12px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+.cp-panel-badge.NORMAL { background: rgba(16,185,129,0.12); color: var(--tm-green); }
+.cp-panel-badge.CAUTION { background: rgba(245,158,11,0.12); color: var(--tm-yellow); }
+.cp-panel-badge.ELEVATED { background: rgba(249,115,22,0.12); color: var(--orange, #f97316); }
+.cp-panel-badge.DANGER { background: rgba(239,68,68,0.12); color: var(--tm-red); }
+.cp-composite-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.cp-composite-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+.cp-signal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.cp-signal-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+}
+.cp-signal-row.active {
+  background: rgba(239,68,68,0.08);
+  color: var(--tm-red);
+}
+.cp-signal-row.inactive {
+  background: rgba(255,255,255,0.02);
+  color: var(--tm-text);
+}
+.cp-signal-tag {
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+/* Combined alert banner */
+.tm-combined-alert {
+  display: none;
+  padding: 14px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-align: center;
+}
+.tm-combined-alert.show {
+  display: block;
+}
+.tm-combined-alert.high-conviction {
+  background: rgba(239,68,68,0.12);
+  border: 1px solid rgba(239,68,68,0.3);
+  color: var(--tm-red);
+}
 </style>
 </head>
 <body>
@@ -339,6 +427,25 @@ body { background: var(--tm-bg); }
   <!-- Signal Cards Grid -->
   <div class="tm-signals" id="signals-grid"></div>
 
+  <!-- Combined Alert Banner (Crash Precursor + Trap Monitor both fire) -->
+  <div class="tm-combined-alert high-conviction" id="combined-alert">
+    ⚠️ HIGH CONVICTION FLUSH RISK — Trap Monitor active + Crash Precursor escalation detected. Both manipulation and systemic breakdown signals firing simultaneously.
+  </div>
+
+  <!-- Crash Precursor Panel -->
+  <div class="cp-panel" id="crash-panel" style="display:none;">
+    <div class="cp-panel-header">
+      <div class="cp-panel-title">⚡ Crash Precursor</div>
+      <span class="cp-panel-badge" id="cp-badge">—</span>
+    </div>
+    <div class="cp-composite-row">
+      <span class="cp-composite-num" id="cp-composite">—/5</span>
+      <span style="font-size:1rem;color:var(--tm-text);">systemic breakdown risk</span>
+    </div>
+    <div class="cp-signal-list" id="cp-signals"></div>
+    <div style="font-size:0.7rem;color:var(--tm-text);margin-top:10px;text-align:right;" id="cp-timestamp">—</div>
+  </div>
+
   <!-- Thresholds Reference -->
   <div class="tm-thresholds-toggle">
     <button id="thresholds-btn" onclick="toggleThresholds()">📋 Signal Thresholds</button>
@@ -376,6 +483,7 @@ body { background: var(--tm-bg); }
 // Trap Monitor v1.0 — Live data fetcher
 const DATA_URL = '../data/trap_monitor.json';
 const PRICE_URL = '../data/btc_price.json';
+const CRASH_URL = '../data/crash_precursor.json';
 
 let pollingTimer = null;
 let pollingTimeLeft = 0;
@@ -403,7 +511,8 @@ function fetchTrapData() {
   Promise.all([
     fetch(DATA_URL).then(r => r.json()).catch(() => null),
     fetch(PRICE_URL).then(r => r.json()).catch(() => null),
-  ]).then(([data, priceData]) => {
+    fetch(CRASH_URL).then(r => r.json()).catch(() => null),
+  ]).then(([data, priceData, crashData]) => {
     if (!data) {
       document.getElementById('status-badge').textContent = 'NO DATA';
       document.getElementById('status-badge').className = 'tm-status-badge NEUTRAL';
@@ -512,6 +621,10 @@ function fetchTrapData() {
     document.getElementById('btc-price').textContent = typeof btcPrice === 'number' ? `$${btcPrice.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}` : btcPrice;
     document.getElementById('last-update').textContent = `Last updated: ${collected}`;
 
+    // Crash Precursor
+    renderCrashPrecursor(crashData);
+    checkCombinedAlert(status, crashData);
+
     // Reset poll
     pollingTimeLeft = POLL_INTERVAL;
     updateTimerUI();
@@ -521,6 +634,65 @@ function fetchTrapData() {
 function updateTimerUI() {
   const dot = document.getElementById('freshness-dot');
   if (pollingTimeLeft <= 0) return;
+}
+
+const CRASH_SIGNAL_LABELS = {
+  taker: 'Aggressive Sell Orders',
+  bid_wall: 'Support Wall Retreat',
+  funding: 'Futures Holding Fees',
+  oi_implosion: 'Leverage Flushes',
+  divergence: 'Momentum Divergence'
+};
+
+function renderCrashPrecursor(d) {
+  const panel = document.getElementById('crash-panel');
+  if (!panel) return;
+  if (!d || d.composite === undefined) {
+    panel.style.display = 'none';
+    return;
+  }
+  panel.style.display = 'block';
+
+  const comp = d.composite || 0;
+  const status = d.status || 'NORMAL';
+  const signals = d.signals || {};
+  const collected = d._collected || d.timestamp || '—';
+
+  // Badge
+  const badge = document.getElementById('cp-badge');
+  badge.textContent = status;
+  badge.className = 'cp-panel-badge ' + status;
+
+  // Composite
+  document.getElementById('cp-composite').textContent = comp + '/5';
+  document.getElementById('cp-composite').style.color = status === 'DANGER' ? 'var(--tm-red)' : status === 'ELEVATED' ? '#f97316' : status === 'CAUTION' ? 'var(--tm-yellow)' : 'var(--tm-green)';
+  
+  // Timestamp
+  const tsEl = document.getElementById('cp-timestamp');
+  tsEl.textContent = 'Last updated: ' + collected;
+
+  // Signals
+  const list = document.getElementById('cp-signals');
+  list.innerHTML = '';
+  Object.entries(CRASH_SIGNAL_LABELS).forEach(([key, label]) => {
+    const val = signals[key] || 0;
+    const isActive = val > 0;
+    const row = document.createElement('div');
+    row.className = 'cp-signal-row ' + (isActive ? 'active' : 'inactive');
+    row.innerHTML = '<span>' + label + '</span><span class="cp-signal-tag">' + (isActive ? '● ACTIVE' : '○ clear') + '</span>';
+    list.appendChild(row);
+  });
+}
+
+function checkCombinedAlert(tmStatus, crashData) {
+  const alert = document.getElementById('combined-alert');
+  if (!alert || !crashData) return;
+  const crashStatus = crashData.status || 'NORMAL';
+  if (tmStatus === 'TRAP_ACTIVE' && (crashStatus === 'ELEVATED' || crashStatus === 'DANGER')) {
+    alert.classList.add('show');
+  } else {
+    alert.classList.remove('show');
+  }
 }
 
 // Init
