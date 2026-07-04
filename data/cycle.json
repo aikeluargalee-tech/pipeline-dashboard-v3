@@ -6,33 +6,33 @@
   "sth_realized_price": null,
   "sth_net_position_change": null,
   "regime": "neutral",
-  "composite_score": 27.4,
+  "composite_score": 28.0,
   "cycle_phase": "medium",
   "distribution": {
-    "timestamp": "2026-07-04 13:46 UTC",
+    "timestamp": "2026-07-04 14:16 UTC",
     "source": "blockchair.com",
-    "total_addresses": 59400441,
-    "total_btc": 20052014.79497096,
+    "total_addresses": 59400148,
+    "total_btc": 20052027.29497096,
     "tiers": [
       {
         "range": "100+ BTC",
-        "addresses": "2,079,015",
-        "btc": "12,331,989",
+        "addresses": "2,079,005",
+        "btc": "12,331,996",
         "pct": "61.50%",
         "pctNum": 61.5,
         "color": "#f59e0b"
       },
       {
         "range": "1 \u2013 100 BTC",
-        "addresses": "950,407",
-        "btc": "6,316,384",
+        "addresses": "950,402",
+        "btc": "6,316,388",
         "pct": "31.50%",
         "pctNum": 31.5,
         "color": "#3b82f6"
       },
       {
         "range": "0.001 \u2013 1 BTC",
-        "addresses": "24,354,180",
+        "addresses": "24,354,060",
         "btc": "1,403,641",
         "pct": "7.00%",
         "pctNum": 7.0,
@@ -40,7 +40,7 @@
       },
       {
         "range": "<0.001 BTC",
-        "addresses": "32,016,837",
+        "addresses": "32,016,679",
         "btc": "6,015",
         "pct": "0.03%",
         "pctNum": 0.03,
@@ -49,16 +49,16 @@
     ]
   },
   "options_skew": {
-    "timestamp": "2026-07-04 13:46 UTC",
-    "spot": 62518.78,
-    "skew_25d": -6.1,
-    "put_25d_iv": 41.1,
-    "call_25d_iv": 35.0,
-    "put_name": "BTC-10JUL26-60000-P",
-    "call_name": "BTC-10JUL26-64000-C",
-    "label": "Elevated hedging \u2014 institutions buying downside protection",
-    "emoji": "\ud83d\udfe1",
-    "display": "\ud83d\udfe1 Options skew (25\u0394): -6.1% \u2014 elevated hedging \u2014 institutions buying downside protection"
+    "timestamp": "2026-07-04 14:16 UTC",
+    "spot": 62683.63,
+    "skew_25d": -4.9,
+    "put_25d_iv": 39.0,
+    "call_25d_iv": 34.1,
+    "put_name": "BTC-10JUL26-61000-P",
+    "call_name": "BTC-10JUL26-65000-C",
+    "label": "Neutral",
+    "emoji": "\u2b1c",
+    "display": "\u2b1c Options skew (25\u0394): -4.9% \u2014 neutral"
   },
   "nupl": 0.14959999918937683,
   "rhodl_ratio": 0.12060000002384186,
@@ -75,5 +75,5 @@
   "fee_rate_sat_vb": 1.0,
   "difficulty": 133869853540305.39,
   "_brk_fetched_at": "2026-07-04T12:39:54.427712+00:00",
-  "_collected": "2026-07-04 13:48 UTC"
+  "_collected": "2026-07-04 14:18 UTC"
 }

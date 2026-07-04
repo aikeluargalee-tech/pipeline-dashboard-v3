@@ -1,11 +1,11 @@
 {
-  "composite": 5,
+  "composite": 3,
   "actual_max": 7,
-  "status": "TRAP_ACTIVE",
-  "direction": "LONG_TRAP",
-  "long_trap_signals": 2,
+  "status": "CAUTION",
+  "direction": "NEUTRAL",
+  "long_trap_signals": 1,
   "short_trap_signals": 1,
-  "downstream_action": "Block L4 longs. Short eligible if setup clears on 1H structure.",
+  "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
   "signals": {
     "s1_liq_asymmetry": {
       "score": 1,
@@ -19,33 +19,33 @@
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-2.77%",
+      "value": "-2.7%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI -2.8% \u2014 unwinding while price $62544 \u2014 divergence"
+      "note": "OI -2.7% \u2014 unwinding while price $62692 \u2014 divergence"
     },
     "s3_funding": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "0.0087%",
+      "value": "0.0089%",
       "threshold": "|Funding| > 0.01%",
-      "note": "Funding 0.0087% \u2014 neutral"
+      "note": "Funding 0.0089% \u2014 neutral"
     },
     "s4_bid_ask_absorption": {
-      "score": 1,
-      "verdict": "TRAP",
+      "score": 0,
+      "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:8 Ask:2",
+      "value": "Bid:4 Ask:4",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid/Ask wall ratio 4.0\u00d7 \u2014 bid support trap"
+      "note": "Bid=4, Ask=4 \u2014 balanced"
     },
     "s5_taker_cvd": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Taker:1.5114 CVD:3661.49",
+      "value": "Taker:0.9789 CVD:3466.15",
       "threshold": "Taker > 1.0 + CVD < 0",
-      "note": "Taker 1.51 + CVD +3661 \u2014 genuine buying"
+      "note": "Taker 0.98, CVD 3466 \u2014 mixed"
     },
     "s6_exchange_netflow": {
       "score": 1,
@@ -64,14 +64,14 @@
       "note": "1/3 sub-signals \u2014 LTH-SOPR 0.9298 \u2014 below threshold (selling at loss) | 1Y+ UTXO SOPR 1.547 > 1.5 \u2014 old coins at high profit | Supply in Profit 52.0% \u2014 not in distribution zone [BRK \u2014 bitview.space | fetched 2026-07-04T12:39]"
     },
     "s8_options_skew": {
-      "score": 1,
-      "verdict": "TRAP",
+      "score": 0,
+      "verdict": "CLEAR",
       "max": 1,
-      "value": "-6.1%",
+      "value": "-4.9%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -6.1% \u2014 puts richly bid (institutions hedging)"
+      "note": "Skew -4.9% \u2014 neutral"
     }
   },
-  "btc_price": 62544.94,
-  "_collected": "2026-07-04 13:48 UTC"
+  "btc_price": 62692.01,
+  "_collected": "2026-07-04 14:18 UTC"
 }
