@@ -1,12 +1,12 @@
 {
   "header": {
-    "generated_timestamp": "2026-07-05T06:09:28Z",
+    "generated_timestamp": "2026-07-05T06:13:25Z",
     "btc_price": 62691.44,
     "change_24h": 0.179,
-    "bid": 62710.1,
-    "ask": 62698.01,
+    "bid": 62708.08,
+    "ask": 62702.01,
     "spread": 0.01,
-    "volume_24h": 547916049.32
+    "volume_24h": 544753188.45
   },
   "critical": {
     "btc_price": 62691.44,
@@ -52,50 +52,50 @@
     "black_swan_score": "0/17",
     "correlation_r": 0.3661,
     "liq_clusters": "Long: $62,700, $62,600, $62,400, $62,350, $61,700 | Short: $63,000, $63,450",
-    "perp_basis_pct": -0.0284,
+    "perp_basis_pct": -0.0378,
     "order_book_top5": {
       "bids": [
         {
-          "price": 62698.0,
-          "size": 1.13817
+          "price": 62703.42,
+          "size": 6.29491
         },
         {
-          "price": 62697.99,
-          "size": 0.00097
+          "price": 62703.41,
+          "size": 0.00034
         },
         {
-          "price": 62697.98,
+          "price": 62703.4,
           "size": 0.00016
         },
         {
-          "price": 62697.38,
-          "size": 0.00023
+          "price": 62702.66,
+          "size": 0.00408
         },
         {
-          "price": 62697.37,
-          "size": 0.00076
+          "price": 62702.65,
+          "size": 0.68338
         }
       ],
       "asks": [
         {
-          "price": 62698.01,
-          "size": 1.94068
+          "price": 62703.43,
+          "size": 0.17517
         },
         {
-          "price": 62698.02,
-          "size": 0.00448
+          "price": 62703.44,
+          "size": 0.00079
         },
         {
-          "price": 62698.03,
+          "price": 62703.45,
           "size": 0.00016
         },
         {
-          "price": 62698.11,
-          "size": 0.01703
+          "price": 62703.84,
+          "size": 0.00061
         },
         {
-          "price": 62698.2,
-          "size": 0.52705
+          "price": 62703.99,
+          "size": 8e-05
         }
       ]
     },
@@ -194,17 +194,17 @@
       "as_of": "2026-07-05",
       "prior_date": "2026-07-05"
     },
-    "last_updated": "2026-07-05T05:19:33Z",
+    "last_updated": "2026-07-05T06:13:08Z",
     "s11_volume_anomaly": {
       "score": 0,
       "label": "NEUTRAL",
       "threshold": 3.0,
-      "ratio": 0.07,
-      "vol_now": 162.40167,
+      "ratio": 0.26,
+      "vol_now": 647.19065,
       "vol_mean_20p": 2490.226150000001,
-      "candle_bearish": false,
+      "candle_bearish": true,
       "window": 20,
-      "as_of": "2026-07-05T04:36:15Z"
+      "as_of": "2026-07-05T06:13:06Z"
     },
     "tripwires": {
       "TW1_CH1_CAPITAL_REVERSAL": {
@@ -214,7 +214,6 @@
           "ETF flow data",
           "AI equity index (NVDA/MSFT)"
         ],
-        "scan": "check_tw1",
         "state": "\u26a0\ufe0f ACTIVE",
         "detail": "ETF outflow $2000M \u2014 capital rotation risk"
       },
@@ -225,7 +224,6 @@
           "Hashprice Index",
           "Exchange inflow data"
         ],
-        "scan": "check_tw2",
         "state": "INACTIVE",
         "detail": "Hashprice FLAT \u2014 no stress signal"
       },
@@ -236,7 +234,6 @@
           "Lightning Network stats",
           "Stablecoin transfer volume"
         ],
-        "scan": "check_tw3",
         "state": "INACTIVE",
         "detail": "Lightning/stablecoin volume data not yet sourced"
       },
@@ -247,7 +244,6 @@
           "MSFT/GOOGL/AMZN earnings",
           "Capex guidance"
         ],
-        "scan": "check_tw4",
         "state": "INACTIVE",
         "detail": "Next earnings cycle: Q3 2026 \u2014 watching MSFT/GOOGL/AMZN capex guidance"
       },
@@ -258,7 +254,6 @@
           "NFP monthly",
           "Labor participation rate"
         ],
-        "scan": "check_tw5",
         "state": "INACTIVE",
         "detail": "NFP 57K (prior) \u2014 watching trend. Next release pending"
       },
@@ -269,7 +264,6 @@
           "SEC 8-K filings",
           "Earnings call transcripts"
         ],
-        "scan": "check_tw6",
         "state": "INACTIVE",
         "detail": "No 8-K BTC treasury language detected \u2014 manual scan"
       }
@@ -277,7 +271,7 @@
     "tripwire_summary": {
       "active_count": 1,
       "total": 6,
-      "as_of": "2026-07-05T05:19:33Z"
+      "as_of": "2026-07-05T06:13:08Z"
     },
     "layer0_5": {
       "forced_sell_risk": "LOW",
@@ -289,14 +283,14 @@
         "source": "Hashrate Index \u2014 manual weekly update"
       },
       "ercot_proxy": {
-        "current_ng_price": null,
-        "mean_30d": null,
-        "pct_vs_30d": null,
-        "elevated": null,
+        "current_ng_price": 3.14,
+        "mean_30d": 3.06,
+        "pct_vs_30d": 2.54,
+        "elevated": false,
         "threshold_pct": 10.0,
-        "as_of": null,
-        "tag": "FRED API key not configured",
-        "error": "FRED_API_KEY not set \u2014 set env var or edit mining_context.py"
+        "as_of": "2026-06-01",
+        "tag": "PROXY \u2014 Henry Hub NG, ~1 week lag",
+        "error": null
       },
       "miner_ai_contract": {
         "detected": false,
@@ -309,7 +303,7 @@
         ],
         "as_of": "2026-07-05"
       },
-      "as_of": "2026-07-05T04:36:16Z"
+      "as_of": "2026-07-05T06:13:07Z"
     }
   },
   "status": {
