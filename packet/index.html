@@ -860,6 +860,23 @@ function generateTextBrief(data) {
       out += `REGIME_MACRO`.padEnd(20) + `: ${rg.sub_regimes.macro || 'N/A'}\n`;
       out += `REGIME_DERIVATIVES`.padEnd(20) + `: ${rg.sub_regimes.derivatives || 'N/A'}\n`;
     }
+    // Transition logging (Fix #3)
+    if (rg.prev_label) {
+      out += `REGIME_PREV_LABEL`.padEnd(20) + `: ${rg.prev_label}\n`;
+    }
+    if (rg.transitioned) {
+      out += `REGIME_TRANSITION`.padEnd(20) + `: ${rg.prev_label} → ${rg.label}\n`;
+      out += `REGIME_TRIGGER`.padEnd(20) + `: ${rg.transition_trigger || 'vote_shift'}\n`;
+    }
+    // Breadth (Fix #1)
+    if (rg.breadth) {
+      const br = rg.breadth;
+      const bParts = [];
+      if (br.spy_momentum) bParts.push(`SPY=${br.spy_momentum}`);
+      if (br.spy_qqq_divergence) bParts.push('QQQ_div');
+      if (br.breadth_quality) bParts.push(br.breadth_quality);
+      if (bParts.length) out += `REGIME_BREADTH`.padEnd(20) + `: ${bParts.join(', ')}\n`;
+    }
     if (rg.signals && rg.signals.length > 0) {
       out += `REGIME_SIGNALS`.padEnd(20) + `: ${rg.signals.join(', ')}\n`;
     }
