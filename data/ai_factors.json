@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-05T10:49:17Z",
+  "last_updated": "2026-07-05T11:48:28Z",
   "s9_vix_roc": {
     "score": 0,
     "label": "NEUTRAL",
@@ -29,13 +29,13 @@
   "s11_volume_anomaly": {
     "score": 0,
     "label": "NEUTRAL",
-    "ratio": 1.0,
-    "vol_now": 8783.44047,
-    "vol_mean_20p": 8794.100126666666,
+    "ratio": 0.99,
+    "vol_now": 8733.59514,
+    "vol_mean_20p": 8791.4352125,
     "threshold": 3.0,
     "window": 20,
     "candle_bearish": true,
-    "as_of": "2026-07-05T10:49:17Z",
+    "as_of": "2026-07-05T11:48:28Z",
     "name": "S11 \u2014 Volume Anomaly Detector",
     "desc": "4H candle volume \u22653\u00d7 20-period rolling mean on a bearish candle. BTC-internal cascade precursor \u2014 24h lead time validated."
   },
@@ -67,9 +67,9 @@
         "IREN",
         "CLSK"
       ],
-      "as_of": "2026-07-05T10:49:17Z"
+      "as_of": "2026-07-05T11:48:28Z"
     },
-    "as_of": "2026-07-05T10:49:17Z"
+    "as_of": "2026-07-05T11:48:28Z"
   },
   "tripwires": {
     "TW1_CH1_CAPITAL_REVERSAL": {
@@ -136,5 +136,5 @@
     "active": 1,
     "total": 6
   },
-  "_collected": "2026-07-05 10:49 UTC"
+  "_collected": "2026-07-05 11:48 UTC"
 }
