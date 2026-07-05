@@ -1,12 +1,12 @@
 {
   "header": {
-    "generated_timestamp": "2026-07-05T16:27:30Z",
+    "generated_timestamp": "2026-07-05T16:30:44Z",
     "btc_price": 62670.0,
     "change_24h": -0.166,
-    "bid": 62675.78,
-    "ask": 62675.79,
+    "bid": 62620.0,
+    "ask": 62620.01,
     "spread": 0.01,
-    "volume_24h": 535079288.63
+    "volume_24h": 535258008.45
   },
   "critical": {
     "btc_price": 62670.0,
@@ -33,6 +33,11 @@
       "1D": 0.0248,
       "4H": -0.0561,
       "1H": 0.054
+    },
+    "oi_per_tf_pct_change": {
+      "1D": 2.48,
+      "4H": -5.61,
+      "1H": 5.4
     },
     "session_cvd": 2037.01,
     "oi_absolute_usd_billions": 6.6,
@@ -62,50 +67,50 @@
     "black_swan_score": "0/17",
     "correlation_r": -0.9168,
     "liq_clusters": "Long: $62,650 (-0.03%), $62,600 (-0.11%), $62,450 (-0.35%), $62,350 (-0.51%) | Short: $62,900 (+0.37%), $63,000 (+0.53%), $63,100 (+0.69%), $63,450 (+1.24%)",
-    "perp_basis_pct": -0.041,
+    "perp_basis_pct": -0.0446,
     "order_book_top5": {
       "bids": [
         {
-          "price": 62675.78,
-          "size": 3.27118
+          "price": 62619.99,
+          "size": 0.24494
         },
         {
-          "price": 62675.77,
-          "size": 0.00034
+          "price": 62619.98,
+          "size": 0.00061
         },
         {
-          "price": 62675.76,
+          "price": 62619.97,
           "size": 0.00016
         },
         {
-          "price": 62675.35,
-          "size": 8e-05
+          "price": 62619.18,
+          "size": 0.00018
         },
         {
-          "price": 62675.31,
-          "size": 0.00898
+          "price": 62619.17,
+          "size": 0.10369
         }
       ],
       "asks": [
         {
-          "price": 62675.79,
-          "size": 0.52007
+          "price": 62620.0,
+          "size": 7.66358
         },
         {
-          "price": 62675.8,
-          "size": 0.00106
+          "price": 62620.01,
+          "size": 0.29307
         },
         {
-          "price": 62675.81,
+          "price": 62620.02,
           "size": 0.00016
         },
         {
-          "price": 62675.99,
-          "size": 0.00018
+          "price": 62620.04,
+          "size": 0.06415
         },
         {
-          "price": 62676.0,
-          "size": 0.01118
+          "price": 62620.05,
+          "size": 0.05026
         }
       ]
     },
@@ -113,7 +118,7 @@
     "realized_vol_1d_pct": 53.08,
     "mstr_close": 100.77,
     "usdjpy": 161.337,
-    "daily_rsi_14": 56.6
+    "daily_rsi_14": 56.2
   },
   "reference": {
     "sr_1h": "S: $62,525 / $62,346 / $62,000 | R: $63,014 / $63,250 / $63,450",
@@ -127,6 +132,7 @@
     "cycle_composite": 29.2,
     "sth_realized_price": null,
     "options_skew_25d": -6.4,
+    "brk_summary": "LTH capitulating (sopr 0.845), STH marginally profitable (sopr 1.001), miner stress high (puell 0.69), hashrate -35.2%, rhodl 0",
     "brk": {
       "mvrv": 1.1778000593185425,
       "realized_price": 53057.35,

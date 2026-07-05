@@ -747,6 +747,7 @@ function generateTextBrief(data) {
         continue;
       }
       const raw = v === null || v === undefined ? 'N/A' : (typeof v === 'object' ? JSON.stringify(v) : v);
+      if (raw === 'N/A' || raw === '—' || raw === '' || raw === 'null') continue;
       if (typeof v === 'object' && v !== null && raw.length > 30) {
         const pretty = JSON.stringify(v, null, 2);
         out += `${formattedKey}: ${pretty.replace(/\n/g, '\n' + ' '.repeat(22))}\n`;
@@ -806,6 +807,7 @@ function generateTextBrief(data) {
     for (const [k, v] of Object.entries(data.context)) {
       const formattedKey = k.toUpperCase().padEnd(20, ' ');
       const raw = v === null || v === undefined ? 'N/A' : (typeof v === 'object' ? JSON.stringify(v) : v);
+      if (raw === 'N/A' || raw === '—' || raw === '' || raw === 'null') continue;
       // Special case: ORDER_BOOK_TOP5 - compact single-line format
       if (k.toUpperCase() === 'ORDER_BOOK_TOP5' && typeof v === 'object' && v !== null) {
         const bestBid = v.bids && v.bids[0];
@@ -886,7 +888,10 @@ function generateTextBrief(data) {
         out += `CYCLE_REGIME      : ${v.regime ?? 'N/A'}\n`;
       } else {
         const formattedKey = k.toUpperCase().padEnd(20, ' ');
+        // Skip full BRK JSON dump when summary is present
+        if (k === 'brk' && data.reference && data.reference.brk_summary) continue;
         const raw = v === null || v === undefined ? 'N/A' : (typeof v === 'object' ? JSON.stringify(v) : v);
+        if (raw === 'N/A' || raw === '—' || raw === '' || raw === 'null') continue;
         if (typeof v === 'object' && v !== null && raw.length > 30) {
           const pretty = JSON.stringify(v, null, 2);
           out += `${formattedKey}: ${pretty.replace(/\n/g, '\n' + ' '.repeat(22))}\n`;
@@ -1083,7 +1088,8 @@ function generateTextBrief(data) {
   // Tier 4: STATUS
   out += `[STATUS] ${subSeparator.substring(9)}\n`;
   if (data.status) {
-    out += `GATE_STATUS_SUM   : ${data.status.gate_status_summary ?? 'N/A'}\n`;
+    const gss = data.status.gate_status_summary;
+    if (gss && gss !== 'N/A' && gss !== '—') out += `GATE_STATUS_SUM   : ${gss}\n`;
     if (data.status.source_timestamps) {
       for (const [src, ts] of Object.entries(data.status.source_timestamps)) {
         const formattedKey = `SRC_${src.toUpperCase()}_TIME`.padEnd(20, ' ');
@@ -1170,7 +1176,6 @@ function renderSourceCards(data) {
           {label: 'Price', val: '$' + (h.btc_price || 0).toLocaleString()},
           {label: 'Regime', val: r.label || '—', cls: r.label === 'early_recovery' ? 'bull' : r.label === 'contraction' ? 'bear' : 'neutral'},
           {label: 'Conf', val: (r.confidence || 0).toFixed(2)},
-          {label: 'Active TW', val: (((d.ai_factors || {}).tripwire_summary || {}).active_count || 0) + '/' + (((d.ai_factors || {}).tripwire_summary || {}).total || 6)},
         ];
       }
     },
