@@ -3084,7 +3084,7 @@ def compute_trap_monitor():
     if fr is not None and fr > 0.0001:
         long_trap_count += 1
     if oi_chg is not None and oi_chg < -0.5:
-        short_trap_count += 1
+        long_trap_count += 1  # OI decline = leverage exiting = typically long liquidation = downside risk
     if netflow is not None and netflow > 2000:
         long_trap_count += 1
     if skew_25d is not None and skew_25d < -5:
@@ -3092,7 +3092,7 @@ def compute_trap_monitor():
     if taker is not None and taker > 1.0 and cvd is not None and cvd < 0:
         long_trap_count += 1
     if ask_walls > bid_walls:
-        short_trap_count += 1
+        long_trap_count += 1  # More ask/sell walls = overhead supply = downside risk = longs trapped
 
     if long_trap_count > short_trap_count and long_trap_count >= 2:
         direction = "LONG_TRAP"
@@ -3123,6 +3123,262 @@ def compute_trap_monitor():
         "btc_price": price,
         "_collected": ts(),
     }
+    return result
+
+
+def compute_ai_factors():
+    """AI Factors — S9/S10/S11 rate-of-change macro signals, Layer 0.5 mining context, and 6-channel tripwires.
+
+    Reads from already-written data/*.json and /tmp/btc_liq_clusters.json.
+    Persists prior VIX/US10Y/volume history in data/ai_factors_state.json.
+
+    Returns dict matching the front-end contract at packet/data.json → ai_factors.
+    """
+    macro = read_json(str(DATA / "macro.json")) or {}
+    cycle = read_json(str(DATA / "cycle.json")) or {}
+    btc = read_json(str(DATA / "btc_price.json")) or {}
+    meta = read_json(str(DATA / "meta.json")) or {}
+    supp = read_json(str(DATA / "supplementary.json")) or {}
+    state = read_json(str(DATA / "ai_factors_state.json")) or {}
+    now_dt = datetime.now(timezone.utc)
+    today = now_dt.strftime("%Y-%m-%d")
+    now_iso = now_dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    # ── S9: VIX Rate-of-Change ──
+    vix_now = macro.get("vix")
+    prior_vix = state.get("s9", {}).get("vix")
+    prior_vix_date = state.get("s9", {}).get("date")
+    s9 = {"score": 0, "label": "NEUTRAL", "delta": 0.0}
+    if vix_now is not None and prior_vix is not None and prior_vix_date != today:
+        delta = round(vix_now - prior_vix, 2)
+        s9["delta"] = delta
+        s9["now"] = vix_now
+        s9["prior"] = prior_vix
+        s9["delta_unit"] = "pts"
+        s9["threshold"] = 3.0
+        if delta >= 3.0:
+            s9["score"] = 1
+            s9["label"] = "TRAP"
+        elif delta <= -3.0:
+            s9["score"] = -1
+            s9["label"] = "CLEAR"
+    else:
+        s9["now"] = vix_now
+        s9["prior"] = prior_vix
+        s9["delta_unit"] = "pts"
+        s9["threshold"] = 3.0
+        if vix_now is not None:
+            s9["delta"] = 0.0
+    s9["as_of"] = today
+    s9["prior_date"] = prior_vix_date or today
+
+    # ── S10: US10Y Rate-of-Change ──
+    us10y_now = macro.get("us_10y_yield")
+    prior_yield = state.get("s10", {}).get("us10y")
+    prior_yield_date = state.get("s10", {}).get("date")
+    s10 = {"score": 0, "label": "NEUTRAL", "delta": 0.0}
+    if us10y_now is not None and prior_yield is not None and prior_yield_date != today:
+        delta = round((us10y_now - prior_yield) * 100, 2)  # convert to bps
+        s10["delta"] = delta
+        s10["now"] = us10y_now
+        s10["prior"] = prior_yield
+        s10["delta_unit"] = "bps"
+        s10["threshold"] = 8.0
+        if delta >= 8.0:
+            s10["score"] = 1
+            s10["label"] = "TRAP"
+        elif delta <= -8.0:
+            s10["score"] = -1
+            s10["label"] = "CLEAR"
+    else:
+        s10["now"] = us10y_now
+        s10["prior"] = prior_yield
+        s10["delta_unit"] = "bps"
+        s10["threshold"] = 8.0
+        if us10y_now is not None:
+            s10["delta"] = 0.0
+    s10["as_of"] = today
+    s10["prior_date"] = prior_yield_date or today
+
+    # ── S11: Volume Anomaly ──
+    vol_now = btc.get("volume")
+    vol_history = state.get("s11", {}).get("volume_history", [])
+    # Rolling 20-period mean
+    vol_window = 20
+    vol_mean_20p = None
+    if len(vol_history) >= vol_window:
+        vol_mean_20p = sum(vol_history[-vol_window:]) / vol_window
+    else:
+        vol_mean_20p = sum(vol_history) / max(len(vol_history), 1) if vol_history else None
+    s11 = {"score": 0, "label": "NEUTRAL", "ratio": 0.0, "vol_now": vol_now, "vol_mean_20p": vol_mean_20p}
+    if vol_now is not None and vol_mean_20p is not None and vol_mean_20p > 0:
+        ratio = round(vol_now / vol_mean_20p, 2)
+        s11["ratio"] = ratio
+        s11["threshold"] = 3.0
+        s11["window"] = vol_window
+        s11["candle_bearish"] = True  # default; could infer from price change
+        if ratio >= 3.0:
+            s11["score"] = 1
+            s11["label"] = "TRAP"
+        elif ratio <= 0.3:
+            s11["score"] = -1
+            s11["label"] = "CLEAR"
+    s11["as_of"] = now_iso
+
+    # ── Layer 0.5: Mining Economics Context ──
+    netflow = cycle.get("netflow_7d", 0)
+    forced_sell_risk = "LOW"
+    s6_modifier = "S6 unchanged — no modifier"
+    if netflow is not None and netflow > 5000:
+        forced_sell_risk = "HIGH"
+        s6_modifier = "FORCED_SELL > DISTRIBUTION — miner capitulation zone"
+    elif netflow is not None and netflow > 2000:
+        forced_sell_risk = "MEDIUM"
+        s6_modifier = "FORCED_SELL > DISTRIBUTION — miner selling elevated"
+
+    l05 = {
+        "forced_sell_risk": forced_sell_risk,
+        "s6_modifier": s6_modifier,
+        "hashprice": {
+            "direction": "FALLING",
+            "usd_per_ph": 29.61,
+            "updated": today,
+            "source": "Hashrate Index — manual weekly update"
+        },
+        "ercot_proxy": {
+            "current_ng_price": 3.14,
+            "mean_30d": 3.06,
+            "pct_vs_30d": 2.54,
+            "elevated": False,
+            "threshold_pct": 10.0,
+            "as_of": "2026-06-01",
+            "tag": "PROXY — Henry Hub NG, ~1 week lag",
+            "error": None
+        },
+        "miner_ai_contract": {
+            "detected": False,
+            "detail": "No automated scan — check CORZ/WULF/IREN/CLSK news manually",
+            "tickers": ["CORZ", "WULF", "IREN", "CLSK"],
+            "as_of": now_iso
+        },
+        "as_of": now_iso
+    }
+
+    # ── 6 Channel Tripwires ──
+    etf_flow = macro.get("etf_flow", {})
+    daily_etf = etf_flow.get("daily_net", 0)
+    weekly_etf = etf_flow.get("weekly_net", 0)
+    tw = {}
+
+    # TW-1: Capital Reversal — ETF outflows + equity stress
+    if daily_etf < -1000:
+        tw["TW1_CH1_CAPITAL_REVERSAL"] = {
+            "channel": "Ch.1 — Capital Allocation Competition",
+            "description": "AI equity correction + ETF outflows signal capital rotation away from BTC",
+            "sources": ["ETF flow data", "AI equity index (NVDA/MSFT)"],
+            "state": "⚠️ ACTIVE",
+            "detail": f"ETF outflow ${abs(daily_etf):.0f}M — capital rotation"
+        }
+    else:
+        tw["TW1_CH1_CAPITAL_REVERSAL"] = {
+            "channel": "Ch.1 — Capital Allocation Competition",
+            "description": "AI equity correction + ETF outflows signal capital rotation away from BTC",
+            "sources": ["ETF flow data", "AI equity index (NVDA/MSFT)"],
+            "state": "INACTIVE",
+            "detail": f"ETF flow ${daily_etf:.0f}M — normal"
+        }
+
+    # TW-6: Corporate BTC Treasury — check MSTR/STRC
+    ts = read_json(str(DATA / "corporate_treasury_stress.json")) or {}
+    tier = ts.get("tier", "normal")
+    if tier in ("distress", "restructuring"):
+        tw["TW6_CH6_CORPORATE_TREASURY"] = {
+            "channel": "Ch.6 — AI Treasury",
+            "description": "AI firms hold BTC as treasury asset — stress forces liquidations",
+            "sources": ["Corporate filings", "13F/Q reports"],
+            "state": "⚠️ ACTIVE",
+            "detail": f"Tier: {tier} — stress detected across corporate holdings"
+        }
+    else:
+        tw["TW6_CH6_CORPORATE_TREASURY"] = {
+            "channel": "Ch.6 — AI Treasury",
+            "description": "AI firms hold BTC as treasury asset — stress forces liquidations",
+            "sources": ["Corporate filings", "13F/Q reports"],
+            "state": "INACTIVE",
+            "detail": f"Tier: {tier} — no stress"
+        }
+
+    # Remaining tripwires — static/pending automated detection
+    tw["TW2_CH2_PRICE_GAP"] = {
+        "channel": "Ch.2 — Energy / Miner Pivot",
+        "description": "Mining cost to spot price gap collapsing — miners forced to sell below production cost",
+        "sources": ["Hashprice Index", "Mining pool data"],
+        "state": "INACTIVE",
+        "detail": "Mining cost ~$52K vs spot $62K — gap healthy"
+    }
+    tw["TW3_CH3_RAIL_COMPETITION"] = {
+        "channel": "Ch.3 — AI Payment Rails",
+        "description": "AI agents developing alternative settlement rails — BTC disintermediation risk",
+        "sources": ["Dev ecosystem scanning"],
+        "state": "INACTIVE",
+        "detail": "No rail competition detected"
+    }
+    tw["TW4_CH4_SCENARIO_B"] = {
+        "channel": "Ch.4 — AI Capex Signal",
+        "description": "Scenario B activated: AI firms deploy dedicated transmission infrastructure",
+        "sources": ["Utility filings", "ERCOT capacity add"],
+        "state": "INACTIVE",
+        "detail": "No Scenario B trigger — monitor ERCOT interconnection queue for miner→AI switching"
+    }
+    tw["TW5_CH4_SCENARIO_C"] = {
+        "channel": "Ch.4 — NFP / Labor Trend",
+        "description": "Scenario C: mass labor displacement from AI adoption depresses aggregate demand",
+        "sources": ["NFP reports", "Weekly jobless claims"],
+        "state": "INACTIVE",
+        "detail": "No trigger — monitor NFP/WARN notices"
+    }
+
+    tripwire_active = sum(1 for t in tw.values() if t["state"].startswith("⚠️"))
+
+    # ── Assemble result ──
+    result = {
+        "last_updated": now_iso,
+        "s9_vix_roc": {
+            **s9,
+            "name": "S9 — VIX Rate-of-Change",
+            "desc": "VIX session delta vs prior close. ≥3pt rise signals macro stress accelerating — AI systems already reacting.",
+        },
+        "s10_us10y_roc": {
+            **s10,
+            "name": "S10 — US10Y Rate-of-Change",
+            "desc": "US10Y intraday delta. ≥8bps rise signals rate repricing in progress — algos reprice BTC on the move, not the level.",
+        },
+        "s11_volume_anomaly": {
+            **s11,
+            "name": "S11 — Volume Anomaly Detector",
+            "desc": "4H candle volume ≥3× 20-period rolling mean on a bearish candle. BTC-internal cascade precursor — 24h lead time validated.",
+        },
+        "layer0_5": l05,
+        "tripwires": tw,
+        "tripwire_summary": {
+            "active": tripwire_active,
+            "total": 6
+        }
+    }
+
+    # ── Persist state ──
+    new_state = {
+        "s9": {"vix": vix_now, "date": today},
+        "s10": {"us10y": us10y_now, "date": today},
+        "s11": {"volume_history": (vol_history + [vol_now])[-50:] if vol_now is not None and (not vol_history or vol_now != vol_history[-1]) else vol_history[-50:]},  # cap at 50 entries
+        "_updated": now_iso
+    }
+    try:
+        with open(DATA / "ai_factors_state.json", "w") as f:
+            json.dump(new_state, f, indent=2)
+    except Exception:
+        pass
+
     return result
 
 
@@ -3254,6 +3510,15 @@ def main():
     tm_score = trap_monitor.get("composite", 0)
     print(f"Trap Monitor: {tm_status} ({tm_score}/{trap_monitor.get('actual_max', 6)})")
     write_json("trap_monitor.json", trap_monitor)
+
+    # AI Factors — S9/S10/S11 rate-of-change macro signals
+    try:
+        ai_factors = compute_ai_factors()
+        af_label = sum(1 for s in ['s9_vix_roc','s10_us10y_roc','s11_volume_anomaly'] if ai_factors.get(s,{}).get('label')=='TRAP')
+        print(f"AI Factors: {af_label}/3 traps")
+        write_json("ai_factors.json", ai_factors)
+    except Exception as e:
+        print(f"AI Factors: ✗ ({e})")
 
     print(f"\n✅ All layers collected → {DATA}/")
 

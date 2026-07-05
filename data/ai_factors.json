@@ -1,0 +1,140 @@
+{
+  "last_updated": "2026-07-05T10:01:58Z",
+  "s9_vix_roc": {
+    "score": 0,
+    "label": "NEUTRAL",
+    "delta": 0.0,
+    "now": 15.81,
+    "prior": 15.81,
+    "delta_unit": "pts",
+    "threshold": 3.0,
+    "as_of": "2026-07-05",
+    "prior_date": "2026-07-05",
+    "name": "S9 \u2014 VIX Rate-of-Change",
+    "desc": "VIX session delta vs prior close. \u22653pt rise signals macro stress accelerating \u2014 AI systems already reacting."
+  },
+  "s10_us10y_roc": {
+    "score": 0,
+    "label": "NEUTRAL",
+    "delta": 0.0,
+    "now": 4.4849997,
+    "prior": 4.4849997,
+    "delta_unit": "bps",
+    "threshold": 8.0,
+    "as_of": "2026-07-05",
+    "prior_date": "2026-07-05",
+    "name": "S10 \u2014 US10Y Rate-of-Change",
+    "desc": "US10Y intraday delta. \u22658bps rise signals rate repricing in progress \u2014 algos reprice BTC on the move, not the level."
+  },
+  "s11_volume_anomaly": {
+    "score": 0,
+    "label": "NEUTRAL",
+    "ratio": 1.01,
+    "vol_now": 8812.60471,
+    "vol_mean_20p": 8754.99405,
+    "threshold": 3.0,
+    "window": 20,
+    "candle_bearish": true,
+    "as_of": "2026-07-05T10:01:58Z",
+    "name": "S11 \u2014 Volume Anomaly Detector",
+    "desc": "4H candle volume \u22653\u00d7 20-period rolling mean on a bearish candle. BTC-internal cascade precursor \u2014 24h lead time validated."
+  },
+  "layer0_5": {
+    "forced_sell_risk": "HIGH",
+    "s6_modifier": "FORCED_SELL > DISTRIBUTION \u2014 miner capitulation zone",
+    "hashprice": {
+      "direction": "FALLING",
+      "usd_per_ph": 29.61,
+      "updated": "2026-07-05",
+      "source": "Hashrate Index \u2014 manual weekly update"
+    },
+    "ercot_proxy": {
+      "current_ng_price": 3.14,
+      "mean_30d": 3.06,
+      "pct_vs_30d": 2.54,
+      "elevated": false,
+      "threshold_pct": 10.0,
+      "as_of": "2026-06-01",
+      "tag": "PROXY \u2014 Henry Hub NG, ~1 week lag",
+      "error": null
+    },
+    "miner_ai_contract": {
+      "detected": false,
+      "detail": "No automated scan \u2014 check CORZ/WULF/IREN/CLSK news manually",
+      "tickers": [
+        "CORZ",
+        "WULF",
+        "IREN",
+        "CLSK"
+      ],
+      "as_of": "2026-07-05T10:01:58Z"
+    },
+    "as_of": "2026-07-05T10:01:58Z"
+  },
+  "tripwires": {
+    "TW1_CH1_CAPITAL_REVERSAL": {
+      "channel": "Ch.1 \u2014 Capital Allocation Competition",
+      "description": "AI equity correction + ETF outflows signal capital rotation away from BTC",
+      "sources": [
+        "ETF flow data",
+        "AI equity index (NVDA/MSFT)"
+      ],
+      "state": "\u26a0\ufe0f ACTIVE",
+      "detail": "ETF outflow $2000M \u2014 capital rotation"
+    },
+    "TW6_CH6_CORPORATE_TREASURY": {
+      "channel": "Ch.6 \u2014 AI Treasury",
+      "description": "AI firms hold BTC as treasury asset \u2014 stress forces liquidations",
+      "sources": [
+        "Corporate filings",
+        "13F/Q reports"
+      ],
+      "state": "INACTIVE",
+      "detail": "Tier: FIRING \u2014 no stress"
+    },
+    "TW2_CH2_PRICE_GAP": {
+      "channel": "Ch.2 \u2014 Energy / Miner Pivot",
+      "description": "Mining cost to spot price gap collapsing \u2014 miners forced to sell below production cost",
+      "sources": [
+        "Hashprice Index",
+        "Mining pool data"
+      ],
+      "state": "INACTIVE",
+      "detail": "Mining cost ~$52K vs spot $62K \u2014 gap healthy"
+    },
+    "TW3_CH3_RAIL_COMPETITION": {
+      "channel": "Ch.3 \u2014 AI Payment Rails",
+      "description": "AI agents developing alternative settlement rails \u2014 BTC disintermediation risk",
+      "sources": [
+        "Dev ecosystem scanning"
+      ],
+      "state": "INACTIVE",
+      "detail": "No rail competition detected"
+    },
+    "TW4_CH4_SCENARIO_B": {
+      "channel": "Ch.4 \u2014 AI Capex Signal",
+      "description": "Scenario B activated: AI firms deploy dedicated transmission infrastructure",
+      "sources": [
+        "Utility filings",
+        "ERCOT capacity add"
+      ],
+      "state": "INACTIVE",
+      "detail": "No Scenario B trigger \u2014 monitor ERCOT interconnection queue for miner\u2192AI switching"
+    },
+    "TW5_CH4_SCENARIO_C": {
+      "channel": "Ch.4 \u2014 NFP / Labor Trend",
+      "description": "Scenario C: mass labor displacement from AI adoption depresses aggregate demand",
+      "sources": [
+        "NFP reports",
+        "Weekly jobless claims"
+      ],
+      "state": "INACTIVE",
+      "detail": "No trigger \u2014 monitor NFP/WARN notices"
+    }
+  },
+  "tripwire_summary": {
+    "active": 1,
+    "total": 6
+  },
+  "_collected": "2026-07-05 10:01 UTC"
+}
