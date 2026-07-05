@@ -1255,10 +1255,52 @@ function updateTimerUI() {
 }
 
 // --- Clipboard ---
+function buildCopyText(data) {
+  let out = '';
+  const h = data.header || {};
+  const src = data.sources || {};
+  const fmt = (n) => typeof n === 'number' ? '$' + n.toLocaleString(undefined, {minimumFractionDigits: 2}) : String(n || '—');
+  const fmpct = (n) => typeof n === 'number' ? (n >= 0 ? '+' : '') + n.toFixed(2) + '%' : String(n || '—');
+
+  // Hero header
+  out += `BTC DATA PACKET — ${h.generated_timestamp || 'N/A'}\n`;
+  out += `${fmt(h.btc_price)}  ${fmpct(h.change_24h)}\n`;
+  out += `BID ${fmt(h.bid)} / ASK ${fmt(h.ask)}  |  SPREAD ${fmt(h.spread)}  |  VOL 24H ${fmt(h.volume_24h)}\n\n`;
+
+  // Source hub
+  out += `═══ SOURCE HUB ═══\n`;
+
+  const cards = [
+    {icon: '📦', name: 'PACKET', render: (d) => {
+      const r = d.regime || {};
+      const af = d.ai_factors || {};
+      const tws = af.tripwire_summary || {};
+      return `Price ${fmt(h.btc_price)}  |  Regime ${r.label||'—'}  |  Conf ${(r.confidence||0).toFixed(2)}  |  TW ${tws.active_count||0}/${tws.total||6}`;
+    }},
+    {icon: '🪤', name: 'TRAPS', render: (s) => `Score ${s.score||'?'}  |  ${s.direction||'—'}  |  ${(s.active_traps||[]).length} active`},
+    {icon: '🔴', name: 'REDLINE', render: (s) => `L0 ${s.l0_regime||'—'}  |  Risk ${s.l1_risk||'—'}  |  Swing ${s.l3_swing||'—'}${s.l3_swing_blocked?'🚫':''}  |  Intra ${s.l4_intraday||'—'}${s.l4_intraday_blocked?'🚫':''}`},
+    {icon: '🐋', name: 'AMT', render: (s) => `Whale ${s.whale_pivot||'—'}  |  MTF ${s.mtf_signal||'—'}  |  ADX ${s.adx_regime||'—'} ${s.adx||''}`},
+    {icon: '📊', name: 'VOL', render: (s) => `POC ${fmt(s.poc)}  |  Shape ${s.shape||'—'}  |  State ${s.state||'—'}`},
+    {icon: '🤖', name: 'AI', render: (s) => `S9/S10/S11 ${[s.s9_label,s.s10_label,s.s11_label].join('/')||'—'}  |  Mining ${s.forced_sell_risk||'—'}  |  TW ${s.active_tripwires||0}/${s.total_tripwires||6}`},
+  ];
+
+  for (const c of cards) {
+    const sdata = c.name === 'PACKET' ? data : (src[c.name.toLowerCase().replace(' ','_')] || src[c.name === 'VOL' ? 'volume_profile' : c.name === 'AI' ? 'ai_factors' : c.name === 'TRAPS' ? 'trap_monitor' : c.name === 'REDLINE' ? 'redline' : c.name === 'AMT' ? 'amt' : ''] || {});
+    out += `${c.icon} ${c.name.padEnd(8)} |  ${c.render(sdata)}\n`;
+  }
+  out += `\n${'═'.repeat(44)}\n\n`;
+
+  // Terminal text
+  const terminal = document.getElementById('terminal-pre');
+  out += terminal ? terminal.textContent : '';
+
+  return out;
+}
+
 function setupClipboardCopy() {
   const copyBtn = document.getElementById('copy-text-btn');
   copyBtn.addEventListener('click', async () => {
-    const text = document.getElementById('terminal-pre').textContent;
+    const text = buildCopyText(currentPacketData);
     try {
       await navigator.clipboard.writeText(text);
       copyBtn.textContent = 'Copied!';
