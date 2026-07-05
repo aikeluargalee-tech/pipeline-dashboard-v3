@@ -1,47 +1,40 @@
 {
   "header": {
-    "generated_timestamp": "2026-07-04T15:40:41Z",
-    "btc_price": 61708.0,
+    "generated_timestamp": "2026-07-05T02:41:27Z",
+    "btc_price": 62792.0,
     "change_24h": 1.063,
-    "bid": 62900.1,
-    "ask": 62880.76,
+    "bid": 62789.0,
+    "ask": 62787.15,
     "spread": 0.01,
-    "volume_24h": 604077787.55
+    "volume_24h": 552879873.3
   },
   "critical": {
-    "btc_price": 61708.0,
-    "amt_adx": 41.1,
-    "amt_mtf": "1D BEARISH [INVALIDATED_CVD=+1,753] | 4H NEUTRAL [DIVERGES_CVD=+2,874] | 1H BEARISH",
-    "candle_delta": -116.99,
-    "candle_deltas_6": [
-      528.22,
-      187.86,
-      482.17,
-      87.49,
-      -192.03,
-      -116.99
-    ],
+    "btc_price": 62792.0,
+    "amt_adx": "N/A",
+    "amt_mtf": "1D ? | 4H ? | 1H ?",
+    "candle_delta": 0,
+    "candle_deltas_6": [],
     "cvd_per_tf": {
-      "1D": 1752.83,
-      "4H": 2874.45,
-      "1H": -30.99
+      "1D": "N/A",
+      "4H": "N/A",
+      "1H": "N/A"
     },
     "oi_per_tf": {
-      "1D": 0.0246,
-      "4H": -0.0472,
-      "1H": 0.0416
+      "1D": "N/A",
+      "4H": "N/A",
+      "1H": "N/A"
     },
-    "session_cvd": 474.05,
-    "oi_absolute_usd_billions": 6.71,
-    "taker_ratio_24h": 1.107,
+    "session_cvd": "N/A",
+    "oi_absolute_usd_billions": 6.64,
+    "taker_ratio_24h": 0,
     "vp_poc": 61681,
     "vp_vah": 61724,
     "vp_val": 61677,
     "vp_shape": "P",
     "vp_state": "ACCEPTANCE",
-    "balance_state": "DEVELOPING_BALANCE",
-    "balance_width_pct": 3.83,
-    "adx_regime": "TRENDING"
+    "balance_state": "N/A",
+    "balance_width_pct": "N/A",
+    "adx_regime": "N/A"
   },
   "context": {
     "fng_value": 22,
@@ -57,52 +50,52 @@
     "funding_rate": 9.146e-05,
     "cvd_24h": 3947.41,
     "black_swan_score": "0/17",
-    "correlation_r": -0.6016,
-    "liq_clusters": "Long: $62,850, $62,400, $62,350, $61,700, $61,250 | Short: $63,000",
-    "perp_basis_pct": -0.0356,
+    "correlation_r": 0.3661,
+    "liq_clusters": "Long: $62,750, $62,400, $62,350, $61,700 | Short: $63,000, $63,450",
+    "perp_basis_pct": -0.0361,
     "order_book_top5": {
       "bids": [
         {
-          "price": 62880.0,
-          "size": 1.57977
+          "price": 62787.14,
+          "size": 3.51299
         },
         {
-          "price": 62879.99,
-          "size": 0.00122
+          "price": 62787.13,
+          "size": 0.00025
         },
         {
-          "price": 62879.98,
+          "price": 62787.12,
           "size": 0.00016
         },
         {
-          "price": 62879.57,
-          "size": 0.00116
+          "price": 62786.98,
+          "size": 0.00236
         },
         {
-          "price": 62879.56,
-          "size": 0.04893
+          "price": 62786.97,
+          "size": 8e-05
         }
       ],
       "asks": [
         {
-          "price": 62880.01,
-          "size": 1.16429
+          "price": 62787.15,
+          "size": 0.65824
         },
         {
-          "price": 62880.02,
-          "size": 0.00124
+          "price": 62787.16,
+          "size": 0.00088
         },
         {
-          "price": 62880.03,
-          "size": 0.00016
+          "price": 62787.17,
+          "size": 0.00032
         },
         {
-          "price": 62880.64,
-          "size": 0.00018
+          "price": 62787.39,
+          "size": 0.00256
         },
         {
-          "price": 62880.65,
-          "size": 0.00018
+          "price": 62787.55,
+          "size": 0.08792
         }
       ]
     },
@@ -110,7 +103,7 @@
     "realized_vol_1d_pct": 53.08,
     "mstr_close": 100.77,
     "usdjpy": 161.337,
-    "daily_rsi_14": 59.7
+    "daily_rsi_14": 57.5
   },
   "reference": {
     "sr_1h": "S: $62,330 / $62,090 / $61,739 | R: $62,979 / $63,250",
@@ -125,23 +118,23 @@
     "sth_realized_price": null,
     "options_skew_25d": -5.2,
     "brk": {
-      "mvrv": 1.1759999990463257,
-      "realized_price": 53057.15,
-      "sopr_24h": 1.0009000305512972,
-      "lth_sopr_24h": 0.9298434053056797,
-      "sth_sopr_24h": 1.001362758683851,
-      "nupl": 0.14959999918937683,
-      "rhodl_ratio": 0.12060000002384186,
-      "puell_multiple": 0.6897000074386597,
-      "lth_net_realized_pnl": -147687.86,
-      "sth_net_realized_pnl": 1313922.77,
-      "supply_in_profit_share": 51.959999084472656,
-      "utxos_1y_sopr": 1.5473554667576106,
-      "hash_rate_ehs": 1.0048606837299092e+21,
-      "hash_rate_drawdown_pct": -26.420000076293945,
-      "fee_rate_sat_vb": 1.0,
+      "mvrv": 1.1859999895095825,
+      "realized_price": 53059.12,
+      "sopr_24h": 1.0007255787719003,
+      "lth_sopr_24h": 0.8590529136680031,
+      "sth_sopr_24h": 1.0016499487833517,
+      "nupl": 0.15680000185966492,
+      "rhodl_ratio": 0.12300000339746475,
+      "puell_multiple": 0.6962000131607056,
+      "lth_net_realized_pnl": -109719.75,
+      "sth_net_realized_pnl": 34023.52,
+      "supply_in_profit_share": 52.38999557495117,
+      "utxos_1y_sopr": 1.5063842439218766,
+      "hash_rate_ehs": 1.0248248032742119e+21,
+      "hash_rate_drawdown_pct": -24.959999084472656,
+      "fee_rate_sat_vb": 0.515,
       "difficulty": 133869853540305.39,
-      "fetched_at": "2026-07-04T12:39:54.427712+00:00"
+      "fetched_at": "2026-07-05T02:41:18.788571+00:00"
     }
   },
   "enriched": {
@@ -154,8 +147,8 @@
     "black_swan_max": 17,
     "black_swan_status": "NORMAL",
     "dxy": 100.857,
-    "correlation_r": -0.6016,
-    "btc_equity_correlation": -0.6016,
+    "correlation_r": 0.3661,
+    "btc_equity_correlation": 0.3661,
     "realized_vol_1h_pct": 58.54,
     "realized_vol_1d_pct": 53.08,
     "fng_value": 22,
@@ -173,14 +166,14 @@
     "sr_1d_resistance": 63750.0,
     "atr_1h_pct": 0.324,
     "atr_1d_pct": 3.639,
-    "btc_price": 61708.0,
+    "btc_price": 62792.0,
     "coinbase_premium": -0.0385,
     "vix": 15.81,
     "funding_rate": 9.146e-05
   },
   "status": {
     "source_timestamps": {
-      "amt": "2026-07-03T06:02:07.230255+00:00",
+      "amt": "N/A",
       "vp": "2026-07-04T14:17:52.389837+00:00",
       "pipeline": "regime=2026-07-04 15:18 UTC | macro=2026-07-04 15:18 UTC"
     },
