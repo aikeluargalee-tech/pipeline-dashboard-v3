@@ -361,7 +361,7 @@
 }
 .source-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
   gap: 10px;
 }
 .source-card {
@@ -413,7 +413,12 @@
 .source-card-val {
   font-family: 'JetBrains Mono', monospace;
   font-weight: 600;
+  font-size: 0.74em;
   color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 .source-card-val.caution { color: var(--yellow); }
 .source-card-val.bear { color: var(--red); }
