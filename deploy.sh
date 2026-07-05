@@ -182,7 +182,7 @@ sed -i \
   -e "s|\"dateModified\": \"[^\"]*\"|\"dateModified\": \"${NOW_ISO}\"|g" \
   dashboard/index.html
 
-if ! git add data/*.json data/gate0.json data/amt_status.json data/sigma_status.json data/trp_status.json data/run_status.json assets/v7_long.png assets/v7_short.png assets/styles.css assets/nav.js assets/favicon.png assets/logo.png assets/social-card.png index.html dashboard/index.html packet/index.html packet/data.json methodology/index.html glossary/index.html about/index.html faq/index.html contact/index.html research/ compare/ privacy/index.html terms/index.html verdicts/ track-record/ docs/ events-and-disruptions/ sitemap.xml robots.txt manifest.json scripts/ 2>/dev/null; then
+if ! git add data/*.json data/gate0.json data/amt_status.json data/sigma_status.json data/trp_status.json data/run_status.json assets/v7_long.png assets/v7_short.png assets/styles.css assets/nav.js assets/favicon.png assets/logo.png assets/social-card.png index.html dashboard/index.html packet/index.html packet/data.json trap-monitor/index.html ai-factors/index.html methodology/index.html glossary/index.html about/index.html faq/index.html contact/index.html research/ compare/ privacy/index.html terms/index.html verdicts/ track-record/ docs/ events-and-disruptions/ sitemap.xml robots.txt manifest.json scripts/ 2>/dev/null; then
     echo "⚠ git add had errors — some files may not exist yet (OK for first deploy)"
 fi
 if git diff --cached --quiet; then
