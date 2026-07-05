@@ -1,9 +1,9 @@
 {
-  "composite": 4,
+  "composite": 3,
   "actual_max": 7,
   "status": "CAUTION",
   "direction": "LONG_TRAP",
-  "long_trap_signals": 4,
+  "long_trap_signals": 3,
   "short_trap_signals": 0,
   "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
   "signals": {
@@ -11,9 +11,9 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "4L/4S",
+      "value": "3L/4S",
       "threshold": "\u22652\u00d7 asymmetry",
-      "note": "Long=4, Short=4 \u2014 balanced"
+      "note": "Long=3, Short=4 \u2014 balanced"
     },
     "s2_oi_divergence": {
       "score": 1,
@@ -21,23 +21,23 @@
       "max": 1,
       "value": "-1.27%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI -1.3% \u2014 unwinding while price $62702 \u2014 divergence"
+      "note": "OI -1.3% \u2014 unwinding while price $62635 \u2014 divergence"
     },
     "s3_funding": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "0.0085%",
+      "value": "0.0083%",
       "threshold": "|Funding| > 0.01%",
-      "note": "Funding 0.0085% \u2014 neutral"
+      "note": "Funding 0.0083% \u2014 neutral"
     },
     "s4_bid_ask_absorption": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:4 Ask:4",
+      "value": "Bid:3 Ask:2",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=4, Ask=4 \u2014 balanced"
+      "note": "Bid=3, Ask=2 \u2014 balanced"
     },
     "s5_taker_cvd": {
       "score": 1,
@@ -64,14 +64,14 @@
       "note": "0/3 sub-signals \u2014 LTH-SOPR 0.8446 \u2014 below threshold (selling at loss) | 1Y+ UTXO SOPR 0.930 \u2014 below threshold | Supply in Profit 52.1% \u2014 not in distribution zone [BRK \u2014 bitview.space | fetched 2026-07-05T15:07]"
     },
     "s8_options_skew": {
-      "score": 1,
-      "verdict": "TRAP",
+      "score": 0,
+      "verdict": "CLEAR",
       "max": 1,
-      "value": "-6.4%",
+      "value": "-4.9%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -6.4% \u2014 puts richly bid (institutions hedging)"
+      "note": "Skew -4.9% \u2014 neutral"
     }
   },
-  "btc_price": 62702.01,
-  "_collected": "2026-07-05 16:18 UTC"
+  "btc_price": 62635.66,
+  "_collected": "2026-07-05 16:48 UTC"
 }
