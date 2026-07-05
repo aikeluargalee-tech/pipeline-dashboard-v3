@@ -26,160 +26,111 @@
   --af-cyan: #22d3ee;
   --af-purple: #a855f7;
   --af-bg: #0b0d14;
+  --af-card: rgba(18,20,31,0.6);
+  --af-border: rgba(255,255,255,0.06);
   --af-text: #a1a1aa;
   --af-bright: #f5f5f6;
-  /* Liquid Glass tokens */
-  --glass-bg: rgba(255,255,255,0.04);
-  --glass-border: rgba(255,255,255,0.10);
-  --glass-highlight: rgba(255,255,255,0.06);
-  --glass-shadow: 0 8px 32px rgba(0,0,0,0.25);
-  --glass-hover-bg: rgba(255,255,255,0.06);
-  --glass-blur: blur(20px) saturate(180%);
-  --glass-blur-hover: blur(28px) saturate(200%);
-  --spring: cubic-bezier(0.34,1.56,0.64,1);
 }
-body {
-  background: var(--af-bg);
-  overflow-x: hidden;
-}
-
-/* ── Ambient gradient orbs behind glass ── */
-.af-bg-orbs {
-  position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
-}
-.af-orb {
-  position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.18;
-  animation: orbDrift 20s ease-in-out infinite alternate;
-}
-.af-orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(34,211,238,0.3), transparent); top: -10%; left: -5%; animation-delay: 0s; }
-.af-orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(168,85,247,0.25), transparent); bottom: -15%; right: -8%; animation-delay: -7s; }
-.af-orb-3 { width: 350px; height: 350px; background: radial-gradient(circle, rgba(16,185,129,0.15), transparent); top: 40%; left: 50%; animation-delay: -14s; }
-@keyframes orbDrift {
-  0% { transform: translate(0,0) scale(1); }
-  100% { transform: translate(40px,-20px) scale(1.15); }
-}
-
-.af-container { max-width: 960px; margin: 0 auto; padding: 40px 24px; position: relative; z-index: 1; }
+body { background: var(--af-bg); }
+.af-container { max-width: 960px; margin: 0 auto; padding: 40px 24px; }
 @media (max-width: 600px) { .af-container { padding: 24px 12px; } }
-
-/* ── Glass mixin applied to cards ── */
-.af-glass {
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-highlight);
-  transition: all 0.4s var(--spring);
-}
-.af-glass:hover {
-  background: var(--glass-hover-bg);
-  backdrop-filter: var(--glass-blur-hover);
-  -webkit-backdrop-filter: var(--glass-blur-hover);
-  transform: scale(1.02);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.10);
-}
 
 /* Hero */
 .af-hero {
-  border-radius: 20px; padding: 40px; margin-bottom: 32px; text-align: center;
+  background: var(--af-card); border: 1px solid var(--af-border);
+  border-radius: 16px; padding: 36px; margin-bottom: 28px; text-align: center;
 }
-.af-hero h1 { font-size: 1.8rem; color: var(--af-cyan); margin: 0 0 8px; font-weight: 800; letter-spacing: -0.02em; }
+.af-hero h1 { font-size: 1.8rem; color: var(--af-cyan); margin: 0 0 8px; }
 .af-hero .subtitle { color: var(--af-text); font-size: 0.95rem; max-width: 600px; margin: 0 auto; }
-.af-updated { font-size: 0.8rem; color: var(--af-text); margin-top: 14px; font-family: 'JetBrains Mono', monospace; }
+.af-updated { font-size: 0.8rem; color: var(--af-text); margin-top: 12px; font-family: 'JetBrains Mono', monospace; }
 
 /* Section headers */
 .af-section-title {
-  font-size: 1.05rem; font-weight: 700; color: var(--af-bright);
-  margin: 36px 0 18px; padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  letter-spacing: -0.01em;
+  font-size: 1.1rem; font-weight: 700; color: var(--af-bright);
+  margin: 32px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--af-border);
 }
 
 /* Signal cards */
-.af-signal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+.af-signal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
 .af-signal-card {
-  border-radius: 16px; padding: 24px;
+  background: var(--af-card); border: 1px solid var(--af-border);
+  border-radius: 12px; padding: 20px;
 }
-.af-signal-card.TRAP { border-color: rgba(239,68,68,0.25); box-shadow: 0 8px 32px rgba(239,68,68,0.06), inset 0 1px 0 var(--glass-highlight); }
-.af-signal-card.CLEAR { border-color: rgba(16,185,129,0.15); }
-.af-signal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.af-signal-card.TRAP { border-color: rgba(239,68,68,0.3); box-shadow: 0 0 16px rgba(239,68,68,0.08); }
+.af-signal-card.CLEAR { border-color: rgba(16,185,129,0.2); }
+.af-signal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .af-signal-name { font-weight: 700; font-size: 1rem; color: var(--af-bright); }
 .af-signal-badge {
-  display: inline-block; padding: 3px 12px; border-radius: 14px;
-  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
-  backdrop-filter: blur(6px);
+  display: inline-block; padding: 3px 12px; border-radius: 12px;
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
 }
-.af-signal-badge.TRAP { background: rgba(239,68,68,0.12); color: var(--af-red); border: 1px solid rgba(239,68,68,0.25); }
-.af-signal-badge.NEUTRAL { background: rgba(161,161,170,0.06); color: var(--af-text); border: 1px solid rgba(255,255,255,0.08); }
-.af-signal-badge.CLEAR { background: rgba(16,185,129,0.08); color: var(--af-green); border: 1px solid rgba(16,185,129,0.18); }
-.af-signal-desc { font-size: 0.8rem; color: var(--af-text); margin-bottom: 10px; line-height: 1.45; }
+.af-signal-badge.TRAP { background: rgba(239,68,68,0.15); color: var(--af-red); border: 1px solid rgba(239,68,68,0.3); }
+.af-signal-badge.NEUTRAL { background: rgba(161,161,170,0.1); color: var(--af-text); border: 1px solid var(--af-border); }
+.af-signal-badge.CLEAR { background: rgba(16,185,129,0.1); color: var(--af-green); border: 1px solid rgba(16,185,129,0.2); }
+.af-signal-desc { font-size: 0.8rem; color: var(--af-text); margin-bottom: 8px; }
 .af-signal-delta {
-  font-family: 'JetBrains Mono', monospace; font-size: 1.4rem; font-weight: 700;
+  font-family: 'JetBrains Mono', monospace; font-size: 1.3rem; font-weight: 700;
   margin-bottom: 4px;
 }
 .af-signal-threshold { font-size: 0.75rem; color: var(--af-text); }
-.af-score-row { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+.af-score-row { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
 .af-score-dot {
   width: 10px; height: 10px; border-radius: 50%;
-  background: var(--af-text); transition: box-shadow 0.3s ease;
+  background: var(--af-text);
 }
-.af-score-dot.plus1 { background: var(--af-red); box-shadow: 0 0 10px rgba(239,68,68,0.5); }
-.af-score-dot.neg1 { background: var(--af-green); box-shadow: 0 0 10px rgba(16,185,129,0.5); }
+.af-score-dot.plus1 { background: var(--af-red); box-shadow: 0 0 8px rgba(239,68,68,0.5); }
+.af-score-dot.neg1 { background: var(--af-green); box-shadow: 0 0 8px rgba(16,185,129,0.5); }
 
-/* Mining card */
-.af-mining-card { border-radius: 16px; padding: 28px; }
-.af-mining-card.HIGH { border-color: rgba(239,68,68,0.25); }
-.af-mining-card.MEDIUM { border-color: rgba(245,158,11,0.25); }
-.af-mining-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 18px; margin-bottom: 16px; }
-.af-mining-label { font-size: 0.72rem; color: var(--af-text); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+/* Mining context card */
+.af-mining-card {
+  background: var(--af-card); border: 1px solid var(--af-border);
+  border-radius: 12px; padding: 24px;
+}
+.af-mining-card.HIGH { border-color: rgba(239,68,68,0.3); }
+.af-mining-card.MEDIUM { border-color: rgba(245,158,11,0.3); }
+.af-mining-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 12px; }
+.af-mining-item {}
+.af-mining-label { font-size: 0.75rem; color: var(--af-text); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
 .af-mining-value { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 600; color: var(--af-bright); }
 .af-mining-risk {
-  display: inline-block; padding: 6px 18px; border-radius: 10px;
-  font-weight: 700; font-size: 0.9rem; margin-top: 10px;
-  backdrop-filter: blur(6px);
+  display: inline-block; padding: 6px 16px; border-radius: 8px;
+  font-weight: 700; font-size: 0.9rem; margin-top: 8px;
 }
-.af-mining-risk.HIGH { background: rgba(239,68,68,0.12); color: var(--af-red); border: 1px solid rgba(239,68,68,0.25); }
-.af-mining-risk.MEDIUM { background: rgba(245,158,11,0.12); color: var(--af-yellow); border: 1px solid rgba(245,158,11,0.25); }
-.af-mining-risk.LOW { background: rgba(16,185,129,0.08); color: var(--af-green); border: 1px solid rgba(16,185,129,0.18); }
-.af-s6-modifier { font-size: 0.8rem; color: var(--af-text); margin-top: 6px; font-style: italic; }
+.af-mining-risk.HIGH { background: rgba(239,68,68,0.15); color: var(--af-red); border: 1px solid rgba(239,68,68,0.3); }
+.af-mining-risk.MEDIUM { background: rgba(245,158,11,0.15); color: var(--af-yellow); border: 1px solid rgba(245,158,11,0.3); }
+.af-mining-risk.LOW { background: rgba(16,185,129,0.1); color: var(--af-green); border: 1px solid rgba(16,185,129,0.2); }
+.af-s6-modifier { font-size: 0.8rem; color: var(--af-text); margin-top: 4px; font-style: italic; }
 
 /* Tripwire grid */
-.af-tw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+.af-tw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
 .af-tw-card {
-  border-radius: 14px; padding: 18px;
+  background: var(--af-card); border: 1px solid var(--af-border);
+  border-radius: 10px; padding: 16px;
 }
-.af-tw-card.ACTIVE { border-color: rgba(239,68,68,0.25); }
-.af-tw-card.WATCH { border-color: rgba(245,158,11,0.25); }
-.af-tw-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+.af-tw-card.ACTIVE { border-color: rgba(239,68,68,0.3); }
+.af-tw-card.WATCH { border-color: rgba(245,158,11,0.3); }
+.af-tw-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
 .af-tw-name { font-weight: 600; font-size: 0.9rem; color: var(--af-bright); }
-.af-tw-channel { font-size: 0.68rem; color: var(--af-text); text-transform: uppercase; }
+.af-tw-channel { font-size: 0.7rem; color: var(--af-text); text-transform: uppercase; }
 .af-tw-state {
   display: inline-block; padding: 2px 10px; border-radius: 10px;
-  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.03em;
-  backdrop-filter: blur(6px);
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.03em;
 }
-.af-tw-state.ACTIVE { background: rgba(239,68,68,0.12); color: var(--af-red); }
-.af-tw-state.INACTIVE { background: rgba(161,161,170,0.05); color: var(--af-text); }
-.af-tw-state.WATCH { background: rgba(245,158,11,0.10); color: var(--af-yellow); }
-.af-tw-detail { font-size: 0.75rem; color: var(--af-text); margin-top: 8px; line-height: 1.4; }
+.af-tw-state.ACTIVE { background: rgba(239,68,68,0.15); color: var(--af-red); }
+.af-tw-state.INACTIVE { background: rgba(161,161,170,0.08); color: var(--af-text); }
+.af-tw-state.WATCH { background: rgba(245,158,11,0.12); color: var(--af-yellow); }
+.af-tw-detail { font-size: 0.75rem; color: var(--af-text); margin-top: 6px; }
 
-/* Loading/error */
+/* Loading/error states */
 .af-loading { text-align: center; padding: 40px; color: var(--af-text); }
 .af-error { color: var(--af-red); text-align: center; padding: 20px; }
 </style>
 </head>
 <body>
 
-<!-- Ambient gradient orbs behind glass -->
-<div class="af-bg-orbs">
-  <div class="af-orb af-orb-1"></div>
-  <div class="af-orb af-orb-2"></div>
-  <div class="af-orb af-orb-3"></div>
-</div>
-
 <div class="af-container">
   <!-- Hero -->
-  <div class="af-hero af-glass">
+  <div class="af-hero">
     <h1>🤖 AI Factors Monitor</h1>
     <p class="subtitle">Apodex AI→BTC transmission channel signals — tracking how artificial intelligence reshapes Bitcoin markets through six independent structural channels.</p>
     <div class="af-updated" id="af-updated">Loading…</div>
@@ -193,7 +144,7 @@ body {
 
   <!-- Layer 0.5 Mining Economics -->
   <div class="af-section-title">⛏ Mining Economics Context <span style="font-weight:400;font-size:0.8rem;color:var(--af-text)">— Layer 0.5</span></div>
-  <div class="af-mining-card af-glass" id="af-mining">
+  <div class="af-mining-card" id="af-mining">
     <div class="af-loading">Loading mining data…</div>
   </div>
 
