@@ -1,12 +1,12 @@
 {
   "header": {
-    "generated_timestamp": "2026-07-05T05:05:27Z",
+    "generated_timestamp": "2026-07-05T05:19:44Z",
     "btc_price": 62862.01,
     "change_24h": 0.246,
-    "bid": 62779.9,
-    "ask": 62777.7,
+    "bid": 62787.5,
+    "ask": 62778.71,
     "spread": 0.01,
-    "volume_24h": 546635144.1
+    "volume_24h": 547605299.6
   },
   "critical": {
     "btc_price": 62862.01,
@@ -52,50 +52,50 @@
     "black_swan_score": "0/17",
     "correlation_r": 0.3661,
     "liq_clusters": "Long: $62,750, $62,400, $62,350, $61,700 | Short: $63,000, $63,450",
-    "perp_basis_pct": -0.0624,
+    "perp_basis_pct": -0.0459,
     "order_book_top5": {
       "bids": [
         {
-          "price": 62784.29,
-          "size": 3.70458
+          "price": 62782.61,
+          "size": 0.21504
         },
         {
-          "price": 62784.28,
-          "size": 0.00025
+          "price": 62782.6,
+          "size": 0.0061
         },
         {
-          "price": 62784.27,
+          "price": 62782.59,
           "size": 0.00016
         },
         {
-          "price": 62784.04,
-          "size": 8e-05
+          "price": 62782.4,
+          "size": 9e-05
         },
         {
-          "price": 62783.52,
-          "size": 9e-05
+          "price": 62782.39,
+          "size": 0.05562
         }
       ],
       "asks": [
         {
-          "price": 62784.3,
-          "size": 0.21743
+          "price": 62782.62,
+          "size": 3.66747
         },
         {
-          "price": 62784.31,
-          "size": 0.00097
+          "price": 62782.63,
+          "size": 0.00882
         },
         {
-          "price": 62784.32,
+          "price": 62782.64,
           "size": 0.00016
         },
         {
-          "price": 62784.85,
-          "size": 8e-05
+          "price": 62782.73,
+          "size": 0.004
         },
         {
-          "price": 62785.01,
-          "size": 0.0025
+          "price": 62784.0,
+          "size": 0.0492
         }
       ]
     },
@@ -103,7 +103,7 @@
     "realized_vol_1d_pct": 53.08,
     "mstr_close": 100.77,
     "usdjpy": 161.337,
-    "daily_rsi_14": 57.5
+    "daily_rsi_14": 57.4
   },
   "reference": {
     "sr_1h": "S: $62,500 / $62,330 / $62,090 | R: $63,450",
@@ -194,7 +194,7 @@
       "as_of": "2026-07-05",
       "prior_date": "2026-07-05"
     },
-    "last_updated": "2026-07-05T04:36:16Z",
+    "last_updated": "2026-07-05T05:19:33Z",
     "s11_volume_anomaly": {
       "score": 0,
       "label": "NEUTRAL",
@@ -215,8 +215,8 @@
           "AI equity index (NVDA/MSFT)"
         ],
         "scan": "check_tw1",
-        "state": "INACTIVE",
-        "detail": "ETF flows +221M \u2014 normal"
+        "state": "\u26a0\ufe0f ACTIVE",
+        "detail": "ETF outflow $2000M \u2014 capital rotation risk"
       },
       "TW2_CH2_PRICE_GAP": {
         "channel": "Ch.2 \u2014 Energy / Miner Pivot",
@@ -227,7 +227,7 @@
         ],
         "scan": "check_tw2",
         "state": "INACTIVE",
-        "detail": "Hashprice data not available"
+        "detail": "Hashprice FLAT \u2014 no stress signal"
       },
       "TW3_CH3_RAIL_COMPETITION": {
         "channel": "Ch.3 \u2014 AI Agent Payment Rails",
@@ -275,9 +275,9 @@
       }
     },
     "tripwire_summary": {
-      "active_count": 0,
+      "active_count": 1,
       "total": 6,
-      "as_of": "2026-07-05T04:36:16Z"
+      "as_of": "2026-07-05T05:19:33Z"
     },
     "layer0_5": {
       "forced_sell_risk": "LOW",
