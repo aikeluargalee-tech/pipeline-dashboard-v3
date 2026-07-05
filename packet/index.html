@@ -798,6 +798,57 @@ function generateTextBrief(data) {
   }
   out += `\n`;
 
+  // Tier 3.5: AI_FACTORS — Apodex AI→BTC transmission channel signals
+  out += `[AI_FACTORS] ${subSeparator.substring(12)}\n`;
+  if (data.ai_factors) {
+    const af = data.ai_factors;
+    const indent = ' '.repeat(22);
+    const sep = `${subSeparator.substring(12)}`;
+
+    // --- S9/S10/S11 Signal Row ---
+    out += `--- Apodex AI→BTC Signals ---\n`;
+    const s9 = af.s9_vix_roc || {};
+    const s10 = af.s10_us10y_roc || {};
+    const s11 = af.s11_volume_anomaly || {};
+    const sigPad = 5;
+
+    const fmtSig = (name, sig) => {
+      const lbl = sig.label || 'N/A';
+      const sc = sig.score != null ? (sig.score > 0 ? `+${sig.score}` : `${sig.score}`) : '?';
+      const d = sig.delta != null ? sig.delta : sig.ratio != null ? sig.ratio + '×' : 'N/A';
+      return `${name.padEnd(sigPad)} ${sc.padEnd(3)} ${lbl.padEnd(9)} Δ${d}`;
+    };
+    out += `${fmtSig('S9', s9)}  [VIX RoC ≥3pt]\n`;
+    out += `${fmtSig('S10', s10)}  [US10Y RoC ≥8bps]\n`;
+    out += `${fmtSig('S11', s11)}  [Vol 3× | bearish only]\n`;
+
+    // --- Layer 0.5 ---
+    const l05 = af.layer0_5 || {};
+    out += `\n--- Mining Economics [Layer 0.5] ---\n`;
+    out += `FORCED_SELL_RISK`.padEnd(20) + `: ${l05.forced_sell_risk || 'N/A'}\n`;
+    out += `S6_MODIFIER`.padEnd(20) + `: ${l05.s6_modifier || 'N/A'}\n`;
+    const hp = l05.hashprice || {};
+    out += `HASHPRICE_DIR`.padEnd(20) + `: ${hp.direction || 'N/A'}\n`;
+    const erc = l05.ercot_proxy || {};
+    const ercPct = erc.pct_vs_30d != null ? (erc.pct_vs_30d > 0 ? '+' : '') + erc.pct_vs_30d + '%' : 'N/A';
+    out += `ERCOT_PROXY`.padEnd(20) + `: ${ercPct} vs 30D mean (Henry Hub NG)\n`;
+
+    // --- Tripwires ---
+    const tw = af.tripwires || {};
+    const twSum = af.tripwire_summary || {};
+    out += `\n--- Channel Tripwires ---\n`;
+    out += `ACTIVE`.padEnd(20) + `: ${twSum.active_count || 0}/${twSum.total || 6}\n`;
+    const twOrder = ['TW1_CH1_CAPITAL_REVERSAL','TW2_CH2_PRICE_GAP','TW3_CH3_RAIL_COMPETITION','TW4_CH4_SCENARIO_B','TW5_CH4_SCENARIO_C','TW6_CH6_CORPORATE_TREASURY'];
+    for (const id of twOrder) {
+      const t = tw[id] || {};
+      const state = (t.state || 'INACTIVE');
+      const marker = state.startsWith('⚠') ? '🔴' : '🟢';
+      const label = id.replace('TW1_','TW-1 ').replace('TW2_','TW-2 ').replace('TW3_','TW-3 ').replace('TW4_','TW-4 ').replace('TW5_','TW-5 ').replace('TW6_','TW-6 ').replace(/_/g,' ');
+      out += `${marker} ${label.padEnd(28)} ${state}\n`;
+    }
+  }
+  out += `\n`;
+
   // Tier 4: STATUS
   out += `[STATUS] ${subSeparator.substring(9)}\n`;
   if (data.status) {
