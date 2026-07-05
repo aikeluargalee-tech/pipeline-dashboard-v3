@@ -882,10 +882,12 @@ function generateTextBrief(data) {
   if (data.reference) {
     for (const [k, v] of Object.entries(data.reference)) {
       if (k === 'cycle' && typeof v === 'object' && v !== null) {
-        out += `CYCLE_MVRV_Z      : ${v.mvrv_z ?? v['mvrv-z'] ?? 'N/A'}\n`;
-        out += `CYCLE_SOPR        : ${v.sopr ?? 'N/A'}\n`;
-        out += `CYCLE_NETFLOW     : ${v.netflow_7d ?? v.netflow ?? 'N/A'}\n`;
-        out += `CYCLE_REGIME      : ${v.regime ?? 'N/A'}\n`;
+        const cmv = v.mvrv_z ?? v['mvrv-z'];
+        if (cmv != null) out += `CYCLE_MVRV_Z      : ${cmv}\n`;
+        if (v.sopr != null) out += `CYCLE_SOPR        : ${v.sopr}\n`;
+        const cnf = v.netflow_7d ?? v.netflow;
+        if (cnf != null) out += `CYCLE_NETFLOW     : ${cnf}\n`;
+        if (v.regime != null && v.regime !== 'N/A' && v.regime !== '—' && v.regime !== '') out += `CYCLE_REGIME      : ${v.regime}\n`;
       } else {
         const formattedKey = k.toUpperCase().padEnd(20, ' ');
         // Skip full BRK JSON dump when summary is present
