@@ -1,12 +1,12 @@
 {
   "header": {
-    "generated_timestamp": "2026-07-05T06:25:32Z",
+    "generated_timestamp": "2026-07-05T06:41:29Z",
     "btc_price": 62691.44,
     "change_24h": 0.179,
-    "bid": 62786.81,
-    "ask": 62786.82,
+    "bid": 62759.5,
+    "ask": 62757.09,
     "spread": 0.01,
-    "volume_24h": 543802578.3
+    "volume_24h": 541360404.1
   },
   "critical": {
     "btc_price": 62691.44,
@@ -52,50 +52,50 @@
     "black_swan_score": "0/17",
     "correlation_r": 0.3661,
     "liq_clusters": "Long: $62,750, $62,600, $62,400, $62,350, $61,700 | Short: $63,000, $63,450",
-    "perp_basis_pct": -0.0359,
+    "perp_basis_pct": -0.0457,
     "order_book_top5": {
       "bids": [
         {
-          "price": 62786.81,
-          "size": 0.95572
+          "price": 62757.08,
+          "size": 0.9949
         },
         {
-          "price": 62786.8,
-          "size": 0.00115
+          "price": 62757.07,
+          "size": 0.0086
         },
         {
-          "price": 62786.79,
-          "size": 0.00016
+          "price": 62757.06,
+          "size": 0.00033
         },
         {
-          "price": 62786.6,
-          "size": 8e-05
+          "price": 62756.01,
+          "size": 0.00062
         },
         {
-          "price": 62786.47,
-          "size": 0.00018
+          "price": 62756.0,
+          "size": 0.02418
         }
       ],
       "asks": [
         {
-          "price": 62786.82,
-          "size": 4.37228
+          "price": 62757.09,
+          "size": 5.00724
         },
         {
-          "price": 62786.83,
-          "size": 0.00034
-        },
-        {
-          "price": 62786.84,
-          "size": 0.00016
-        },
-        {
-          "price": 62786.86,
+          "price": 62757.1,
           "size": 0.00061
         },
         {
-          "price": 62786.94,
-          "size": 0.0161
+          "price": 62757.11,
+          "size": 0.00016
+        },
+        {
+          "price": 62757.61,
+          "size": 0.004
+        },
+        {
+          "price": 62757.67,
+          "size": 8e-05
         }
       ]
     },
@@ -103,7 +103,7 @@
     "realized_vol_1d_pct": 53.08,
     "mstr_close": 100.77,
     "usdjpy": 161.337,
-    "daily_rsi_14": 57.5
+    "daily_rsi_14": 57.2
   },
   "reference": {
     "sr_1h": "S: $62,525 / $62,330 / $62,090 | R: $63,450",
@@ -194,7 +194,7 @@
       "as_of": "2026-07-05",
       "prior_date": "2026-07-05"
     },
-    "last_updated": "2026-07-05T06:14:29Z",
+    "last_updated": "2026-07-05T06:37:34Z",
     "s11_volume_anomaly": {
       "score": 0,
       "label": "NEUTRAL",
@@ -274,12 +274,12 @@
       "as_of": "2026-07-05T06:14:29Z"
     },
     "layer0_5": {
-      "forced_sell_risk": "LOW",
-      "s6_modifier": "DISTRIBUTION > FORCED_SELL",
+      "forced_sell_risk": "MEDIUM",
+      "s6_modifier": "FORCED_SELL > DISTRIBUTION",
       "hashprice": {
-        "direction": "FLAT",
-        "usd_per_ph": null,
-        "updated": null,
+        "direction": "FALLING",
+        "usd_per_ph": 29.61,
+        "updated": "2026-07-05",
         "source": "Hashrate Index \u2014 manual weekly update"
       },
       "ercot_proxy": {
@@ -303,7 +303,7 @@
         ],
         "as_of": "2026-07-05"
       },
-      "as_of": "2026-07-05T06:14:29Z"
+      "as_of": "2026-07-05T06:37:34Z"
     }
   },
   "status": {
