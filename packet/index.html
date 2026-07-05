@@ -339,6 +339,15 @@
   background: rgba(255, 255, 255, 0.02);
   border-radius: 0 0 12px 12px;
 }
+.terminal-controls-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px 12px 0 0;
+}
 .terminal-block {
   margin: 0;
   padding: 16px 20px;
@@ -567,6 +576,12 @@
 
   <!-- Raw Text CRT Terminal View (only view) -->
   <div class="terminal-wrapper">
+    <div class="terminal-controls-top">
+      <p style="margin: 0; font-size: 0.78em; color: var(--muted); font-family: 'JetBrains Mono', monospace; opacity: 0.7;">
+        Copy and paste into any LLM for an AI verdict.
+      </p>
+      <button class="action-btn" id="copy-text-btn-top" aria-label="Copy terminal text to clipboard">Copy Packet</button>
+    </div>
     <pre class="terminal-block" id="terminal-pre">Loading terminal brief output...</pre>
     <div class="terminal-controls-bottom">
       <p style="margin: 0 0 8px; font-size: 0.78em; color: var(--muted); font-family: 'JetBrains Mono', monospace; opacity: 0.7;">
@@ -1316,18 +1331,17 @@ function buildCopyText(data) {
 }
 
 function setupClipboardCopy() {
-  const copyBtn = document.getElementById('copy-text-btn');
-  copyBtn.addEventListener('click', async () => {
+  async function copyToClipboard(btn) {
     const text = buildCopyText(currentPacketData);
     try {
       await navigator.clipboard.writeText(text);
-      copyBtn.textContent = 'Copied!';
-      copyBtn.style.color = 'var(--green)';
-      copyBtn.style.borderColor = 'var(--green)';
+      btn.textContent = 'Copied!';
+      btn.style.color = 'var(--green)';
+      btn.style.borderColor = 'var(--green)';
       setTimeout(() => {
-        copyBtn.textContent = 'Copy Packet';
-        copyBtn.style.color = '';
-        copyBtn.style.borderColor = '';
+        btn.textContent = 'Copy Packet';
+        btn.style.color = '';
+        btn.style.borderColor = '';
       }, 2000);
     } catch (err) {
       console.error("Clipboard copy failed:", err);
@@ -1337,10 +1351,16 @@ function setupClipboardCopy() {
       textArea.select();
       document.execCommand("copy");
       document.body.removeChild(textArea);
-      copyBtn.textContent = 'Copied!';
-      setTimeout(() => { copyBtn.textContent = 'Copy Packet'; }, 2000);
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy Packet'; }, 2000);
     }
-  });
+  }
+
+  const topBtn = document.getElementById('copy-text-btn-top');
+  if (topBtn) topBtn.addEventListener('click', () => copyToClipboard(topBtn));
+
+  const bottomBtn = document.getElementById('copy-text-btn');
+  if (bottomBtn) bottomBtn.addEventListener('click', () => copyToClipboard(bottomBtn));
 }
 
 // --- Init ---
