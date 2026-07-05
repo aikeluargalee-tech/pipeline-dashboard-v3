@@ -849,6 +849,23 @@ function generateTextBrief(data) {
   }
   out += `\n`;
 
+  // Tier 3.6: REGIME — synthesized structural market regime
+  out += `[REGIME] ${subSeparator.substring(9)}\n`;
+  if (data.regime && Object.keys(data.regime).length > 0) {
+    const rg = data.regime;
+    out += `REGIME_LABEL`.padEnd(20) + `: ${rg.label || 'N/A'}\n`;
+    out += `REGIME_CONFIDENCE`.padEnd(20) + `: ${rg.confidence != null ? rg.confidence.toFixed(2) : 'N/A'}\n`;
+    if (rg.sub_regimes) {
+      out += `REGIME_BTC_CYCLE`.padEnd(20) + `: ${rg.sub_regimes.btc_cycle || 'N/A'}\n`;
+      out += `REGIME_MACRO`.padEnd(20) + `: ${rg.sub_regimes.macro || 'N/A'}\n`;
+      out += `REGIME_DERIVATIVES`.padEnd(20) + `: ${rg.sub_regimes.derivatives || 'N/A'}\n`;
+    }
+    if (rg.signals && rg.signals.length > 0) {
+      out += `REGIME_SIGNALS`.padEnd(20) + `: ${rg.signals.join(', ')}\n`;
+    }
+  }
+  out += `\n`;
+
   // Tier 4: STATUS
   out += `[STATUS] ${subSeparator.substring(9)}\n`;
   if (data.status) {
