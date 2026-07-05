@@ -254,7 +254,7 @@ function renderSignal(id, data) {
   }
 
   return `
-    <div class="af-signal-card ${label}">
+    <div class="af-signal-card af-glass ${label}">
       <div class="af-signal-header">
         <span class="af-signal-name">${def.name || id}</span>
         <span class="af-signal-badge ${label}">${label}</span>
@@ -319,7 +319,7 @@ function renderTripwires(tw) {
     const stateClass = isActive ? 'ACTIVE' : (state === 'WATCH' ? 'WATCH' : 'INACTIVE');
     const stateLabel = isActive ? '⚠️ ' + state : state;
     return `
-      <div class="af-tw-card ${cardClass}">
+      <div class="af-tw-card af-glass ${cardClass}">
         <div class="af-tw-header">
           <div>
             <div class="af-tw-name">${labels.name || id}</div>
