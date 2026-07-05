@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>AI Factors — Apodex AI→BTC Transmission Channels | Pipeline Dashboard</title>
+<meta name="description" content="AI Factors Monitor: Apodex AI→BTC transmission channel signals — S9/S10/S11 rate-of-change macro traps, Layer 0.5 mining economics context, and 6-channel tripwire monitoring framework.">
+<link rel="canonical" href="https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/ai-factors/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css?v=12">
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+<link rel="apple-touch-icon" href="../assets/logo.png">
+<meta name="theme-color" content="#05070d">
+
+<style>
+:root {
+  --af-green: #10b981;
+  --af-red: #ef4444;
+  --af-yellow: #f59e0b;
+  --af-cyan: #22d3ee;
+  --af-purple: #a855f7;
+  --af-bg: #0b0d14;
+  --af-card: rgba(18,20,31,0.6);
+  --af-border: rgba(255,255,255,0.06);
+  --af-text: #a1a1aa;
+  --af-bright: #f5f5f6;
+}
+body { background: var(--af-bg); }
+.af-container { max-width: 960px; margin: 0 auto; padding: 40px 24px; }
+@media (max-width: 600px) { .af-container { padding: 24px 12px; } }
+
+/* Hero */
+.af-hero {
+  background: var(--af-card); border: 1px solid var(--af-border);
+  border-radius: 16px; padding: 36px; margin-bottom: 28px; text-align: center;
+}
+.af-hero h1 { font-size: 1.8rem; color: var(--af-cyan); margin: 0 0 8px; }
+.af-hero .subtitle { color: var(--af-text); font-size: 0.95rem; max-width: 600px; margin: 0 auto; }
+.af-updated { font-size: 0.8rem; color: var(--af-text); margin-top: 12px; font-family: 'JetBrains Mono', monospace; }
+
+/* Section headers */
+.af-section-title {
+  font-size: 1.1rem; font-weight: 700; color: var(--af-bright);
+  margin: 32px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--af-border);
+}
+
+/* Signal cards */
+.af-signal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.af-signal-card {
+  background: var(--af-card); border: 1px solid var(--af-border);
+  border-radius: 12px; padding: 20px;
+}
+.af-signal-card.TRAP { border-color: rgba(239,68,68,0.3); box-shadow: 0 0 16px rgba(239,68,68,0.08); }
+.af-signal-card.CLEAR { border-color: rgba(16,185,129,0.2); }
+.af-signal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.af-signal-name { font-weight: 700; font-size: 1rem; color: var(--af-bright); }
+.af-signal-badge {
+  display: inline-block; padding: 3px 12px; border-radius: 12px;
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+}
+.af-signal-badge.TRAP { background: rgba(239,68,68,0.15); color: var(--af-red); border: 1px solid rgba(239,68,68,0.3); }
+.af-signal-badge.NEUTRAL { background: rgba(161,161,170,0.1); color: var(--af-text); border: 1px solid var(--af-border); }
+.af-signal-badge.CLEAR { background: rgba(16,185,129,0.1); color: var(--af-green); border: 1px solid rgba(16,185,129,0.2); }
+.af-signal-desc { font-size: 0.8rem; color: var(--af-text); margin-bottom: 8px; }
+.af-signal-delta {
+  font-family: 'JetBrains Mono', monospace; font-size: 1.3rem; font-weight: 700;
+  margin-bottom: 4px;
+}
+.af-signal-threshold { font-size: 0.75rem; color: var(--af-text); }
+.af-score-row { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
+.af-score-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--af-text);
+}
+.af-score-dot.plus1 { background: var(--af-red); box-shadow: 0 0 8px rgba(239,68,68,0.5); }
+.af-score-dot.neg1 { background: var(--af-green); box-shadow: 0 0 8px rgba(16,185,129,0.5); }
+
+/* Mining context card */
+.af-mining-card {
+  background: var(--af-card); border: 1px solid var(--af-border);
+  border-radius: 12px; padding: 24px;
+}
+.af-mining-card.HIGH { border-color: rgba(239,68,68,0.3); }
+.af-mining-card.MEDIUM { border-color: rgba(245,158,11,0.3); }
+.af-mining-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 12px; }
+.af-mining-item {}
+.af-mining-label { font-size: 0.75rem; color: var(--af-text); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+.af-mining-value { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 600; color: var(--af-bright); }
+.af-mining-risk {
+  display: inline-block; padding: 6px 16px; border-radius: 8px;
+  font-weight: 700; font-size: 0.9rem; margin-top: 8px;
+}
+.af-mining-risk.HIGH { background: rgba(239,68,68,0.15); color: var(--af-red); border: 1px solid rgba(239,68,68,0.3); }
+.af-mining-risk.MEDIUM { background: rgba(245,158,11,0.15); color: var(--af-yellow); border: 1px solid rgba(245,158,11,0.3); }
+.af-mining-risk.LOW { background: rgba(16,185,129,0.1); color: var(--af-green); border: 1px solid rgba(16,185,129,0.2); }
+.af-s6-modifier { font-size: 0.8rem; color: var(--af-text); margin-top: 4px; font-style: italic; }
+
+/* Tripwire grid */
+.af-tw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.af-tw-card {
+  background: var(--af-card); border: 1px solid var(--af-border);
+  border-radius: 10px; padding: 16px;
+}
+.af-tw-card.ACTIVE { border-color: rgba(239,68,68,0.3); }
+.af-tw-card.WATCH { border-color: rgba(245,158,11,0.3); }
+.af-tw-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.af-tw-name { font-weight: 600; font-size: 0.9rem; color: var(--af-bright); }
+.af-tw-channel { font-size: 0.7rem; color: var(--af-text); text-transform: uppercase; }
+.af-tw-state {
+  display: inline-block; padding: 2px 10px; border-radius: 10px;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.03em;
+}
+.af-tw-state.ACTIVE { background: rgba(239,68,68,0.15); color: var(--af-red); }
+.af-tw-state.INACTIVE { background: rgba(161,161,170,0.08); color: var(--af-text); }
+.af-tw-state.WATCH { background: rgba(245,158,11,0.12); color: var(--af-yellow); }
+.af-tw-detail { font-size: 0.75rem; color: var(--af-text); margin-top: 6px; }
+
+/* Loading/error states */
+.af-loading { text-align: center; padding: 40px; color: var(--af-text); }
+.af-error { color: var(--af-red); text-align: center; padding: 20px; }
+</style>
+</head>
+<body>
+
+<div class="af-container">
+  <!-- Hero -->
+  <div class="af-hero">
+    <h1>🤖 AI Factors Monitor</h1>
+    <p class="subtitle">Apodex AI→BTC transmission channel signals — tracking how artificial intelligence reshapes Bitcoin markets through six independent structural channels.</p>
+    <div class="af-updated" id="af-updated">Loading…</div>
+  </div>
+
+  <!-- Signal Grid: S9, S10, S11 -->
+  <div class="af-section-title">📡 Rate-of-Change Macro Signals</div>
+  <div class="af-signal-grid" id="af-signals">
+    <div class="af-loading">Loading signals…</div>
+  </div>
+
+  <!-- Layer 0.5 Mining Economics -->
+  <div class="af-section-title">⛏ Mining Economics Context <span style="font-weight:400;font-size:0.8rem;color:var(--af-text)">— Layer 0.5</span></div>
+  <div class="af-mining-card" id="af-mining">
+    <div class="af-loading">Loading mining data…</div>
+  </div>
+
+  <!-- Channel Tripwires -->
+  <div class="af-section-title">🔭 Channel Tripwire Monitor <span style="font-weight:400;font-size:0.8rem;color:var(--af-text)">— TW-1 through TW-6</span></div>
+  <div class="af-tw-grid" id="af-tripwires">
+    <div class="af-loading">Loading tripwires…</div>
+  </div>
+</div>
+
+<script>
+const DATA_URL = '../packet/data.json';
+let pollingTimer = null;
+let pollingInterval = 60;
+
+// Signal definitions
+const SIGNAL_DEFS = {
+  s9_vix_roc: {
+    name: 'S9 — VIX Rate-of-Change',
+    desc: 'VIX session delta vs prior close. ≥3pt rise signals macro stress accelerating — AI systems already reacting.',
+    threshold: '≥ +3.0 pts',
+    deltaUnit: 'pts',
+    calibration: '0.87× StdDev, ~4 fires/yr, zero false positives'
+  },
+  s10_us10y_roc: {
+    name: 'S10 — US10Y Rate-of-Change',
+    desc: 'US10Y intraday delta. ≥8bps rise signals rate repricing in progress — algos reprice BTC on the move, not the level.',
+    threshold: '≥ +8 bps',
+    deltaUnit: 'bps',
+    calibration: '1.39× StdDev, ~8 fires/yr, 371 days validated'
+  },
+  s11_volume_anomaly: {
+    name: 'S11 — Volume Anomaly Detector',
+    desc: '4H candle volume ≥3× 20-period rolling mean on a bearish candle. BTC-internal cascade precursor — 24h lead time validated.',
+    threshold: '≥ 3.0× rolling mean',
+    deltaUnit: '×',
+    calibration: 'Oct 2025 cascade validated, 8h development window'
+  }
+};
+
+function getScoreClass(score) {
+  if (score > 0) return 'plus1';
+  if (score < 0) return 'neg1';
+  return '';
+}
+
+function renderSignal(id, data) {
+  const def = SIGNAL_DEFS[id] || {};
+  const label = data.label || 'NEUTRAL';
+  const score = data.score != null ? data.score : 0;
+  const scoreStr = score > 0 ? '+' + score : '' + score;
+  let deltaVal = '—';
+  if (data.delta != null) {
+    const sign = data.delta > 0 ? '+' : '';
+    deltaVal = sign + data.delta + ' ' + (def.deltaUnit || '');
+  } else if (data.ratio != null) {
+    deltaVal = data.ratio + '×';
+  }
+
+  return `
+    <div class="af-signal-card ${label}">
+      <div class="af-signal-header">
+        <span class="af-signal-name">${def.name || id}</span>
+        <span class="af-signal-badge ${label}">${label}</span>
+      </div>
+      <div class="af-signal-desc">${def.desc || ''}</div>
+      <div class="af-signal-delta" style="color: ${label === 'TRAP' ? 'var(--af-red)' : label === 'CLEAR' ? 'var(--af-green)' : 'var(--af-text)'}">
+        Δ ${deltaVal}
+      </div>
+      <div class="af-signal-threshold">Threshold: ${def.threshold || '—'} · ${def.calibration || ''}</div>
+      <div class="af-score-row">
+        Score: <span class="af-score-dot ${getScoreClass(score)}"></span> ${scoreStr}
+      </div>
+    </div>`;
+}
+
+function renderMining(l05) {
+  const hp = l05.hashprice || {};
+  const erc = l05.ercot_proxy || {};
+  const risk = l05.forced_sell_risk || 'LOW';
+  const s6 = l05.s6_modifier || '—';
+  const ercPct = erc.pct_vs_30d != null ? (erc.pct_vs_30d > 0 ? '+' : '') + erc.pct_vs_30d + '%' : 'N/A';
+  const ercTag = erc.tag || '';
+
+  return `
+    <div class="af-mining-grid">
+      <div class="af-mining-item">
+        <div class="af-mining-label">Hashprice 7D Trend</div>
+        <div class="af-mining-value">${hp.direction || 'N/A'}</div>
+      </div>
+      <div class="af-mining-item">
+        <div class="af-mining-label">ERCOT Proxy (Henry Hub NG)</div>
+        <div class="af-mining-value">${ercPct} vs 30D</div>
+      </div>
+      <div class="af-mining-item">
+        <div class="af-mining-label">Miner AI Contract</div>
+        <div class="af-mining-value">${(l05.miner_ai_contract || {}).detected ? '⚠️ DETECTED' : 'None'}</div>
+      </div>
+    </div>
+    <span class="af-mining-risk ${risk}">FORCED SELL RISK: ${risk}</span>
+    <div class="af-s6-modifier">S6 Interpretation: ${s6}</div>
+    ${ercTag ? '<div style="font-size:0.7rem;color:var(--af-text);margin-top:4px">' + ercTag + '</div>' : ''}
+  `;
+}
+
+const TW_LABELS = {
+  'TW1_CH1_CAPITAL_REVERSAL': { name: 'TW-1: Capital Reversal', channel: 'Ch.1 — Capital Allocation' },
+  'TW2_CH2_PRICE_GAP': { name: 'TW-2: Mining Price Gap', channel: 'Ch.2 — Energy / Miner Pivot' },
+  'TW3_CH3_RAIL_COMPETITION': { name: 'TW-3: Rail Competition', channel: 'Ch.3 — AI Payment Rails' },
+  'TW4_CH4_SCENARIO_B': { name: 'TW-4: Scenario B', channel: 'Ch.4 — AI Capex Signal' },
+  'TW5_CH4_SCENARIO_C': { name: 'TW-5: Scenario C', channel: 'Ch.4 — NFP / Labor Trend' },
+  'TW6_CH6_CORPORATE_TREASURY': { name: 'TW-6: Corporate BTC', channel: 'Ch.6 — AI Treasury' }
+};
+
+function renderTripwires(tw) {
+  const order = Object.keys(TW_LABELS);
+  return order.map(id => {
+    const t = tw[id] || {};
+    const labels = TW_LABELS[id] || {};
+    const state = (t.state || 'INACTIVE').replace('⚠️ ', '');
+    const isActive = t.state && t.state.startsWith('⚠️');
+    const cardClass = isActive ? 'ACTIVE' : (state === 'WATCH' ? 'WATCH' : '');
+    const stateClass = isActive ? 'ACTIVE' : (state === 'WATCH' ? 'WATCH' : 'INACTIVE');
+    const stateLabel = isActive ? '⚠️ ' + state : state;
+    return `
+      <div class="af-tw-card ${cardClass}">
+        <div class="af-tw-header">
+          <div>
+            <div class="af-tw-name">${labels.name || id}</div>
+            <div class="af-tw-channel">${labels.channel || ''}</div>
+          </div>
+          <span class="af-tw-state ${stateClass}">${stateLabel}</span>
+        </div>
+        <div class="af-tw-detail">${t.detail || '—'}</div>
+      </div>`;
+  }).join('');
+}
+
+async function fetchData() {
+  try {
+    const res = await fetch(DATA_URL + '?t=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const af = data.ai_factors || {};
+
+    // Updated timestamp
+    document.getElementById('af-updated').textContent =
+      'Last updated: ' + (af.last_updated ? new Date(af.last_updated).toLocaleString() : 'N/A');
+
+    // Signals
+    document.getElementById('af-signals').innerHTML =
+      renderSignal('s9_vix_roc', af.s9_vix_roc || {}) +
+      renderSignal('s10_us10y_roc', af.s10_us10y_roc || {}) +
+      renderSignal('s11_volume_anomaly', af.s11_volume_anomaly || {});
+
+    // Mining
+    const l05 = af.layer0_5 || {};
+    document.getElementById('af-mining').className = 'af-mining-card ' + (l05.forced_sell_risk || 'LOW');
+    document.getElementById('af-mining').innerHTML = renderMining(l05);
+
+    // Tripwires
+    document.getElementById('af-tripwires').innerHTML = renderTripwires(af.tripwires || {});
+
+  } catch (e) {
+    document.getElementById('af-signals').innerHTML =
+      '<div class="af-error">⚠️ Failed to load data: ' + e.message + '</div>';
+  }
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  fetchData();
+  if (pollingTimer) clearInterval(pollingTimer);
+  pollingTimer = setInterval(fetchData, pollingInterval * 1000);
+});
+</script>
+
+<script src="../assets/nav.js?v=12"></script>
+</body>
+</html>
