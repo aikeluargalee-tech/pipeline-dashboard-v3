@@ -11,9 +11,9 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "4L/3S",
+      "value": "4L/4S",
       "threshold": "\u22652\u00d7 asymmetry",
-      "note": "Long=4, Short=3 \u2014 balanced"
+      "note": "Long=4, Short=4 \u2014 balanced"
     },
     "s2_oi_divergence": {
       "score": 1,
@@ -21,7 +21,7 @@
       "max": 1,
       "value": "-0.8%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI -0.8% \u2014 unwinding while price $62710 \u2014 divergence"
+      "note": "OI -0.8% \u2014 unwinding while price $62724 \u2014 divergence"
     },
     "s3_funding": {
       "score": 0,
@@ -35,9 +35,9 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:4 Ask:3",
+      "value": "Bid:3 Ask:2",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=4, Ask=3 \u2014 balanced"
+      "note": "Bid=3, Ask=2 \u2014 balanced"
     },
     "s5_taker_cvd": {
       "score": 0,
@@ -67,11 +67,11 @@
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-6.1%",
+      "value": "-6.3%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -6.1% \u2014 puts richly bid (institutions hedging)"
+      "note": "Skew -6.3% \u2014 puts richly bid (institutions hedging)"
     }
   },
-  "btc_price": 62710.01,
-  "_collected": "2026-07-05 14:18 UTC"
+  "btc_price": 62724.0,
+  "_collected": "2026-07-05 14:48 UTC"
 }
