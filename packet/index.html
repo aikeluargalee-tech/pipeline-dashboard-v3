@@ -342,8 +342,95 @@
   max-width: 100%;
 }
 .terminal-wrapper {
-  max-width: 100%;
+  margin-top: 10px;
 }
+
+/* ── Source Hub Cards ── */
+.source-hub {
+  margin: 24px 0 28px;
+}
+.source-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
+}
+.source-card {
+  background: rgba(18, 20, 31, 0.45);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.source-card:hover {
+  border-color: var(--cyan);
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.12);
+}
+.source-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.source-card-icon {
+  font-size: 1.1em;
+  width: 24px;
+  text-align: center;
+}
+.source-card-name {
+  font-size: 0.72em;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.source-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.78em;
+  padding: 2px 0;
+}
+.source-card-label {
+  color: var(--muted);
+  font-size: 0.85em;
+}
+.source-card-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  color: var(--text);
+}
+.source-card-val.caution { color: var(--yellow); }
+.source-card-val.bear { color: var(--red); }
+.source-card-val.bull { color: var(--green); }
+.source-card-val.neutral { color: var(--cyan); }
+.source-card-status {
+  margin-top: 6px;
+  font-size: 0.68em;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+/* Status badges */
+.source-status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.7em;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.badge-active { background: rgba(244, 63, 94, 0.15); color: var(--red); }
+.badge-caution { background: rgba(245, 158, 11, 0.15); color: var(--yellow); }
+.badge-clear { background: rgba(16, 185, 129, 0.12); color: var(--green); }
+.badge-blocked { background: rgba(244, 63, 94, 0.12); color: var(--red); }
+.badge-operational { background: rgba(34, 211, 238, 0.1); color: var(--cyan); }
 
 /* Mobile Responsiveness Rules */
 @media (max-width: 768px) {
@@ -453,6 +540,13 @@
         <div class="refresh-spinner" id="refresh-loading"></div>
       </div>
       <button class="action-btn" id="manual-refresh-btn" aria-label="Refresh packet data now">Force Sync</button>
+    </div>
+  </div>
+
+  <!-- Source Hub — key metrics from all 7 data sources -->
+  <div class="source-hub" id="source-hub">
+    <div class="source-grid" id="source-grid">
+      <div class="source-card" style="opacity:0.5">Loading sources...</div>
     </div>
   </div>
 
@@ -883,6 +977,59 @@ function generateTextBrief(data) {
   }
   out += `\n`;
 
+  // Tier 3.7: External Sources — aggregated data from all dashboards
+  const src = data.sources || {};
+  
+  // TRAPS
+  const tm = src.trap_monitor || {};
+  if (Object.keys(tm).length) {
+    out += `[TRAPS] ${subSeparator.substring(8)}\n`;
+    out += `TRAP_SCORE`.padEnd(20) + `: ${tm.score || '?'} ${tm.status || ''}\n`;
+    out += `TRAP_DIRECTION`.padEnd(20) + `: ${tm.direction || 'N/A'}\n`;
+    const traps = tm.active_traps || [];
+    out += `TRAP_ACTIVE`.padEnd(20) + `: ${traps.length ? traps.join(', ') : 'none'}\n`;
+    if (tm.downstream_action) out += `TRAP_ACTION`.padEnd(20) + `: ${tm.downstream_action}\n`;
+    out += `\n`;
+  }
+
+  // REDLINE
+  const rl = src.redline || {};
+  if (Object.keys(rl).length && rl.overall_status) {
+    out += `[REDLINE] ${subSeparator.substring(10)}\n`;
+    out += `RL_STATUS`.padEnd(20) + `: ${rl.overall_status}\n`;
+    out += `RL_L0_REGIME`.padEnd(20) + `: ${rl.l0_regime} (${rl.l0_confidence ? (rl.l0_confidence*100).toFixed(0)+'%' : '?'})\n`;
+    out += `RL_L1_RISK`.padEnd(20) + `: ${rl.l1_risk}\n`;
+    out += `RL_L3_SWING`.padEnd(20) + `: ${rl.l3_swing}${rl.l3_swing_blocked ? ' 🚫' : ''}\n`;
+    out += `RL_L4_INTRADAY`.padEnd(20) + `: ${rl.l4_intraday}${rl.l4_intraday_blocked ? ' 🚫' : ''}\n`;
+    out += `RL_CONFLICT`.padEnd(20) + `: ${rl.conflict}\n`;
+    if (rl.errors) out += `RL_ERRORS`.padEnd(20) + `: ${rl.errors}\n`;
+    out += `\n`;
+  }
+
+  // AMT
+  const amts = src.amt || {};
+  if (Object.keys(amts).length) {
+    out += `[AMT] ${subSeparator.substring(6)}\n`;
+    out += `AMT_WHALE`.padEnd(20) + `: ${amts.whale_pivot || 'N/A'} (${amts.whale_conviction || '?'})\n`;
+    out += `AMT_MTF`.padEnd(20) + `: ${amts.mtf_signal || 'N/A'}\n`;
+    out += `AMT_AGGRESSION`.padEnd(20) + `: ${amts.aggression_score || 'N/A'}\n`;
+    out += `AMT_ADX`.padEnd(20) + `: ${amts.adx_regime || 'N/A'} (${amts.adx || '?'})\n`;
+    out += `\n`;
+  }
+
+  // VP
+  const vps = src.volume_profile || {};
+  if (Object.keys(vps).length) {
+    out += `[VP] ${subSeparator.substring(5)}\n`;
+    out += `VP_POC`.padEnd(20) + `: $${typeof vps.poc === 'number' ? vps.poc.toLocaleString() : vps.poc}\n`;
+    out += `VP_VAH`.padEnd(20) + `: $${typeof vps.vah === 'number' ? vps.vah.toLocaleString() : vps.vah}\n`;
+    out += `VP_VAL`.padEnd(20) + `: $${typeof vps.val === 'number' ? vps.val.toLocaleString() : vps.val}\n`;
+    out += `VP_SHAPE`.padEnd(20) + `: ${vps.shape || 'N/A'}\n`;
+    out += `VP_STATE`.padEnd(20) + `: ${vps.state || 'N/A'}\n`;
+    if (vps.active_pattern) out += `VP_PATTERN`.padEnd(20) + `: ${vps.active_pattern}\n`;
+    out += `\n`;
+  }
+
   // Tier 4: STATUS
   out += `[STATUS] ${subSeparator.substring(9)}\n`;
   if (data.status) {
@@ -956,6 +1103,102 @@ async function fetchPacketData() {
   }
 }
 
+// --- Render Source Hub Cards ---
+function renderSourceCards(data) {
+  const grid = document.getElementById('source-grid');
+  if (!grid) return;
+  const src = data.sources || {};
+  
+  const SOURCES = [
+    {
+      id: 'packet', icon: '📦', name: 'Packet', url: null,
+      render: function(d) {
+        const h = d.header || {};
+        const r = d.regime || {};
+        return [
+          {label: 'Price', val: '$' + (h.btc_price || 0).toLocaleString()},
+          {label: 'Regime', val: r.label || '—', cls: r.label === 'early_recovery' ? 'bull' : r.label === 'contraction' ? 'bear' : 'neutral'},
+          {label: 'Conf', val: (r.confidence || 0).toFixed(2)},
+          {label: 'Active TW', val: ((d.ai_factors || {}).tripwire_summary || {}).active_count + '/' + (((d.ai_factors || {}).tripwire_summary || {}).total || 6)},
+        ];
+      }
+    },
+    {
+      id: 'trap_monitor', icon: '🪤', name: 'Traps',
+      url: '../trap-monitor/',
+      render: function(s) {
+        return [
+          {label: 'Score', val: s.score || '?', cls: (s.status === 'CAUTION' || s.status === 'DANGER') ? 'caution' : 'neutral'},
+          {label: 'Direction', val: s.direction || '—', cls: s.direction === 'LONG_TRAP' ? 'bear' : s.direction === 'SHORT_TRAP' ? 'bull' : 'neutral'},
+          {label: 'Active', val: (s.active_traps || []).length + ' traps', cls: (s.active_traps || []).length > 0 ? 'caution' : 'clear'},
+        ];
+      }
+    },
+    {
+      id: 'redline', icon: '🔴', name: 'Redline',
+      url: 'https://aikeluargalee-tech.github.io/redline-btc/',
+      render: function(s) {
+        return [
+          {label: 'L0', val: s.l0_regime, cls: s.l0_regime === 'BEAR' ? 'bear' : s.l0_regime === 'BULL' ? 'bull' : 'neutral'},
+          {label: 'Risk', val: s.l1_risk, cls: s.l1_risk === 'ON' ? 'bear' : 'clear'},
+          {label: 'Swing', val: (s.l3_swing || '—') + (s.l3_swing_blocked ? '🚫' : ''), cls: s.l3_swing === 'NONE' ? 'neutral' : ''},
+          {label: 'Intra', val: (s.l4_intraday || '—') + (s.l4_intraday_blocked ? '🚫' : ''), cls: s.l4_intraday === 'SHORT' ? 'bear' : s.l4_intraday === 'LONG' ? 'bull' : 'neutral'},
+        ];
+      }
+    },
+    {
+      id: 'amt', icon: '🐋', name: 'AMT',
+      url: 'https://aikeluargalee-tech.github.io/btc-amt-viewer/',
+      render: function(s) {
+        return [
+          {label: 'Whale', val: s.whale_pivot || '—', cls: s.whale_pivot === 'LONG' ? 'bull' : s.whale_pivot === 'SHORT' ? 'bear' : 'neutral'},
+          {label: 'MTF', val: s.mtf_signal || '—', cls: (s.mtf_signal || '').includes('BEAR') ? 'bear' : (s.mtf_signal || '').includes('BULL') ? 'bull' : 'neutral'},
+          {label: 'ADX', val: s.adx_regime + ' ' + (s.adx || ''), cls: s.adx_regime === 'TRENDING' ? 'caution' : 'neutral'},
+        ];
+      }
+    },
+    {
+      id: 'volume_profile', icon: '📊', name: 'Vol Profile',
+      url: 'https://aikeluargalee-tech.github.io/volume-profile-v3/',
+      render: function(s) {
+        return [
+          {label: 'POC', val: '$' + (s.poc || 0).toLocaleString()},
+          {label: 'Shape', val: s.shape || '—', cls: s.shape === 'P' ? 'bull' : s.shape === 'b' ? 'bear' : 'neutral'},
+          {label: 'State', val: s.state || '—', cls: s.state === 'ACCEPTANCE' ? 'neutral' : s.state === 'REJECTION' ? 'bear' : ''},
+        ];
+      }
+    },
+    {
+      id: 'ai_factors', icon: '🤖', name: 'AI Factors',
+      url: '../ai-factors/',
+      render: function(s) {
+        return [
+          {label: 'S9/S10/S11', val: [s.s9_label, s.s10_label, s.s11_label].filter(Boolean).join('/') || '—'},
+          {label: 'Mining', val: s.forced_sell_risk || '—', cls: s.forced_sell_risk === 'HIGH' ? 'bear' : s.forced_sell_risk === 'MEDIUM' ? 'caution' : 'clear'},
+          {label: 'Tripwires', val: (s.active_tripwires || 0) + '/' + (s.total_tripwires || 6), cls: s.active_tripwires > 0 ? 'caution' : 'clear'},
+        ];
+      }
+    }
+  ];
+  
+  let html = '';
+  for (const sdef of SOURCES) {
+    const sdata = sdef.id === 'packet' ? data : (src[sdef.id] || {});
+    const rows = sdef.render(sdata);
+    const cardHtml = rows.map(r => 
+      `<div class="source-card-row"><span class="source-card-label">${r.label}</span><span class="source-card-val ${r.cls||''}">${r.val}</span></div>`
+    ).join('');
+    
+    html += sdef.url
+      ? `<a href="${sdef.url}" class="source-card" target="_blank" rel="noopener">`
+      : `<div class="source-card">`;
+    html += `<div class="source-card-header"><span class="source-card-icon">${sdef.icon}</span><span class="source-card-name">${sdef.name}</span></div>`;
+    html += cardHtml;
+    html += sdef.url ? `</a>` : `</div>`;
+  }
+  grid.innerHTML = html;
+}
+
 // --- Render Hero + Terminal Brief ---
 function renderPage(data) {
   const h = data.header || {};
@@ -989,6 +1232,9 @@ function renderPage(data) {
   // Render terminal brief
   const terminalEl = document.getElementById('terminal-pre');
   if (terminalEl) terminalEl.textContent = generateTextBrief(data);
+
+  // Render source hub cards
+  renderSourceCards(data);
 }
 
 // --- Polling ---
