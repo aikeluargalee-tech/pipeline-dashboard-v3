@@ -2,36 +2,37 @@
   "gate": {
     "verdict": "TIGHTENED",
     "emoji": "\ud83d\udfe1",
-    "detail": "ai3_wave, geopolitical"
+    "detail": [
+      "ai3_wave",
+      "geopolitical"
+    ]
   },
   "macro": {
-    "verdict": "BEARISH",
-    "emoji": "\ud83d\udd34",
-    "detail": "DXY 100.892 (neutral); VIX 15.81 (normal); SPY/QQQ negative; ETF -$2000.0M"
+    "verdict": "NEUTRAL",
+    "emoji": "\ud83d\udfe1",
+    "detail": "VIX 15.8 normal"
   },
   "structure": {
     "verdict": "HOLDING",
     "emoji": "\ud83d\udfe1",
-    "detail": "Price below MA50 (-4.1%); 1H S below $62,000 (2.8%); Near 4H R $64,000 (0.3%); 4H S below $62,500 (2.0%)"
+    "detail": "3/3 timeframes active"
   },
   "derivatives": {
     "verdict": "NEUTRAL",
     "emoji": "\ud83d\udfe1",
-    "detail": "Taker 0.505 (neutral); CVD +5,445; FR +0.0077% (neutral)"
+    "detail": "FR 0.0094% neutral, L/S 1.42, CVD +5867"
   },
   "cycle": {
-    "verdict": "NEUTRAL",
-    "emoji": "\ud83d\udfe1",
-    "detail": "MVRV-Z 0.33; SOPR 1.0011; Netflow +7,439 BTC (inflow); Cycle 29.2/100"
+    "verdict": "UNDERVALUED",
+    "emoji": "\ud83d\udfe2",
+    "detail": "MVRV-Z 0.35 undervalued, netflow +2,470 BTC"
   },
   "synthesis": {
-    "verdict": "NEUTRAL",
-    "detail": "0 bullish / 1 bearish signals | Regime: RANGING | Price 4.1% below MA50 \u2014 medium-term structure bearish",
-    "bull_count": 0,
-    "bear_count": 1,
-    "ta_warning": "Price 4.1% below MA50 \u2014 medium-term structure bearish",
-    "detected_regime": "RANGING",
-    "regime_overlay_applied": false
+    "verdict": "CAUTIOUS NEUTRAL",
+    "detail": "Tightened rules active. 1 bullish / 0 bearish signals.",
+    "bull_count": 0.5,
+    "bear_count": 0.0,
+    "ta_warning": null
   },
-  "_collected": "2026-07-06 01:50 UTC"
+  "_collected": "2026-07-06 02:18 UTC"
 }
