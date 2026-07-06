@@ -1,38 +1,38 @@
 {
-  "mvrv_z": null,
-  "sopr": null,
-  "puell_multiple": null,
+  "mvrv_z": 0.35,
+  "sopr": 1.0008,
+  "puell_multiple": 0.6171,
   "netflow_7d": 2491.85,
   "sth_realized_price": null,
   "sth_net_position_change": null,
-  "regime": "unknown",
+  "regime": "neutral",
   "composite_score": 30.3,
   "cycle_phase": "medium",
   "distribution": {
-    "timestamp": "2026-07-06 09:46 UTC",
+    "timestamp": "2026-07-06 10:16 UTC",
     "source": "blockchair.com",
-    "total_addresses": 59426884,
-    "total_btc": 20052789.79497096,
+    "total_addresses": 59424694,
+    "total_btc": 20052796.04497096,
     "tiers": [
       {
         "range": "100+ BTC",
-        "addresses": "2,079,940",
-        "btc": "12,332,465",
+        "addresses": "2,079,864",
+        "btc": "12,332,469",
         "pct": "61.50%",
         "pctNum": 61.5,
         "color": "#f59e0b"
       },
       {
         "range": "1 \u2013 100 BTC",
-        "addresses": "950,830",
-        "btc": "6,316,628",
+        "addresses": "950,795",
+        "btc": "6,316,630",
         "pct": "31.50%",
         "pctNum": 31.5,
         "color": "#3b82f6"
       },
       {
         "range": "0.001 \u2013 1 BTC",
-        "addresses": "24,365,022",
+        "addresses": "24,364,124",
         "btc": "1,403,695",
         "pct": "7.00%",
         "pctNum": 7.0,
@@ -40,7 +40,7 @@
       },
       {
         "range": "<0.001 BTC",
-        "addresses": "32,031,090",
+        "addresses": "32,029,910",
         "btc": "6,015",
         "pct": "0.03%",
         "pctNum": 0.03,
@@ -49,16 +49,16 @@
     ]
   },
   "options_skew": {
-    "timestamp": "2026-07-06 09:46 UTC",
-    "spot": 62608.94,
-    "skew_25d": -9.1,
-    "put_25d_iv": 44.0,
-    "call_25d_iv": 34.9,
+    "timestamp": "2026-07-06 10:16 UTC",
+    "spot": 62801.66,
+    "skew_25d": -10.3,
+    "put_25d_iv": 44.8,
+    "call_25d_iv": 34.5,
     "put_name": "BTC-10JUL26-61000-P",
-    "call_name": "BTC-10JUL26-64000-C",
-    "label": "Elevated hedging \u2014 institutions buying downside protection",
-    "emoji": "\ud83d\udfe1",
-    "display": "\ud83d\udfe1 Options skew (25\u0394): -9.1% \u2014 elevated hedging \u2014 institutions buying downside protection"
+    "call_name": "BTC-10JUL26-64500-C",
+    "label": "Extreme fear \u2014 historically near local bottoms",
+    "emoji": "\ud83d\udd34",
+    "display": "\ud83d\udd34 Options skew (25\u0394): -10.3% \u2014 extreme fear \u2014 historically near local bottoms"
   },
   "nupl": 0.15729999542236328,
   "rhodl_ratio": 0.11919999867677689,
@@ -75,5 +75,5 @@
   "fee_rate_sat_vb": 0.722,
   "difficulty": 133869853540305.39,
   "_brk_fetched_at": "2026-07-06T07:21:22.231650+00:00",
-  "_collected": "2026-07-06 09:47 UTC"
+  "_collected": "2026-07-06 10:17 UTC"
 }
