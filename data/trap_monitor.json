@@ -11,41 +11,41 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "3L/3S",
+      "value": "3L/5S",
       "threshold": "\u22652\u00d7 asymmetry",
-      "note": "Long=3, Short=3 \u2014 balanced"
+      "note": "Long=3, Short=5 \u2014 balanced"
     },
     "s2_oi_divergence": {
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-1.75%",
+      "value": "-1.86%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI -1.8% \u2014 unwinding while price $63042 \u2014 divergence"
+      "note": "OI -1.9% \u2014 unwinding while price $62971 \u2014 divergence"
     },
     "s3_funding": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "0.0051%",
+      "value": "0.0052%",
       "threshold": "|Funding| > 0.01%",
-      "note": "Funding 0.0051% \u2014 neutral"
+      "note": "Funding 0.0052% \u2014 neutral"
     },
     "s4_bid_ask_absorption": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:5 Ask:4",
+      "value": "Bid:4 Ask:3",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=5, Ask=4 \u2014 balanced"
+      "note": "Bid=4, Ask=3 \u2014 balanced"
     },
     "s5_taker_cvd": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Taker:0.8231 CVD:4899.99",
+      "value": "Taker:0.9855 CVD:4707.43",
       "threshold": "Taker > 1.0 + CVD < 0",
-      "note": "Taker 0.82, CVD 4900 \u2014 mixed"
+      "note": "Taker 0.99, CVD 4707 \u2014 mixed"
     },
     "s6_exchange_netflow": {
       "score": 1,
@@ -67,11 +67,11 @@
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-9.8%",
+      "value": "-9.7%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -9.8% \u2014 puts richly bid (institutions hedging)"
+      "note": "Skew -9.7% \u2014 puts richly bid (institutions hedging)"
     }
   },
-  "btc_price": 63042.19,
-  "_collected": "2026-07-06 06:47 UTC"
+  "btc_price": 62971.93,
+  "_collected": "2026-07-06 07:17 UTC"
 }
