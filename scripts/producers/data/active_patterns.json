@@ -1,6 +1,28 @@
 {
-  "updated": "2026-07-06T11:46:15.983294+00:00",
-  "active": [],
+  "updated": "2026-07-06T12:16:07.134863+00:00",
+  "active": [
+    {
+      "pattern_name": "DOUBLE_TOP",
+      "tf": "4H",
+      "direction": "bearish",
+      "state": "FORMING",
+      "confidence": 55,
+      "candles_span": 28,
+      "volume_confirmed": true,
+      "key_levels": {
+        "peak1": 64289.4,
+        "peak2": 64370.0,
+        "neckline": 60691.8,
+        "target": 57053.9,
+        "stop": 64973.0
+      },
+      "description": "Double top forming \u2014 second peak at $64,370",
+      "invalidation_price": 64973.0,
+      "timestamp": "2026-07-06T12:16:07.109883+00:00",
+      "btc_price": 62450.0,
+      "pattern_id": "DTOP_4H_367"
+    }
+  ],
   "archived": [
     "BFLAG_4H_504",
     "BFLAG_4H_505",
@@ -13,6 +35,7 @@
     "BFLAG_4H_516",
     "BFLAG_4H_517",
     "BFLAG_4H_518",
+    "DBOT_4H_408",
     "DBOT_4H_413",
     "DBOT_4H_414",
     "DBOT_4H_416",
