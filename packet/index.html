@@ -1087,7 +1087,30 @@ function generateTextBrief(data) {
     out += `\n`;
   }
 
-  // Tier 4: STATUS
+  // Tier 4: HEATMAP (Layer 6 raw data)
+  const hm = data.heatmap || {};
+  if (Object.keys(hm).length) {
+    out += `[HEATMAP] ${subSeparator.substring(10)}\n`;
+    out += `HM_AVAILABLE`.padEnd(20) + `: ${hm.data_available ? 'YES' : 'NO (run V7 capture)'}\n`;
+    if (hm.data_available) {
+      if (hm.nearest_above) {
+        const a = hm.nearest_above;
+        out += `HM_ABOVE`.padEnd(20) + `: $${typeof a.price === 'number' ? a.price.toLocaleString() : a.price}  +${a.distance_pct?.toFixed(1) || '?'}%  ${a.density || '?'}\n`;
+      }
+      if (hm.nearest_below) {
+        const b = hm.nearest_below;
+        out += `HM_BELOW`.padEnd(20) + `: $${typeof b.price === 'number' ? b.price.toLocaleString() : b.price}  ${b.distance_pct?.toFixed(1) || '?'}%  ${b.density || '?'}\n`;
+      }
+      out += `HM_TIGHTNESS`.padEnd(20) + `: ${hm.tightness || '?'}\n`;
+      out += `HM_SPREAD`.padEnd(20) + `: $${typeof hm.cluster_spread_usd === 'number' ? hm.cluster_spread_usd.toLocaleString() : hm.cluster_spread_usd || '?'}\n`;
+      if (hm.vice_grip) out += `HM_VICE_GRIP`.padEnd(20) + `: YES ≤$500 ⚡\n`;
+      out += `HM_STALENESS`.padEnd(20) + `: ${hm.staleness_minutes != null ? hm.staleness_minutes + 'm' + (hm.staleness_warning ? ' ⚠' : '') : '?'}\n`;
+      if (hm.trend && hm.trend.direction) out += `HM_TREND`.padEnd(20) + `: ${hm.trend.direction}\n`;
+    }
+    out += `\n`;
+  }
+
+  // Tier 5: STATUS
   out += `[STATUS] ${subSeparator.substring(9)}\n`;
   if (data.status) {
     const gss = data.status.gate_status_summary;
@@ -1359,11 +1382,20 @@ function buildCopyText(data) {
     {icon: '🐋', name: 'AMT', render: (s) => `Whale ${s.whale_pivot||'—'}  |  MTF ${s.mtf_signal||'—'}  |  ADX ${s.adx_regime||'—'} ${s.adx||''}`},
     {icon: '📊', name: 'VOL', render: (s) => `POC ${fmt(s.poc)}  |  Shape ${s.shape||'—'}  |  State ${s.state||'—'}`},
     {icon: '🤖', name: 'AI', render: (s) => `S9/S10/S11 ${[s.s9_label,s.s10_label,s.s11_label].filter(Boolean).join('/')||'—'}  |  Mining ${s.forced_sell_risk||'—'}  |  TW ${s.active_tripwires||0}/${s.total_tripwires||6}`},
+    {icon: '🔥', name: 'HEATMAP', render: (h) => {
+      if (!h || !h.data_available) return 'No capture yet';
+      const parts = [];
+      if (h.nearest_above) parts.push(`▲$${h.nearest_above.price?.toLocaleString()} +${h.nearest_above.distance_pct?.toFixed(1)}%`);
+      if (h.nearest_below) parts.push(`▼$${h.nearest_below.price?.toLocaleString()} ${h.nearest_below.distance_pct?.toFixed(1)}%`);
+      parts.push(h.vice_grip ? 'VICE GRIP ⚡' : (h.tightness || '?'));
+      parts.push(`${h.staleness_minutes}m`);
+      return parts.join('  |  ');
+    }},
   ];
 
-  const KEY_MAP = { PACKET: null, TRAPS: 'trap_monitor', REDLINE: 'redline', AMT: 'amt', VOL: 'volume_profile', AI: 'ai_factors' };
+  const KEY_MAP = { PACKET: null, TRAPS: 'trap_monitor', REDLINE: 'redline', AMT: 'amt', VOL: 'volume_profile', AI: 'ai_factors', HEATMAP: 'heatmap' };
   for (const c of cards) {
-    const sdata = c.name === 'PACKET' ? data : (src[KEY_MAP[c.name]] || {});
+    const sdata = c.name === 'PACKET' ? data : (c.name === 'HEATMAP' ? (data.heatmap || {}) : (src[KEY_MAP[c.name]] || {}));
     out += `${c.icon} ${c.name.padEnd(8)} |  ${c.render(sdata)}\n`;
   }
   out += `\n${'═'.repeat(44)}\n\n`;
