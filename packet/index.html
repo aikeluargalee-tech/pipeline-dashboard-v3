@@ -1236,12 +1236,30 @@ function renderSourceCards(data) {
           {label: 'Tripwires', val: (s.active_tripwires || 0) + '/' + (s.total_tripwires || 6), cls: s.active_tripwires > 0 ? 'caution' : 'clear'},
         ];
       }
+    },
+    {
+      id: 'heatmap', icon: '🔥', name: 'Heatmap L6',
+      url: 'https://aikeluargalee-tech.github.io/redline-btc/',
+      render: function(h) {
+        if (!h || !h.data_available) {
+          return [{label: 'Status', val: 'No capture yet', cls: 'neutral'}];
+        }
+        const a = h.nearest_above;
+        const b = h.nearest_below;
+        const rows = [];
+        if (a) rows.push({label: '▲ Above', val: '$' + (a.price||0).toLocaleString() + ' +' + (a.distance_pct||0).toFixed(1) + '%', cls: a.density && a.density.includes('Dense') ? 'bear' : 'neutral'});
+        if (b) rows.push({label: '▼ Below', val: '$' + (b.price||0).toLocaleString() + ' ' + (b.distance_pct||0).toFixed(1) + '%', cls: b.density && b.density.includes('Dense') ? 'bull' : 'neutral'});
+        if (h.staleness_minutes != null) rows.push({label: 'Age', val: h.staleness_minutes + 'm' + (h.staleness_warning ? ' ⚠' : ''), cls: h.staleness_warning ? 'caution' : 'neutral'});
+        if (h.vice_grip) rows.push({label: 'Vice Grip', val: '≤$500 ⚡', cls: 'caution'});
+        if (h.tightness) rows.push({label: 'Spread', val: (h.tightness || '—') + (h.cluster_spread_usd ? ' $' + h.cluster_spread_usd.toLocaleString() : ''), cls: h.vice_grip ? 'caution' : 'neutral'});
+        return rows.length ? rows : [{label: 'Status', val: 'No clusters near price', cls: 'neutral'}];
+      }
     }
   ];
   
   let html = '';
   for (const sdef of SOURCES) {
-    const sdata = sdef.id === 'packet' ? data : (src[sdef.id] || {});
+    const sdata = sdef.id === 'packet' ? data : (sdef.id === 'heatmap' ? (data.heatmap || {}) : (src[sdef.id] || {}));
     const rows = sdef.render(sdata);
     const cardHtml = rows.map(r => 
       `<div class="source-card-row"><span class="source-card-label">${r.label}</span><span class="source-card-val ${r.cls||''}">${r.val}</span></div>`
