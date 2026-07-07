@@ -1375,6 +1375,107 @@ function updateTimerUI() {
 }
 
 // --- Clipboard ---
+function buildBeginnerSummary(data) {
+  const h = data.header || {};
+  const src = data.sources || {};
+  const ctx = data.context || {};
+  const rg = data.regime || {};
+  const hm = data.heatmap || {};
+  const rl = src.redline || {};
+  const amt = src.amt || {};
+  const vp = src.volume_profile || {};
+  const af = data.ai_factors || {};
+
+  const price = h.btc_price || 0;
+  const change = h.change_24h || 0;
+  const fmtK = (n) => typeof n === 'number' ? '$' + (n/1000).toFixed(1) + 'K' : '—';
+  const fmPct = (n) => typeof n === 'number' ? (n >= 0 ? '+' : '') + n.toFixed(1) + '%' : '—';
+
+  let out = '';
+
+  // ── 1. WHAT'S HAPPENING RIGHT NOW ──
+  out += `═══ WHAT'S HAPPENING NOW ═══\n`;
+  const changeWord = change > 1 ? 'rising' : change < -1 ? 'dropping' : 'flat';
+  out += `BTC is at ${fmtK(price)} (${fmPct(change)} today), ${changeWord}.\n\n`;
+
+  // Trading range from heatmap
+  if (hm.data_available && hm.nearest_above && hm.nearest_below) {
+    const above = hm.nearest_above;
+    const below = hm.nearest_below;
+    out += `It's trading between two big liquidity walls:\n`;
+    out += `  ▲ Sell wall at ${fmtK(above.price)} (+${above.distance_pct?.toFixed(1)}% away) — ${above.density || '?'} density\n`;
+    out += `  ▼ Buy wall at ${fmtK(below.price)} (${below.distance_pct?.toFixed(1)}% away) — ${below.density || '?'} density\n`;
+    if (hm.vice_grip) {
+      out += `  ⚡ These walls are VERY close together ($500 or less). A breakout is likely soon.\n`;
+    }
+    out += `\n`;
+  }
+
+  // ── 2. MARKET MOOD ──
+  out += `═══ MARKET MOOD ═══\n`;
+  const regime = rg.label || 'unknown';
+  const regimeWord = regime === 'contraction' ? 'bearish (trending down)' : regime === 'early_recovery' ? 'early bull (recovering)' : regime === 'expansion' ? 'bullish (trending up)' : regime;
+  out += `Overall: ${regimeWord}\n`;
+
+  if (ctx.fng_value != null) {
+    const fng = ctx.fng_value;
+    const mood = fng < 30 ? 'Fear — people are nervous, prices may be undervalued' :
+                 fng > 70 ? 'Greed — people are euphoric, be cautious' :
+                 'Neutral — no extreme emotions right now';
+    out += `Fear & Greed: ${fng}/100 — ${mood}\n`;
+  }
+
+  const risk = rl.l1_risk || '?';
+  if (risk === 'ON') out += `Risk: Normal — no crash signals active\n`;
+
+  out += `\n`;
+
+  // ── 3. WHAT THE PROS ARE DOING ──
+  out += `═══ WHAT THE PROS ARE DOING ═══\n`;
+  const whale = amt.whale_pivot || 'NEUTRAL';
+  const whaleWord = whale === 'LONG' ? 'buying (whales are accumulating)' : whale === 'SHORT' ? 'selling (whales are distributing)' : 'sitting on the sidelines';
+  out += `Whales: ${whaleWord}\n`;
+
+  // Volume direction
+  const vpShape = vp.shape || '?';
+  const vpWord = vpShape === 'P' ? 'Buyers are in control (price pushing up from value)' :
+                 vpShape === 'b' ? 'Sellers are in control (price pushing down from value)' :
+                 'Price is in a balanced range';
+  out += `Volume says: ${vpWord}\n`;
+
+  out += `\n`;
+
+  // ── 4. SHOULD YOU TRADE? ──
+  out += `═══ SHOULD YOU TRADE? ═══\n`;
+
+  const swingDir = rl.l3_swing || 'NONE';
+  const swingBlocked = rl.l3_swing_blocked;
+  const intraDir = rl.l4_intraday || 'NONE';
+  const intraBlocked = rl.l4_intraday_blocked;
+
+  if (risk !== 'ON') {
+    out += `⛔ Risk is OFF — do not trade. Market is in danger mode.\n`;
+  } else if (swingDir !== 'NONE' && !swingBlocked) {
+    out += `✅ Swing trade: ${swingDir} signal is active. Check Redline for details.\n`;
+  } else if (intraDir !== 'NONE' && !intraBlocked) {
+    out += `✅ Intraday trade: ${intraDir} signal is active. Check Redline for details.\n`;
+  } else {
+    out += `⏸  No clear trade signal right now. ${swingBlocked ? 'Swing blocked. ' : ''}${intraBlocked ? 'Intraday blocked. ' : ''}Wait for the checklist to clear.\n`;
+  }
+
+  // Heatmap gate status
+  const rlIntra = src.redline_intra || {};
+  if (hm.data_available) {
+    const hgBlocked = hm.nearest_above && hm.nearest_above.density?.includes('Dense') && (hm.nearest_above.distance_pct || 0) <= 2;
+    if (hgBlocked) {
+      out += `🚫 Heatmap gate: BLOCKED — a dense sell wall is too close. Wait for it to clear or break.\n`;
+    }
+  }
+
+  out += `\n`;
+  return out;
+}
+
 function buildCopyText(data) {
   if (!data) return '';
   let out = '';
@@ -1388,18 +1489,23 @@ function buildCopyText(data) {
   out += `${fmt(h.btc_price)}  ${fmpct(h.change_24h)}\n`;
   out += `BID ${fmt(h.bid)} / ASK ${fmt(h.ask)}  |  SPREAD ${fmt(h.spread)}  |  VOL 24H ${fmt(h.volume_24h)}\n\n`;
 
+  // ── BEGINNER SUMMARY (plain English — read this first) ──
+  out += buildBeginnerSummary(data);
+  out += `\n`;
+
   // Legend — what each section means
   out += `═══ LEGEND ═══\n`;
-  out += `SOURCE HUB = dashboard signals snapshot (AI+human readable)\n`;
-  out += `TERMINAL   = full packet data with analysis tiers:\n`;
-  out += `  [CRITICAL] = price action & derivatives (immediate)\n`;
-  out += `  [CONTEXT]  = macro environment (medium-term)\n`;
-  out += `  [REFERENCE] = on-chain & cycle metrics (long-term)\n`;
-  out += `  [AI_FACTORS] = Apodex AI→BTC signals & tripwires\n`;
-  out += `  [REGIME]   = structural market regime classification\n`;
-  out += `  [TRAPS-REDLINE-AMT-VP] = external dashboard exports\n`;
-  out += `  [HEATMAP]  = Coinglass V7 liquidity clusters (L6)\n`;
-  out += `  [STATUS]   = pipeline health & source timestamps\n`;
+  out += `BEGINNER SUMMARY = plain English (read this first)\n`;
+  out += `SOURCE HUB        = dashboard signals snapshot\n`;
+  out += `TERMINAL DETAIL   = full packet data for AI & pros:\n`;
+  out += `  [CRITICAL] = price action & derivatives\n`;
+  out += `  [CONTEXT]  = macro environment\n`;
+  out += `  [REFERENCE] = on-chain & cycle metrics\n`;
+  out += `  [AI_FACTORS] = Apodex AI→BTC signals\n`;
+  out += `  [REGIME]   = market regime classification\n`;
+  out += `  [TRAPS-REDLINE-AMT-VP] = external dashboards\n`;
+  out += `  [HEATMAP]  = Coinglass V7 liquidity clusters\n`;
+  out += `  [STATUS]   = pipeline health\n`;
   out += `\n`;
 
   // Source hub
