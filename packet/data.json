@@ -1,29 +1,29 @@
 {
   "header": {
-    "generated_timestamp": "2026-07-07T08:21:00Z",
-    "btc_price": 63140.0,
+    "generated_timestamp": "2026-07-07T08:37:02Z",
+    "btc_price": 63070.0,
     "change_24h": 0.164,
-    "bid": 63139.59,
-    "ask": 63139.6,
+    "bid": 63073.99,
+    "ask": 63074.0,
     "spread": 0.01,
-    "volume_24h": 1404869227.64
+    "volume_24h": 1399831103.24
   },
   "critical": {
-    "btc_price": 63140.0,
+    "btc_price": 63070.0,
     "amt_adx": 42.0,
     "amt_mtf": "1D BEARISH [INVALIDATED_CVD=+1,772] | 4H NEUTRAL [DIVERGES_CVD=+2,874] | 1H BULLISH",
-    "candle_delta": 34.06,
+    "candle_delta": 27.79,
     "candle_deltas_6": [
       2226.51,
       73.19,
       22.01,
       -217.85,
       -6.82,
-      34.06
+      27.79
     ],
-    "delta_sum_6": 2131.1,
+    "delta_sum_6": 2124.83,
     "delta_trend": "BUYING",
-    "delta_interp": "Buyers dominated. Last candle +34.1.",
+    "delta_interp": "Buyers dominated. Last candle +27.8.",
     "cvd_per_tf": {
       "1D": 1771.67,
       "4H": 2874.31,
@@ -39,9 +39,9 @@
       "4H": -5.61,
       "1H": 5.4
     },
-    "session_cvd": 2541.14,
+    "session_cvd": 2534.87,
     "oi_absolute_usd_billions": 6.39,
-    "taker_ratio_24h": 1.234,
+    "taker_ratio_24h": 1.232,
     "vp_poc": 63266,
     "vp_vah": 63278,
     "vp_val": 63251,
@@ -66,59 +66,59 @@
     "cvd_24h": -4081.0,
     "black_swan_score": "0/17",
     "correlation_r": 0.6507,
-    "liq_clusters": "Long: $63,100 (-0.06%), $61,300 (-2.91%) | Short: $63,250 (+0.17%), $63,300 (+0.25%), $64,000 (+1.36%), $64,700 (+2.47%)",
-    "perp_basis_pct": -0.0393,
+    "liq_clusters": "Long: $63,050 (-0.03%), $61,300 (-2.81%) | Short: $63,250 (+0.29%), $63,300 (+0.36%), $64,000 (+1.47%), $64,700 (+2.58%)",
+    "perp_basis_pct": -0.0404,
     "order_book_top5": {
       "bids": [
         {
-          "price": 63139.59,
-          "size": 1.95376
+          "price": 63073.99,
+          "size": 4.16434
         },
         {
-          "price": 63139.58,
-          "size": 0.00115
+          "price": 63073.98,
+          "size": 0.00114
         },
         {
-          "price": 63139.57,
+          "price": 63073.97,
           "size": 0.00016
         },
         {
-          "price": 63139.21,
-          "size": 0.00123
+          "price": 63073.61,
+          "size": 0.00142
         },
         {
-          "price": 63139.2,
-          "size": 0.07762
+          "price": 63073.6,
+          "size": 0.00041
         }
       ],
       "asks": [
         {
-          "price": 63139.6,
-          "size": 2.80453
+          "price": 63074.0,
+          "size": 2.09566
         },
         {
-          "price": 63139.61,
-          "size": 0.02396
+          "price": 63074.01,
+          "size": 0.00288
         },
         {
-          "price": 63139.62,
+          "price": 63074.02,
           "size": 0.00016
         },
         {
-          "price": 63139.64,
-          "size": 0.00018
+          "price": 63074.58,
+          "size": 8e-05
         },
         {
-          "price": 63139.65,
-          "size": 0.05018
+          "price": 63074.75,
+          "size": 0.00571
         }
       ]
     },
     "realized_vol_1h_pct": 58.54,
     "realized_vol_1d_pct": 53.08,
     "mstr_close": 100.77,
-    "usdjpy": 161.85,
-    "daily_rsi_14": 52.8
+    "usdjpy": 161.923,
+    "daily_rsi_14": 52.3
   },
   "reference": {
     "sr_1h": "S: $63,042 / $62,806 / $62,548 | R: $64,250 / $64,596 / $64,750",
@@ -182,7 +182,7 @@
     "sr_1d_resistance": 65000.0,
     "atr_1h_pct": 0.622,
     "atr_1d_pct": 3.717,
-    "btc_price": 63140.0,
+    "btc_price": 63070.0,
     "coinbase_premium": -0.0959,
     "vix": 15.95,
     "funding_rate": 6.037e-05
@@ -191,9 +191,9 @@
     "s9_vix_roc": {
       "score": 0,
       "label": "NEUTRAL",
-      "now": 15.84,
+      "now": 15.95,
       "prior": 15.84,
-      "delta": 0.0,
+      "delta": 0.11,
       "delta_unit": "pts",
       "threshold": 3.0,
       "as_of": "2026-07-07",
@@ -210,17 +210,17 @@
       "as_of": "2026-07-07",
       "prior_date": "2026-07-07"
     },
-    "last_updated": "2026-07-07T08:20:52Z",
+    "last_updated": "2026-07-07T08:36:52Z",
     "s11_volume_anomaly": {
       "score": 0,
       "label": "NEUTRAL",
       "threshold": 3.0,
-      "ratio": 0.07,
-      "vol_now": 146.09165,
+      "ratio": 0.12,
+      "vol_now": 261.56294,
       "vol_mean_20p": 2238.2398399999997,
-      "candle_bearish": false,
+      "candle_bearish": true,
       "window": 20,
-      "as_of": "2026-07-07T08:20:51Z"
+      "as_of": "2026-07-07T08:36:50Z"
     },
     "layer0_5": {
       "forced_sell_risk": "MEDIUM",
@@ -252,7 +252,7 @@
         ],
         "as_of": "2026-07-07"
       },
-      "as_of": "2026-07-07T08:20:52Z"
+      "as_of": "2026-07-07T08:36:51Z"
     },
     "tripwires": {
       "TW1_CH1_CAPITAL_REVERSAL": {
@@ -319,7 +319,7 @@
     "tripwire_summary": {
       "active_count": 0,
       "total": 6,
-      "as_of": "2026-07-07T08:20:52Z"
+      "as_of": "2026-07-07T08:36:52Z"
     }
   },
   "regime": {
@@ -353,17 +353,17 @@
       "breadth_quality": "limited",
       "signals": []
     },
-    "as_of": "2026-07-07T08:20:52Z"
+    "as_of": "2026-07-07T08:36:52Z"
   },
   "status": {
     "source_timestamps": {
-      "amt": "2026-07-07T08:20:50.166278+00:00",
+      "amt": "2026-07-07T08:36:49.580788+00:00",
       "vp": "2026-07-07T07:47:49.028954+00:00",
       "pipeline": "regime=2026-07-07 08:18 UTC | macro=2026-07-07 08:18 UTC"
     },
     "staleness_warnings": [
-      "STALE vp: 33m behind AMT",
-      "STALE brk: 144m behind AMT"
+      "STALE vp: 49m behind AMT",
+      "STALE brk: 160m behind AMT"
     ]
   },
   "sources": {
@@ -405,11 +405,11 @@
       "timestamp": "2026-07-04T12:35:55.606137"
     },
     "amt": {
-      "price": 63140.0,
-      "change_24h": 0.089,
+      "price": 63070.0,
+      "change_24h": 0.35,
       "balance_state": "TIGHT_BALANCE",
-      "aggression_score": 0.53,
-      "net_delta": 2541.14,
+      "aggression_score": 0.4,
+      "net_delta": 2534.87,
       "whale_pivot": null,
       "whale_conviction": 0,
       "mtf_signal": "NEUTRAL_NONE",
