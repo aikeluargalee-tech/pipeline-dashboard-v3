@@ -11,17 +11,17 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "2L/4S",
+      "value": "4L/2S",
       "threshold": "\u22652\u00d7 asymmetry",
-      "note": "Long=2, Short=4 \u2014 balanced"
+      "note": "Long=4, Short=2 \u2014 balanced"
     },
     "s2_oi_divergence": {
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-2.64%",
+      "value": "-2.04%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI -2.6% \u2014 unwinding while price $63067 \u2014 divergence"
+      "note": "OI -2.0% \u2014 unwinding while price $63219 \u2014 divergence"
     },
     "s3_funding": {
       "score": 0,
@@ -35,17 +35,17 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:4 Ask:3",
+      "value": "Bid:4 Ask:4",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=4, Ask=3 \u2014 balanced"
+      "note": "Bid=4, Ask=4 \u2014 balanced"
     },
     "s5_taker_cvd": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Taker:0.7589 CVD:-4081.0",
+      "value": "Taker:0.8897 CVD:-4478.88",
       "threshold": "Taker > 1.0 + CVD < 0",
-      "note": "Taker 0.76, CVD -4081 \u2014 mixed"
+      "note": "Taker 0.89, CVD -4479 \u2014 mixed"
     },
     "s6_exchange_netflow": {
       "score": 0,
@@ -72,6 +72,6 @@
       "note": "Skew -8.0% \u2014 puts richly bid (institutions hedging)"
     }
   },
-  "btc_price": 63067.3,
-  "_collected": "2026-07-07 08:48 UTC"
+  "btc_price": 63219.34,
+  "_collected": "2026-07-07 09:18 UTC"
 }
