@@ -1087,25 +1087,45 @@ function generateTextBrief(data) {
     out += `\n`;
   }
 
-  // Tier 4: HEATMAP (Layer 6 raw data)
+  // Tier 4: HEATMAP — Coinglass V7 liquidation heatmap clusters (Layer 6)
   const hm = data.heatmap || {};
   if (Object.keys(hm).length) {
     out += `[HEATMAP] ${subSeparator.substring(10)}\n`;
-    out += `HM_AVAILABLE`.padEnd(20) + `: ${hm.data_available ? 'YES' : 'NO (run V7 capture)'}\n`;
-    if (hm.data_available) {
+    if (!hm.data_available) {
+      out += `HM_DATA_AVAILABLE`.padEnd(22) + `: NO — no V7 capture yet (run @Coinglass BTC heatmap)\n`;
+      out += `HM_NOTE`.padEnd(22) + `: Heatmap gate passes through without data\n`;
+    } else if (hm.nearest_above === null && hm.nearest_below === null) {
+      out += `HM_DATA_AVAILABLE`.padEnd(22) + `: YES — no clusters near current price\n`;
+      out += `HM_SPREAD_USD`.padEnd(22) + `: $${typeof hm.cluster_spread_usd === 'number' ? hm.cluster_spread_usd.toLocaleString() : hm.cluster_spread_usd || '?'}\n`;
+      out += `HM_TIGHTNESS`.padEnd(22) + `: ${hm.tightness || '?'} — no blocking liquidity\n`;
+      out += `HM_STALENESS`.padEnd(22) + `: ${hm.staleness_minutes != null ? hm.staleness_minutes + 'm ago' + (hm.staleness_warning ? ' ⚠ STALE' : '') : '?'}\n`;
+    } else {
+      out += `HM_DATA_AVAILABLE`.padEnd(22) + `: YES\n`;
+      if (hm.confidence && hm.confidence !== 'Unknown') {
+        out += `HM_CONFIDENCE`.padEnd(22) + `: ${hm.confidence}\n`;
+      }
       if (hm.nearest_above) {
         const a = hm.nearest_above;
-        out += `HM_ABOVE`.padEnd(20) + `: $${typeof a.price === 'number' ? a.price.toLocaleString() : a.price}  +${a.distance_pct?.toFixed(1) || '?'}%  ${a.density || '?'}\n`;
+        const price = typeof a.price === 'number' ? '$' + a.price.toLocaleString() : '$' + a.price;
+        const dist = a.distance_pct != null ? (a.distance_pct >= 0 ? '+' : '') + a.distance_pct.toFixed(1) + '%' : '?';
+        out += `HM_OVERHEAD_CLUSTER`.padEnd(22) + `: ${price}  ${dist} from price  density: ${a.density || '?'}\n`;
+        out += `  → Overhead liquidity wall. If Dense ≤2%: blocks LONG entry.\n`;
       }
       if (hm.nearest_below) {
         const b = hm.nearest_below;
-        out += `HM_BELOW`.padEnd(20) + `: $${typeof b.price === 'number' ? b.price.toLocaleString() : b.price}  ${b.distance_pct?.toFixed(1) || '?'}%  ${b.density || '?'}\n`;
+        const price = typeof b.price === 'number' ? '$' + b.price.toLocaleString() : '$' + b.price;
+        const dist = b.distance_pct != null ? (b.distance_pct >= 0 ? '+' : '') + b.distance_pct.toFixed(1) + '%' : '?';
+        out += `HM_SUPPORT_CLUSTER`.padEnd(22) + `: ${price}  ${dist} from price  density: ${b.density || '?'}\n`;
+        out += `  → Support floor. If Dense ≤2%: blocks SHORT entry.\n`;
       }
-      out += `HM_TIGHTNESS`.padEnd(20) + `: ${hm.tightness || '?'}\n`;
-      out += `HM_SPREAD`.padEnd(20) + `: $${typeof hm.cluster_spread_usd === 'number' ? hm.cluster_spread_usd.toLocaleString() : hm.cluster_spread_usd || '?'}\n`;
-      if (hm.vice_grip) out += `HM_VICE_GRIP`.padEnd(20) + `: YES ≤$500 ⚡\n`;
-      out += `HM_STALENESS`.padEnd(20) + `: ${hm.staleness_minutes != null ? hm.staleness_minutes + 'm' + (hm.staleness_warning ? ' ⚠' : '') : '?'}\n`;
-      if (hm.trend && hm.trend.direction) out += `HM_TREND`.padEnd(20) + `: ${hm.trend.direction}\n`;
+      out += `HM_CLUSTER_SPREAD`.padEnd(22) + `: $${typeof hm.cluster_spread_usd === 'number' ? hm.cluster_spread_usd.toLocaleString() : hm.cluster_spread_usd || '?'}  (width between nearest clusters)\n`;
+      out += `HM_TIGHTNESS`.padEnd(22) + `: ${hm.tightness || '?'}${hm.vice_grip ? ' — VICE GRIP ≤$500 ⚡ breakout imminent' : ''}\n`;
+      out += `HM_STALENESS`.padEnd(22) + `: ${hm.staleness_minutes != null ? hm.staleness_minutes + 'm ago' + (hm.staleness_warning ? ' ⚠ STALE' : '') : '?'}\n`;
+      if (hm.trend && hm.trend.direction) {
+        out += `HM_TREND_DIRECTION`.padEnd(22) + `: ${hm.trend.direction}${hm.trend.delta_range_usd != null ? ' (Δ' + hm.trend.delta_range_usd + ' USD over ' + (hm.trend.reads || '?') + ' reads)' : ''}\n`;
+        out += `  → Are clusters tightening or widening over time?\n`;
+      }
+      out += `HM_GATE_RULES`.padEnd(22) + `: Dense ≤2% blocks, Moderate ≤1% blocks, Scattered = warns, Vice Grip = warns\n`;
     }
     out += `\n`;
   }
@@ -1367,23 +1387,37 @@ function buildCopyText(data) {
   out += `${fmt(h.btc_price)}  ${fmpct(h.change_24h)}\n`;
   out += `BID ${fmt(h.bid)} / ASK ${fmt(h.ask)}  |  SPREAD ${fmt(h.spread)}  |  VOL 24H ${fmt(h.volume_24h)}\n\n`;
 
+  // Legend — what each section means
+  out += `═══ LEGEND ═══\n`;
+  out += `SOURCE HUB = dashboard signals snapshot (AI+human readable)\n`;
+  out += `TERMINAL   = full packet data with analysis tiers:\n`;
+  out += `  [CRITICAL] = price action & derivatives (immediate)\n`;
+  out += `  [CONTEXT]  = macro environment (medium-term)\n`;
+  out += `  [REFERENCE] = on-chain & cycle metrics (long-term)\n`;
+  out += `  [AI_FACTORS] = Apodex AI→BTC signals & tripwires\n`;
+  out += `  [REGIME]   = structural market regime classification\n`;
+  out += `  [TRAPS-REDLINE-AMT-VP] = external dashboard exports\n`;
+  out += `  [HEATMAP]  = Coinglass V7 liquidity clusters (L6)\n`;
+  out += `  [STATUS]   = pipeline health & source timestamps\n`;
+  out += `\n`;
+
   // Source hub
   out += `═══ SOURCE HUB ═══\n`;
 
   const cards = [
-    {icon: '📦', name: 'PACKET', render: (d) => {
+    {icon: '📦', name: 'PACKET   [own analysis]', render: (d) => {
       const r = d.regime || {};
       const af = d.ai_factors || {};
       const tws = af.tripwire_summary || {};
       return `Price ${fmt(h.btc_price)}  |  Regime ${r.label||'—'}  |  Conf ${(r.confidence||0).toFixed(2)}  |  TW ${tws.active_count||0}/${tws.total||6}`;
     }},
-    {icon: '🪤', name: 'TRAPS', render: (s) => `Score ${s.score||'?'}  |  ${s.direction||'—'}  |  ${(s.active_traps||[]).length} active`},
-    {icon: '🔴', name: 'REDLINE', render: (s) => `L0 ${s.l0_regime||'—'}  |  Risk ${s.l1_risk||'—'}  |  Swing ${s.l3_swing||'—'}${s.l3_swing_blocked?'🚫':''}  |  Intra ${s.l4_intraday||'—'}${s.l4_intraday_blocked?'🚫':''}`},
-    {icon: '🐋', name: 'AMT', render: (s) => `Whale ${s.whale_pivot||'—'}  |  MTF ${s.mtf_signal||'—'}  |  ADX ${s.adx_regime||'—'} ${s.adx||''}`},
-    {icon: '📊', name: 'VOL', render: (s) => `POC ${fmt(s.poc)}  |  Shape ${s.shape||'—'}  |  State ${s.state||'—'}`},
-    {icon: '🤖', name: 'AI', render: (s) => `S9/S10/S11 ${[s.s9_label,s.s10_label,s.s11_label].filter(Boolean).join('/')||'—'}  |  Mining ${s.forced_sell_risk||'—'}  |  TW ${s.active_tripwires||0}/${s.total_tripwires||6}`},
-    {icon: '🔥', name: 'HEATMAP', render: (h) => {
-      if (!h || !h.data_available) return 'No capture yet';
+    {icon: '🪤', name: 'TRAPS    [trap monitor]', render: (s) => `Score ${s.score||'?'}  |  ${s.direction||'—'}  |  ${(s.active_traps||[]).length} active`},
+    {icon: '🔴', name: 'REDLINE  [trade engine]', render: (s) => `L0 ${s.l0_regime||'—'}  |  Risk ${s.l1_risk||'—'}  |  Swing ${s.l3_swing||'—'}${s.l3_swing_blocked?'🚫':''}  |  Intra ${s.l4_intraday||'—'}${s.l4_intraday_blocked?'🚫':''}`},
+    {icon: '🐋', name: 'AMT      [whale flow]', render: (s) => `Whale ${s.whale_pivot||'—'}  |  MTF ${s.mtf_signal||'—'}  |  ADX ${s.adx_regime||'—'} ${s.adx||''}`},
+    {icon: '📊', name: 'VOL      [volume prof]', render: (s) => `POC ${fmt(s.poc)}  |  Shape ${s.shape||'—'}  |  State ${s.state||'—'}`},
+    {icon: '🤖', name: 'AI       [Apodex AI]', render: (s) => `S9/S10/S11 ${[s.s9_label,s.s10_label,s.s11_label].filter(Boolean).join('/')||'—'}  |  Mining ${s.forced_sell_risk||'—'}  |  TW ${s.active_tripwires||0}/${s.total_tripwires||6}`},
+    {icon: '🔥', name: 'HEATMAP  [liq clusters]', render: (h) => {
+      if (!h || !h.data_available) return 'No capture yet (run V7)';
       const parts = [];
       if (h.nearest_above) parts.push(`▲$${h.nearest_above.price?.toLocaleString()} +${h.nearest_above.distance_pct?.toFixed(1)}%`);
       if (h.nearest_below) parts.push(`▼$${h.nearest_below.price?.toLocaleString()} ${h.nearest_below.distance_pct?.toFixed(1)}%`);
@@ -1398,7 +1432,9 @@ function buildCopyText(data) {
     const sdata = c.name === 'PACKET' ? data : (c.name === 'HEATMAP' ? (data.heatmap || {}) : (src[KEY_MAP[c.name]] || {}));
     out += `${c.icon} ${c.name.padEnd(8)} |  ${c.render(sdata)}\n`;
   }
-  out += `\n${'═'.repeat(44)}\n\n`;
+  out += `\n${'═'.repeat(44)}\n`;
+  out += `TERMINAL DETAIL (full analysis tiers)\n`;
+  out += `${'═'.repeat(44)}\n\n`;
 
   // Terminal text
   const terminal = document.getElementById('terminal-pre');
