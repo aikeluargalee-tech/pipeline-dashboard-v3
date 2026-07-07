@@ -1,27 +1,27 @@
 {
-  "composite": 3,
+  "composite": 2,
   "actual_max": 7,
-  "status": "CAUTION",
+  "status": "CLEAR",
   "direction": "LONG_TRAP",
-  "long_trap_signals": 3,
+  "long_trap_signals": 2,
   "short_trap_signals": 0,
-  "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
+  "downstream_action": "Standard L4 rules apply. No trap override.",
   "signals": {
     "s1_liq_asymmetry": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "3L/2S",
+      "value": "3L/3S",
       "threshold": "\u22652\u00d7 asymmetry",
-      "note": "Long=3, Short=2 \u2014 balanced"
+      "note": "Long=3, Short=3 \u2014 balanced"
     },
     "s2_oi_divergence": {
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-2.01%",
+      "value": "-1.59%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI -2.0% \u2014 unwinding while price $64000 \u2014 divergence"
+      "note": "OI -1.6% \u2014 unwinding while price $63780 \u2014 divergence"
     },
     "s3_funding": {
       "score": 0,
@@ -32,20 +32,20 @@
       "note": "Funding 0.0100% \u2014 neutral"
     },
     "s4_bid_ask_absorption": {
-      "score": 1,
-      "verdict": "TRAP",
+      "score": 0,
+      "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:2 Ask:5",
+      "value": "Bid:4 Ask:3",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Ask/Bid wall ratio 2.5\u00d7 \u2014 absorption risk"
+      "note": "Bid=4, Ask=3 \u2014 balanced"
     },
     "s5_taker_cvd": {
-      "score": 1,
-      "verdict": "TRAP",
+      "score": 0,
+      "verdict": "CLEAR",
       "max": 1,
-      "value": "Taker:1.1867 CVD:-543.16",
+      "value": "Taker:0.7054 CVD:-1683.73",
       "threshold": "Taker > 1.0 + CVD < 0",
-      "note": "Taker 1.19 (aggressive buying) + CVD -543 negative \u2014 divergence trap"
+      "note": "Taker 0.71, CVD -1684 \u2014 mixed"
     },
     "s6_exchange_netflow": {
       "score": 0,
@@ -64,14 +64,14 @@
       "note": "0/3 sub-signals \u2014 LTH-SOPR 0.7644 \u2014 below threshold (selling at loss) | 1Y+ UTXO SOPR 1.223 \u2014 below threshold | Supply in Profit 54.3% \u2014 not in distribution zone [BRK \u2014 bitview.space | fetched 2026-07-07T00:43]"
     },
     "s8_options_skew": {
-      "score": 0,
-      "verdict": "CLEAR",
+      "score": 1,
+      "verdict": "TRAP",
       "max": 1,
-      "value": "-4.8%",
+      "value": "-6.8%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -4.8% \u2014 neutral"
+      "note": "Skew -6.8% \u2014 puts richly bid (institutions hedging)"
     }
   },
-  "btc_price": 64000.02,
-  "_collected": "2026-07-07 01:48 UTC"
+  "btc_price": 63780.54,
+  "_collected": "2026-07-07 02:17 UTC"
 }
