@@ -1,11 +1,11 @@
 {
-  "composite": 3,
+  "composite": 1,
   "actual_max": 7,
-  "status": "CAUTION",
+  "status": "CLEAR",
   "direction": "LONG_TRAP",
   "long_trap_signals": 2,
   "short_trap_signals": 0,
-  "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
+  "downstream_action": "Standard L4 rules apply. No trap override.",
   "signals": {
     "s1_liq_asymmetry": {
       "score": 0,
@@ -21,23 +21,23 @@
       "max": 1,
       "value": "-2.57%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI -2.6% \u2014 unwinding while price $63587 \u2014 divergence"
+      "note": "OI -2.6% \u2014 unwinding while price $64066 \u2014 divergence"
     },
     "s3_funding": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "0.0068%",
+      "value": "0.0069%",
       "threshold": "|Funding| > 0.01%",
-      "note": "Funding 0.0068% \u2014 neutral"
+      "note": "Funding 0.0069% \u2014 neutral"
     },
     "s4_bid_ask_absorption": {
-      "score": 1,
-      "verdict": "TRAP",
+      "score": 0,
+      "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:5 Ask:2",
+      "value": "Bid:3 Ask:4",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid/Ask wall ratio 2.5\u00d7 \u2014 bid support trap"
+      "note": "Bid=3, Ask=4 \u2014 balanced"
     },
     "s5_taker_cvd": {
       "score": 0,
@@ -64,14 +64,14 @@
       "note": "0/3 sub-signals \u2014 LTH-SOPR 0.7840 \u2014 below threshold (selling at loss) | 1Y+ UTXO SOPR 1.017 \u2014 below threshold | Supply in Profit 52.0% \u2014 not in distribution zone [BRK \u2014 bitview.space | fetched 2026-07-07T12:05]"
     },
     "s8_options_skew": {
-      "score": 1,
-      "verdict": "TRAP",
+      "score": 0,
+      "verdict": "CLEAR",
       "max": 1,
-      "value": "-5.5%",
+      "value": "-4.9%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -5.5% \u2014 puts richly bid (institutions hedging)"
+      "note": "Skew -4.9% \u2014 neutral"
     }
   },
-  "btc_price": 63587.38,
-  "_collected": "2026-07-07 15:18 UTC"
+  "btc_price": 64066.98,
+  "_collected": "2026-07-07 15:48 UTC"
 }
