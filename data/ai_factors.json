@@ -1,47 +1,47 @@
 {
-  "last_updated": "2026-07-07T00:46:24Z",
+  "last_updated": "2026-07-07T01:17:42Z",
   "s9_vix_roc": {
     "score": 0,
     "label": "NEUTRAL",
-    "delta": -0.83,
+    "delta": 0.0,
     "now": 15.57,
-    "prior": 16.4,
+    "prior": 15.57,
     "delta_unit": "pts",
     "threshold": 3.0,
     "as_of": "2026-07-07",
-    "prior_date": "2026-07-06",
+    "prior_date": "2026-07-07",
     "name": "S9 \u2014 VIX Rate-of-Change",
     "desc": "VIX session delta vs prior close. \u22653pt rise signals macro stress accelerating \u2014 AI systems already reacting."
   },
   "s10_us10y_roc": {
     "score": 0,
     "label": "NEUTRAL",
-    "delta": -0.6,
+    "delta": 0.0,
     "now": 4.479,
-    "prior": 4.485,
+    "prior": 4.479,
     "delta_unit": "bps",
     "threshold": 8.0,
     "as_of": "2026-07-07",
-    "prior_date": "2026-07-06",
+    "prior_date": "2026-07-07",
     "name": "S10 \u2014 US10Y Rate-of-Change",
     "desc": "US10Y intraday delta. \u22658bps rise signals rate repricing in progress \u2014 algos reprice BTC on the move, not the level."
   },
   "s11_volume_anomaly": {
     "score": 0,
     "label": "NEUTRAL",
-    "ratio": 1.98,
-    "vol_now": 21145.17546,
-    "vol_mean_20p": 10682.3072275,
+    "ratio": 1.88,
+    "vol_now": 21161.92003,
+    "vol_mean_20p": 11251.974965,
     "threshold": 3.0,
     "window": 20,
     "candle_bearish": true,
-    "as_of": "2026-07-07T00:46:24Z",
+    "as_of": "2026-07-07T01:17:42Z",
     "name": "S11 \u2014 Volume Anomaly Detector",
     "desc": "4H candle volume \u22653\u00d7 20-period rolling mean on a bearish candle. BTC-internal cascade precursor \u2014 24h lead time validated."
   },
   "layer0_5": {
-    "forced_sell_risk": "MEDIUM",
-    "s6_modifier": "FORCED_SELL > DISTRIBUTION \u2014 miner selling elevated",
+    "forced_sell_risk": "LOW",
+    "s6_modifier": "S6 unchanged \u2014 no modifier",
     "hashprice": {
       "direction": "FALLING",
       "usd_per_ph": 29.61,
@@ -67,9 +67,9 @@
         "IREN",
         "CLSK"
       ],
-      "as_of": "2026-07-07T00:46:24Z"
+      "as_of": "2026-07-07T01:17:42Z"
     },
-    "as_of": "2026-07-07T00:46:24Z"
+    "as_of": "2026-07-07T01:17:42Z"
   },
   "tripwires": {
     "TW1_CH1_CAPITAL_REVERSAL": {
@@ -136,5 +136,5 @@
     "active": 1,
     "total": 6
   },
-  "_collected": "2026-07-07 00:46 UTC"
+  "_collected": "2026-07-07 01:17 UTC"
 }
