@@ -721,6 +721,10 @@ function generateTextBrief(data) {
   out += `VOLUME 24H  : ${vol}\n`;
   out += `${separator}\n\n`;
 
+  // ── BEGINNER SUMMARY (plain English — read this first) ──
+  out += buildBeginnerSummary(data);
+  out += `\n`;
+
   // Tier 1: CRITICAL
   out += `[CRITICAL] ${subSeparator.substring(11)}\n`;
   if (data.critical) {
@@ -1488,10 +1492,6 @@ function buildCopyText(data) {
   out += `BTC DATA PACKET — ${h.generated_timestamp || 'N/A'}\n`;
   out += `${fmt(h.btc_price)}  ${fmpct(h.change_24h)}\n`;
   out += `BID ${fmt(h.bid)} / ASK ${fmt(h.ask)}  |  SPREAD ${fmt(h.spread)}  |  VOL 24H ${fmt(h.volume_24h)}\n\n`;
-
-  // ── BEGINNER SUMMARY (plain English — read this first) ──
-  out += buildBeginnerSummary(data);
-  out += `\n`;
 
   // Legend — what each section means
   out += `═══ LEGEND ═══\n`;
