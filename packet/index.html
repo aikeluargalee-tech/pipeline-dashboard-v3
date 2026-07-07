@@ -1390,93 +1390,54 @@ function buildBeginnerSummary(data) {
   const vp = src.volume_profile || {};
   const af = data.ai_factors || {};
 
-  const price = h.btc_price || 0;
-  const change = h.change_24h || 0;
   const fmtK = (n) => typeof n === 'number' ? '$' + (n/1000).toFixed(1) + 'K' : '—';
   const fmPct = (n) => typeof n === 'number' ? (n >= 0 ? '+' : '') + n.toFixed(1) + '%' : '—';
 
   let out = '';
 
-  // ── 1. WHAT'S HAPPENING RIGHT NOW ──
-  out += `═══ WHAT'S HAPPENING NOW ═══\n`;
-  const changeWord = change > 1 ? 'rising' : change < -1 ? 'dropping' : 'flat';
-  out += `BTC is at ${fmtK(price)} (${fmPct(change)} today), ${changeWord}.\n\n`;
+  // ── 1. PRICE ──
+  out += `═══ PRICE ═══\n`;
+  out += `BTC: ${fmtK(h.btc_price)} (24h: ${fmPct(h.change_24h)})\n`;
+  out += `High 24h: ${fmtK(h.high_24h)} | Low 24h: ${fmtK(h.low_24h)}\n`;
+  out += `\n`;
 
-  // Trading range from heatmap
+  // ── 2. LIQUIDITY (Heatmap) ──
   if (hm.data_available && hm.nearest_above && hm.nearest_below) {
-    const above = hm.nearest_above;
-    const below = hm.nearest_below;
-    out += `It's trading between two big liquidity walls:\n`;
-    out += `  ▲ Sell wall at ${fmtK(above.price)} (+${above.distance_pct?.toFixed(1)}% away) — ${above.density || '?'} density\n`;
-    out += `  ▼ Buy wall at ${fmtK(below.price)} (${below.distance_pct?.toFixed(1)}% away) — ${below.density || '?'} density\n`;
-    if (hm.vice_grip) {
-      out += `  ⚡ These walls are VERY close together ($500 or less). A breakout is likely soon.\n`;
-    }
+    out += `═══ LIQUIDITY WALLS ═══\n`;
+    out += `▲ Above: ${fmtK(hm.nearest_above.price)} (+${hm.nearest_above.distance_pct?.toFixed(1)}%) — ${hm.nearest_above.density || '?'}\n`;
+    out += `▼ Below: ${fmtK(hm.nearest_below.price)} (${hm.nearest_below.distance_pct?.toFixed(1)}%) — ${hm.nearest_below.density || '?'}\n`;
+    if (hm.vice_grip) out += `Vice grip: YES (walls ≤$500 apart)\n`;
     out += `\n`;
   }
 
-  // ── 2. MARKET MOOD ──
-  out += `═══ MARKET MOOD ═══\n`;
-  const regime = rg.label || 'unknown';
-  const regimeWord = regime === 'contraction' ? 'bearish (trending down)' : regime === 'early_recovery' ? 'early bull (recovering)' : regime === 'expansion' ? 'bullish (trending up)' : regime;
-  out += `Overall: ${regimeWord}\n`;
-
-  if (ctx.fng_value != null) {
-    const fng = ctx.fng_value;
-    const mood = fng < 30 ? 'Fear — people are nervous, prices may be undervalued' :
-                 fng > 70 ? 'Greed — people are euphoric, be cautious' :
-                 'Neutral — no extreme emotions right now';
-    out += `Fear & Greed: ${fng}/100 — ${mood}\n`;
-  }
-
-  const risk = rl.l1_risk || '?';
-  if (risk === 'ON') out += `Risk: Normal — no crash signals active\n`;
-
+  // ── 3. SENTIMENT ──
+  out += `═══ SENTIMENT ═══\n`;
+  out += `Regime: ${rg.label || '?'}\n`;
+  out += `Fear & Greed: ${ctx.fng_value != null ? ctx.fng_value + '/100' : '?'}\n`;
+  out += `Risk (Redline L1): ${rl.l1_risk || '?'}\n`;
   out += `\n`;
 
-  // ── 3. WHAT THE PROS ARE DOING ──
-  out += `═══ WHAT THE PROS ARE DOING ═══\n`;
-  const whale = amt.whale_pivot || 'NEUTRAL';
-  const whaleWord = whale === 'LONG' ? 'buying (whales are accumulating)' : whale === 'SHORT' ? 'selling (whales are distributing)' : 'sitting on the sidelines';
-  out += `Whales: ${whaleWord}\n`;
-
-  // Volume direction
-  const vpShape = vp.shape || '?';
-  const vpWord = vpShape === 'P' ? 'Buyers are in control (price pushing up from value)' :
-                 vpShape === 'b' ? 'Sellers are in control (price pushing down from value)' :
-                 'Price is in a balanced range';
-  out += `Volume says: ${vpWord}\n`;
-
+  // ── 4. WHALES & VOLUME ──
+  out += `═══ WHALES & VOLUME ═══\n`;
+  out += `Whale pivot: ${amt.whale_pivot || '?'}\n`;
+  out += `Volume profile: ${vp.shape || '?'}\n`;
   out += `\n`;
 
-  // ── 4. SHOULD YOU TRADE? ──
-  out += `═══ SHOULD YOU TRADE? ═══\n`;
-
-  const swingDir = rl.l3_swing || 'NONE';
-  const swingBlocked = rl.l3_swing_blocked;
-  const intraDir = rl.l4_intraday || 'NONE';
-  const intraBlocked = rl.l4_intraday_blocked;
-
-  if (risk !== 'ON') {
-    out += `⛔ Risk is OFF — do not trade. Market is in danger mode.\n`;
-  } else if (swingDir !== 'NONE' && !swingBlocked) {
-    out += `✅ Swing trade: ${swingDir} signal is active. Check Redline for details.\n`;
-  } else if (intraDir !== 'NONE' && !intraBlocked) {
-    out += `✅ Intraday trade: ${intraDir} signal is active. Check Redline for details.\n`;
-  } else {
-    out += `⏸  No clear trade signal right now. ${swingBlocked ? 'Swing blocked. ' : ''}${intraBlocked ? 'Intraday blocked. ' : ''}Wait for the checklist to clear.\n`;
-  }
-
-  // Heatmap gate status
-  const rlIntra = src.redline_intra || {};
-  if (hm.data_available) {
-    const hgBlocked = hm.nearest_above && hm.nearest_above.density?.includes('Dense') && (hm.nearest_above.distance_pct || 0) <= 2;
-    if (hgBlocked) {
-      out += `🚫 Heatmap gate: BLOCKED — a dense sell wall is too close. Wait for it to clear or break.\n`;
-    }
-  }
-
+  // ── 5. REDLINE SIGNALS (raw — no verdict) ──
+  out += `═══ REDLINE SIGNALS ═══\n`;
+  out += `Swing (L3): ${rl.l3_swing || 'NONE'}${rl.l3_swing_blocked ? ' [BLOCKED]' : ''}\n`;
+  out += `Intraday (L4): ${rl.l4_intraday || 'NONE'}${rl.l4_intraday_blocked ? ' [BLOCKED]' : ''}\n`;
   out += `\n`;
+
+  // ── 6. AI FACTORS ──
+  if (af.s9_market_stress != null || af.s10_whale_conviction != null || af.s11_smart_dumb != null) {
+    out += `═══ AI FACTORS ═══\n`;
+    if (af.s9_market_stress != null) out += `S9 Market Stress: ${af.s9_market_stress}\n`;
+    if (af.s10_whale_conviction != null) out += `S10 Whale Conviction: ${af.s10_whale_conviction}\n`;
+    if (af.s11_smart_dumb != null) out += `S11 Smart/Dumb Money: ${af.s11_smart_dumb}\n`;
+    out += `\n`;
+  }
+
   return out;
 }
 
