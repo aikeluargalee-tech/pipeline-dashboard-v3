@@ -699,10 +699,9 @@ function formatMetricValue(key, val) {
   return String(val);
 }
 
-// --- Generate Raw ASCII Text Brief (~70 lines) ---
+// --- Generate Raw ASCII Text // --- Generate Raw ASCII Text Brief (~70 lines) ---
 function generateTextBrief(data) {
   const separator = "============================================";
-  const subSeparator = "--------------------------------------------";
   const h = data.header || {};
   const price = typeof h.btc_price === 'number' ? h.btc_price.toLocaleString(undefined, {minimumFractionDigits:2}) : '--';
   const change = typeof h.change_24h === 'number' ? ((h.change_24h > 0 ? '+' : '') + h.change_24h.toFixed(2) + '%') : '--';
@@ -721,9 +720,19 @@ function generateTextBrief(data) {
   out += `VOLUME 24H  : ${vol}\n`;
   out += `${separator}\n\n`;
 
-  // ── BEGINNER SUMMARY (plain English — read this first) ──
-  out += buildBeginnerSummary(data);
+  // ── TELEMETRY BRIEF (plain English — read this first) ──
+  out += buildTelemetryBrief(data);
   out += `\n`;
+
+  out += buildTiersDetail(data);
+
+  return out;
+}
+
+function buildTiersDetail(data) {
+  const separator = "============================================";
+  const subSeparator = "--------------------------------------------";
+  let out = '';
 
   // Tier 1: CRITICAL
   out += `[CRITICAL] ${subSeparator.substring(11)}\n`;
@@ -1141,8 +1150,8 @@ function generateTextBrief(data) {
     const gss = data.status.gate_status_summary;
     if (gss && gss !== 'N/A' && gss !== '—') out += `GATE_STATUS_SUM   : ${gss}\n`;
     if (data.status.source_timestamps) {
-      for (const [src, ts] of Object.entries(data.status.source_timestamps)) {
-        const formattedKey = `SRC_${src.toUpperCase()}_TIME`.padEnd(20, ' ');
+      for (const [srcName, ts] of Object.entries(data.status.source_timestamps)) {
+        const formattedKey = `SRC_${srcName.toUpperCase()}_TIME`.padEnd(20, ' ');
         const tsStr = String(ts);
         if (tsStr.length > 29 && tsStr.includes(' | ')) {
           const indent = ' '.repeat(22);
@@ -1171,7 +1180,7 @@ function generateTextBrief(data) {
     }
   }
   out += `${separator}\n`;
-  
+
   return out;
 }
 
@@ -1379,7 +1388,7 @@ function updateTimerUI() {
 }
 
 // --- Clipboard ---
-function buildBeginnerSummary(data) {
+function buildTelemetryBrief(data) {
   const h = data.header || {};
   const src = data.sources || {};
   const ctx = data.context || {};
@@ -1414,13 +1423,31 @@ function buildBeginnerSummary(data) {
   out += `═══ SENTIMENT ═══\n`;
   out += `Regime: ${rg.label || '?'}\n`;
   out += `Fear & Greed: ${ctx.fng_value != null ? ctx.fng_value + '/100' : '?'}\n`;
-  out += `Risk (Redline L1): ${rl.l1_risk || '?'}\n`;
+  let rlRiskStr = '?';
+  if (rl.l1_risk === 'ON') rlRiskStr = 'ON (Safe)';
+  else if (rl.l1_risk === 'OFF') rlRiskStr = 'OFF (Risk)';
+  else if (rl.l1_risk) rlRiskStr = rl.l1_risk;
+  out += `Redline L1 Risk Mode: ${rlRiskStr}\n`;
+  const tm = src.trap_monitor || {};
+  if (tm.score != null || tm.direction != null || tm.active_traps != null) {
+    const activeCount = Array.isArray(tm.active_traps) ? tm.active_traps.length : 0;
+    out += `Trap Monitor: Score ${tm.score || '?'}, Direction ${tm.direction || 'N/A'}, Active count ${activeCount}\n`;
+  }
   out += `\n`;
 
   // ── 4. WHALES & VOLUME ──
   out += `═══ WHALES & VOLUME ═══\n`;
   out += `Whale pivot: ${amt.whale_pivot || '?'}\n`;
-  out += `Volume profile: ${vp.shape || '?'}\n`;
+  let vpShapeStr = '?';
+  if (vp.shape === 'P') vpShapeStr = 'P-shape (buying trend)';
+  else if (vp.shape === 'b') vpShapeStr = 'b-shape (selling trend)';
+  else if (vp.shape === 'D') vpShapeStr = 'D-shape (balanced)';
+  else if (vp.shape) vpShapeStr = vp.shape;
+  out += `Volume profile: ${vpShapeStr}\n`;
+  if (vp.poc != null) {
+    const pocStr = typeof vp.poc === 'number' ? '$' + vp.poc.toLocaleString() : vp.poc;
+    out += `Volume POC: ${pocStr}\n`;
+  }
   out += `\n`;
 
   // ── 5. REDLINE SIGNALS (raw — no verdict) ──
@@ -1430,61 +1457,39 @@ function buildBeginnerSummary(data) {
   out += `\n`;
 
   // ── 6. AI FACTORS ──
-  if (af.s9_market_stress != null || af.s10_whale_conviction != null || af.s11_smart_dumb != null) {
+  const minerCap = (data.ai_factors?.layer0_5?.forced_sell_risk) || (src.ai_factors?.forced_sell_risk);
+  if (af.s9_market_stress != null || af.s10_whale_conviction != null || af.s11_smart_dumb != null || minerCap != null) {
     out += `═══ AI FACTORS ═══\n`;
-    if (af.s9_market_stress != null) out += `S9 Market Stress: ${af.s9_market_stress}\n`;
-    if (af.s10_whale_conviction != null) out += `S10 Whale Conviction: ${af.s10_whale_conviction}\n`;
-    if (af.s11_smart_dumb != null) out += `S11 Smart/Dumb Money: ${af.s11_smart_dumb}\n`;
+    if (af.s9_market_stress != null) out += `S9 Market Stress: ${af.s9_market_stress}/100\n`;
+    if (af.s10_whale_conviction != null) out += `S10 Whale Conviction: ${af.s10_whale_conviction}/100\n`;
+    if (af.s11_smart_dumb != null) out += `S11 Smart/Dumb: ${af.s11_smart_dumb} (pos=bullish, neg=bearish)\n`;
+    if (minerCap != null) out += `Miner capitulation: ${minerCap}\n`;
     out += `\n`;
   }
 
   return out;
 }
 
-function buildCopyText(data) {
+function buildSourceHubText(data) {
   if (!data) return '';
-  let out = '';
   const h = data.header || {};
   const src = data.sources || {};
   const fmt = (n) => typeof n === 'number' ? '$' + n.toLocaleString(undefined, {minimumFractionDigits: 2}) : String(n || '—');
-  const fmpct = (n) => typeof n === 'number' ? (n >= 0 ? '+' : '') + n.toFixed(2) + '%' : String(n || '—');
-
-  // Hero header
-  out += `BTC DATA PACKET — ${h.generated_timestamp || 'N/A'}\n`;
-  out += `${fmt(h.btc_price)}  ${fmpct(h.change_24h)}\n`;
-  out += `BID ${fmt(h.bid)} / ASK ${fmt(h.ask)}  |  SPREAD ${fmt(h.spread)}  |  VOL 24H ${fmt(h.volume_24h)}\n\n`;
-
-  // Legend — what each section means
-  out += `═══ LEGEND ═══\n`;
-  out += `BEGINNER SUMMARY = plain English (read this first)\n`;
-  out += `SOURCE HUB        = dashboard signals snapshot\n`;
-  out += `TERMINAL DETAIL   = full packet data for AI & pros:\n`;
-  out += `  [CRITICAL] = price action & derivatives\n`;
-  out += `  [CONTEXT]  = macro environment\n`;
-  out += `  [REFERENCE] = on-chain & cycle metrics\n`;
-  out += `  [AI_FACTORS] = Apodex AI→BTC signals\n`;
-  out += `  [REGIME]   = market regime classification\n`;
-  out += `  [TRAPS-REDLINE-AMT-VP] = external dashboards\n`;
-  out += `  [HEATMAP]  = Coinglass V7 liquidity clusters\n`;
-  out += `  [STATUS]   = pipeline health\n`;
-  out += `\n`;
-
-  // Source hub
-  out += `═══ SOURCE HUB ═══\n`;
+  let out = `═══ SOURCE HUB ═══\n`;
 
   const cards = [
-    {icon: '📦', name: 'PACKET   [own analysis]', render: (d) => {
+    {icon: '📦', key: 'PACKET', name: 'PACKET   [own analysis]', render: (d) => {
       const r = d.regime || {};
       const af = d.ai_factors || {};
       const tws = af.tripwire_summary || {};
       return `Price ${fmt(h.btc_price)}  |  Regime ${r.label||'—'}  |  Conf ${(r.confidence||0).toFixed(2)}  |  TW ${tws.active_count||0}/${tws.total||6}`;
     }},
-    {icon: '🪤', name: 'TRAPS    [trap monitor]', render: (s) => `Score ${s.score||'?'}  |  ${s.direction||'—'}  |  ${(s.active_traps||[]).length} active`},
-    {icon: '🔴', name: 'REDLINE  [trade engine]', render: (s) => `L0 ${s.l0_regime||'—'}  |  Risk ${s.l1_risk||'—'}  |  Swing ${s.l3_swing||'—'}${s.l3_swing_blocked?'🚫':''}  |  Intra ${s.l4_intraday||'—'}${s.l4_intraday_blocked?'🚫':''}`},
-    {icon: '🐋', name: 'AMT      [whale flow]', render: (s) => `Whale ${s.whale_pivot||'—'}  |  MTF ${s.mtf_signal||'—'}  |  ADX ${s.adx_regime||'—'} ${s.adx||''}`},
-    {icon: '📊', name: 'VOL      [volume prof]', render: (s) => `POC ${fmt(s.poc)}  |  Shape ${s.shape||'—'}  |  State ${s.state||'—'}`},
-    {icon: '🤖', name: 'AI       [Apodex AI]', render: (s) => `S9/S10/S11 ${[s.s9_label,s.s10_label,s.s11_label].filter(Boolean).join('/')||'—'}  |  Mining ${s.forced_sell_risk||'—'}  |  TW ${s.active_tripwires||0}/${s.total_tripwires||6}`},
-    {icon: '🔥', name: 'HEATMAP  [liq clusters]', render: (h) => {
+    {icon: '🪤', key: 'TRAPS', name: 'TRAPS    [trap monitor]', render: (s) => `Score ${s.score||'?'}  |  ${s.direction||'—'}  |  ${(s.active_traps||[]).length} active`},
+    {icon: '🔴', key: 'REDLINE', name: 'REDLINE  [trade engine]', render: (s) => `L0 ${s.l0_regime||'—'}  |  Risk ${s.l1_risk||'—'}  |  Swing ${s.l3_swing||'—'}${s.l3_swing_blocked?'🚫':''}  |  Intra ${s.l4_intraday||'—'}${s.l4_intraday_blocked?'🚫':''}`},
+    {icon: '🐋', key: 'AMT', name: 'AMT      [whale flow]', render: (s) => `Whale ${s.whale_pivot||'—'}  |  MTF ${s.mtf_signal||'—'}  |  ADX ${s.adx_regime||'—'} ${s.adx||''}`},
+    {icon: '📊', key: 'VOL', name: 'VOL      [volume prof]', render: (s) => `POC ${fmt(s.poc)}  |  Shape ${s.shape||'—'}  |  State ${s.state||'—'}`},
+    {icon: '🤖', key: 'AI', name: 'AI       [Apodex AI]', render: (s) => `S9/S10/S11 ${[s.s9_label,s.s10_label,s.s11_label].filter(Boolean).join('/')||'—'}  |  Mining ${s.forced_sell_risk||'—'}  |  TW ${s.active_tripwires||0}/${s.total_tripwires||6}`},
+    {icon: '🔥', key: 'HEATMAP', name: 'HEATMAP  [liq clusters]', render: (h) => {
       if (!h || !h.data_available) return 'No capture yet (run V7)';
       const parts = [];
       if (h.nearest_above) parts.push(`▲$${h.nearest_above.price?.toLocaleString()} +${h.nearest_above.distance_pct?.toFixed(1)}%`);
@@ -1497,16 +1502,53 @@ function buildCopyText(data) {
 
   const KEY_MAP = { PACKET: null, TRAPS: 'trap_monitor', REDLINE: 'redline', AMT: 'amt', VOL: 'volume_profile', AI: 'ai_factors', HEATMAP: 'heatmap' };
   for (const c of cards) {
-    const sdata = c.name === 'PACKET' ? data : (c.name === 'HEATMAP' ? (data.heatmap || {}) : (src[KEY_MAP[c.name]] || {}));
+    const sdata = c.key === 'PACKET' ? data : (c.key === 'HEATMAP' ? (data.heatmap || {}) : (src[KEY_MAP[c.key]] || {}));
     out += `${c.icon} ${c.name.padEnd(8)} |  ${c.render(sdata)}\n`;
   }
+  return out;
+}
+
+function buildCopyText(data) {
+  if (!data) return '';
+  let out = '';
+  const h = data.header || {};
+  const fmt = (n) => typeof n === 'number' ? '$' + n.toLocaleString(undefined, {minimumFractionDigits: 2}) : String(n || '—');
+  const fmpct = (n) => typeof n === 'number' ? (n >= 0 ? '+' : '') + n.toFixed(2) + '%' : String(n || '—');
+
+  // Hero header
+  out += `BTC DATA PACKET — ${h.generated_timestamp || 'N/A'}\n`;
+  out += `${fmt(h.btc_price)}  ${fmpct(h.change_24h)}\n`;
+  out += `BID ${fmt(h.bid)} / ASK ${fmt(h.ask)}  |  SPREAD ${fmt(h.spread)}  |  VOL 24H ${fmt(h.volume_24h)}\n\n`;
+
+  // Legend — what each section means
+  out += `═══ LEGEND ═══\n`;
+  out += `TELEMETRY BRIEF   = plain English (read this first)\n`;
+  out += `SOURCE HUB        = dashboard signals snapshot\n`;
+  out += `TERMINAL DETAIL   = full packet data for AI & pros:\n`;
+  out += `  [CRITICAL] = price action & derivatives\n`;
+  out += `  [CONTEXT]  = macro environment\n`;
+  out += `  [REFERENCE] = on-chain & cycle metrics\n`;
+  out += `  [AI_FACTORS] = Apodex AI→BTC signals\n`;
+  out += `  [REGIME]   = market regime classification\n`;
+  out += `  [TRAPS-REDLINE-AMT-VP] = external dashboards\n`;
+  out += `  [HEATMAP]  = Coinglass V7 liquidity clusters\n`;
+  out += `  [STATUS]   = pipeline health\n`;
+  out += `\n`;
+
+  // Telemetry Brief
+  out += `═══ TELEMETRY BRIEF ═══\n`;
+  out += buildTelemetryBrief(data);
+  out += `\n`;
+
+  // Source hub
+  out += buildSourceHubText(data);
+  out += `\n`;
+
   out += `\n${'═'.repeat(44)}\n`;
   out += `TERMINAL DETAIL (full analysis tiers)\n`;
   out += `${'═'.repeat(44)}\n\n`;
 
-  // Terminal text
-  const terminal = document.getElementById('terminal-pre');
-  out += terminal ? terminal.textContent : '';
+  out += buildTiersDetail(data);
 
   return out;
 }
