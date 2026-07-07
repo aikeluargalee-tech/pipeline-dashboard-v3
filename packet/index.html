@@ -1457,12 +1457,15 @@ function buildTelemetryBrief(data) {
   out += `\n`;
 
   // ── 6. AI FACTORS ──
-  const minerCap = (data.ai_factors?.layer0_5?.forced_sell_risk) || (src.ai_factors?.forced_sell_risk);
-  if (af.s9_market_stress != null || af.s10_whale_conviction != null || af.s11_smart_dumb != null || minerCap != null) {
+  const s9 = af.s9_vix_roc || {};
+  const s10 = af.s10_us10y_roc || {};
+  const s11 = af.s11_volume_anomaly || {};
+  const minerCap = af.layer0_5?.forced_sell_risk;
+  if (s9.score != null || s10.score != null || s11.score != null || minerCap != null) {
     out += `═══ AI FACTORS ═══\n`;
-    if (af.s9_market_stress != null) out += `S9 Market Stress: ${af.s9_market_stress}/100\n`;
-    if (af.s10_whale_conviction != null) out += `S10 Whale Conviction: ${af.s10_whale_conviction}/100\n`;
-    if (af.s11_smart_dumb != null) out += `S11 Smart/Dumb: ${af.s11_smart_dumb} (pos=bullish, neg=bearish)\n`;
+    if (s9.score != null) out += `S9 Market Stress: ${s9.score}/100${s9.label ? ' (' + s9.label + ')' : ''}\n`;
+    if (s10.score != null) out += `S10 Whale Conviction: ${s10.score}/100${s10.label ? ' (' + s10.label + ')' : ''}\n`;
+    if (s11.score != null) out += `S11 Smart/Dumb: ${s11.score}${s11.label ? ' (' + s11.label + ')' : ''} (pos=bullish, neg=bearish)\n`;
     if (minerCap != null) out += `Miner capitulation: ${minerCap}\n`;
     out += `\n`;
   }
