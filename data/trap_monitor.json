@@ -1,11 +1,11 @@
 {
-  "composite": 2,
+  "composite": 3,
   "actual_max": 7,
-  "status": "CLEAR",
+  "status": "CAUTION",
   "direction": "LONG_TRAP",
-  "long_trap_signals": 3,
+  "long_trap_signals": 4,
   "short_trap_signals": 0,
-  "downstream_action": "Standard L4 rules apply. No trap override.",
+  "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
   "signals": {
     "s1_liq_asymmetry": {
       "score": 0,
@@ -19,33 +19,33 @@
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-1.23%",
+      "value": "-2.45%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI -1.2% \u2014 unwinding while price $63134 \u2014 divergence"
+      "note": "OI -2.5% \u2014 unwinding while price $63101 \u2014 divergence"
     },
     "s3_funding": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "0.0087%",
+      "value": "0.0079%",
       "threshold": "|Funding| > 0.01%",
-      "note": "Funding 0.0087% \u2014 neutral"
+      "note": "Funding 0.0079% \u2014 neutral"
     },
     "s4_bid_ask_absorption": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:3 Ask:4",
+      "value": "Bid:2 Ask:3",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=3, Ask=4 \u2014 balanced"
+      "note": "Bid=2, Ask=3 \u2014 balanced"
     },
     "s5_taker_cvd": {
-      "score": 0,
-      "verdict": "CLEAR",
+      "score": 1,
+      "verdict": "TRAP",
       "max": 1,
-      "value": "Taker:0.8345 CVD:-4643.94",
+      "value": "Taker:1.0427 CVD:-3838.76",
       "threshold": "Taker > 1.0 + CVD < 0",
-      "note": "Taker 0.83, CVD -4644 \u2014 mixed"
+      "note": "Taker 1.04 (aggressive buying) + CVD -3839 negative \u2014 divergence trap"
     },
     "s6_exchange_netflow": {
       "score": 0,
@@ -67,11 +67,11 @@
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-7.9%",
+      "value": "-7.6%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -7.9% \u2014 puts richly bid (institutions hedging)"
+      "note": "Skew -7.6% \u2014 puts richly bid (institutions hedging)"
     }
   },
-  "btc_price": 63134.62,
-  "_collected": "2026-07-07 05:59 UTC"
+  "btc_price": 63101.11,
+  "_collected": "2026-07-07 06:18 UTC"
 }
