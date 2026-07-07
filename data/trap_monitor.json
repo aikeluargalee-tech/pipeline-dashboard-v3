@@ -21,15 +21,15 @@
       "max": 1,
       "value": "-2.45%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI -2.5% \u2014 unwinding while price $63101 \u2014 divergence"
+      "note": "OI -2.5% \u2014 unwinding while price $63260 \u2014 divergence"
     },
     "s3_funding": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "0.0079%",
+      "value": "0.0078%",
       "threshold": "|Funding| > 0.01%",
-      "note": "Funding 0.0079% \u2014 neutral"
+      "note": "Funding 0.0078% \u2014 neutral"
     },
     "s4_bid_ask_absorption": {
       "score": 0,
@@ -67,11 +67,11 @@
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-7.6%",
+      "value": "-8.1%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -7.6% \u2014 puts richly bid (institutions hedging)"
+      "note": "Skew -8.1% \u2014 puts richly bid (institutions hedging)"
     }
   },
-  "btc_price": 63101.11,
-  "_collected": "2026-07-07 06:18 UTC"
+  "btc_price": 63260.04,
+  "_collected": "2026-07-07 06:48 UTC"
 }
