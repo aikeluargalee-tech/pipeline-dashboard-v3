@@ -1035,6 +1035,7 @@ function generateTextBrief(data) {
   out += `\n`;
 
   // Tier 3.7: External Sources — aggregated data from all dashboards
+  out += `─── EXTERNAL DASHBOARDS ───\n\n`;
   const src = data.sources || {};
   
   // TRAPS
@@ -1213,7 +1214,7 @@ function renderSourceCards(data) {
   
   const SOURCES = [
     {
-      id: 'packet', icon: '📦', name: 'Packet', url: null,
+      id: 'packet', icon: '📦', name: 'Packet · own analysis', url: null,
       render: function(d) {
         const h = d.header || {};
         const r = d.regime || {};
@@ -1225,7 +1226,7 @@ function renderSourceCards(data) {
       }
     },
     {
-      id: 'trap_monitor', icon: '🪤', name: 'Traps',
+      id: 'trap_monitor', icon: '🪤', name: 'Traps · market traps',
       url: '../trap-monitor/',
       render: function(s) {
         return [
@@ -1236,7 +1237,7 @@ function renderSourceCards(data) {
       }
     },
     {
-      id: 'redline', icon: '🔴', name: 'Redline',
+      id: 'redline', icon: '🔴', name: 'Redline · trade engine',
       url: 'https://aikeluargalee-tech.github.io/redline-btc/',
       render: function(s) {
         return [
@@ -1248,7 +1249,7 @@ function renderSourceCards(data) {
       }
     },
     {
-      id: 'amt', icon: '🐋', name: 'AMT',
+      id: 'amt', icon: '🐋', name: 'AMT · whale flow',
       url: 'https://aikeluargalee-tech.github.io/btc-amt-viewer/',
       render: function(s) {
         return [
@@ -1259,7 +1260,7 @@ function renderSourceCards(data) {
       }
     },
     {
-      id: 'volume_profile', icon: '📊', name: 'Vol Profile',
+      id: 'volume_profile', icon: '📊', name: 'Vol Profile · volume analysis',
       url: 'https://aikeluargalee-tech.github.io/volume-profile-v3/',
       render: function(s) {
         return [
@@ -1270,7 +1271,7 @@ function renderSourceCards(data) {
       }
     },
     {
-      id: 'ai_factors', icon: '🤖', name: 'AI Factors',
+      id: 'ai_factors', icon: '🤖', name: 'AI Factors · Apodex AI→BTC',
       url: '../ai-factors/',
       render: function(s) {
         return [
@@ -1281,7 +1282,7 @@ function renderSourceCards(data) {
       }
     },
     {
-      id: 'heatmap', icon: '🔥', name: 'Heatmap L6',
+      id: 'heatmap', icon: '🔥', name: 'Heatmap L6 · Coinglass V7 clusters',
       url: 'https://aikeluargalee-tech.github.io/redline-btc/',
       render: function(h) {
         if (!h || !h.data_available) {
