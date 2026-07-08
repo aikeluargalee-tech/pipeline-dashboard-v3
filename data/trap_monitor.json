@@ -27,17 +27,17 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "0.0055%",
+      "value": "0.0057%",
       "threshold": "|Funding| > 0.01%",
-      "note": "Funding 0.0055% \u2014 neutral"
+      "note": "Funding 0.0057% \u2014 neutral"
     },
     "s4_bid_ask_absorption": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:3 Ask:5",
+      "value": "Bid:2 Ask:4",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=3, Ask=5 \u2014 balanced"
+      "note": "Bid=2, Ask=4 \u2014 balanced"
     },
     "s5_taker_cvd": {
       "score": 0,
@@ -59,19 +59,19 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "LTH:0.87|1Y+:1.13|SiP:51%",
+      "value": "LTH:0.93|1Y+:1.41|SiP:50%",
       "threshold": "\u22652 of: LTH-SOPR>1.02, 1Y+UTXO-SOPR>1.5, SiP>80%",
-      "note": "0/3 sub-signals \u2014 LTH-SOPR 0.8702 \u2014 below threshold (selling at loss) | 1Y+ UTXO SOPR 1.130 \u2014 below threshold | Supply in Profit 51.2% \u2014 not in distribution zone [BRK \u2014 bitview.space | fetched 2026-07-08T08:26]"
+      "note": "0/3 sub-signals \u2014 LTH-SOPR 0.9265 \u2014 below threshold (selling at loss) | 1Y+ UTXO SOPR 1.409 \u2014 below threshold | Supply in Profit 49.9% \u2014 not in distribution zone [BRK \u2014 bitview.space | fetched 2026-07-08T14:35]"
     },
     "s8_options_skew": {
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-10.7%",
+      "value": "-9.8%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -10.7% \u2014 puts richly bid (institutions hedging)"
+      "note": "Skew -9.8% \u2014 puts richly bid (institutions hedging)"
     }
   },
-  "btc_price": 61927.72,
-  "_collected": "2026-07-08 14:18 UTC"
+  "btc_price": 61819.06,
+  "_collected": "2026-07-08 14:49 UTC"
 }
