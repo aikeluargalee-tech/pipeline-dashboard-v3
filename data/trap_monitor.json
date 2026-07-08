@@ -1,5 +1,5 @@
 {
-  "composite": 3,
+  "composite": 4,
   "actual_max": 7,
   "status": "CAUTION",
   "direction": "LONG_TRAP",
@@ -27,17 +27,17 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "0.0058%",
+      "value": "0.0067%",
       "threshold": "|Funding| > 0.01%",
-      "note": "Funding 0.0058% \u2014 neutral"
+      "note": "Funding 0.0067% \u2014 neutral"
     },
     "s4_bid_ask_absorption": {
-      "score": 0,
-      "verdict": "CLEAR",
+      "score": 1,
+      "verdict": "TRAP",
       "max": 1,
-      "value": "Bid:5 Ask:5",
+      "value": "Bid:5 Ask:2",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=5, Ask=5 \u2014 balanced"
+      "note": "Bid/Ask wall ratio 2.5\u00d7 \u2014 bid support trap"
     },
     "s5_taker_cvd": {
       "score": 1,
@@ -67,11 +67,11 @@
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-8.2%",
+      "value": "-7.6%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -8.2% \u2014 puts richly bid (institutions hedging)"
+      "note": "Skew -7.6% \u2014 puts richly bid (institutions hedging)"
     }
   },
-  "btc_price": 61596.8,
-  "_collected": "2026-07-08 15:18 UTC"
+  "btc_price": 61648.53,
+  "_collected": "2026-07-08 15:48 UTC"
 }
