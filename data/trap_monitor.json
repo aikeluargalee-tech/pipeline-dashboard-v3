@@ -3,7 +3,7 @@
   "actual_max": 7,
   "status": "CAUTION",
   "direction": "LONG_TRAP",
-  "long_trap_signals": 3,
+  "long_trap_signals": 2,
   "short_trap_signals": 0,
   "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
   "signals": {
@@ -11,9 +11,9 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "4L/2S",
+      "value": "5L/2S",
       "threshold": "\u22652\u00d7 asymmetry",
-      "note": "Long=4, Short=2 \u2014 balanced"
+      "note": "Long=5, Short=2 \u2014 balanced"
     },
     "s2_oi_divergence": {
       "score": 1,
@@ -21,23 +21,23 @@
       "max": 1,
       "value": "-2.98%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI -3.0% \u2014 unwinding while price $63006 \u2014 divergence"
+      "note": "OI -3.0% \u2014 unwinding while price $62939 \u2014 divergence"
     },
     "s3_funding": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "0.0015%",
+      "value": "0.0004%",
       "threshold": "|Funding| > 0.01%",
-      "note": "Funding 0.0015% \u2014 neutral"
+      "note": "Funding 0.0004% \u2014 neutral"
     },
     "s4_bid_ask_absorption": {
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "Bid:0 Ask:4",
+      "value": "Bid:4 Ask:1",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Ask walls (4) > Bid walls (0) \u2014 supply pressure"
+      "note": "Bid/Ask wall ratio 4.0\u00d7 \u2014 bid support trap"
     },
     "s5_taker_cvd": {
       "score": 0,
@@ -67,11 +67,11 @@
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-7.4%",
+      "value": "-7.3%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -7.4% \u2014 puts richly bid (institutions hedging)"
+      "note": "Skew -7.3% \u2014 puts richly bid (institutions hedging)"
     }
   },
-  "btc_price": 63006.6,
-  "_collected": "2026-07-08 03:18 UTC"
+  "btc_price": 62939.55,
+  "_collected": "2026-07-08 03:48 UTC"
 }
