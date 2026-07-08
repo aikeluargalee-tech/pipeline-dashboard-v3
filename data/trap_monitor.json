@@ -1,5 +1,5 @@
 {
-  "composite": 2,
+  "composite": 1,
   "actual_max": 7,
   "status": "CLEAR",
   "direction": "LONG_TRAP",
@@ -11,41 +11,41 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "2L/4S",
+      "value": "2L/3S",
       "threshold": "\u22652\u00d7 asymmetry",
-      "note": "Long=2, Short=4 \u2014 balanced"
+      "note": "Long=2, Short=3 \u2014 balanced"
     },
     "s2_oi_divergence": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "-0.42%",
+      "value": "0.74%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI -0.4% \u2014 neutral/no divergence"
+      "note": "OI 0.7% \u2014 neutral/no divergence"
     },
     "s3_funding": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "0.0042%",
+      "value": "0.0055%",
       "threshold": "|Funding| > 0.01%",
-      "note": "Funding 0.0042% \u2014 neutral"
+      "note": "Funding 0.0055% \u2014 neutral"
     },
     "s4_bid_ask_absorption": {
-      "score": 1,
-      "verdict": "TRAP",
+      "score": 0,
+      "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:1 Ask:3",
+      "value": "Bid:3 Ask:5",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Ask/Bid wall ratio 3.0\u00d7 \u2014 absorption risk"
+      "note": "Bid=3, Ask=5 \u2014 balanced"
     },
     "s5_taker_cvd": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Taker:0.7657 CVD:-5288.72",
+      "value": "Taker:0.9609 CVD:-4788.05",
       "threshold": "Taker > 1.0 + CVD < 0",
-      "note": "Taker 0.77, CVD -5289 \u2014 mixed"
+      "note": "Taker 0.96, CVD -4788 \u2014 mixed"
     },
     "s6_exchange_netflow": {
       "score": 0,
@@ -67,11 +67,11 @@
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-10.0%",
+      "value": "-10.7%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -10.0% \u2014 puts richly bid (institutions hedging)"
+      "note": "Skew -10.7% \u2014 puts richly bid (institutions hedging)"
     }
   },
-  "btc_price": 61830.0,
-  "_collected": "2026-07-08 13:48 UTC"
+  "btc_price": 61927.72,
+  "_collected": "2026-07-08 14:18 UTC"
 }
