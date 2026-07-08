@@ -3,17 +3,17 @@
   "actual_max": 7,
   "status": "CAUTION",
   "direction": "LONG_TRAP",
-  "long_trap_signals": 4,
+  "long_trap_signals": 2,
   "short_trap_signals": 0,
   "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
   "signals": {
     "s1_liq_asymmetry": {
-      "score": 0,
-      "verdict": "CLEAR",
+      "score": 1,
+      "verdict": "TRAP",
       "max": 1,
-      "value": "2L/3S",
+      "value": "1L/3S",
       "threshold": "\u22652\u00d7 asymmetry",
-      "note": "Long=2, Short=3 \u2014 balanced"
+      "note": "Short=3 below, Long=1 \u2014 asymmetry favors longs"
     },
     "s2_oi_divergence": {
       "score": 1,
@@ -21,7 +21,7 @@
       "max": 1,
       "value": "-1.57%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI -1.6% \u2014 unwinding while price $62588 \u2014 divergence"
+      "note": "OI -1.6% \u2014 unwinding while price $62602 \u2014 divergence"
     },
     "s3_funding": {
       "score": 0,
@@ -35,17 +35,17 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:1 Ask:2",
+      "value": "Bid:3 Ask:2",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=1, Ask=2 \u2014 balanced"
+      "note": "Bid=3, Ask=2 \u2014 balanced"
     },
     "s5_taker_cvd": {
-      "score": 1,
-      "verdict": "TRAP",
+      "score": 0,
+      "verdict": "CLEAR",
       "max": 1,
-      "value": "Taker:1.0434 CVD:-3455.99",
+      "value": "Taker:0.8449 CVD:-4008.56",
       "threshold": "Taker > 1.0 + CVD < 0",
-      "note": "Taker 1.04 (aggressive buying) + CVD -3456 negative \u2014 divergence trap"
+      "note": "Taker 0.84, CVD -4009 \u2014 mixed"
     },
     "s6_exchange_netflow": {
       "score": 0,
@@ -67,11 +67,11 @@
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-8.1%",
+      "value": "-7.7%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -8.1% \u2014 puts richly bid (institutions hedging)"
+      "note": "Skew -7.7% \u2014 puts richly bid (institutions hedging)"
     }
   },
-  "btc_price": 62588.01,
-  "_collected": "2026-07-08 05:48 UTC"
+  "btc_price": 62602.99,
+  "_collected": "2026-07-08 06:18 UTC"
 }
