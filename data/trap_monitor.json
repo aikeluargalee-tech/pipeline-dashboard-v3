@@ -1,51 +1,51 @@
 {
-  "composite": 2,
+  "composite": 4,
   "actual_max": 7,
-  "status": "CLEAR",
+  "status": "CAUTION",
   "direction": "LONG_TRAP",
   "long_trap_signals": 2,
   "short_trap_signals": 0,
-  "downstream_action": "Standard L4 rules apply. No trap override.",
+  "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
   "signals": {
     "s1_liq_asymmetry": {
-      "score": 0,
-      "verdict": "CLEAR",
+      "score": 1,
+      "verdict": "TRAP",
       "max": 1,
-      "value": "2L/2S",
+      "value": "1L/3S",
       "threshold": "\u22652\u00d7 asymmetry",
-      "note": "Long=2, Short=2 \u2014 balanced"
+      "note": "Short=3 below, Long=1 \u2014 asymmetry favors longs"
     },
     "s2_oi_divergence": {
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-1.96%",
+      "value": "-1.39%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI -2.0% \u2014 unwinding while price $62114 \u2014 divergence"
+      "note": "OI -1.4% \u2014 unwinding while price $62030 \u2014 divergence"
     },
     "s3_funding": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "0.0017%",
+      "value": "0.0021%",
       "threshold": "|Funding| > 0.01%",
-      "note": "Funding 0.0017% \u2014 neutral"
+      "note": "Funding 0.0021% \u2014 neutral"
     },
     "s4_bid_ask_absorption": {
-      "score": 0,
-      "verdict": "CLEAR",
+      "score": 1,
+      "verdict": "TRAP",
       "max": 1,
-      "value": "Bid:4 Ask:2",
+      "value": "Bid:3 Ask:0",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=4, Ask=2 \u2014 balanced"
+      "note": "Bid walls (3) > Ask walls (0) \u2014 support"
     },
     "s5_taker_cvd": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Taker:0.9028 CVD:-4311.69",
+      "value": "Taker:0.9659 CVD:-4794.17",
       "threshold": "Taker > 1.0 + CVD < 0",
-      "note": "Taker 0.90, CVD -4312 \u2014 mixed"
+      "note": "Taker 0.97, CVD -4794 \u2014 mixed"
     },
     "s6_exchange_netflow": {
       "score": 0,
@@ -67,11 +67,11 @@
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-6.8%",
+      "value": "-5.7%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -6.8% \u2014 puts richly bid (institutions hedging)"
+      "note": "Skew -5.7% \u2014 puts richly bid (institutions hedging)"
     }
   },
-  "btc_price": 62114.92,
-  "_collected": "2026-07-08 09:48 UTC"
+  "btc_price": 62030.0,
+  "_collected": "2026-07-08 10:18 UTC"
 }
