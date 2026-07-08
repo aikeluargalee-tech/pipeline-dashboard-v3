@@ -793,6 +793,57 @@
         "30d": null
       },
       "resolved": false
+    },
+    {
+      "id": "regime_105ffc6b",
+      "type": "regime_change",
+      "created_at": "2026-07-08T06:47:56.811681+00:00",
+      "btc_price_at_call": 62560.0,
+      "direction": "neutral",
+      "gate0_status": "PAUSE",
+      "regime_label": "STAND ASIDE",
+      "rationale_snapshot": {
+        "gate": {
+          "verdict": "PAUSE",
+          "sources": [
+            "quantum"
+          ]
+        },
+        "macro": {
+          "verdict": "NEUTRAL",
+          "emoji": "\ud83d\udfe1",
+          "detail": "VIX 16.1 normal"
+        },
+        "structure": {
+          "verdict": "HOLDING",
+          "emoji": "\ud83d\udfe1",
+          "detail": "3/3 timeframes active"
+        },
+        "derivatives": {
+          "verdict": "NEUTRAL",
+          "emoji": "\ud83d\udfe1",
+          "detail": "FR -0.0000% neutral, L/S 1.57, CVD -4009"
+        },
+        "cycle": {
+          "verdict": "UNDERVALUED",
+          "emoji": "\ud83d\udfe2",
+          "detail": "MVRV-Z 0.38 undervalued, netflow -1,281 BTC"
+        },
+        "synthesis": {
+          "verdict": "STAND ASIDE",
+          "detail": "Gate 0 PAUSE active. No new positions. | TA: Price 5.2% below MA50 \u2014 medium-term structure bearish",
+          "bull_count": 0.5,
+          "bear_count": 0.0,
+          "ta_warning": "Price 5.2% below MA50 \u2014 medium-term structure bearish"
+        },
+        "btc_price": 62560.0
+      },
+      "outcomes": {
+        "1d": null,
+        "7d": null,
+        "30d": null
+      },
+      "resolved": false
     }
   ]
 }
