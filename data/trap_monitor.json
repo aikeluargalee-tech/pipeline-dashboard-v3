@@ -11,9 +11,9 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "4L/3S",
+      "value": "2L/3S",
       "threshold": "\u22652\u00d7 asymmetry",
-      "note": "Long=4, Short=3 \u2014 balanced"
+      "note": "Long=2, Short=3 \u2014 balanced"
     },
     "s2_oi_divergence": {
       "score": 1,
@@ -21,7 +21,7 @@
       "max": 1,
       "value": "-2.01%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI -2.0% \u2014 unwinding while price $62391 \u2014 divergence"
+      "note": "OI -2.0% \u2014 unwinding while price $62289 \u2014 divergence"
     },
     "s3_funding": {
       "score": 0,
@@ -35,9 +35,9 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:2 Ask:3",
+      "value": "Bid:3 Ask:5",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=2, Ask=3 \u2014 balanced"
+      "note": "Bid=3, Ask=5 \u2014 balanced"
     },
     "s5_taker_cvd": {
       "score": 1,
@@ -59,19 +59,19 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "LTH:0.87|1Y+:1.13|SiP:53%",
+      "value": "LTH:0.87|1Y+:1.13|SiP:51%",
       "threshold": "\u22652 of: LTH-SOPR>1.02, 1Y+UTXO-SOPR>1.5, SiP>80%",
-      "note": "0/3 sub-signals \u2014 LTH-SOPR 0.8666 \u2014 below threshold (selling at loss) | 1Y+ UTXO SOPR 1.133 \u2014 below threshold | Supply in Profit 52.5% \u2014 not in distribution zone [BRK \u2014 bitview.space | fetched 2026-07-08T02:18]"
+      "note": "0/3 sub-signals \u2014 LTH-SOPR 0.8702 \u2014 below threshold (selling at loss) | 1Y+ UTXO SOPR 1.130 \u2014 below threshold | Supply in Profit 51.2% \u2014 not in distribution zone [BRK \u2014 bitview.space | fetched 2026-07-08T08:26]"
     },
     "s8_options_skew": {
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-7.1%",
+      "value": "-6.6%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -7.1% \u2014 puts richly bid (institutions hedging)"
+      "note": "Skew -6.6% \u2014 puts richly bid (institutions hedging)"
     }
   },
-  "btc_price": 62391.8,
-  "_collected": "2026-07-08 08:18 UTC"
+  "btc_price": 62289.99,
+  "_collected": "2026-07-08 08:48 UTC"
 }
