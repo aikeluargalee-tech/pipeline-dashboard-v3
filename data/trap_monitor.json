@@ -1,11 +1,11 @@
 {
-  "composite": 2,
+  "composite": 3,
   "actual_max": 7,
-  "status": "CLEAR",
+  "status": "CAUTION",
   "direction": "LONG_TRAP",
-  "long_trap_signals": 2,
+  "long_trap_signals": 3,
   "short_trap_signals": 0,
-  "downstream_action": "Standard L4 rules apply. No trap override.",
+  "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
   "signals": {
     "s1_liq_asymmetry": {
       "score": 0,
@@ -19,9 +19,9 @@
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-1.39%",
+      "value": "-0.74%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI -1.4% \u2014 unwinding while price $62101 \u2014 divergence"
+      "note": "OI -0.7% \u2014 unwinding while price $62090 \u2014 divergence"
     },
     "s3_funding": {
       "score": 0,
@@ -35,17 +35,17 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:4 Ask:2",
+      "value": "Bid:3 Ask:2",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=4, Ask=2 \u2014 balanced"
+      "note": "Bid=3, Ask=2 \u2014 balanced"
     },
     "s5_taker_cvd": {
-      "score": 0,
-      "verdict": "CLEAR",
+      "score": 1,
+      "verdict": "TRAP",
       "max": 1,
-      "value": "Taker:0.9659 CVD:-4794.17",
+      "value": "Taker:1.1086 CVD:-4528.24",
       "threshold": "Taker > 1.0 + CVD < 0",
-      "note": "Taker 0.97, CVD -4794 \u2014 mixed"
+      "note": "Taker 1.11 (aggressive buying) + CVD -4528 negative \u2014 divergence trap"
     },
     "s6_exchange_netflow": {
       "score": 0,
@@ -67,11 +67,11 @@
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-7.5%",
+      "value": "-7.0%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -7.5% \u2014 puts richly bid (institutions hedging)"
+      "note": "Skew -7.0% \u2014 puts richly bid (institutions hedging)"
     }
   },
-  "btc_price": 62101.0,
-  "_collected": "2026-07-08 10:49 UTC"
+  "btc_price": 62090.01,
+  "_collected": "2026-07-08 11:18 UTC"
 }
