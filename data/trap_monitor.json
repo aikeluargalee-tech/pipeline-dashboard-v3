@@ -1,11 +1,11 @@
 {
-  "composite": 4,
+  "composite": 5,
   "actual_max": 7,
-  "status": "CAUTION",
+  "status": "TRAP_ACTIVE",
   "direction": "LONG_TRAP",
   "long_trap_signals": 2,
   "short_trap_signals": 0,
-  "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
+  "downstream_action": "Block L4 longs. Short eligible if setup clears on 1H structure.",
   "signals": {
     "s1_liq_asymmetry": {
       "score": 1,
@@ -21,23 +21,23 @@
       "max": 1,
       "value": "-1.06%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI -1.1% \u2014 unwinding while price $63009 \u2014 divergence"
+      "note": "OI -1.1% \u2014 unwinding while price $62843 \u2014 divergence"
     },
     "s3_funding": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "0.0067%",
+      "value": "0.0056%",
       "threshold": "|Funding| > 0.01%",
-      "note": "Funding 0.0067% \u2014 neutral"
+      "note": "Funding 0.0056% \u2014 neutral"
     },
     "s4_bid_ask_absorption": {
-      "score": 0,
-      "verdict": "CLEAR",
+      "score": 1,
+      "verdict": "TRAP",
       "max": 1,
-      "value": "Bid:3 Ask:3",
+      "value": "Bid:6 Ask:1",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=3, Ask=3 \u2014 balanced"
+      "note": "Bid/Ask wall ratio 6.0\u00d7 \u2014 bid support trap"
     },
     "s5_taker_cvd": {
       "score": 0,
@@ -67,11 +67,11 @@
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-6.3%",
+      "value": "-5.8%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -6.3% \u2014 puts richly bid (institutions hedging)"
+      "note": "Skew -5.8% \u2014 puts richly bid (institutions hedging)"
     }
   },
-  "btc_price": 63009.75,
-  "_collected": "2026-07-09 10:18 UTC"
+  "btc_price": 62843.99,
+  "_collected": "2026-07-09 10:47 UTC"
 }
