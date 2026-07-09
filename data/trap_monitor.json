@@ -3,7 +3,7 @@
   "actual_max": 7,
   "status": "CAUTION",
   "direction": "LONG_TRAP",
-  "long_trap_signals": 3,
+  "long_trap_signals": 2,
   "short_trap_signals": 0,
   "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
   "signals": {
@@ -11,17 +11,17 @@
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "5L/0S",
+      "value": "3L/1S",
       "threshold": "\u22652\u00d7 asymmetry",
-      "note": "Long=5 below, Short=0 \u2014 asymmetry favors shorts"
+      "note": "Long=3 below, Short=1 \u2014 asymmetry favors shorts"
     },
     "s2_oi_divergence": {
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-0.79%",
+      "value": "-1.06%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI -0.8% \u2014 unwinding while price $62853 \u2014 divergence"
+      "note": "OI -1.1% \u2014 unwinding while price $63009 \u2014 divergence"
     },
     "s3_funding": {
       "score": 0,
@@ -35,17 +35,17 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:2 Ask:4",
+      "value": "Bid:3 Ask:3",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=2, Ask=4 \u2014 balanced"
+      "note": "Bid=3, Ask=3 \u2014 balanced"
     },
     "s5_taker_cvd": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Taker:0.8678 CVD:1247.64",
+      "value": "Taker:0.9705 CVD:1391.23",
       "threshold": "Taker > 1.0 + CVD < 0",
-      "note": "Taker 0.87, CVD 1248 \u2014 mixed"
+      "note": "Taker 0.97, CVD 1391 \u2014 mixed"
     },
     "s6_exchange_netflow": {
       "score": 1,
@@ -67,11 +67,11 @@
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-6.4%",
+      "value": "-6.3%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -6.4% \u2014 puts richly bid (institutions hedging)"
+      "note": "Skew -6.3% \u2014 puts richly bid (institutions hedging)"
     }
   },
-  "btc_price": 62853.99,
-  "_collected": "2026-07-09 09:48 UTC"
+  "btc_price": 63009.75,
+  "_collected": "2026-07-09 10:18 UTC"
 }
