@@ -1,51 +1,51 @@
 {
-  "composite": 3,
+  "composite": 4,
   "actual_max": 7,
   "status": "CAUTION",
-  "direction": "NEUTRAL",
-  "long_trap_signals": 1,
+  "direction": "LONG_TRAP",
+  "long_trap_signals": 2,
   "short_trap_signals": 0,
   "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
   "signals": {
     "s1_liq_asymmetry": {
-      "score": 0,
-      "verdict": "CLEAR",
+      "score": 1,
+      "verdict": "TRAP",
       "max": 1,
-      "value": "2L/5S",
+      "value": "5L/1S",
       "threshold": "\u22652\u00d7 asymmetry",
-      "note": "Long=2, Short=5 \u2014 balanced"
+      "note": "Long=5 below, Short=1 \u2014 asymmetry favors shorts"
     },
     "s2_oi_divergence": {
-      "score": 0,
-      "verdict": "CLEAR",
+      "score": 1,
+      "verdict": "TRAP",
       "max": 1,
-      "value": "0.51%",
+      "value": "-0.79%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI 0.5% \u2014 neutral/no divergence"
+      "note": "OI -0.8% \u2014 unwinding while price $62875 \u2014 divergence"
     },
     "s3_funding": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "0.0030%",
+      "value": "0.0067%",
       "threshold": "|Funding| > 0.01%",
-      "note": "Funding 0.0030% \u2014 neutral"
+      "note": "Funding 0.0067% \u2014 neutral"
     },
     "s4_bid_ask_absorption": {
-      "score": 1,
-      "verdict": "TRAP",
+      "score": 0,
+      "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:5 Ask:1",
+      "value": "Bid:4 Ask:3",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid/Ask wall ratio 5.0\u00d7 \u2014 bid support trap"
+      "note": "Bid=4, Ask=3 \u2014 balanced"
     },
     "s5_taker_cvd": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Taker:0.8808 CVD:-2210.04",
+      "value": "Taker:0.8678 CVD:1247.64",
       "threshold": "Taker > 1.0 + CVD < 0",
-      "note": "Taker 0.88, CVD -2210 \u2014 mixed"
+      "note": "Taker 0.87, CVD 1248 \u2014 mixed"
     },
     "s6_exchange_netflow": {
       "score": 1,
@@ -59,19 +59,19 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "LTH:0.76|1Y+:1.11|SiP:50%",
+      "value": "LTH:0.75|1Y+:1.13|SiP:52%",
       "threshold": "\u22652 of: LTH-SOPR>1.02, 1Y+UTXO-SOPR>1.5, SiP>80%",
-      "note": "0/3 sub-signals \u2014 LTH-SOPR 0.7615 \u2014 below threshold (selling at loss) | 1Y+ UTXO SOPR 1.112 \u2014 below threshold | Supply in Profit 49.9% \u2014 not in distribution zone [BRK \u2014 bitview.space | fetched 2026-07-09T03:09]"
+      "note": "0/3 sub-signals \u2014 LTH-SOPR 0.7522 \u2014 below threshold (selling at loss) | 1Y+ UTXO SOPR 1.130 \u2014 below threshold | Supply in Profit 52.1% \u2014 not in distribution zone [BRK \u2014 bitview.space | fetched 2026-07-09T09:02]"
     },
     "s8_options_skew": {
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-6.4%",
+      "value": "-6.1%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -6.4% \u2014 puts richly bid (institutions hedging)"
+      "note": "Skew -6.1% \u2014 puts richly bid (institutions hedging)"
     }
   },
-  "btc_price": 61933.99,
-  "_collected": "2026-07-09 03:47 UTC"
+  "btc_price": 62875.99,
+  "_collected": "2026-07-09 09:06 UTC"
 }

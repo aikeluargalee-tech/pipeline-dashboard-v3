@@ -1,10 +1,10 @@
 {
-  "last_updated": "2026-07-09T03:47:58Z",
+  "last_updated": "2026-07-09T09:06:03Z",
   "s9_vix_roc": {
     "score": 0,
     "label": "NEUTRAL",
     "delta": 0.0,
-    "now": 16.9,
+    "now": 16.78,
     "prior": 16.9,
     "delta_unit": "pts",
     "threshold": 3.0,
@@ -30,12 +30,12 @@
     "score": 0,
     "label": "NEUTRAL",
     "ratio": 0.92,
-    "vol_now": 18246.31304,
-    "vol_mean_20p": 19776.310831000003,
+    "vol_now": 18244.50426,
+    "vol_mean_20p": 19787.520157500003,
     "threshold": 3.0,
     "window": 20,
     "candle_bearish": true,
-    "as_of": "2026-07-09T03:47:58Z",
+    "as_of": "2026-07-09T09:06:03Z",
     "name": "S11 \u2014 Volume Anomaly Detector",
     "desc": "4H candle volume \u22653\u00d7 20-period rolling mean on a bearish candle. BTC-internal cascade precursor \u2014 24h lead time validated."
   },
@@ -67,9 +67,9 @@
         "IREN",
         "CLSK"
       ],
-      "as_of": "2026-07-09T03:47:58Z"
+      "as_of": "2026-07-09T09:06:03Z"
     },
-    "as_of": "2026-07-09T03:47:58Z"
+    "as_of": "2026-07-09T09:06:03Z"
   },
   "tripwires": {
     "TW1_CH1_CAPITAL_REVERSAL": {
@@ -79,8 +79,8 @@
         "ETF flow data",
         "AI equity index (NVDA/MSFT)"
       ],
-      "state": "\u26a0\ufe0f ACTIVE",
-      "detail": "ETF outflow $8000M \u2014 capital rotation"
+      "state": "INACTIVE",
+      "detail": "ETF flow $85M \u2014 normal"
     },
     "TW6_CH6_CORPORATE_TREASURY": {
       "channel": "Ch.6 \u2014 AI Treasury",
@@ -133,8 +133,8 @@
     }
   },
   "tripwire_summary": {
-    "active": 1,
+    "active": 0,
     "total": 6
   },
-  "_collected": "2026-07-09 03:47 UTC"
+  "_collected": "2026-07-09 09:06 UTC"
 }
