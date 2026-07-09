@@ -1,28 +1,28 @@
 {
-  "last_updated": "2026-07-09T03:12:59Z",
+  "last_updated": "2026-07-09T03:17:55Z",
   "s9_vix_roc": {
     "score": 0,
     "label": "NEUTRAL",
-    "delta": -0.07,
+    "delta": 0.0,
     "now": 16.9,
-    "prior": 16.97,
+    "prior": 16.9,
     "delta_unit": "pts",
     "threshold": 3.0,
     "as_of": "2026-07-09",
-    "prior_date": "2026-07-08",
+    "prior_date": "2026-07-09",
     "name": "S9 \u2014 VIX Rate-of-Change",
     "desc": "VIX session delta vs prior close. \u22653pt rise signals macro stress accelerating \u2014 AI systems already reacting."
   },
   "s10_us10y_roc": {
     "score": 0,
     "label": "NEUTRAL",
-    "delta": -1.2,
+    "delta": 0.0,
     "now": 4.569,
-    "prior": 4.5810003,
+    "prior": 4.569,
     "delta_unit": "bps",
     "threshold": 8.0,
     "as_of": "2026-07-09",
-    "prior_date": "2026-07-08",
+    "prior_date": "2026-07-09",
     "name": "S10 \u2014 US10Y Rate-of-Change",
     "desc": "US10Y intraday delta. \u22658bps rise signals rate repricing in progress \u2014 algos reprice BTC on the move, not the level."
   },
@@ -30,12 +30,12 @@
     "score": 0,
     "label": "NEUTRAL",
     "ratio": 0.91,
-    "vol_now": 17944.19052,
-    "vol_mean_20p": 19676.118922,
+    "vol_now": 17946.99263,
+    "vol_mean_20p": 19729.9513655,
     "threshold": 3.0,
     "window": 20,
     "candle_bearish": true,
-    "as_of": "2026-07-09T03:12:59Z",
+    "as_of": "2026-07-09T03:17:55Z",
     "name": "S11 \u2014 Volume Anomaly Detector",
     "desc": "4H candle volume \u22653\u00d7 20-period rolling mean on a bearish candle. BTC-internal cascade precursor \u2014 24h lead time validated."
   },
@@ -67,9 +67,9 @@
         "IREN",
         "CLSK"
       ],
-      "as_of": "2026-07-09T03:12:59Z"
+      "as_of": "2026-07-09T03:17:55Z"
     },
-    "as_of": "2026-07-09T03:12:59Z"
+    "as_of": "2026-07-09T03:17:55Z"
   },
   "tripwires": {
     "TW1_CH1_CAPITAL_REVERSAL": {
@@ -136,5 +136,5 @@
     "active": 1,
     "total": 6
   },
-  "_collected": "2026-07-09 03:12 UTC"
+  "_collected": "2026-07-09 03:17 UTC"
 }
