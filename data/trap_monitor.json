@@ -3,7 +3,7 @@
   "actual_max": 7,
   "status": "CLEAR",
   "direction": "NEUTRAL",
-  "long_trap_signals": 0,
+  "long_trap_signals": 1,
   "short_trap_signals": 0,
   "downstream_action": "Standard L4 rules apply. No trap override.",
   "signals": {
@@ -11,17 +11,17 @@
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "4L/0S",
+      "value": "4L/1S",
       "threshold": "\u22652\u00d7 asymmetry",
-      "note": "Long=4 below, Short=0 \u2014 asymmetry favors shorts"
+      "note": "Long=4 below, Short=1 \u2014 asymmetry favors shorts"
     },
     "s2_oi_divergence": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "1.15%",
+      "value": "2.07%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI 1.1% \u2014 neutral/no divergence"
+      "note": "OI 2.1% \u2014 neutral/no divergence"
     },
     "s3_funding": {
       "score": 0,
@@ -35,17 +35,17 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:5 Ask:5",
+      "value": "Bid:4 Ask:5",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=5, Ask=5 \u2014 balanced"
+      "note": "Bid=4, Ask=5 \u2014 balanced"
     },
     "s5_taker_cvd": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Taker:1.1643 CVD:6851.54",
+      "value": "Taker:1.1592 CVD:7178.75",
       "threshold": "Taker > 1.0 + CVD < 0",
-      "note": "Taker 1.16 + CVD +6852 \u2014 genuine buying"
+      "note": "Taker 1.16 + CVD +7179 \u2014 genuine buying"
     },
     "s6_exchange_netflow": {
       "score": 1,
@@ -67,11 +67,11 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "-2.3%",
+      "value": "-3.8%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -2.3% \u2014 neutral"
+      "note": "Skew -3.8% \u2014 neutral"
     }
   },
-  "btc_price": 64133.53,
-  "_collected": "2026-07-10 05:48 UTC"
+  "btc_price": 64016.0,
+  "_collected": "2026-07-10 06:18 UTC"
 }
