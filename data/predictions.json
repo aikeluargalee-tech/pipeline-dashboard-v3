@@ -795,7 +795,13 @@
           "max_price": 62979.86,
           "direction_correct": true
         },
-        "7d": null,
+        "7d": {
+          "price_then": 64047.88,
+          "price_change_pct": 4.28,
+          "min_price": 61306.84,
+          "max_price": 64700.0,
+          "direction_correct": true
+        },
         "30d": null
       },
       "resolved": false
@@ -952,11 +958,12 @@
         "regime_label": "CAUTIOUS NEUTRAL"
       },
       "outcomes": {
-        "1d": null,
-        "7d": null,
-        "30d": null
+        "outcome": "win",
+        "exit_price": 63900.0,
+        "resolved_at": "2026-07-10T01:00:00+00:00",
+        "price_change_pct": 3.23
       },
-      "resolved": false
+      "resolved": true
     }
   ]
 }

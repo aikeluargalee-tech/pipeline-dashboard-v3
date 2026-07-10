@@ -1,14 +1,14 @@
 {
-  "last_updated": "2026-07-09T11:18:26Z",
+  "last_updated": "2026-07-10T05:18:03Z",
   "s9_vix_roc": {
     "score": 0,
     "label": "NEUTRAL",
-    "delta": 0.0,
-    "now": 17.09,
-    "prior": 16.99,
+    "delta": -1.25,
+    "now": 15.84,
+    "prior": 17.09,
     "delta_unit": "pts",
     "threshold": 3.0,
-    "as_of": "2026-07-09",
+    "as_of": "2026-07-10",
     "prior_date": "2026-07-09",
     "name": "S9 \u2014 VIX Rate-of-Change",
     "desc": "VIX session delta vs prior close. \u22653pt rise signals macro stress accelerating \u2014 AI systems already reacting."
@@ -16,12 +16,12 @@
   "s10_us10y_roc": {
     "score": 0,
     "label": "NEUTRAL",
-    "delta": 0.0,
-    "now": 4.569,
+    "delta": -3.0,
+    "now": 4.539,
     "prior": 4.569,
     "delta_unit": "bps",
     "threshold": 8.0,
-    "as_of": "2026-07-09",
+    "as_of": "2026-07-10",
     "prior_date": "2026-07-09",
     "name": "S10 \u2014 US10Y Rate-of-Change",
     "desc": "US10Y intraday delta. \u22658bps rise signals rate repricing in progress \u2014 algos reprice BTC on the move, not the level."
@@ -29,13 +29,13 @@
   "s11_volume_anomaly": {
     "score": 0,
     "label": "NEUTRAL",
-    "ratio": 0.86,
-    "vol_now": 16504.68257,
-    "vol_mean_20p": 19212.946294,
+    "ratio": 0.9,
+    "vol_now": 17110.79903,
+    "vol_mean_20p": 19015.559189,
     "threshold": 3.0,
     "window": 20,
     "candle_bearish": true,
-    "as_of": "2026-07-09T11:18:26Z",
+    "as_of": "2026-07-10T05:18:03Z",
     "name": "S11 \u2014 Volume Anomaly Detector",
     "desc": "4H candle volume \u22653\u00d7 20-period rolling mean on a bearish candle. BTC-internal cascade precursor \u2014 24h lead time validated."
   },
@@ -45,7 +45,7 @@
     "hashprice": {
       "direction": "FALLING",
       "usd_per_ph": 29.61,
-      "updated": "2026-07-09",
+      "updated": "2026-07-10",
       "source": "Hashrate Index \u2014 manual weekly update"
     },
     "ercot_proxy": {
@@ -67,9 +67,9 @@
         "IREN",
         "CLSK"
       ],
-      "as_of": "2026-07-09T11:18:26Z"
+      "as_of": "2026-07-10T05:18:03Z"
     },
-    "as_of": "2026-07-09T11:18:26Z"
+    "as_of": "2026-07-10T05:18:03Z"
   },
   "tripwires": {
     "TW1_CH1_CAPITAL_REVERSAL": {
@@ -80,7 +80,7 @@
         "AI equity index (NVDA/MSFT)"
       ],
       "state": "INACTIVE",
-      "detail": "ETF flow $85M \u2014 normal"
+      "detail": "ETF flow $510M \u2014 normal"
     },
     "TW6_CH6_CORPORATE_TREASURY": {
       "channel": "Ch.6 \u2014 AI Treasury",
@@ -136,5 +136,5 @@
     "active": 0,
     "total": 6
   },
-  "_collected": "2026-07-09 11:18 UTC"
+  "_collected": "2026-07-10 05:18 UTC"
 }
