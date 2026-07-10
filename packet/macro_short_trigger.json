@@ -1,26 +1,26 @@
 {
-  "packet_id": 17,
-  "captured_at": "2026-07-10T13:42:41Z",
+  "packet_id": 18,
+  "captured_at": "2026-07-10T13:58:50Z",
   "btc": {
-    "price": 64362.0,
-    "session_high": 64608.0,
+    "price": 64484.27,
+    "session_high": 64692.83,
     "session_low": 62559.59,
-    "change_pct": 2.47,
-    "vwap": 63688.60168568,
-    "volume_btc": 15108.01438,
-    "volume_usd": 962208310.1093433,
+    "change_pct": 2.29,
+    "vwap": 63720.55990219,
+    "volume_btc": 15116.95468,
+    "volume_usd": 963260816.2255589,
     "break_level": 58872,
-    "gap_to_break_pct": 9.33
+    "gap_to_break_pct": 9.53
   },
   "funding_rate": {
-    "value_pct": 0.006,
+    "value_pct": 0.0067,
     "next_settlement_utc": null,
     "trend": "rising",
     "consecutive_negative_count": 0
   },
   "taker_volume": {
-    "ratio_24h": 1.002,
-    "delta_sum_6": 11.52,
+    "ratio_24h": 0.999,
+    "delta_sum_6": -6.93,
     "delta_trend": "NEUTRAL",
     "deltas_6": [
       277.09,
@@ -28,16 +28,16 @@
       -35.07,
       -278.43,
       168.92,
-      135.63
+      117.18
     ]
   },
   "mstr": {
-    "price": 99.0,
+    "price": 97.34,
     "prev_close": 93.89,
-    "change_pct": 5.44,
-    "volume": 3010986,
-    "avg_volume": 26729554,
-    "ma_50": 137.56,
+    "change_pct": 3.68,
+    "volume": 4307512,
+    "avg_volume": 26794380,
+    "ma_50": 137.52,
     "ma_200": 175.21,
     "buy_window": {
       "active": true,
@@ -47,11 +47,11 @@
       "announcement_detected": false,
       "consecutive_silent_sessions": 0
     },
-    "gap_to_trigger_pct": 32.0,
+    "gap_to_trigger_pct": 29.79,
     "trigger_price": 75.0
   },
   "vix": {
-    "value": 15.76,
+    "value": 15.68,
     "source": "FRED",
     "captured_at": "2026-07-10",
     "trigger_threshold": 25.0,
@@ -59,7 +59,7 @@
     "stale": false
   },
   "us10y": {
-    "value": 4.545,
+    "value": 4.549,
     "source": "FRED",
     "captured_at": "2026-07-10",
     "trigger_threshold": 4.6,
@@ -67,9 +67,9 @@
     "stale": false
   },
   "usdjpy": {
-    "value": 161.77,
+    "value": 161.78,
     "source": "live",
-    "captured_at": "2026-07-10T13:42:41Z",
+    "captured_at": "2026-07-10T13:58:50Z",
     "structural_above_162": false,
     "consecutive_packets_above_162": 0,
     "spike_threshold_pct": 2.0,
