@@ -368,6 +368,144 @@
 .source-hub {
   margin: 24px 0 28px;
 }
+.source-hub {
+  margin-top: 24px;
+}
+
+/* Macro Short Trigger Report Card */
+.mst-card {
+  position: relative;
+  margin-bottom: 36px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(18, 20, 31, 0.25);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+.mst-card .mst-header {
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 6px 16px rgba(5, 7, 13, 0.5);
+  backdrop-filter: blur(12px);
+}
+.mst-card .mst-header .mst-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 0.95em;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.mst-card .mst-header .mst-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7em;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(136, 136, 147, 0.15);
+  color: var(--muted);
+}
+.mst-card .mst-body {
+  padding: 14px 20px;
+}
+.mst-card .mst-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  font-size: 0.82em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+.mst-card .mst-row:last-child {
+  border-bottom: none;
+}
+.mst-card .mst-row.mst-sep {
+  border-bottom: 1px solid var(--border);
+  margin: 4px 0;
+  padding: 0;
+  height: 0;
+}
+.mst-card .mst-label {
+  color: var(--muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78em;
+  min-width: 90px;
+}
+.mst-card .mst-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82em;
+  color: var(--text);
+  text-align: right;
+}
+.mst-card .mst-trigger-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 0.8em;
+}
+.mst-card .mst-trigger-label {
+  font-family: 'Inter', sans-serif;
+  color: var(--muted);
+  min-width: 90px;
+}
+.mst-card .mst-trigger-value {
+  font-family: 'JetBrains Mono', monospace;
+  text-align: right;
+  flex: 1;
+}
+.mst-card .mst-verdict {
+  text-align: center;
+  padding: 10px 0 4px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 0.95em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.mst-card .mst-verdict-breakdown {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68em;
+  color: var(--muted);
+  font-weight: 400;
+}
+.mst-card .mst-deltas {
+  display: flex;
+  gap: 3px;
+  align-items: flex-end;
+  height: 28px;
+}
+.mst-card .mst-delta-bar {
+  width: 14px;
+  border-radius: 2px;
+  transition: height 0.2s ease;
+}
+.mst-card .mst-delta-bar.positive { background: var(--green); }
+.mst-card .mst-delta-bar.negative { background: var(--red); }
+.mst-card .mst-stale {
+  color: var(--muted) !important;
+  font-style: italic;
+  font-size: 0.75em;
+}
+.mst-card .mst-warn-icon {
+  color: var(--yellow);
+  font-size: 0.85em;
+}
+@media (max-width: 600px) {
+  .mst-card .mst-header { flex-wrap: wrap; gap: 4px; }
+  .mst-card .mst-label { min-width: 70px; font-size: 0.72em; }
+  .mst-card .mst-value { font-size: 0.75em; }
+  .mst-card .mst-deltas { height: 22px; }
+  .mst-card .mst-delta-bar { width: 10px; }
+}
+
 .source-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
@@ -564,6 +702,47 @@
         <div class="refresh-spinner" id="refresh-loading"></div>
       </div>
       <button class="action-btn" id="manual-refresh-btn" aria-label="Refresh packet data now">Force Sync</button>
+    </div>
+  </div>
+
+  <!-- Macro Short Trigger Report Card -->
+  <div class="mst-card" id="macro-short-trigger-card" style="display:none">
+    <div class="mst-header">
+      <div class="mst-title">
+        <span id="mst-verdict-icon">⚪</span>
+        <span>MACRO SHORT TRIGGER</span>
+        <span class="mst-tag" id="mst-packet-tag">Packet #—</span>
+      </div>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:0.72em;color:var(--muted)" id="mst-timestamp">—</span>
+    </div>
+    <div class="mst-body">
+      <!-- BTC + Funding -->
+      <div class="mst-row">
+        <span class="mst-label">BTC</span>
+        <span class="mst-value" id="mst-btc">—</span>
+      </div>
+      <div class="mst-row">
+        <span class="mst-label">Funding</span>
+        <span class="mst-value" id="mst-funding">—</span>
+      </div>
+      <div class="mst-row mst-sep"></div>
+      <!-- T1-T4 Triggers -->
+      <div class="mst-trigger-row"><span class="mst-trigger-label">T1 MSTR</span><span class="mst-trigger-value" id="mst-t1">—</span></div>
+      <div class="mst-trigger-row"><span class="mst-trigger-label">T2 VIX</span><span class="mst-trigger-value" id="mst-t2">—</span></div>
+      <div class="mst-trigger-row"><span class="mst-trigger-label">T3 US10Y</span><span class="mst-trigger-value" id="mst-t3">—</span></div>
+      <div class="mst-trigger-row"><span class="mst-trigger-label">T4 USDJPY</span><span class="mst-trigger-value" id="mst-t4">—</span></div>
+      <div class="mst-row mst-sep"></div>
+      <!-- Iran -->
+      <div class="mst-row">
+        <span class="mst-label">Iran</span>
+        <span class="mst-value" id="mst-iran">—</span>
+      </div>
+      <div class="mst-row mst-sep"></div>
+      <!-- Verdict -->
+      <div class="mst-verdict" id="mst-verdict-row">
+        <span id="mst-verdict-text">—</span>
+        <span class="mst-verdict-breakdown" id="mst-verdict-reason"></span>
+      </div>
     </div>
   </div>
 
@@ -1210,6 +1389,7 @@ async function fetchPacketData() {
   if (loadedData) {
     currentPacketData = loadedData;
     renderPage(loadedData);
+    fetchMacroTriggerData();  // also fetch macro short trigger report
     resetTimer();
   } else {
     console.error("Failed to load packet data:", lastError);
@@ -1368,6 +1548,142 @@ function renderPage(data) {
 
   // Render source hub cards
   renderSourceCards(data);
+}
+
+// --- Macro Short Trigger Report ---
+async function fetchMacroTriggerData() {
+  try {
+    const res = await fetch('macro_short_trigger.json?t=' + Date.now());
+    if (res.ok) {
+      const mst = await res.json();
+      renderMacroShortTrigger(mst);
+    }
+  } catch (e) {
+    console.error('Macro trigger fetch failed:', e.message);
+  }
+}
+
+function triggerColor(score) {
+  return { green: 'var(--green)', yellow: 'var(--yellow)', red: 'var(--red)', unknown: 'var(--muted)' }[score] || 'var(--muted)';
+}
+function triggerEmoji(score) {
+  return { green: '🟢', yellow: '🟡', red: '🔴', unknown: '❓' }[score] || '⚪';
+}
+
+function renderMacroShortTrigger(m) {
+  if (!m) return;
+  const card = document.getElementById('macro-short-trigger-card');
+  if (!card) return;
+  card.style.display = 'block';
+
+  // Header
+  document.getElementById('mst-verdict-icon').textContent = m.triggers?.verdict_emoji || '⚪';
+  document.getElementById('mst-packet-tag').textContent = 'Packet #' + (m.packet_id || '—');
+  const ts = m.captured_at ? new Date(m.captured_at).toLocaleString() : '—';
+  document.getElementById('mst-timestamp').textContent = ts;
+
+  // BTC row
+  const btc = m.btc || {};
+  const btcChange = btc.change_pct != null ? (btc.change_pct >= 0 ? '▲' : '▼') + Math.abs(btc.change_pct).toFixed(2) + '%' : '—';
+  const btcCls = btc.change_pct >= 0 ? 'val-positive' : 'val-negative';
+  const btcHL = btc.session_high && btc.session_low
+    ? ` H:$${Number(btc.session_high).toLocaleString()} L:$${Number(btc.session_low).toLocaleString()}`
+    : '';
+  const btcRef = ` vs $$64,100 entry`;
+  document.getElementById('mst-btc').innerHTML =
+    `<span>$${Number(btc.price || 0).toLocaleString()}</span> ` +
+    `<span class="${btcCls}">${btcChange}</span>` +
+    `<span style="color:var(--muted);font-size:0.75em">${btcHL}${btcRef}</span>`;
+
+  // Funding row
+  const fr = m.funding_rate || {};
+  const frTrend = { deepening_negative: '↓↓', negative: '↓', stable: '→', rising: '↑' }[fr.trend] || '';
+  const frNeg = fr.consecutive_negative_count > 0 ? ` (${fr.consecutive_negative_count}p)` : '';
+  document.getElementById('mst-funding').innerHTML =
+    `<span class="${fr.value_pct < 0 ? 'val-negative' : 'val-positive'}">${(fr.value_pct || 0).toFixed(4)}%</span> ` +
+    `<span style="color:var(--muted);font-size:0.75em">${frTrend} ${fr.trend}${frNeg}</span>`;
+
+  // Delta bars
+  const deltas = m.taker_volume?.deltas_6 || [];
+  let deltaHTML = '';
+  if (deltas.length) {
+    const maxAbs = Math.max(...deltas.map(Math.abs), 1);
+    deltaHTML = '<span class="mst-deltas">';
+    for (const d of deltas) {
+      const h = Math.max(4, Math.round(Math.abs(d) / maxAbs * 24));
+      const cls = d >= 0 ? 'positive' : 'negative';
+      deltaHTML += `<span class="mst-delta-bar ${cls}" style="height:${h}px" title="${d >= 0 ? '+' : ''}${d.toFixed(1)}"></span>`;
+    }
+    deltaHTML += '</span>';
+  }
+
+  // Trigger rows
+  const triggers = m.triggers || {};
+  const mstr = m.mstr || {};
+  const vix = m.vix || {};
+  const us10y = m.us10y || {};
+  const jpy = m.usdjpy || {};
+  const iran = m.iran_escalation || {};
+
+  const makeTriggerHTML = (label, score, details, stale) => {
+    const sc = score === 'unknown' && stale ? 'grey' : score;
+    let detStr = details || '';
+    if (stale) detStr += ' <span class="mst-stale">(stale)</span>';
+    return `<span style="color:${triggerColor(sc)};font-weight:600">${triggerEmoji(score)} ${label}</span>` +
+           `<span style="font-family:'JetBrains Mono',monospace;color:${score === 'stale' || score === 'unknown' ? 'var(--muted)' : 'var(--text)'}">${detStr}</span>`;
+  };
+
+  // T1 MSTR
+  let mstrDet = `$${Number(mstr.price || 0).toLocaleString()}`;
+  if (mstr.buy_window?.active) {
+    mstrDet += ` Buy D${mstr.buy_window.days_remaining || '?'}${mstr.ma_50 ? ' MA50:$' + Number(mstr.ma_50).toLocaleString() : ''}`;
+  }
+  document.getElementById('mst-t1').innerHTML = makeTriggerHTML('MSTR', triggers.T1_mstr, mstrDet);
+
+  // T2 VIX
+  document.getElementById('mst-t2').innerHTML = makeTriggerHTML('VIX',
+    triggers.T2_vix, `${vix.value != null ? vix.value.toFixed(2) : '—'} (thresh ${vix.trigger_threshold})`, vix.stale);
+
+  // T3 US10Y
+  document.getElementById('mst-t3').innerHTML = makeTriggerHTML('US10Y',
+    triggers.T3_us10y, `${us10y.value != null ? us10y.value.toFixed(3) + '%' : '—'} (thresh ${us10y.trigger_threshold}%)`, us10y.stale);
+
+  // T4 USDJPY
+  let jpyDet = jpy.value != null ? jpy.value.toFixed(2) : '—';
+  if (jpy.structural_above_162) jpyDet += ' >162';
+  if (jpy.spike_detected) jpyDet += ' ⚡SPIKE';
+  document.getElementById('mst-t4').innerHTML = makeTriggerHTML('USDJPY', triggers.T4_usdjpy, jpyDet);
+
+  // Iran
+  const iranEmoji = iran.active ? (iran.severity === 'critical' ? '🚨' : '🔴') : '🟢';
+  let iranStr = iranEmoji + ' ' + (iran.active ? iran.severity.toUpperCase() : 'Clear');
+  if (iran.note) iranStr += ' — ' + iran.note;
+  if (iran.stale_warning) iranStr += ' <span class="mst-warn-icon">⚠️ stale</span>';
+  document.getElementById('mst-iran').innerHTML = iranStr;
+
+  // Verdict
+  const verdictColor = {
+    CRITICAL: 'var(--red)', ARMED: 'var(--red)',
+    WATCH: 'var(--yellow)', NO_SIGNAL: 'var(--green)'
+  }[triggers.verdict] || 'var(--muted)';
+  document.getElementById('mst-verdict-text').innerHTML =
+    `<span style="color:${verdictColor};font-size:1.1em">${triggers.verdict_emoji || ''} ${triggers.verdict || '—'}</span>`;
+
+  // Breakdown
+  const scores = [
+    triggers.T1_mstr || '?', triggers.T2_vix || '?',
+    triggers.T3_us10y || '?', triggers.T4_usdjpy || '?'
+  ];
+  const reds = scores.filter(s => s === 'red').length;
+  const yellows = scores.filter(s => s === 'yellow').length;
+  const unks = scores.filter(s => s === 'unknown').length;
+  let reasonParts = [];
+  if (reds > 0) reasonParts.push(reds + '🔴');
+  if (yellows > 0) reasonParts.push(yellows + '🟡');
+  if (unks > 0) reasonParts.push(unks + '❓');
+  const reasonStr = scores.map(s => triggerEmoji(s)).join('');
+  document.getElementById('mst-verdict-reason').textContent =
+    reasonParts.join(' + ') + ' — ' + reasonStr;
 }
 
 // --- Polling ---
