@@ -1,0 +1,95 @@
+{
+  "packet_id": 2,
+  "captured_at": "2026-07-10T10:27:38Z",
+  "btc": {
+    "price": 64367.04,
+    "session_high": 64480.01,
+    "session_low": 62465.39,
+    "change_pct": 2.33,
+    "vwap": 63381.38031203,
+    "volume_btc": 16889.42076,
+    "volume_usd": 1070474800.4394614,
+    "break_level": 58872,
+    "gap_to_break_pct": 9.33
+  },
+  "funding_rate": {
+    "value_pct": 0.0092,
+    "next_settlement_utc": null,
+    "trend": "rising",
+    "consecutive_negative_count": 0
+  },
+  "taker_volume": {
+    "ratio_24h": 1.009,
+    "delta_sum_6": 74.52,
+    "delta_trend": "NEUTRAL",
+    "deltas_6": [
+      147.46,
+      277.09,
+      -256.62,
+      -35.07,
+      -278.43,
+      220.09
+    ]
+  },
+  "mstr": {
+    "price": 93.89,
+    "prev_close": 93.87,
+    "change_pct": 0.02,
+    "volume": 13737900,
+    "avg_volume": 27363545,
+    "ma_50": 138.89,
+    "ma_200": 176.4,
+    "buy_window": {
+      "active": true,
+      "window_start": "2026-07-01",
+      "window_end": "2026-07-31",
+      "days_remaining": 21,
+      "announcement_detected": false,
+      "consecutive_silent_sessions": 0
+    },
+    "gap_to_trigger_pct": 25.19,
+    "trigger_price": 75.0
+  },
+  "vix": {
+    "value": 15.97,
+    "source": "FRED",
+    "captured_at": "2026-07-10",
+    "trigger_threshold": 25.0,
+    "triggered": false,
+    "stale": false
+  },
+  "us10y": {
+    "value": 4.539,
+    "source": "FRED",
+    "captured_at": "2026-07-10",
+    "trigger_threshold": 4.6,
+    "triggered": false,
+    "stale": false
+  },
+  "usdjpy": {
+    "value": 161.7,
+    "source": "live",
+    "captured_at": "2026-07-10T10:27:38Z",
+    "structural_above_162": false,
+    "consecutive_packets_above_162": 0,
+    "spike_threshold_pct": 2.0,
+    "spike_detected": false,
+    "compound_triggered": false
+  },
+  "iran_escalation": {
+    "active": false,
+    "severity": "none",
+    "last_updated": "2026-07-10T00:00:00Z",
+    "note": "No active escalation",
+    "stale_warning": false
+  },
+  "triggers": {
+    "T1_mstr": "green",
+    "T2_vix": "green",
+    "T3_us10y": "yellow",
+    "T4_usdjpy": "green",
+    "triggered_count": 0,
+    "verdict": "NO_SIGNAL",
+    "verdict_emoji": "\ud83d\udfe2"
+  }
+}
