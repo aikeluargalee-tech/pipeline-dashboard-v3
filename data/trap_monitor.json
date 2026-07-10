@@ -1,51 +1,51 @@
 {
-  "composite": 2,
+  "composite": 3,
   "actual_max": 7,
-  "status": "CLEAR",
+  "status": "CAUTION",
   "direction": "NEUTRAL",
   "long_trap_signals": 1,
   "short_trap_signals": 0,
-  "downstream_action": "Standard L4 rules apply. No trap override.",
+  "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
   "signals": {
     "s1_liq_asymmetry": {
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "5L/0S",
+      "value": "4L/1S",
       "threshold": "\u22652\u00d7 asymmetry",
-      "note": "Long=5 below, Short=0 \u2014 asymmetry favors shorts"
+      "note": "Long=4 below, Short=1 \u2014 asymmetry favors shorts"
     },
     "s2_oi_divergence": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "4.06%",
+      "value": "3.97%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI 4.1% \u2014 neutral/no divergence"
+      "note": "OI 4.0% \u2014 neutral/no divergence"
     },
     "s3_funding": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "0.0089%",
+      "value": "0.0085%",
       "threshold": "|Funding| > 0.01%",
-      "note": "Funding 0.0089% \u2014 neutral"
+      "note": "Funding 0.0085% \u2014 neutral"
     },
     "s4_bid_ask_absorption": {
-      "score": 0,
-      "verdict": "CLEAR",
+      "score": 1,
+      "verdict": "TRAP",
       "max": 1,
-      "value": "Bid:2 Ask:3",
+      "value": "Bid:2 Ask:6",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=2, Ask=3 \u2014 balanced"
+      "note": "Ask/Bid wall ratio 3.0\u00d7 \u2014 absorption risk"
     },
     "s5_taker_cvd": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Taker:1.5865 CVD:9363.45",
+      "value": "Taker:1.0035 CVD:9672.23",
       "threshold": "Taker > 1.0 + CVD < 0",
-      "note": "Taker 1.59 + CVD +9363 \u2014 genuine buying"
+      "note": "Taker 1.00 + CVD +9672 \u2014 genuine buying"
     },
     "s6_exchange_netflow": {
       "score": 1,
@@ -67,11 +67,11 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "-3.6%",
+      "value": "-3.4%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -3.6% \u2014 neutral"
+      "note": "Skew -3.4% \u2014 neutral"
     }
   },
-  "btc_price": 64450.0,
-  "_collected": "2026-07-10 10:47 UTC"
+  "btc_price": 64457.09,
+  "_collected": "2026-07-10 11:17 UTC"
 }
