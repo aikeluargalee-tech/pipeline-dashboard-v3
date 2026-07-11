@@ -1,46 +1,46 @@
 {
-  "mvrv_z": 0.3538,
-  "sopr": 0.9832,
-  "puell_multiple": 0.6448,
+  "mvrv_z": null,
+  "sopr": null,
+  "puell_multiple": null,
   "netflow_7d": -10310.12,
   "sth_realized_price": null,
   "sth_net_position_change": null,
-  "regime": "accumulation",
+  "regime": "unknown",
   "composite_score": 29.1,
   "cycle_phase": "medium",
   "distribution": {
-    "timestamp": "2026-07-11 08:16 UTC",
+    "timestamp": "2026-07-11 08:46 UTC",
     "source": "blockchair.com",
-    "total_addresses": 0,
-    "total_btc": 20054783.54155096,
+    "total_addresses": 59503128,
+    "total_btc": 20054789.79155096,
     "tiers": [
       {
         "range": "100+ BTC",
-        "addresses": "0",
-        "btc": "12,333,691",
+        "addresses": "2,082,609",
+        "btc": "12,333,695",
         "pct": "61.50%",
         "pctNum": 61.5,
         "color": "#f59e0b"
       },
       {
         "range": "1 \u2013 100 BTC",
-        "addresses": "0",
-        "btc": "6,317,256",
+        "addresses": "952,050",
+        "btc": "6,317,258",
         "pct": "31.50%",
         "pctNum": 31.5,
         "color": "#3b82f6"
       },
       {
         "range": "0.001 \u2013 1 BTC",
-        "addresses": "0",
-        "btc": "1,403,834",
+        "addresses": "24,396,282",
+        "btc": "1,403,835",
         "pct": "7.00%",
         "pctNum": 7.0,
         "color": "#6366f1"
       },
       {
         "range": "<0.001 BTC",
-        "addresses": "0",
+        "addresses": "32,072,185",
         "btc": "6,016",
         "pct": "0.03%",
         "pctNum": 0.03,
@@ -49,16 +49,16 @@
     ]
   },
   "options_skew": {
-    "timestamp": "2026-07-11 08:16 UTC",
-    "spot": 64187.75,
-    "skew_25d": -0.7,
-    "put_25d_iv": 21.3,
-    "call_25d_iv": 20.6,
-    "put_name": "BTC-13JUL26-63500-P",
-    "call_name": "BTC-13JUL26-65000-C",
+    "timestamp": "2026-07-11 08:46 UTC",
+    "spot": 64222.93,
+    "skew_25d": -0.4,
+    "put_25d_iv": 16.0,
+    "call_25d_iv": 15.6,
+    "put_name": "BTC-12JUL26-64000-P",
+    "call_name": "BTC-12JUL26-64500-C",
     "label": "Neutral",
     "emoji": "\u2b1c",
-    "display": "\u2b1c Options skew (25\u0394): -0.7% \u2014 neutral"
+    "display": "\u2b1c Options skew (25\u0394): -0.4% \u2014 neutral"
   },
   "nupl": 0.17229999601840973,
   "rhodl_ratio": 0.08460000157356262,
@@ -75,5 +75,5 @@
   "fee_rate_sat_vb": 1.0,
   "difficulty": 133869853540305.39,
   "_brk_fetched_at": "2026-07-11T08:11:42.480452+00:00",
-  "_collected": "2026-07-11 08:18 UTC"
+  "_collected": "2026-07-11 08:47 UTC"
 }
