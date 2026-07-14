@@ -1,5 +1,5 @@
 {
-  "composite": 0,
+  "composite": -1,
   "actual_max": 7,
   "status": "CLEAR",
   "direction": "NEUTRAL",
@@ -11,41 +11,41 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "4L/4S",
+      "value": "3L/4S",
       "threshold": "\u22652\u00d7 asymmetry",
-      "note": "Long=4, Short=4 \u2014 balanced"
+      "note": "Long=3, Short=4 \u2014 balanced"
     },
     "s2_oi_divergence": {
-      "score": 0,
-      "verdict": "NEUTRAL",
+      "score": -1,
+      "verdict": "CLEAR",
       "max": 1,
-      "value": "N/A",
+      "value": "6.21%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "No OI data"
+      "note": "OI 6.2% \u2014 healthy accumulation"
     },
     "s3_funding": {
       "score": 0,
-      "verdict": "NEUTRAL",
+      "verdict": "CLEAR",
       "max": 1,
-      "value": "N/A",
+      "value": "0.0033%",
       "threshold": "|Funding| > 0.01%",
-      "note": "No funding data"
+      "note": "Funding 0.0033% \u2014 neutral"
     },
     "s4_bid_ask_absorption": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:5 Ask:5",
+      "value": "Bid:5 Ask:3",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=5, Ask=5 \u2014 balanced"
+      "note": "Bid=5, Ask=3 \u2014 balanced"
     },
     "s5_taker_cvd": {
       "score": 0,
-      "verdict": "NEUTRAL",
+      "verdict": "CLEAR",
       "max": 1,
-      "value": "N/A",
+      "value": "Taker:0.8223 CVD:-4844.65",
       "threshold": "Taker > 1.0 + CVD < 0",
-      "note": "No taker/CVD data"
+      "note": "Taker 0.82, CVD -4845 \u2014 mixed"
     },
     "s6_exchange_netflow": {
       "score": 0,
@@ -67,11 +67,11 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "-2.5%",
+      "value": "-2.4%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -2.5% \u2014 neutral"
+      "note": "Skew -2.4% \u2014 neutral"
     }
   },
-  "btc_price": null,
-  "_collected": "2026-07-14 07:19 UTC"
+  "btc_price": 62554.62,
+  "_collected": "2026-07-14 07:49 UTC"
 }

@@ -1,5 +1,43 @@
 {
-  "status": "offline",
-  "reason": "Klines unavailable",
-  "timestamp": "2026-07-14T07:18:55.445430+00:00"
+  "strategy": "Mean Reversion + Vol Filter",
+  "version": "1.0.0",
+  "mode": "LOOSE",
+  "signal": "NO_SIGNAL",
+  "timestamp": "2026-07-14T07:48:36.310629+00:00",
+  "btc_price": 62555.35,
+  "mean_20h": 62412.26,
+  "atr_pct": 2.36,
+  "atr_data_valid": true,
+  "atr_price": 1476.31,
+  "rsi_14": 47.3,
+  "confidence": "LOW",
+  "position_size_pct": 0.3,
+  "max_hold_hours": 8,
+  "stop_distance_usd": 2952.61,
+  "entry_price": null,
+  "stop_loss": null,
+  "tp_primary": null,
+  "tp_partial": null,
+  "tp_partial_pct": 0.5,
+  "rr_ratio": null,
+  "long_checks": {
+    "rsi": false,
+    "taker_ratio": false,
+    "cvd": false,
+    "oi_delta": true,
+    "funding": true,
+    "liquidity": true,
+    "range_guard": "BLOCKED: stop 4.7% exceeds 20h low range 1.1%"
+  },
+  "short_checks": {
+    "rsi": false,
+    "taker_ratio": false,
+    "cvd": true,
+    "oi_delta": true,
+    "funding": true,
+    "liquidity": true,
+    "range_guard": "BLOCKED: stop 4.7% exceeds 20h high range 1.2%"
+  },
+  "invalidation_triggers": [],
+  "regime": "RANGING"
 }
