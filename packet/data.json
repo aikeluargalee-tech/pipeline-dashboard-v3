@@ -1,29 +1,29 @@
 {
   "header": {
-    "generated_timestamp": "2026-07-14T08:52:55Z",
-    "btc_price": 62689.0,
+    "generated_timestamp": "2026-07-14T09:09:33Z",
+    "btc_price": 62681.0,
     "change_24h": -0.632,
-    "bid": 62698.9,
-    "ask": 62698.91,
+    "bid": 62681.25,
+    "ask": 62681.26,
     "spread": 0.01,
-    "volume_24h": 1091375179.24
+    "volume_24h": 1081013791.57
   },
   "critical": {
-    "btc_price": 62689.0,
+    "btc_price": 62681.0,
     "amt_adx": 42.0,
     "amt_mtf": "1D BEARISH [INVALIDATED_CVD=+1,772] | 4H NEUTRAL [DIVERGES_CVD=+2,874] | 1H BULLISH",
-    "candle_delta": -48.59,
+    "candle_delta": -55.67,
     "candle_deltas_6": [
       -284.5,
       -167.62,
       -48.02,
       -218.32,
       108.96,
-      -48.59
+      -55.67
     ],
-    "delta_sum_6": -658.09,
+    "delta_sum_6": -665.17,
     "delta_trend": "STRONG_SELLING",
-    "delta_interp": "Sellers dominated. Last candle -48.6.",
+    "delta_interp": "Sellers dominated. Last candle -55.7.",
     "cvd_per_tf": {
       "1D": 1771.67,
       "4H": 2874.31,
@@ -39,8 +39,8 @@
       "4H": -5.61,
       "1H": 5.4
     },
-    "session_cvd": -3843.22,
-    "oi_absolute_usd_billions": 6.67,
+    "session_cvd": -3850.3,
+    "oi_absolute_usd_billions": 6.66,
     "taker_ratio_24h": 0.917,
     "vp_poc": 62655,
     "vp_vah": 62665,
@@ -66,58 +66,58 @@
     "cvd_24h": -5732.2,
     "black_swan_score": "1/17",
     "correlation_r": 0.6333,
-    "liq_clusters": "Long: $62,650 (-0.06%), $62,500 (-0.30%), $61,900 (-1.26%), $61,800 (-1.42%) | Short: $63,300 (+0.97%), $64,250 (+2.49%), $64,400 (+2.73%)",
-    "perp_basis_pct": -0.0419,
+    "liq_clusters": "Long: $62,650 (-0.05%), $62,500 (-0.29%), $61,900 (-1.25%), $61,800 (-1.41%) | Short: $62,850 (+0.27%), $63,300 (+0.99%), $64,400 (+2.74%)",
+    "perp_basis_pct": -0.0456,
     "order_book_top5": {
       "bids": [
         {
-          "price": 62703.99,
-          "size": 7.97964
+          "price": 62689.99,
+          "size": 5.56689
         },
         {
-          "price": 62703.98,
-          "size": 0.00034
+          "price": 62689.98,
+          "size": 0.0007
         },
         {
-          "price": 62703.97,
+          "price": 62689.97,
           "size": 0.00016
         },
         {
-          "price": 62703.95,
-          "size": 0.35018
+          "price": 62689.39,
+          "size": 0.00016
         },
         {
-          "price": 62703.9,
-          "size": 0.35026
+          "price": 62689.33,
+          "size": 0.00018
         }
       ],
       "asks": [
         {
-          "price": 62704.0,
-          "size": 0.16889
+          "price": 62690.0,
+          "size": 1.45776
         },
         {
-          "price": 62704.01,
-          "size": 0.00079
+          "price": 62690.01,
+          "size": 0.00124
         },
         {
-          "price": 62704.02,
+          "price": 62690.02,
           "size": 0.00016
         },
         {
-          "price": 62704.15,
-          "size": 8e-05
+          "price": 62690.12,
+          "size": 0.00018
         },
         {
-          "price": 62705.14,
-          "size": 8e-05
+          "price": 62690.13,
+          "size": 0.11037
         }
       ]
     },
     "realized_vol_1h_pct": 58.54,
     "realized_vol_1d_pct": 53.08,
     "mstr_close": 92.1,
-    "usdjpy": 162.24,
+    "usdjpy": 162.229,
     "daily_rsi_14": 58.4
   },
   "reference": {
@@ -182,7 +182,7 @@
     "sr_1d_resistance": 64220.95,
     "atr_1h_pct": 0.456,
     "atr_1d_pct": 2.988,
-    "btc_price": 62689.0,
+    "btc_price": 62681.0,
     "coinbase_premium": -0.1271,
     "vix": 17.24,
     "funding_rate": 5.515e-05
@@ -191,9 +191,9 @@
     "s9_vix_roc": {
       "score": 0,
       "label": "NEUTRAL",
-      "now": 17.29,
+      "now": 17.24,
       "prior": 17.29,
-      "delta": 0.0,
+      "delta": -0.05,
       "delta_unit": "pts",
       "threshold": 3.0,
       "as_of": "2026-07-14",
@@ -210,17 +210,17 @@
       "as_of": "2026-07-14",
       "prior_date": "2026-07-14"
     },
-    "last_updated": "2026-07-14T08:52:41Z",
+    "last_updated": "2026-07-14T09:09:21Z",
     "s11_volume_anomaly": {
       "score": 0,
       "label": "NEUTRAL",
       "threshold": 3.0,
-      "ratio": 0.14,
-      "vol_now": 353.70979,
+      "ratio": 0.17,
+      "vol_now": 424.7536,
       "vol_mean_20p": 2454.3476055,
       "candle_bearish": false,
       "window": 20,
-      "as_of": "2026-07-14T08:52:39Z"
+      "as_of": "2026-07-14T09:09:20Z"
     },
     "layer0_5": {
       "forced_sell_risk": "MEDIUM",
@@ -252,7 +252,7 @@
         ],
         "as_of": "2026-07-14"
       },
-      "as_of": "2026-07-14T08:52:40Z"
+      "as_of": "2026-07-14T09:09:21Z"
     },
     "tripwires": {
       "TW1_CH1_CAPITAL_REVERSAL": {
@@ -319,7 +319,7 @@
     "tripwire_summary": {
       "active_count": 0,
       "total": 6,
-      "as_of": "2026-07-14T08:52:41Z"
+      "as_of": "2026-07-14T09:09:21Z"
     }
   },
   "regime": {
@@ -358,7 +358,7 @@
         "mstr_weak"
       ]
     },
-    "as_of": "2026-07-14T08:52:41Z"
+    "as_of": "2026-07-14T09:09:21Z"
   },
   "heatmap": {
     "data_available": false,
@@ -366,12 +366,12 @@
   },
   "status": {
     "source_timestamps": {
-      "amt": "2026-07-14T08:52:38.035004+00:00",
+      "amt": "2026-07-14T09:09:19.261582+00:00",
       "vp": "2026-07-14T08:47:52.826657+00:00",
       "pipeline": "regime=2026-07-14 08:48 UTC | macro=2026-07-14 08:48 UTC"
     },
     "staleness_warnings": [
-      "STALE brk: 98m behind AMT"
+      "STALE brk: 115m behind AMT"
     ]
   },
   "sources": {
@@ -410,11 +410,11 @@
       "timestamp": "2026-07-07T13:47:41.021908"
     },
     "amt": {
-      "price": 62689.0,
-      "change_24h": -0.824,
+      "price": 62681.0,
+      "change_24h": -0.747,
       "balance_state": "DEVELOPING_BALANCE",
-      "aggression_score": 0.53,
-      "net_delta": -3843.22,
+      "aggression_score": 0.54,
+      "net_delta": -3850.3,
       "whale_pivot": null,
       "whale_conviction": 0,
       "mtf_signal": "NEUTRAL_NONE",
