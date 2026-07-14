@@ -1,29 +1,29 @@
 {
   "header": {
-    "generated_timestamp": "2026-07-14T07:31:23Z",
-    "btc_price": 62646.0,
-    "change_24h": -0.464,
-    "bid": 62648.66,
-    "ask": 62648.67,
+    "generated_timestamp": "2026-07-14T07:47:28Z",
+    "btc_price": 62520.0,
+    "change_24h": -0.757,
+    "bid": 62542.68,
+    "ask": 62542.69,
     "spread": 0.01,
-    "volume_24h": 1228511321.24
+    "volume_24h": 1194751765.7
   },
   "critical": {
-    "btc_price": 62646.0,
+    "btc_price": 62520.0,
     "amt_adx": 42.0,
     "amt_mtf": "1D BEARISH [INVALIDATED_CVD=+1,772] | 4H NEUTRAL [DIVERGES_CVD=+2,874] | 1H BULLISH",
-    "candle_delta": 53.52,
+    "candle_delta": 69.98,
     "candle_deltas_6": [
       -569.87,
       -284.5,
       -167.62,
       -48.02,
       -218.32,
-      53.52
+      69.98
     ],
-    "delta_sum_6": -1234.81,
+    "delta_sum_6": -1218.35,
     "delta_trend": "STRONG_SELLING",
-    "delta_interp": "Sellers dominated. Last candle +53.5.",
+    "delta_interp": "Sellers dominated. Last candle +70.0.",
     "cvd_per_tf": {
       "1D": 1771.67,
       "4H": 2874.31,
@@ -39,9 +39,9 @@
       "4H": -5.61,
       "1H": 5.4
     },
-    "session_cvd": -3681.15,
-    "oi_absolute_usd_billions": 6.66,
-    "taker_ratio_24h": 0.875,
+    "session_cvd": -3664.7,
+    "oi_absolute_usd_billions": 6.64,
+    "taker_ratio_24h": 0.877,
     "vp_poc": 64290,
     "vp_vah": 64297,
     "vp_val": 64280,
@@ -66,59 +66,59 @@
     "cvd_24h": "N/A",
     "black_swan_score": "1/17",
     "correlation_r": 0.6333,
-    "liq_clusters": "Long: $62,600 (-0.06%), $62,500 (-0.22%), $61,900 (-1.18%), $61,800 (-1.34%) | Short: $63,300 (+1.06%), $64,250 (+2.57%), $64,300 (+2.65%), $64,400 (+2.81%)",
-    "perp_basis_pct": -0.0432,
+    "liq_clusters": "Long: $62,500 (-0.03%), $61,900 (-0.99%), $61,800 (-1.15%) | Short: $63,300 (+1.25%), $64,250 (+2.77%), $64,300 (+2.85%), $64,400 (+3.01%)",
+    "perp_basis_pct": -0.0467,
     "order_book_top5": {
       "bids": [
         {
-          "price": 62647.41,
-          "size": 0.37246
+          "price": 62543.99,
+          "size": 6.904
         },
         {
-          "price": 62647.4,
-          "size": 0.00175
+          "price": 62543.98,
+          "size": 1.4373
         },
         {
-          "price": 62647.39,
+          "price": 62543.97,
           "size": 0.00016
         },
         {
-          "price": 62646.4,
-          "size": 8e-05
+          "price": 62543.53,
+          "size": 0.00018
         },
         {
-          "price": 62646.23,
-          "size": 8e-05
+          "price": 62543.52,
+          "size": 0.14149
         }
       ],
       "asks": [
         {
-          "price": 62647.42,
-          "size": 5.17351
+          "price": 62544.0,
+          "size": 0.16354
         },
         {
-          "price": 62647.43,
-          "size": 0.22375
+          "price": 62544.01,
+          "size": 0.00097
         },
         {
-          "price": 62647.44,
-          "size": 0.47267
+          "price": 62544.02,
+          "size": 0.00016
         },
         {
-          "price": 62647.45,
-          "size": 0.05026
+          "price": 62545.46,
+          "size": 0.0025
         },
         {
-          "price": 62647.49,
-          "size": 0.00026
+          "price": 62545.58,
+          "size": 9e-05
         }
       ]
     },
     "realized_vol_1h_pct": 58.54,
     "realized_vol_1d_pct": 53.08,
     "mstr_close": 92.1,
-    "usdjpy": 162.344,
-    "daily_rsi_14": 58.0
+    "usdjpy": 162.333,
+    "daily_rsi_14": 57.3
   },
   "reference": {
     "sr_1h": "S:  | R: ",
@@ -182,7 +182,7 @@
     "sr_1d_resistance": null,
     "atr_1h_pct": 0.0,
     "atr_1d_pct": 0.0,
-    "btc_price": 62646.0,
+    "btc_price": 62520.0,
     "coinbase_premium": -0.1552,
     "vix": "N/A",
     "funding_rate": "N/A"
@@ -210,17 +210,17 @@
       "as_of": "2026-07-14",
       "prior_date": "2026-07-14"
     },
-    "last_updated": "2026-07-14T07:31:13Z",
+    "last_updated": "2026-07-14T07:47:19Z",
     "s11_volume_anomaly": {
       "score": 0,
       "label": "NEUTRAL",
       "threshold": 3.0,
-      "ratio": 0.75,
-      "vol_now": 1852.16633,
+      "ratio": 0.8,
+      "vol_now": 1987.31041,
       "vol_mean_20p": 2481.5563620000003,
-      "candle_bearish": false,
+      "candle_bearish": true,
       "window": 20,
-      "as_of": "2026-07-14T07:31:12Z"
+      "as_of": "2026-07-14T07:47:18Z"
     },
     "layer0_5": {
       "forced_sell_risk": "MEDIUM",
@@ -252,7 +252,7 @@
         ],
         "as_of": "2026-07-14"
       },
-      "as_of": "2026-07-14T07:31:13Z"
+      "as_of": "2026-07-14T07:47:18Z"
     },
     "tripwires": {
       "TW1_CH1_CAPITAL_REVERSAL": {
@@ -263,7 +263,7 @@
           "AI equity index (NVDA/MSFT)"
         ],
         "state": "INACTIVE",
-        "detail": "ETF flows +510M \u2014 normal"
+        "detail": "ETF flow parse error: None"
       },
       "TW2_CH2_PRICE_GAP": {
         "channel": "Ch.2 \u2014 Energy / Miner Pivot",
@@ -319,7 +319,7 @@
     "tripwire_summary": {
       "active_count": 0,
       "total": 6,
-      "as_of": "2026-07-14T07:31:13Z"
+      "as_of": "2026-07-14T07:47:19Z"
     }
   },
   "regime": {
@@ -359,12 +359,13 @@
   },
   "status": {
     "source_timestamps": {
-      "amt": "2026-07-14T07:31:11.436534+00:00",
+      "amt": "2026-07-14T07:47:16.756815+00:00",
       "vp": "2026-07-11T08:47:42.516277+00:00",
       "pipeline": "regime=2026-07-14 07:19 UTC | macro=2026-07-14 07:19 UTC"
     },
     "staleness_warnings": [
-      "STALE vp: 4243m behind AMT"
+      "STALE vp: 4259m behind AMT",
+      "STALE brk: 33m behind AMT"
     ]
   },
   "sources": {
@@ -403,11 +404,11 @@
       "timestamp": "2026-07-07T13:47:41.021908"
     },
     "amt": {
-      "price": 62646.0,
-      "change_24h": -0.464,
+      "price": 62520.0,
+      "change_24h": -0.757,
       "balance_state": "DEVELOPING_BALANCE",
-      "aggression_score": 0.54,
-      "net_delta": -3681.15,
+      "aggression_score": 0.63,
+      "net_delta": -3664.7,
       "whale_pivot": null,
       "whale_conviction": 0,
       "mtf_signal": "NEUTRAL_NONE",
