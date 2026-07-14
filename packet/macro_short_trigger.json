@@ -1,16 +1,16 @@
 {
-  "packet_id": 24,
-  "captured_at": "2026-07-11T08:44:02Z",
+  "packet_id": 25,
+  "captured_at": "2026-07-14T07:14:45Z",
   "btc": {
-    "price": 64285.99,
-    "session_high": 64692.83,
-    "session_low": 63656.0,
-    "change_pct": 0.16,
-    "vwap": 64131.33660341,
-    "volume_btc": 14232.97131,
-    "volume_usd": 912779473.948255,
+    "price": 62587.99,
+    "session_high": 63302.88,
+    "session_low": 61824.97,
+    "change_pct": -0.37,
+    "vwap": 62583.29143367,
+    "volume_btc": 19684.19462,
+    "volume_usd": 1231901688.5404463,
     "break_level": 58872,
-    "gap_to_break_pct": 9.2
+    "gap_to_break_pct": 6.31
   },
   "funding_rate": {
     "value_pct": 0.0009,
@@ -32,46 +32,46 @@
     ]
   },
   "mstr": {
-    "price": 94.64,
-    "prev_close": 93.89,
-    "change_pct": 0.8,
-    "volume": 16204000,
-    "avg_volume": 27393450,
-    "ma_50": 137.47,
-    "ma_200": 175.19,
+    "price": 92.1,
+    "prev_close": 94.64,
+    "change_pct": -2.68,
+    "volume": 12620000,
+    "avg_volume": 27149765,
+    "ma_50": 136.15,
+    "ma_200": 174.01,
     "buy_window": {
       "active": true,
       "window_start": "2026-07-01",
       "window_end": "2026-07-31",
-      "days_remaining": 20,
+      "days_remaining": 17,
       "announcement_detected": false,
       "consecutive_silent_sessions": 0
     },
-    "gap_to_trigger_pct": 26.19,
+    "gap_to_trigger_pct": 22.8,
     "trigger_price": 75.0
   },
   "vix": {
     "value": 15.03,
-    "source": "FRED",
+    "source": "stale",
     "captured_at": "2026-07-11",
     "trigger_threshold": 25.0,
     "triggered": false,
-    "stale": false
+    "stale": true
   },
   "us10y": {
     "value": 4.569,
-    "source": "FRED",
+    "source": "stale",
     "captured_at": "2026-07-11",
     "trigger_threshold": 4.6,
     "triggered": false,
-    "stale": false
+    "stale": true
   },
   "usdjpy": {
-    "value": 161.67,
+    "value": 162.34,
     "source": "live",
-    "captured_at": "2026-07-11T08:44:02Z",
-    "structural_above_162": false,
-    "consecutive_packets_above_162": 0,
+    "captured_at": "2026-07-14T07:14:45Z",
+    "structural_above_162": true,
+    "consecutive_packets_above_162": 1,
     "spike_threshold_pct": 2.0,
     "spike_detected": false,
     "compound_triggered": false
@@ -85,9 +85,9 @@
   },
   "triggers": {
     "T1_mstr": "green",
-    "T2_vix": "green",
-    "T3_us10y": "yellow",
-    "T4_usdjpy": "green",
+    "T2_vix": "unknown",
+    "T3_us10y": "unknown",
+    "T4_usdjpy": "yellow",
     "triggered_count": 0,
     "verdict": "NO_SIGNAL",
     "verdict_emoji": "\ud83d\udfe2"
