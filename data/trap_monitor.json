@@ -3,7 +3,7 @@
   "actual_max": 7,
   "status": "CLEAR",
   "direction": "NEUTRAL",
-  "long_trap_signals": 0,
+  "long_trap_signals": 1,
   "short_trap_signals": 0,
   "downstream_action": "Standard L4 rules apply. No trap override.",
   "signals": {
@@ -11,41 +11,41 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "3L/4S",
+      "value": "4L/5S",
       "threshold": "\u22652\u00d7 asymmetry",
-      "note": "Long=3, Short=4 \u2014 balanced"
+      "note": "Long=4, Short=5 \u2014 balanced"
     },
     "s2_oi_divergence": {
       "score": -1,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "6.21%",
+      "value": "6.65%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI 6.2% \u2014 healthy accumulation"
+      "note": "OI 6.7% \u2014 healthy accumulation"
     },
     "s3_funding": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "0.0033%",
+      "value": "0.0042%",
       "threshold": "|Funding| > 0.01%",
-      "note": "Funding 0.0033% \u2014 neutral"
+      "note": "Funding 0.0042% \u2014 neutral"
     },
     "s4_bid_ask_absorption": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:5 Ask:3",
+      "value": "Bid:3 Ask:4",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=5, Ask=3 \u2014 balanced"
+      "note": "Bid=3, Ask=4 \u2014 balanced"
     },
     "s5_taker_cvd": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Taker:0.8223 CVD:-4844.65",
+      "value": "Taker:0.9248 CVD:-5732.2",
       "threshold": "Taker > 1.0 + CVD < 0",
-      "note": "Taker 0.82, CVD -4845 \u2014 mixed"
+      "note": "Taker 0.92, CVD -5732 \u2014 mixed"
     },
     "s6_exchange_netflow": {
       "score": 0,
@@ -67,11 +67,11 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "-2.4%",
+      "value": "-2.9%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -2.4% \u2014 neutral"
+      "note": "Skew -2.9% \u2014 neutral"
     }
   },
-  "btc_price": 62554.62,
-  "_collected": "2026-07-14 07:49 UTC"
+  "btc_price": 62607.99,
+  "_collected": "2026-07-14 08:18 UTC"
 }
