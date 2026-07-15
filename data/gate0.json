@@ -1,10 +1,11 @@
 {
-  "verdict": "PAUSE",
+  "verdict": "TIGHTENED",
   "sources": [
-    "quantum"
+    "ai3_wave",
+    "geopolitical"
   ],
   "rules": {
-    "action": "No new positions. Reduce open size. Monitor only."
+    "action": "Reduce position size. Tight stops. Wait for conditions to clear."
   },
   "modules": {
     "trp_check": {
@@ -32,8 +33,8 @@
       "detail": "US market closed (outside hours)"
     },
     "quantum": {
-      "state": "PAUSE",
-      "detail": "TIER2: Crypto firms prepare defenses as quantum threat to encryption draws nearer - Reu (Reuters)"
+      "state": "PROCEED",
+      "detail": "No new quantum+bitcoin news"
     },
     "stablecoins": {
       "state": "PROCEED",
@@ -52,6 +53,6 @@
       "detail": "Tier INFO geopolitical signal: neutral \u2014 10 signals today"
     }
   },
-  "timestamp": "2026-07-15 10:17 UTC",
-  "_collected": "2026-07-15 10:17 UTC"
+  "timestamp": "2026-07-15 10:47 UTC",
+  "_collected": "2026-07-15 10:47 UTC"
 }

@@ -1115,6 +1115,58 @@
         "30d": null
       },
       "resolved": false
+    },
+    {
+      "id": "regime_deb9f51f",
+      "type": "regime_change",
+      "created_at": "2026-07-15T10:47:47.274485+00:00",
+      "btc_price_at_call": 64659.37,
+      "direction": "neutral",
+      "gate0_status": "TIGHTENED",
+      "regime_label": "CAUTIOUS NEUTRAL",
+      "rationale_snapshot": {
+        "gate": {
+          "verdict": "TIGHTENED",
+          "sources": [
+            "ai3_wave",
+            "geopolitical"
+          ]
+        },
+        "macro": {
+          "verdict": "NEUTRAL",
+          "emoji": "\ud83d\udfe1",
+          "detail": "VIX 16.4 normal"
+        },
+        "structure": {
+          "verdict": "HOLDING",
+          "emoji": "\ud83d\udfe1",
+          "detail": "3/3 timeframes active"
+        },
+        "derivatives": {
+          "verdict": "NEUTRAL",
+          "emoji": "\ud83d\udfe1",
+          "detail": "FR 0.0100% neutral, L/S 1.20, CVD +8895"
+        },
+        "cycle": {
+          "verdict": "UNDERVALUED",
+          "emoji": "\ud83d\udfe2",
+          "detail": "MVRV-Z 0.33 undervalued, netflow +6,896 BTC"
+        },
+        "synthesis": {
+          "verdict": "CAUTIOUS NEUTRAL",
+          "detail": "Tightened rules active. 1 bullish / 0 bearish signals.",
+          "bull_count": 0.5,
+          "bear_count": 0.0,
+          "ta_warning": null
+        },
+        "btc_price": 64659.37
+      },
+      "outcomes": {
+        "1d": null,
+        "7d": null,
+        "30d": null
+      },
+      "resolved": false
     }
   ]
 }
