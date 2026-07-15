@@ -1,22 +1,22 @@
 {
-  "mvrv_z": null,
-  "sopr": null,
-  "puell_multiple": null,
+  "mvrv_z": 0.3275,
+  "sopr": 0.991,
+  "puell_multiple": 0.7622,
   "netflow_7d": 6896.19,
   "sth_realized_price": null,
   "sth_net_position_change": null,
-  "regime": "unknown",
+  "regime": "neutral",
   "composite_score": 32.5,
   "cycle_phase": "medium",
   "distribution": {
-    "timestamp": "2026-07-15 12:17 UTC",
+    "timestamp": "2026-07-15 12:47 UTC",
     "source": "blockchair.com",
-    "total_addresses": 0,
+    "total_addresses": 59495403,
     "total_btc": 20056702.29155096,
     "tiers": [
       {
         "range": "100+ BTC",
-        "addresses": "0",
+        "addresses": "2,082,339",
         "btc": "12,334,871",
         "pct": "61.50%",
         "pctNum": 61.5,
@@ -24,7 +24,7 @@
       },
       {
         "range": "1 \u2013 100 BTC",
-        "addresses": "0",
+        "addresses": "951,926",
         "btc": "6,317,861",
         "pct": "31.50%",
         "pctNum": 31.5,
@@ -32,7 +32,7 @@
       },
       {
         "range": "0.001 \u2013 1 BTC",
-        "addresses": "0",
+        "addresses": "24,393,115",
         "btc": "1,403,969",
         "pct": "7.00%",
         "pctNum": 7.0,
@@ -40,7 +40,7 @@
       },
       {
         "range": "<0.001 BTC",
-        "addresses": "0",
+        "addresses": "32,068,022",
         "btc": "6,017",
         "pct": "0.03%",
         "pctNum": 0.03,
@@ -49,11 +49,11 @@
     ]
   },
   "options_skew": {
-    "timestamp": "2026-07-15 12:18 UTC",
-    "spot": 64683.95,
+    "timestamp": "2026-07-15 12:47 UTC",
+    "spot": 64815.64,
     "skew_25d": -1.6,
-    "put_25d_iv": 33.8,
-    "call_25d_iv": 32.2,
+    "put_25d_iv": 35.3,
+    "call_25d_iv": 33.8,
     "put_name": "BTC-16JUL26-64000-P",
     "call_name": "BTC-16JUL26-65500-C",
     "label": "Neutral",
@@ -75,5 +75,5 @@
   "fee_rate_sat_vb": 0.615,
   "difficulty": 127170500429035.19,
   "_brk_fetched_at": "2026-07-15T07:42:34.923151+00:00",
-  "_collected": "2026-07-15 12:20 UTC"
+  "_collected": "2026-07-15 12:50 UTC"
 }
