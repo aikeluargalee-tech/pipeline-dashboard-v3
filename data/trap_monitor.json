@@ -2,8 +2,8 @@
   "composite": 2,
   "actual_max": 7,
   "status": "CLEAR",
-  "direction": "LONG_TRAP",
-  "long_trap_signals": 2,
+  "direction": "NEUTRAL",
+  "long_trap_signals": 1,
   "short_trap_signals": 0,
   "downstream_action": "Standard L4 rules apply. No trap override.",
   "signals": {
@@ -35,9 +35,9 @@
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "Bid:2 Ask:5",
+      "value": "Bid:6 Ask:2",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Ask/Bid wall ratio 2.5\u00d7 \u2014 absorption risk"
+      "note": "Bid/Ask wall ratio 3.0\u00d7 \u2014 bid support trap"
     },
     "s5_taker_cvd": {
       "score": 0,
@@ -72,6 +72,6 @@
       "note": "Skew -3.0% \u2014 neutral"
     }
   },
-  "btc_price": 64905.09,
-  "_collected": "2026-07-15 09:19 UTC"
+  "btc_price": 64729.99,
+  "_collected": "2026-07-15 09:48 UTC"
 }

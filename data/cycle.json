@@ -1,38 +1,38 @@
 {
-  "mvrv_z": 0.3275,
-  "sopr": 0.991,
-  "puell_multiple": 0.7622,
+  "mvrv_z": null,
+  "sopr": null,
+  "puell_multiple": null,
   "netflow_7d": 6896.19,
   "sth_realized_price": null,
   "sth_net_position_change": null,
-  "regime": "neutral",
+  "regime": "unknown",
   "composite_score": 32.5,
   "cycle_phase": "medium",
   "distribution": {
-    "timestamp": "2026-07-15 09:17 UTC",
+    "timestamp": "2026-07-15 09:46 UTC",
     "source": "blockchair.com",
-    "total_addresses": 59496664,
-    "total_btc": 20056642.91655096,
+    "total_addresses": 59497532,
+    "total_btc": 20056655.41655096,
     "tiers": [
       {
         "range": "100+ BTC",
-        "addresses": "2,082,383",
-        "btc": "12,334,835",
+        "addresses": "2,082,413",
+        "btc": "12,334,843",
         "pct": "61.50%",
         "pctNum": 61.5,
         "color": "#f59e0b"
       },
       {
         "range": "1 \u2013 100 BTC",
-        "addresses": "951,946",
-        "btc": "6,317,842",
+        "addresses": "951,960",
+        "btc": "6,317,846",
         "pct": "31.50%",
         "pctNum": 31.5,
         "color": "#3b82f6"
       },
       {
         "range": "0.001 \u2013 1 BTC",
-        "addresses": "24,393,632",
+        "addresses": "24,393,988",
         "btc": "1,403,965",
         "pct": "7.00%",
         "pctNum": 7.0,
@@ -40,7 +40,7 @@
       },
       {
         "range": "<0.001 BTC",
-        "addresses": "32,068,701",
+        "addresses": "32,069,169",
         "btc": "6,016",
         "pct": "0.03%",
         "pctNum": 0.03,
@@ -49,11 +49,11 @@
     ]
   },
   "options_skew": {
-    "timestamp": "2026-07-15 09:17 UTC",
-    "spot": 64789.2,
+    "timestamp": "2026-07-15 09:46 UTC",
+    "spot": 64678.67,
     "skew_25d": -3.0,
-    "put_25d_iv": 33.5,
-    "call_25d_iv": 30.5,
+    "put_25d_iv": 33.2,
+    "call_25d_iv": 30.2,
     "put_name": "BTC-16JUL26-64000-P",
     "call_name": "BTC-16JUL26-65500-C",
     "label": "Neutral",
@@ -75,5 +75,5 @@
   "fee_rate_sat_vb": 0.615,
   "difficulty": 127170500429035.19,
   "_brk_fetched_at": "2026-07-15T07:42:34.923151+00:00",
-  "_collected": "2026-07-15 09:19 UTC"
+  "_collected": "2026-07-15 09:48 UTC"
 }
