@@ -2,8 +2,8 @@
   "composite": 1,
   "actual_max": 7,
   "status": "CLEAR",
-  "direction": "NEUTRAL",
-  "long_trap_signals": 1,
+  "direction": "LONG_TRAP",
+  "long_trap_signals": 2,
   "short_trap_signals": 0,
   "downstream_action": "Standard L4 rules apply. No trap override.",
   "signals": {
@@ -35,9 +35,9 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:6 Ask:3",
+      "value": "Bid:2 Ask:4",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=6, Ask=3 \u2014 balanced"
+      "note": "Bid=2, Ask=4 \u2014 balanced"
     },
     "s5_taker_cvd": {
       "score": 0,
@@ -67,11 +67,11 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "-3.6%",
+      "value": "-3.1%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -3.6% \u2014 neutral"
+      "note": "Skew -3.1% \u2014 neutral"
     }
   },
-  "btc_price": 64616.82,
-  "_collected": "2026-07-15 03:18 UTC"
+  "btc_price": 64738.0,
+  "_collected": "2026-07-15 03:48 UTC"
 }

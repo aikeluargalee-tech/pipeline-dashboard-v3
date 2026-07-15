@@ -1,38 +1,38 @@
 {
-  "mvrv_z": 0.3275,
-  "sopr": 0.991,
-  "puell_multiple": 0.7622,
+  "mvrv_z": null,
+  "sopr": null,
+  "puell_multiple": null,
   "netflow_7d": 6896.19,
   "sth_realized_price": null,
   "sth_net_position_change": null,
-  "regime": "neutral",
+  "regime": "unknown",
   "composite_score": 32.5,
   "cycle_phase": "medium",
   "distribution": {
-    "timestamp": "2026-07-15 03:16 UTC",
+    "timestamp": "2026-07-15 03:46 UTC",
     "source": "blockchair.com",
-    "total_addresses": 59500646,
-    "total_btc": 20056505.41655096,
+    "total_addresses": 59499035,
+    "total_btc": 20056508.54155096,
     "tiers": [
       {
         "range": "100+ BTC",
-        "addresses": "2,082,522",
-        "btc": "12,334,750",
+        "addresses": "2,082,466",
+        "btc": "12,334,752",
         "pct": "61.50%",
         "pctNum": 61.5,
         "color": "#f59e0b"
       },
       {
         "range": "1 \u2013 100 BTC",
-        "addresses": "952,010",
-        "btc": "6,317,799",
+        "addresses": "951,984",
+        "btc": "6,317,800",
         "pct": "31.50%",
         "pctNum": 31.5,
         "color": "#3b82f6"
       },
       {
         "range": "0.001 \u2013 1 BTC",
-        "addresses": "24,395,264",
+        "addresses": "24,394,604",
         "btc": "1,403,955",
         "pct": "7.00%",
         "pctNum": 7.0,
@@ -40,7 +40,7 @@
       },
       {
         "range": "<0.001 BTC",
-        "addresses": "32,070,848",
+        "addresses": "32,069,979",
         "btc": "6,016",
         "pct": "0.03%",
         "pctNum": 0.03,
@@ -49,16 +49,16 @@
     ]
   },
   "options_skew": {
-    "timestamp": "2026-07-15 03:16 UTC",
-    "spot": 64572.55,
-    "skew_25d": -3.6,
-    "put_25d_iv": 38.4,
-    "call_25d_iv": 34.8,
+    "timestamp": "2026-07-15 03:46 UTC",
+    "spot": 64639.21,
+    "skew_25d": -3.1,
+    "put_25d_iv": 38.3,
+    "call_25d_iv": 35.1,
     "put_name": "BTC-16JUL26-63500-P",
     "call_name": "BTC-16JUL26-65500-C",
     "label": "Neutral",
     "emoji": "\u2b1c",
-    "display": "\u2b1c Options skew (25\u0394): -3.6% \u2014 neutral"
+    "display": "\u2b1c Options skew (25\u0394): -3.1% \u2014 neutral"
   },
   "nupl": 0.18150000274181366,
   "rhodl_ratio": 0.12439999729394913,
@@ -75,5 +75,5 @@
   "fee_rate_sat_vb": 1.992,
   "difficulty": 127170500429035.19,
   "_brk_fetched_at": "2026-07-15T02:49:39.351377+00:00",
-  "_collected": "2026-07-15 03:18 UTC"
+  "_collected": "2026-07-15 03:48 UTC"
 }
