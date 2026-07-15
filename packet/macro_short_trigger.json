@@ -1,16 +1,16 @@
 {
-  "packet_id": 41,
-  "captured_at": "2026-07-15T03:54:05Z",
+  "packet_id": 42,
+  "captured_at": "2026-07-15T07:43:24Z",
   "btc": {
-    "price": 64774.99,
-    "session_high": 65100.0,
+    "price": 64622.59,
+    "session_high": 65277.37,
     "session_low": 62500.0,
-    "change_pct": 3.54,
-    "vwap": 64006.79338061,
-    "volume_btc": 19986.29118,
-    "volume_usd": 1279258410.0030336,
+    "change_pct": 3.22,
+    "vwap": 64239.55272276,
+    "volume_btc": 20781.66799,
+    "volume_usd": 1335005056.5105212,
     "break_level": 58872,
-    "gap_to_break_pct": 10.03
+    "gap_to_break_pct": 9.77
   },
   "funding_rate": {
     "value_pct": 0.01,
@@ -19,26 +19,26 @@
     "consecutive_negative_count": 0
   },
   "taker_volume": {
-    "ratio_24h": 1.109,
-    "delta_sum_6": 1029.89,
-    "delta_trend": "DETERIORATING",
+    "ratio_24h": 1.104,
+    "delta_sum_6": 1023.8,
+    "delta_trend": "BUYING",
     "deltas_6": [
-      108.96,
       -146.14,
       861.52,
       148.22,
       388.32,
-      -330.99
+      -335.4,
+      107.28
     ]
   },
   "mstr": {
     "price": 97.58,
-    "prev_close": 92.1,
-    "change_pct": 5.95,
-    "volume": 18039740,
-    "avg_volume": 27216257,
-    "ma_50": 134.79,
-    "ma_200": 172.89,
+    "prev_close": 94.64,
+    "change_pct": 3.11,
+    "volume": 12682300,
+    "avg_volume": 27152880,
+    "ma_50": 136.15,
+    "ma_200": 174.01,
     "buy_window": {
       "active": true,
       "window_start": "2026-07-01",
@@ -67,11 +67,11 @@
     "stale": false
   },
   "usdjpy": {
-    "value": 162.15,
+    "value": 162.26,
     "source": "live",
-    "captured_at": "2026-07-15T03:54:05Z",
+    "captured_at": "2026-07-15T07:43:24Z",
     "structural_above_162": true,
-    "consecutive_packets_above_162": 5,
+    "consecutive_packets_above_162": 1,
     "spike_threshold_pct": 2.0,
     "spike_detected": false,
     "compound_triggered": false
