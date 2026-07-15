@@ -1,26 +1,26 @@
 {
-  "packet_id": 68,
-  "captured_at": "2026-07-15T15:05:00Z",
+  "packet_id": 69,
+  "captured_at": "2026-07-15T15:21:11Z",
   "btc": {
-    "price": 65308.0,
+    "price": 65369.41,
     "session_high": 65577.0,
-    "session_low": 64194.64,
-    "change_pct": 1.51,
-    "vwap": 64828.98269051,
-    "volume_btc": 20727.63734,
-    "volume_usd": 1343751642.3300142,
+    "session_low": 64231.77,
+    "change_pct": 1.53,
+    "vwap": 64840.66460032,
+    "volume_btc": 20622.06009,
+    "volume_usd": 1337148081.6633654,
     "break_level": 58872,
-    "gap_to_break_pct": 10.93
+    "gap_to_break_pct": 11.04
   },
   "funding_rate": {
-    "value_pct": 0.0067,
+    "value_pct": 0.0058,
     "next_settlement_utc": null,
     "trend": "rising",
     "consecutive_negative_count": 0
   },
   "taker_volume": {
-    "ratio_24h": 1.078,
-    "delta_sum_6": 671.75,
+    "ratio_24h": 1.082,
+    "delta_sum_6": 713.57,
     "delta_trend": "STRONG_BUYING",
     "deltas_6": [
       148.22,
@@ -28,15 +28,15 @@
       -335.4,
       12.34,
       236.37,
-      221.9
+      263.72
     ]
   },
   "mstr": {
-    "price": 98.61,
+    "price": 98.45,
     "prev_close": 92.1,
-    "change_pct": 7.07,
-    "volume": 6082742,
-    "avg_volume": 26618407,
+    "change_pct": 6.89,
+    "volume": 6555599,
+    "avg_volume": 26642049,
     "ma_50": 134.81,
     "ma_200": 172.89,
     "buy_window": {
@@ -47,11 +47,11 @@
       "announcement_detected": false,
       "consecutive_silent_sessions": 0
     },
-    "gap_to_trigger_pct": 31.48,
+    "gap_to_trigger_pct": 31.27,
     "trigger_price": 75.0
   },
   "vix": {
-    "value": 16.13,
+    "value": 16.2,
     "source": "FRED",
     "captured_at": "2026-07-15",
     "trigger_threshold": 25.0,
@@ -59,7 +59,7 @@
     "stale": false
   },
   "us10y": {
-    "value": 4.557,
+    "value": 4.553,
     "source": "FRED",
     "captured_at": "2026-07-15",
     "trigger_threshold": 4.6,
@@ -67,11 +67,11 @@
     "stale": false
   },
   "usdjpy": {
-    "value": 162.13,
+    "value": 162.17,
     "source": "live",
-    "captured_at": "2026-07-15T15:05:00Z",
+    "captured_at": "2026-07-15T15:21:11Z",
     "structural_above_162": true,
-    "consecutive_packets_above_162": 27,
+    "consecutive_packets_above_162": 28,
     "spike_threshold_pct": 2.0,
     "spike_detected": false,
     "compound_triggered": false
