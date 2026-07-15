@@ -858,7 +858,13 @@
           "max_price": 62980.0,
           "direction_correct": true
         },
-        "7d": null,
+        "7d": {
+          "price_then": 64814.0,
+          "price_change_pct": 3.6,
+          "min_price": 61544.56,
+          "max_price": 65277.37,
+          "direction_correct": true
+        },
         "30d": null
       },
       "resolved": false
@@ -916,7 +922,13 @@
           "max_price": 63283.26,
           "direction_correct": true
         },
-        "7d": null,
+        "7d": {
+          "price_then": 64577.7,
+          "price_change_pct": 2.99,
+          "min_price": 61544.56,
+          "max_price": 65277.37,
+          "direction_correct": true
+        },
         "30d": null
       },
       "resolved": false
@@ -1046,11 +1058,12 @@
         "regime_label": "CAUTIOUS NEUTRAL"
       },
       "outcomes": {
-        "1d": null,
-        "7d": null,
-        "30d": null
+        "outcome": "win",
+        "exit_price": 65000.0,
+        "resolved_at": "2026-07-15T06:00:00+00:00",
+        "price_change_pct": 3.67
       },
-      "resolved": false
+      "resolved": true
     }
   ]
 }
