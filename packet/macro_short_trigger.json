@@ -1,59 +1,59 @@
 {
-  "packet_id": 36,
-  "captured_at": "2026-07-14T10:18:22Z",
+  "packet_id": 37,
+  "captured_at": "2026-07-15T02:50:08Z",
   "btc": {
-    "price": 62725.62,
-    "session_high": 63157.85,
-    "session_low": 61824.97,
-    "change_pct": -0.58,
-    "vwap": 62472.66358647,
-    "volume_btc": 17031.26214,
-    "volume_usd": 1063988310.125234,
+    "price": 64525.0,
+    "session_high": 65100.0,
+    "session_low": 62314.0,
+    "change_pct": 3.06,
+    "vwap": 63957.55506189,
+    "volume_btc": 20083.69925,
+    "volume_usd": 1284504300.6283278,
     "break_level": 58872,
-    "gap_to_break_pct": 6.55
+    "gap_to_break_pct": 9.6
   },
   "funding_rate": {
-    "value_pct": 0.0056,
+    "value_pct": 0.0065,
     "next_settlement_utc": null,
     "trend": "rising",
     "consecutive_negative_count": 0
   },
   "taker_volume": {
-    "ratio_24h": 0.911,
-    "delta_sum_6": -746.66,
-    "delta_trend": "STRONG_SELLING",
+    "ratio_24h": 1.107,
+    "delta_sum_6": 994.01,
+    "delta_trend": "DETERIORATING",
     "deltas_6": [
-      -284.5,
-      -167.62,
-      -48.02,
-      -218.32,
       108.96,
-      -137.16
+      -146.14,
+      861.52,
+      148.22,
+      388.32,
+      -366.87
     ]
   },
   "mstr": {
-    "price": 92.1,
-    "prev_close": 94.64,
-    "change_pct": -2.68,
-    "volume": 12620000,
-    "avg_volume": 27149765,
-    "ma_50": 136.15,
-    "ma_200": 174.01,
+    "price": 97.58,
+    "prev_close": 92.1,
+    "change_pct": 5.95,
+    "volume": 18039740,
+    "avg_volume": 27216257,
+    "ma_50": 134.79,
+    "ma_200": 172.89,
     "buy_window": {
       "active": true,
       "window_start": "2026-07-01",
       "window_end": "2026-07-31",
-      "days_remaining": 17,
+      "days_remaining": 16,
       "announcement_detected": false,
       "consecutive_silent_sessions": 0
     },
-    "gap_to_trigger_pct": 22.8,
+    "gap_to_trigger_pct": 30.11,
     "trigger_price": 75.0
   },
   "vix": {
-    "value": 17.34,
+    "value": 17.3,
     "source": "FRED",
-    "captured_at": "2026-07-14",
+    "captured_at": "2026-07-15",
     "trigger_threshold": 25.0,
     "triggered": false,
     "stale": false
@@ -61,17 +61,17 @@
   "us10y": {
     "value": 4.609,
     "source": "FRED",
-    "captured_at": "2026-07-14",
+    "captured_at": "2026-07-15",
     "trigger_threshold": 4.6,
     "triggered": true,
     "stale": false
   },
   "usdjpy": {
-    "value": 162.21,
+    "value": 162.07,
     "source": "live",
-    "captured_at": "2026-07-14T10:18:22Z",
+    "captured_at": "2026-07-15T02:50:08Z",
     "structural_above_162": true,
-    "consecutive_packets_above_162": 12,
+    "consecutive_packets_above_162": 1,
     "spike_threshold_pct": 2.0,
     "spike_detected": false,
     "compound_triggered": false
