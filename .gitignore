@@ -65,3 +65,20 @@ venv.bak/
 .qwen/
 data/.positions.lock
 opencode-audit-critical.txt
+
+# Security — NEVER commit these
+.gemini_key
+*.key
+*.pem
+.pipeline_secrets.env
+*_secret*
+
+# Logs
+*.log
+
+# Audit artifacts
+opencode-audit*.txt
+audit-report*.txt
+
+# Temporary / cache
+*.bak
