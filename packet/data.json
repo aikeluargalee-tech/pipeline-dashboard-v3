@@ -1,22 +1,29 @@
 {
   "header": {
-    "generated_timestamp": "2026-07-17T07:37:07Z",
-    "btc_price": 65462.55,
-    "change_24h": 1.038,
-    "bid": 65462.55,
-    "ask": 65462.55,
-    "spread": 0,
-    "volume_24h": 0
+    "generated_timestamp": "2026-07-17T07:53:20Z",
+    "btc_price": 62948.0,
+    "change_24h": -2.095,
+    "bid": 62951.43,
+    "ask": 62951.44,
+    "spread": 0.01,
+    "volume_24h": 1348289832.87
   },
   "critical": {
-    "btc_price": 65462.55,
+    "btc_price": 62948.0,
     "amt_adx": 42.0,
     "amt_mtf": "1D BEARISH [INVALIDATED_CVD=+1,772] | 4H NEUTRAL [DIVERGES_CVD=+2,874] | 1H BULLISH",
-    "candle_delta": 0,
-    "candle_deltas_6": [],
-    "delta_sum_6": 0,
-    "delta_trend": "N/A",
-    "delta_interp": "N/A",
+    "candle_delta": -121.0,
+    "candle_deltas_6": [
+      56.11,
+      20.03,
+      -0.55,
+      -172.28,
+      -192.99,
+      -121.0
+    ],
+    "delta_sum_6": -410.68,
+    "delta_trend": "STRONG_SELLING",
+    "delta_interp": "Sellers dominated. Last candle -121.0.",
     "cvd_per_tf": {
       "1D": 1771.67,
       "4H": 2874.31,
@@ -32,54 +39,99 @@
       "4H": -5.61,
       "1H": 5.4
     },
-    "session_cvd": 0,
-    "oi_absolute_usd_billions": "N/A",
-    "taker_ratio_24h": 0,
+    "session_cvd": -1374.28,
+    "oi_absolute_usd_billions": 6.46,
+    "taker_ratio_24h": 0.961,
     "vp_poc": 65482,
     "vp_vah": 65484,
     "vp_val": 65457,
     "vp_shape": "b",
     "vp_state": "ACCEPTANCE",
     "balance_state": "TIGHT_BALANCE",
-    "balance_width_pct": 0,
+    "balance_width_pct": 2.63,
     "adx_regime": "TRENDING"
   },
   "context": {
-    "fng_value": 25,
-    "vix": 16.09,
-    "etf_flow_daily": -424.7,
-    "etf_flow_weekly": -3142.8,
-    "coinbase_premium": -0.0848,
-    "equities": "SPY $753 (+0.1%) | QQQ $715 (-0.7%) | GLD $372 (-0.2%)",
-    "dxy": 100.742,
-    "us10y": 4.553,
-    "oi_change_24h": 1.88,
-    "long_short_ratio": 1.1863,
-    "funding_rate": 4.739e-05,
-    "cvd_24h": 8289.28,
-    "black_swan_score": "1/17",
-    "correlation_r": "N/A",
-    "liq_clusters": "N/A",
-    "perp_basis_pct": "N/A",
-    "order_book_top5": null,
+    "fng_value": 27,
+    "vix": 17.9,
+    "etf_flow_daily": -440.0,
+    "etf_flow_weekly": 5038.0,
+    "coinbase_premium": -0.092,
+    "equities": "SPY $751 (-0.5%) | QQQ $706 (-1.6%) | GLD $365 (-2.0%)",
+    "dxy": 100.704,
+    "us10y": 4.569,
+    "oi_change_24h": 0.53,
+    "long_short_ratio": 1.7367,
+    "funding_rate": 2.208e-05,
+    "cvd_24h": -7408.93,
+    "black_swan_score": "0/17",
+    "correlation_r": 0.5002,
+    "liq_clusters": "Long: $62,900 (-0.08%) | Short: $64,900 (+3.10%), $65,000 (+3.26%), $65,450 (+3.97%), $65,500 (+4.05%), $65,600 (+4.21%)",
+    "perp_basis_pct": -0.0485,
+    "order_book_top5": {
+      "bids": [
+        {
+          "price": 62951.43,
+          "size": 3.31287
+        },
+        {
+          "price": 62951.42,
+          "size": 0.00097
+        },
+        {
+          "price": 62951.41,
+          "size": 0.00016
+        },
+        {
+          "price": 62950.77,
+          "size": 8e-05
+        },
+        {
+          "price": 62949.99,
+          "size": 0.03694
+        }
+      ],
+      "asks": [
+        {
+          "price": 62951.44,
+          "size": 3.15445
+        },
+        {
+          "price": 62951.45,
+          "size": 0.00079
+        },
+        {
+          "price": 62951.46,
+          "size": 0.00016
+        },
+        {
+          "price": 62951.51,
+          "size": 0.0006
+        },
+        {
+          "price": 62951.71,
+          "size": 0.00018
+        }
+      ]
+    },
     "realized_vol_1h_pct": 58.54,
     "realized_vol_1d_pct": 53.08,
-    "mstr_close": null,
-    "usdjpy": null,
-    "daily_rsi_14": null
+    "mstr_close": 94.03,
+    "usdjpy": 162.241,
+    "daily_rsi_14": 51.8
   },
   "reference": {
-    "sr_1h": "S: $64,494 / $64,303 / $64,000 | R: $65,500 / $65,750",
-    "sr_1h_inverted": "$64,750 / $65,027",
+    "sr_1h": "S: $62,750 / $62,500 / $62,250 | R: $63,979 / $64,306 / $64,494",
+    "sr_1h_inverted": "$63,000 / $63,250",
     "sr_1d": "S: $61,250 / $60,000 / $58,915 | R: $66,250 / $67,378 / $68,750",
     "cycle": {
-      "mvrv_z": 0.3275,
-      "sopr": 0.991,
-      "netflow_7d": 6896.19
+      "mvrv_z": 0.4093,
+      "sopr": 0.9946,
+      "netflow_7d": 881.2
     },
-    "cycle_composite": 32.8,
+    "cycle_composite": 32.7,
     "sth_realized_price": null,
-    "options_skew_25d": -0.5,
+    "options_skew_25d": -6.2,
     "brk_summary": "N/A",
     "brk": {
       "mvrv": "N/A",
@@ -107,33 +159,33 @@
     "crash_active_signals": [
       "Taker"
     ],
-    "black_swan_score": 1,
+    "black_swan_score": 0,
     "black_swan_max": 17,
     "black_swan_status": "NORMAL",
-    "dxy": 100.742,
-    "correlation_r": "N/A",
-    "btc_equity_correlation": "N/A",
+    "dxy": 100.704,
+    "correlation_r": 0.5002,
+    "btc_equity_correlation": 0.5002,
     "realized_vol_1h_pct": 58.54,
     "realized_vol_1d_pct": 53.08,
-    "fng_value": 25,
-    "fng_classification": "extreme_fear",
+    "fng_value": 27,
+    "fng_classification": "fear",
     "cot_signal": "BEARISH \u2014 Lev funds net short",
-    "oi_trend": "accumulating",
-    "oi_change_24h_pct": 1.88,
-    "liquidity_verdict": "HEALTHY",
-    "taker_buy_ratio": 0.519,
+    "oi_trend": "stable",
+    "oi_change_24h_pct": 0.53,
+    "liquidity_verdict": "THINNING",
+    "taker_buy_ratio": 0.5,
     "oi_delta": "FLAT",
-    "funding_signal": "POSITIVE",
-    "sr_1h_support": 64494.1,
-    "sr_1h_resistance": 65500.0,
+    "funding_signal": "NEUTRAL",
+    "sr_1h_support": 62750.0,
+    "sr_1h_resistance": 63979.0,
     "sr_1d_support": 61250.0,
     "sr_1d_resistance": 66250.0,
-    "atr_1h_pct": 0.556,
-    "atr_1d_pct": 2.844,
-    "btc_price": 65462.55,
-    "coinbase_premium": -0.0848,
-    "vix": 16.09,
-    "funding_rate": 4.739e-05
+    "atr_1h_pct": 0.48,
+    "atr_1d_pct": 2.77,
+    "btc_price": 62948.0,
+    "coinbase_premium": -0.092,
+    "vix": 17.9,
+    "funding_rate": 2.208e-05
   },
   "ai_factors": {
     "layer0_5": {
@@ -146,14 +198,14 @@
         "source": "Hashrate Index \u2014 manual weekly update"
       },
       "ercot_proxy": {
-        "current_ng_price": null,
-        "mean_30d": null,
-        "pct_vs_30d": null,
-        "elevated": null,
+        "current_ng_price": 3.15,
+        "mean_30d": 3.06,
+        "pct_vs_30d": 2.85,
+        "elevated": false,
         "threshold_pct": 10.0,
-        "as_of": null,
-        "tag": "FRED API key not configured",
-        "error": "FRED_API_KEY not set \u2014 set env var or edit mining_context.py"
+        "as_of": "2026-06-01",
+        "tag": "PROXY \u2014 Henry Hub NG, ~1 week lag",
+        "error": null
       },
       "miner_ai_contract": {
         "detected": false,
@@ -166,9 +218,9 @@
         ],
         "as_of": "2026-07-17"
       },
-      "as_of": "2026-07-17T07:37:04Z"
+      "as_of": "2026-07-17T07:53:10Z"
     },
-    "last_updated": "2026-07-17T07:37:04Z",
+    "last_updated": "2026-07-17T07:53:10Z",
     "tripwires": {
       "TW1_CH1_CAPITAL_REVERSAL": {
         "channel": "Ch.1 \u2014 Capital Allocation Competition",
@@ -177,8 +229,8 @@
           "ETF flow data",
           "AI equity index (NVDA/MSFT)"
         ],
-        "state": "INACTIVE",
-        "detail": "ETF flow data unavailable"
+        "state": "WATCH",
+        "detail": "ETF outflow $425M \u2014 monitoring"
       },
       "TW2_CH2_PRICE_GAP": {
         "channel": "Ch.2 \u2014 Energy / Miner Pivot",
@@ -234,13 +286,46 @@
     "tripwire_summary": {
       "active_count": 0,
       "total": 6,
-      "as_of": "2026-07-17T07:37:04Z"
+      "as_of": "2026-07-17T07:53:10Z"
+    },
+    "s9_vix_roc": {
+      "score": 0,
+      "label": "NEUTRAL",
+      "now": 16.09,
+      "prior": 16.09,
+      "delta": 0.0,
+      "delta_unit": "pts",
+      "threshold": 3.0,
+      "as_of": "2026-07-17",
+      "prior_date": "2026-07-17"
+    },
+    "s10_us10y_roc": {
+      "score": 0,
+      "label": "NEUTRAL",
+      "now": 4.553,
+      "prior": 4.553,
+      "delta": 0.0,
+      "delta_unit": "bps",
+      "threshold": 8.0,
+      "as_of": "2026-07-17",
+      "prior_date": "2026-07-17"
+    },
+    "s11_volume_anomaly": {
+      "score": 0,
+      "label": "NEUTRAL",
+      "threshold": 3.0,
+      "ratio": 1.25,
+      "vol_now": 3875.09362,
+      "vol_mean_20p": 3090.322322,
+      "candle_bearish": true,
+      "window": 20,
+      "as_of": "2026-07-17T07:53:09Z"
     }
   },
   "regime": {
     "label": "mid_cycle",
     "confidence": 0.6,
-    "prev_label": null,
+    "prev_label": "mid_cycle",
     "transitioned": false,
     "transition_at": null,
     "transition_trigger": null,
@@ -251,21 +336,24 @@
     },
     "signals": [
       "mvrv_z_deep_value",
-      "lth_sopr_below_1",
-      "hashrate_drawdown_gt_25pct",
       "fear",
       "etf_light_outflows",
+      "mstr_proxy_weak",
       "breadth_data_limited",
       "neutral_funding",
-      "taker_buying_dominant"
+      "moderate_long_bias",
+      "taker_buying_dominant",
+      "cvd_declining"
     ],
     "breadth": {
       "spy_momentum": "flat",
       "spy_qqq_divergence": false,
       "breadth_quality": "limited",
-      "signals": []
+      "signals": [
+        "mstr_weak"
+      ]
     },
-    "as_of": "2026-07-17T07:37:04Z"
+    "as_of": "2026-07-17T07:53:11Z"
   },
   "heatmap": {
     "data_available": false,
@@ -273,49 +361,45 @@
   },
   "status": {
     "source_timestamps": {
-      "amt": "2026-07-17T07:37:03.732301+00:00",
+      "amt": "2026-07-17T07:53:08.933660+00:00",
       "vp": "2026-07-15T15:47:53.054426+00:00",
-      "pipeline": "regime=2026-07-15 15:48 UTC | macro=2026-07-15 15:48 UTC"
+      "pipeline": "regime=2026-07-17 07:48 UTC | macro=2026-07-17 07:48 UTC"
     },
     "staleness_warnings": [
-      "STALE regime: 2389m behind AMT",
-      "STALE macro: 2389m behind AMT",
-      "STALE derivs: 2389m behind AMT",
-      "STALE cycle: 2389m behind AMT",
-      "STALE vp: 2389m behind AMT"
+      "STALE vp: 2405m behind AMT"
     ]
   },
   "sources": {
     "trap_monitor": {
       "score": "2/7",
       "status": "CLEAR",
-      "direction": "NEUTRAL",
+      "direction": "LONG_TRAP",
       "active_traps": [
-        "s1_liq_asymmetry",
-        "s6_exchange_netflow"
+        "s5_taker_cvd",
+        "s8_options_skew"
       ],
       "signals": {
-        "s1_liq_asymmetry": "TRAP",
+        "s1_liq_asymmetry": "NEUTRAL",
         "s2_oi_divergence": "CLEAR",
         "s3_funding": "CLEAR",
-        "s4_bid_ask_absorption": "CLEAR",
-        "s5_taker_cvd": "CLEAR",
-        "s6_exchange_netflow": "TRAP",
+        "s4_bid_ask_absorption": "NEUTRAL",
+        "s5_taker_cvd": "TRAP",
+        "s6_exchange_netflow": "CLEAR",
         "s7_utxo_bands": "CLEAR",
-        "s8_options_skew": "CLEAR"
+        "s8_options_skew": "TRAP"
       },
       "downstream_action": "Standard L4 rules apply. No trap override.",
-      "collected": "2026-07-15 15:48 UTC"
+      "collected": "2026-07-17 07:48 UTC"
     },
     "redline": {
       "error": "unavailable"
     },
     "amt": {
-      "price": 65462.55,
-      "change_24h": 0,
+      "price": 62948.0,
+      "change_24h": -1.897,
       "balance_state": "TIGHT_BALANCE",
-      "aggression_score": 0.65,
-      "net_delta": 0,
+      "aggression_score": 0.56,
+      "net_delta": -1374.28,
       "whale_pivot": null,
       "whale_conviction": 0,
       "mtf_signal": "NEUTRAL_NONE",
@@ -334,14 +418,13 @@
       "active_pattern": "POC_MAGNET"
     },
     "ai_factors": {
-      "s9_label": "N/A",
-      "s10_label": "N/A",
-      "s11_label": "N/A",
+      "s9_label": "NEUTRAL",
+      "s10_label": "NEUTRAL",
+      "s11_label": "NEUTRAL",
       "forced_sell_risk": "MEDIUM",
       "active_tripwires": 0,
       "total_tripwires": 6,
       "active_tw_names": [
-        "TW1_CH1_CAPITAL_REVERSAL",
         "TW3_CH3_RAIL_COMPETITION",
         "TW4_CH4_SCENARIO_B",
         "TW5_CH4_SCENARIO_C",
