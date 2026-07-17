@@ -1110,7 +1110,13 @@
         "btc_price": 64795.99
       },
       "outcomes": {
-        "1d": null,
+        "1d": {
+          "price_then": 64221.34,
+          "price_change_pct": -0.89,
+          "min_price": 63888.0,
+          "max_price": 65600.0,
+          "direction_correct": true
+        },
         "7d": null,
         "30d": null
       },
@@ -1162,7 +1168,13 @@
         "btc_price": 64659.37
       },
       "outcomes": {
-        "1d": null,
+        "1d": {
+          "price_then": 64221.34,
+          "price_change_pct": -0.68,
+          "min_price": 63888.0,
+          "max_price": 65600.0,
+          "direction_correct": true
+        },
         "7d": null,
         "30d": null
       },
@@ -1211,6 +1223,64 @@
           "ta_warning": null
         },
         "btc_price": 65462.55
+      },
+      "outcomes": {
+        "1d": {
+          "price_then": 64704.73,
+          "price_change_pct": -1.16,
+          "min_price": 63838.28,
+          "max_price": 65470.0,
+          "direction_correct": true
+        },
+        "7d": null,
+        "30d": null
+      },
+      "resolved": false
+    },
+    {
+      "id": "regime_68ae8e3e",
+      "type": "regime_change",
+      "created_at": "2026-07-17T07:40:31.960416+00:00",
+      "btc_price_at_call": 62932.01,
+      "direction": "neutral",
+      "gate0_status": "TIGHTENED",
+      "regime_label": "CAUTIOUS NEUTRAL",
+      "rationale_snapshot": {
+        "gate": {
+          "verdict": "TIGHTENED",
+          "sources": [
+            "ai3_wave",
+            "geopolitical"
+          ]
+        },
+        "macro": {
+          "verdict": "NEUTRAL",
+          "emoji": "\ud83d\udfe1",
+          "detail": "VIX 18.0 normal"
+        },
+        "structure": {
+          "verdict": "HOLDING",
+          "emoji": "\ud83d\udfe1",
+          "detail": "3/3 timeframes active"
+        },
+        "derivatives": {
+          "verdict": "NEUTRAL",
+          "emoji": "\ud83d\udfe1",
+          "detail": "FR 0.0026% neutral, L/S 1.74, CVD -7409"
+        },
+        "cycle": {
+          "verdict": "MID",
+          "emoji": "\ud83d\udfe1",
+          "detail": ""
+        },
+        "synthesis": {
+          "verdict": "CAUTIOUS NEUTRAL",
+          "detail": "Tightened rules active. 0 bullish / 0 bearish signals.",
+          "bull_count": 0.0,
+          "bear_count": 0.0,
+          "ta_warning": null
+        },
+        "btc_price": 62932.01
       },
       "outcomes": {
         "1d": null,

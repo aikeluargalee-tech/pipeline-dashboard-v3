@@ -1,10 +1,11 @@
 {
-  "verdict": "PAUSE",
+  "verdict": "TIGHTENED",
   "sources": [
-    "quantum"
+    "ai3_wave",
+    "geopolitical"
   ],
   "rules": {
-    "action": "No new positions. Reduce open size. Monitor only."
+    "action": "Reduce position size. Tight stops. Wait for conditions to clear."
   },
   "modules": {
     "trp_check": {
@@ -29,11 +30,11 @@
     },
     "ai_bubble": {
       "state": "PROCEED",
-      "detail": "BTC 24h: +0.98%"
+      "detail": "US market closed (outside hours)"
     },
     "quantum": {
-      "state": "PAUSE",
-      "detail": "TIER2: Quantum Threatens Almost $500B in Bitcoin, Research Finds \u2014 But Experts Believe  (Yahoo Finance)"
+      "state": "PROCEED",
+      "detail": "No new quantum+bitcoin news"
     },
     "stablecoins": {
       "state": "PROCEED",
@@ -41,7 +42,7 @@
     },
     "session": {
       "state": "PROCEED",
-      "detail": "Active session: NEW YORK"
+      "detail": "Active session: LONDON"
     },
     "ai3_wave": {
       "state": "TIGHTENED",
@@ -52,6 +53,6 @@
       "detail": "Tier FADE geopolitical signal: neutral \u2014 16 signals today"
     }
   },
-  "timestamp": "2026-07-15 15:47 UTC",
-  "_collected": "2026-07-15 15:48 UTC"
+  "timestamp": "2026-07-17 07:40 UTC",
+  "_collected": "2026-07-17 07:40 UTC"
 }
