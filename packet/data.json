@@ -1,29 +1,22 @@
 {
   "header": {
-    "generated_timestamp": "2026-07-15T15:52:53Z",
-    "btc_price": 65558.0,
+    "generated_timestamp": "2026-07-17T07:37:07Z",
+    "btc_price": 65462.55,
     "change_24h": 1.038,
-    "bid": 65549.97,
-    "ask": 65549.98,
-    "spread": 0.01,
-    "volume_24h": 1273094731.35
+    "bid": 65462.55,
+    "ask": 65462.55,
+    "spread": 0,
+    "volume_24h": 0
   },
   "critical": {
-    "btc_price": 65558.0,
+    "btc_price": 65462.55,
     "amt_adx": 42.0,
     "amt_mtf": "1D BEARISH [INVALIDATED_CVD=+1,772] | 4H NEUTRAL [DIVERGES_CVD=+2,874] | 1H BULLISH",
-    "candle_delta": 228.62,
-    "candle_deltas_6": [
-      148.22,
-      388.32,
-      -335.4,
-      12.34,
-      236.37,
-      228.62
-    ],
-    "delta_sum_6": 678.47,
-    "delta_trend": "STRONG_BUYING",
-    "delta_interp": "Buyers dominated. Last candle +228.6.",
+    "candle_delta": 0,
+    "candle_deltas_6": [],
+    "delta_sum_6": 0,
+    "delta_trend": "N/A",
+    "delta_interp": "N/A",
     "cvd_per_tf": {
       "1D": 1771.67,
       "4H": 2874.31,
@@ -39,16 +32,16 @@
       "4H": -5.61,
       "1H": 5.4
     },
-    "session_cvd": -1831.34,
-    "oi_absolute_usd_billions": 6.99,
-    "taker_ratio_24h": 1.076,
+    "session_cvd": 0,
+    "oi_absolute_usd_billions": "N/A",
+    "taker_ratio_24h": 0,
     "vp_poc": 65482,
     "vp_vah": 65484,
     "vp_val": 65457,
     "vp_shape": "b",
     "vp_state": "ACCEPTANCE",
-    "balance_state": "DEVELOPING_BALANCE",
-    "balance_width_pct": 4.6,
+    "balance_state": "TIGHT_BALANCE",
+    "balance_width_pct": 0,
     "adx_regime": "TRENDING"
   },
   "context": {
@@ -65,60 +58,15 @@
     "funding_rate": 4.739e-05,
     "cvd_24h": 8289.28,
     "black_swan_score": "1/17",
-    "correlation_r": 0.7159,
-    "liq_clusters": "Long: $65,500 (-0.06%), $65,450 (-0.14%), $64,500 (-1.59%), $62,500 (-4.64%) | Short: none detected",
-    "perp_basis_pct": -0.0763,
-    "order_book_top5": {
-      "bids": [
-        {
-          "price": 65518.0,
-          "size": 1.13674
-        },
-        {
-          "price": 65517.99,
-          "size": 0.00082
-        },
-        {
-          "price": 65517.98,
-          "size": 0.00016
-        },
-        {
-          "price": 65517.88,
-          "size": 8e-05
-        },
-        {
-          "price": 65517.72,
-          "size": 8e-05
-        }
-      ],
-      "asks": [
-        {
-          "price": 65518.01,
-          "size": 7.57708
-        },
-        {
-          "price": 65518.02,
-          "size": 0.00034
-        },
-        {
-          "price": 65518.03,
-          "size": 0.00016
-        },
-        {
-          "price": 65518.04,
-          "size": 0.00018
-        },
-        {
-          "price": 65518.05,
-          "size": 0.05026
-        }
-      ]
-    },
+    "correlation_r": "N/A",
+    "liq_clusters": "N/A",
+    "perp_basis_pct": "N/A",
+    "order_book_top5": null,
     "realized_vol_1h_pct": 58.54,
     "realized_vol_1d_pct": 53.08,
-    "mstr_close": 98.41,
-    "usdjpy": 162.127,
-    "daily_rsi_14": 71.2
+    "mstr_close": null,
+    "usdjpy": null,
+    "daily_rsi_14": null
   },
   "reference": {
     "sr_1h": "S: $64,494 / $64,303 / $64,000 | R: $65,500 / $65,750",
@@ -132,25 +80,25 @@
     "cycle_composite": 32.8,
     "sth_realized_price": null,
     "options_skew_25d": -0.5,
-    "brk_summary": "LTH capitulating (sopr 0.774), STH marginally profitable (sopr 1.006), miner stress moderate (puell 0.73), hashrate -32.4%, rhodl 0",
+    "brk_summary": "N/A",
     "brk": {
-      "mvrv": 1.233299970626831,
-      "realized_price": 52861.13,
-      "sopr_24h": 0.9971339244155303,
-      "lth_sopr_24h": 0.7739251618738365,
-      "sth_sopr_24h": 1.0058455050492918,
-      "nupl": 0.1890999972820282,
-      "rhodl_ratio": 0.12620000541210175,
-      "puell_multiple": 0.7329000234603882,
-      "lth_net_realized_pnl": -128090.5,
-      "sth_net_realized_pnl": 13408.48,
-      "supply_in_profit_share": 57.05999755859375,
-      "utxos_1y_sopr": 0.8281532543717298,
-      "hash_rate_ehs": 9.229652603282914e+20,
-      "hash_rate_drawdown_pct": -32.42000198364258,
-      "fee_rate_sat_vb": 1.307,
-      "difficulty": 127170500429035.19,
-      "fetched_at": "2026-07-15T13:59:25.933135+00:00"
+      "mvrv": "N/A",
+      "realized_price": "N/A",
+      "sopr_24h": "N/A",
+      "lth_sopr_24h": "N/A",
+      "sth_sopr_24h": "N/A",
+      "nupl": "N/A",
+      "rhodl_ratio": "N/A",
+      "puell_multiple": "N/A",
+      "lth_net_realized_pnl": "N/A",
+      "sth_net_realized_pnl": "N/A",
+      "supply_in_profit_share": "N/A",
+      "utxos_1y_sopr": "N/A",
+      "hash_rate_ehs": "N/A",
+      "hash_rate_drawdown_pct": "N/A",
+      "fee_rate_sat_vb": "N/A",
+      "difficulty": "N/A",
+      "fetched_at": "2026-07-17T07:37:03.525503+00:00"
     }
   },
   "enriched": {
@@ -163,8 +111,8 @@
     "black_swan_max": 17,
     "black_swan_status": "NORMAL",
     "dxy": 100.742,
-    "correlation_r": 0.7159,
-    "btc_equity_correlation": 0.7159,
+    "correlation_r": "N/A",
+    "btc_equity_correlation": "N/A",
     "realized_vol_1h_pct": 58.54,
     "realized_vol_1d_pct": 53.08,
     "fng_value": 25,
@@ -182,46 +130,12 @@
     "sr_1d_resistance": 66250.0,
     "atr_1h_pct": 0.556,
     "atr_1d_pct": 2.844,
-    "btc_price": 65558.0,
+    "btc_price": 65462.55,
     "coinbase_premium": -0.0848,
     "vix": 16.09,
     "funding_rate": 4.739e-05
   },
   "ai_factors": {
-    "s9_vix_roc": {
-      "score": 0,
-      "label": "NEUTRAL",
-      "now": 16.2,
-      "prior": 16.2,
-      "delta": 0.0,
-      "delta_unit": "pts",
-      "threshold": 3.0,
-      "as_of": "2026-07-15",
-      "prior_date": "2026-07-15"
-    },
-    "s10_us10y_roc": {
-      "score": 0,
-      "label": "NEUTRAL",
-      "now": 4.553,
-      "prior": 4.553,
-      "delta": 0.0,
-      "delta_unit": "bps",
-      "threshold": 8.0,
-      "as_of": "2026-07-15",
-      "prior_date": "2026-07-15"
-    },
-    "last_updated": "2026-07-15T15:52:42Z",
-    "s11_volume_anomaly": {
-      "score": 0,
-      "label": "NEUTRAL",
-      "threshold": 3.0,
-      "ratio": 1.96,
-      "vol_now": 5795.39108,
-      "vol_mean_20p": 2961.2936525,
-      "candle_bearish": false,
-      "window": 20,
-      "as_of": "2026-07-15T15:52:40Z"
-    },
     "layer0_5": {
       "forced_sell_risk": "MEDIUM",
       "s6_modifier": "FORCED_SELL > DISTRIBUTION",
@@ -232,14 +146,14 @@
         "source": "Hashrate Index \u2014 manual weekly update"
       },
       "ercot_proxy": {
-        "current_ng_price": 3.15,
-        "mean_30d": 3.06,
-        "pct_vs_30d": 2.85,
-        "elevated": false,
+        "current_ng_price": null,
+        "mean_30d": null,
+        "pct_vs_30d": null,
+        "elevated": null,
         "threshold_pct": 10.0,
-        "as_of": "2026-06-01",
-        "tag": "PROXY \u2014 Henry Hub NG, ~1 week lag",
-        "error": null
+        "as_of": null,
+        "tag": "FRED API key not configured",
+        "error": "FRED_API_KEY not set \u2014 set env var or edit mining_context.py"
       },
       "miner_ai_contract": {
         "detected": false,
@@ -250,10 +164,11 @@
           "IREN",
           "CLSK"
         ],
-        "as_of": "2026-07-15"
+        "as_of": "2026-07-17"
       },
-      "as_of": "2026-07-15T15:52:41Z"
+      "as_of": "2026-07-17T07:37:04Z"
     },
+    "last_updated": "2026-07-17T07:37:04Z",
     "tripwires": {
       "TW1_CH1_CAPITAL_REVERSAL": {
         "channel": "Ch.1 \u2014 Capital Allocation Competition",
@@ -262,8 +177,8 @@
           "ETF flow data",
           "AI equity index (NVDA/MSFT)"
         ],
-        "state": "WATCH",
-        "detail": "ETF outflow $425M \u2014 monitoring"
+        "state": "INACTIVE",
+        "detail": "ETF flow data unavailable"
       },
       "TW2_CH2_PRICE_GAP": {
         "channel": "Ch.2 \u2014 Energy / Miner Pivot",
@@ -319,13 +234,13 @@
     "tripwire_summary": {
       "active_count": 0,
       "total": 6,
-      "as_of": "2026-07-15T15:52:42Z"
+      "as_of": "2026-07-17T07:37:04Z"
     }
   },
   "regime": {
     "label": "mid_cycle",
     "confidence": 0.6,
-    "prev_label": "mid_cycle",
+    "prev_label": null,
     "transitioned": false,
     "transition_at": null,
     "transition_trigger": null,
@@ -350,7 +265,7 @@
       "breadth_quality": "limited",
       "signals": []
     },
-    "as_of": "2026-07-15T15:52:42Z"
+    "as_of": "2026-07-17T07:37:04Z"
   },
   "heatmap": {
     "data_available": false,
@@ -358,12 +273,16 @@
   },
   "status": {
     "source_timestamps": {
-      "amt": "2026-07-15T15:52:39.489049+00:00",
+      "amt": "2026-07-17T07:37:03.732301+00:00",
       "vp": "2026-07-15T15:47:53.054426+00:00",
       "pipeline": "regime=2026-07-15 15:48 UTC | macro=2026-07-15 15:48 UTC"
     },
     "staleness_warnings": [
-      "STALE brk: 113m behind AMT"
+      "STALE regime: 2389m behind AMT",
+      "STALE macro: 2389m behind AMT",
+      "STALE derivs: 2389m behind AMT",
+      "STALE cycle: 2389m behind AMT",
+      "STALE vp: 2389m behind AMT"
     ]
   },
   "sources": {
@@ -392,11 +311,11 @@
       "error": "unavailable"
     },
     "amt": {
-      "price": 65558.0,
-      "change_24h": 1.345,
-      "balance_state": "DEVELOPING_BALANCE",
-      "aggression_score": 0.4,
-      "net_delta": -1831.34,
+      "price": 65462.55,
+      "change_24h": 0,
+      "balance_state": "TIGHT_BALANCE",
+      "aggression_score": 0.65,
+      "net_delta": 0,
       "whale_pivot": null,
       "whale_conviction": 0,
       "mtf_signal": "NEUTRAL_NONE",
@@ -415,13 +334,14 @@
       "active_pattern": "POC_MAGNET"
     },
     "ai_factors": {
-      "s9_label": "NEUTRAL",
-      "s10_label": "NEUTRAL",
-      "s11_label": "NEUTRAL",
+      "s9_label": "N/A",
+      "s10_label": "N/A",
+      "s11_label": "N/A",
       "forced_sell_risk": "MEDIUM",
       "active_tripwires": 0,
       "total_tripwires": 6,
       "active_tw_names": [
+        "TW1_CH1_CAPITAL_REVERSAL",
         "TW3_CH3_RAIL_COMPETITION",
         "TW4_CH4_SCENARIO_B",
         "TW5_CH4_SCENARIO_C",
