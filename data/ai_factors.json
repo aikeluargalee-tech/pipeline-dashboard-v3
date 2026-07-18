@@ -1,14 +1,14 @@
 {
-  "last_updated": "2026-07-17T08:17:45Z",
+  "last_updated": "2026-07-18T04:43:44Z",
   "s9_vix_roc": {
     "score": 0,
     "label": "NEUTRAL",
-    "delta": 0.0,
-    "now": 17.96,
-    "prior": 17.9,
+    "delta": 0.81,
+    "now": 18.77,
+    "prior": 17.96,
     "delta_unit": "pts",
     "threshold": 3.0,
-    "as_of": "2026-07-17",
+    "as_of": "2026-07-18",
     "prior_date": "2026-07-17",
     "name": "S9 \u2014 VIX Rate-of-Change",
     "desc": "VIX session delta vs prior close. \u22653pt rise signals macro stress accelerating \u2014 AI systems already reacting."
@@ -16,12 +16,12 @@
   "s10_us10y_roc": {
     "score": 0,
     "label": "NEUTRAL",
-    "delta": 0.0,
-    "now": 4.569,
+    "delta": -2.8,
+    "now": 4.541,
     "prior": 4.569,
     "delta_unit": "bps",
     "threshold": 8.0,
-    "as_of": "2026-07-17",
+    "as_of": "2026-07-18",
     "prior_date": "2026-07-17",
     "name": "S10 \u2014 US10Y Rate-of-Change",
     "desc": "US10Y intraday delta. \u22658bps rise signals rate repricing in progress \u2014 algos reprice BTC on the move, not the level."
@@ -29,23 +29,23 @@
   "s11_volume_anomaly": {
     "score": 0,
     "label": "NEUTRAL",
-    "ratio": 0.98,
-    "vol_now": 20557.74761,
-    "vol_mean_20p": 20939.995139500003,
+    "ratio": 0.8,
+    "vol_now": 16775.58977,
+    "vol_mean_20p": 20967.635543,
     "threshold": 3.0,
     "window": 20,
     "candle_bearish": true,
-    "as_of": "2026-07-17T08:17:45Z",
+    "as_of": "2026-07-18T04:43:44Z",
     "name": "S11 \u2014 Volume Anomaly Detector",
     "desc": "4H candle volume \u22653\u00d7 20-period rolling mean on a bearish candle. BTC-internal cascade precursor \u2014 24h lead time validated."
   },
   "layer0_5": {
-    "forced_sell_risk": "LOW",
-    "s6_modifier": "S6 unchanged \u2014 no modifier",
+    "forced_sell_risk": "MEDIUM",
+    "s6_modifier": "FORCED_SELL > DISTRIBUTION \u2014 miner selling elevated",
     "hashprice": {
       "direction": "FALLING",
       "usd_per_ph": 29.61,
-      "updated": "2026-07-17",
+      "updated": "2026-07-18",
       "source": "Hashrate Index \u2014 manual weekly update"
     },
     "ercot_proxy": {
@@ -67,9 +67,9 @@
         "IREN",
         "CLSK"
       ],
-      "as_of": "2026-07-17T08:17:45Z"
+      "as_of": "2026-07-18T04:43:44Z"
     },
-    "as_of": "2026-07-17T08:17:45Z"
+    "as_of": "2026-07-18T04:43:44Z"
   },
   "tripwires": {
     "TW1_CH1_CAPITAL_REVERSAL": {
@@ -136,5 +136,5 @@
     "active": 0,
     "total": 6
   },
-  "_collected": "2026-07-17 08:17 UTC"
+  "_collected": "2026-07-18 04:43 UTC"
 }
