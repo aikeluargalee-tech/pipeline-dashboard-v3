@@ -1,26 +1,26 @@
 {
-  "packet_id": 77,
-  "captured_at": "2026-07-18T04:40:54Z",
+  "packet_id": 78,
+  "captured_at": "2026-07-18T06:20:12Z",
   "btc": {
-    "price": 63952.86,
+    "price": 63999.99,
     "session_high": 64387.99,
     "session_low": 62537.56,
-    "change_pct": 0.89,
-    "vwap": 63373.86429605,
-    "volume_btc": 16794.38111,
-    "volume_usd": 1064324829.4013158,
+    "change_pct": 2.0,
+    "vwap": 63436.83040143,
+    "volume_btc": 15012.84894,
+    "volume_usd": 952367552.049136,
     "break_level": 58872,
-    "gap_to_break_pct": 8.63
+    "gap_to_break_pct": 8.71
   },
   "funding_rate": {
-    "value_pct": 0.0013,
+    "value_pct": 0.0073,
     "next_settlement_utc": null,
-    "trend": "stable",
+    "trend": "rising",
     "consecutive_negative_count": 0
   },
   "taker_volume": {
-    "ratio_24h": 0.893,
-    "delta_sum_6": -736.78,
+    "ratio_24h": 0.894,
+    "delta_sum_6": -744.7,
     "delta_trend": "STRONG_SELLING",
     "deltas_6": [
       184.4,
@@ -28,7 +28,7 @@
       -135.36,
       -347.64,
       43.32,
-      -66.45
+      -74.37
     ]
   },
   "mstr": {
@@ -51,7 +51,7 @@
     "trigger_price": 75.0
   },
   "vix": {
-    "value": 17.96,
+    "value": 18.77,
     "source": "FRED",
     "captured_at": "2026-07-18",
     "trigger_threshold": 25.0,
@@ -59,7 +59,7 @@
     "stale": false
   },
   "us10y": {
-    "value": 4.569,
+    "value": 4.541,
     "source": "FRED",
     "captured_at": "2026-07-18",
     "trigger_threshold": 4.6,
@@ -69,7 +69,7 @@
   "usdjpy": {
     "value": 162.35,
     "source": "live",
-    "captured_at": "2026-07-18T04:40:54Z",
+    "captured_at": "2026-07-18T06:20:12Z",
     "structural_above_162": true,
     "consecutive_packets_above_162": 1,
     "spike_threshold_pct": 2.0,
