@@ -1,5 +1,5 @@
 {
-  "composite": 1,
+  "composite": 2,
   "actual_max": 7,
   "status": "CLEAR",
   "direction": "NEUTRAL",
@@ -19,33 +19,33 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "1.61%",
+      "value": "2.39%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI 1.6% \u2014 neutral/no divergence"
+      "note": "OI 2.4% \u2014 neutral/no divergence"
     },
     "s3_funding": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "0.0041%",
+      "value": "0.0053%",
       "threshold": "|Funding| > 0.01%",
-      "note": "Funding 0.0041% \u2014 neutral"
+      "note": "Funding 0.0053% \u2014 neutral"
     },
     "s4_bid_ask_absorption": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:4 Ask:5",
+      "value": "Bid:2 Ask:4",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=4, Ask=5 \u2014 balanced"
+      "note": "Bid=2, Ask=4 \u2014 balanced"
     },
     "s5_taker_cvd": {
-      "score": 0,
-      "verdict": "CLEAR",
+      "score": 1,
+      "verdict": "TRAP",
       "max": 1,
-      "value": "Taker:0.6385 CVD:3145.27",
+      "value": "Taker:0.3769 CVD:1775.61",
       "threshold": "Taker > 1.0 + CVD < 0",
-      "note": "Taker 0.64, CVD 3145 \u2014 mixed"
+      "note": "Taker 0.38 (selling) + CVD positive \u2014 bear trap"
     },
     "s6_exchange_netflow": {
       "score": 0,
@@ -67,11 +67,11 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "-2.1%",
+      "value": "-2.8%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -2.1% \u2014 neutral"
+      "note": "Skew -2.8% \u2014 neutral"
     }
   },
-  "btc_price": 64772.59,
-  "_collected": "2026-07-19 01:57 UTC"
+  "btc_price": 64848.11,
+  "_collected": "2026-07-19 02:19 UTC"
 }

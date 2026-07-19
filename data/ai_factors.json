@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-19T01:57:45Z",
+  "last_updated": "2026-07-19T02:19:11Z",
   "s9_vix_roc": {
     "score": 0,
     "label": "NEUTRAL",
@@ -9,7 +9,7 @@
     "delta_unit": "pts",
     "threshold": 3.0,
     "as_of": "2026-07-19",
-    "prior_date": "2026-07-18",
+    "prior_date": "2026-07-19",
     "name": "S9 \u2014 VIX Rate-of-Change",
     "desc": "VIX session delta vs prior close. \u22653pt rise signals macro stress accelerating \u2014 AI systems already reacting."
   },
@@ -22,20 +22,20 @@
     "delta_unit": "bps",
     "threshold": 8.0,
     "as_of": "2026-07-19",
-    "prior_date": "2026-07-18",
+    "prior_date": "2026-07-19",
     "name": "S10 \u2014 US10Y Rate-of-Change",
     "desc": "US10Y intraday delta. \u22658bps rise signals rate repricing in progress \u2014 algos reprice BTC on the move, not the level."
   },
   "s11_volume_anomaly": {
     "score": 0,
     "label": "NEUTRAL",
-    "ratio": 0.41,
-    "vol_now": 8250.98076,
-    "vol_mean_20p": 19962.2161785,
+    "ratio": 0.44,
+    "vol_now": 8538.40485,
+    "vol_mean_20p": 19286.9194795,
     "threshold": 3.0,
     "window": 20,
     "candle_bearish": true,
-    "as_of": "2026-07-19T01:57:45Z",
+    "as_of": "2026-07-19T02:19:11Z",
     "name": "S11 \u2014 Volume Anomaly Detector",
     "desc": "4H candle volume \u22653\u00d7 20-period rolling mean on a bearish candle. BTC-internal cascade precursor \u2014 24h lead time validated."
   },
@@ -67,9 +67,9 @@
         "IREN",
         "CLSK"
       ],
-      "as_of": "2026-07-19T01:57:45Z"
+      "as_of": "2026-07-19T02:19:11Z"
     },
-    "as_of": "2026-07-19T01:57:45Z"
+    "as_of": "2026-07-19T02:19:11Z"
   },
   "tripwires": {
     "TW1_CH1_CAPITAL_REVERSAL": {
@@ -136,5 +136,5 @@
     "active": 0,
     "total": 6
   },
-  "_collected": "2026-07-19 01:57 UTC"
+  "_collected": "2026-07-19 02:19 UTC"
 }
