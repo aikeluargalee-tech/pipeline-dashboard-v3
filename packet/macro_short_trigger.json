@@ -1,16 +1,16 @@
 {
-  "packet_id": 80,
-  "captured_at": "2026-07-18T06:52:02Z",
+  "packet_id": 81,
+  "captured_at": "2026-07-19T01:54:33Z",
   "btc": {
-    "price": 63982.0,
-    "session_high": 64387.99,
-    "session_low": 62537.56,
-    "change_pct": 1.77,
-    "vwap": 63455.19609323,
-    "volume_btc": 14680.35326,
-    "volume_usd": 931544694.8312283,
+    "price": 64782.19,
+    "session_high": 64906.4,
+    "session_low": 63887.73,
+    "change_pct": 1.25,
+    "vwap": 64301.19356187,
+    "volume_btc": 8217.3401,
+    "volume_usd": 528384776.3338036,
     "break_level": 58872,
-    "gap_to_break_pct": 8.68
+    "gap_to_break_pct": 10.04
   },
   "funding_rate": {
     "value_pct": 0.0076,
@@ -19,16 +19,16 @@
     "consecutive_negative_count": 0
   },
   "taker_volume": {
-    "ratio_24h": 0.895,
-    "delta_sum_6": -737.45,
-    "delta_trend": "STRONG_SELLING",
+    "ratio_24h": 1.027,
+    "delta_sum_6": 95.94,
+    "delta_trend": "DETERIORATING",
     "deltas_6": [
-      184.4,
-      -415.05,
-      -135.36,
-      -347.64,
-      43.32,
-      -67.12
+      -66.99,
+      28.84,
+      55.64,
+      271.99,
+      -163.54,
+      -30.0
     ]
   },
   "mstr": {
@@ -43,7 +43,7 @@
       "active": true,
       "window_start": "2026-07-01",
       "window_end": "2026-07-31",
-      "days_remaining": 13,
+      "days_remaining": 12,
       "announcement_detected": false,
       "consecutive_silent_sessions": 0
     },
@@ -53,7 +53,7 @@
   "vix": {
     "value": 18.77,
     "source": "FRED",
-    "captured_at": "2026-07-18",
+    "captured_at": "2026-07-19",
     "trigger_threshold": 25.0,
     "triggered": false,
     "stale": false
@@ -61,7 +61,7 @@
   "us10y": {
     "value": 4.541,
     "source": "FRED",
-    "captured_at": "2026-07-18",
+    "captured_at": "2026-07-19",
     "trigger_threshold": 4.6,
     "triggered": false,
     "stale": false
@@ -69,9 +69,9 @@
   "usdjpy": {
     "value": 162.35,
     "source": "live",
-    "captured_at": "2026-07-18T06:52:02Z",
+    "captured_at": "2026-07-19T01:54:33Z",
     "structural_above_162": true,
-    "consecutive_packets_above_162": 3,
+    "consecutive_packets_above_162": 1,
     "spike_threshold_pct": 2.0,
     "spike_detected": false,
     "compound_triggered": false
