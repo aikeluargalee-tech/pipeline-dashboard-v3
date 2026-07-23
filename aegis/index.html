@@ -117,6 +117,9 @@
 .ag-cp-status.DANGER{background:rgba(244,63,94,.12);color:var(--ag-red)}
 .ag-cp-row{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-radius:6px;font-size:.8em;margin-bottom:3px}
 .ag-cp-row.fired{background:rgba(244,63,94,.07);color:var(--ag-red)}
+/* Combined alert — Trap + Crash both firing */
+.ag-combined-alert{padding:16px 20px;border-radius:12px;margin-bottom:18px;text-align:center;background:rgba(244,63,94,.08);border:2px solid rgba(244,63,94,.4);animation:ag-pulse 2s ease-in-out infinite}
+@keyframes ag-pulse{0%,100%{border-color:rgba(244,63,94,.4)}50%{border-color:rgba(244,63,94,.8)}}
 .ag-cp-row.clear{background:rgba(255,255,255,.015);color:var(--muted)}
 
 /* Evidence */
@@ -254,6 +257,14 @@
     </div>
   </section>
 
+  <!-- ═══════════ COMBINED ALERT BANNER ═══════════ -->
+  <div class="ag-combined-alert" id="combined-alert" hidden>
+    <div style="font-size:2em;margin-bottom:4px;">⚡</div>
+    <div style="font-size:.9em;font-weight:700;margin-bottom:2px;" id="combined-title">MULTI-SYSTEM ALERT</div>
+    <div style="font-size:.75em;opacity:.8;line-height:1.4;" id="combined-detail"></div>
+    <div style="font-size:.72em;margin-top:6px;padding:8px 12px;background:rgba(255,255,255,.05);border-radius:6px;font-weight:600;color:var(--ag-red);" id="combined-action"></div>
+  </div>
+
   <!-- ═══════════ SECTION 3: TRAP ENVIRONMENT ═══════════ -->
   <section class="ag-section" id="trap-environment">
     <h2><span class="sec-num">3</span> Trap Environment <span style="font-size:.6em;color:var(--muted);font-weight:400">— Legacy Environment Risk Index</span></h2>
@@ -263,6 +274,19 @@
     <div class="ag-env-banner CLEAR" id="env-banner">
       Legacy Environment Risk Index: <span id="env-score">—/8</span> — <span id="env-status">CLEAR</span>
       <span style="font-size:.72em;display:block;margin-top:4px;opacity:.7" id="env-direction"></span>
+    </div>
+
+    <!-- Downstream action display -->
+    <div class="ag-action-card" id="action-card" style="margin-bottom:18px;display:none;">
+      <div style="font-size:.75em;font-weight:700;color:var(--ag-cyan);margin-bottom:6px;">📋 RECOMMENDED ACTION</div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="font-size:2em;" id="action-icon">—</div>
+        <div>
+          <div style="font-weight:700;font-size:.85em;" id="action-title">—</div>
+          <div style="font-size:.72em;color:var(--muted);margin-top:2px;" id="action-desc">—</div>
+        </div>
+      </div>
+      <div style="margin-top:8px;font-size:.7em;color:var(--muted);border-top:1px solid rgba(255,255,255,.04);padding-top:6px;line-height:1.4;" id="action-context">—</div>
     </div>
 
     <div class="ag-te-grid" id="te-groups">
@@ -288,6 +312,34 @@
       </div>
     </div>
     <div class="ag-muted-note" id="te-update">Environment data: —</div>
+
+    <!-- Thresholds reference table (collapsible) -->
+    <details style="margin-bottom:14px;font-size:.72em;" id="thresholds-ref">
+      <summary style="cursor:pointer;color:var(--ag-cyan);font-weight:600;padding:6px 0;">📐 Signal Thresholds Reference</summary>
+      <div style="overflow-x:auto;margin-top:8px;">
+        <table style="width:100%;border-collapse:collapse;font-size:.9em;">
+          <thead>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.1);text-align:left;">
+              <th style="padding:6px 8px;color:var(--ag-cyan);">Signal</th>
+              <th style="padding:6px 8px;color:var(--ag-cyan);">Metric</th>
+              <th style="padding:6px 8px;color:var(--muted);">🟢 Clear</th>
+              <th style="padding:6px 8px;color:var(--muted);">🟡 Caution</th>
+              <th style="padding:6px 8px;color:var(--muted);">🔴 Trap</th>
+            </tr>
+          </thead>
+          <tbody style="color:var(--muted);">
+            <tr style="border-bottom:1px solid rgba(255,255,255,.04);"><td style="padding:5px 8px;">S1</td><td>Liq Asymmetry</td><td>&lt; 1.5:1</td><td>1.5–3:1</td><td>&gt; 3:1</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.04);"><td style="padding:5px 8px;">S2</td><td>OI–Price Δ</td><td>&lt; 5%</td><td>5–15%</td><td>&gt; 15%</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.04);"><td style="padding:5px 8px;">S3</td><td>Funding Rate</td><td>-0.01% to +0.01%</td><td>±0.01–0.05%</td><td>&gt; ±0.05%</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.04);"><td style="padding:5px 8px;">S4</td><td>Bid/Ask Absorp.</td><td>&gt; 50% bid depth</td><td>35–50%</td><td>&lt; 35% bid depth</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.04);"><td style="padding:5px 8px;">S5</td><td>Taker–CVD Split</td><td>Bias &lt; 10%</td><td>10–30% imbalance</td><td>&gt; 30% imbalance</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.04);"><td style="padding:5px 8px;">S6</td><td>Exchange Netflow</td><td>&lt; ±5k BTC/day</td><td>±5–15k BTC/day</td><td>&gt; ±15k BTC/day</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.04);"><td style="padding:5px 8px;">S7</td><td>UTXO Age Bands</td><td>&lt; 5% young UTXO</td><td>5–12%</td><td>&gt; 12% young UTXO</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.04);"><td style="padding:5px 8px;">S8</td><td>Options 25Δ Skew</td><td>-5% to +5%</td><td>±5–15%</td><td>&gt; ±15%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
 
     <!-- Structural Backdrop — Accumulation Zone -->
     <div class="ag-panel" id="accum-panel" style="margin-top:14px;background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.12);">
@@ -315,6 +367,16 @@
       <div style="font-family:'JetBrains Mono',monospace;font-size:1.3em;font-weight:800;margin-bottom:12px" id="cp-composite">0/5</div>
       <div id="cp-signals"></div>
       <div class="ag-muted-note" id="cp-update">Crash precursor: —</div>
+      <!-- Network Health (BRK Tier 3) -->
+      <div style="border-top:1px solid rgba(255,255,255,0.06);margin-top:10px;padding-top:10px;" id="cp-network" hidden>
+        <div style="font-size:.75em;font-weight:600;color:var(--ag-cyan);margin-bottom:8px;">🌐 Network Health — BRK</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.75em;">
+          <div style="background:rgba(255,255,255,.02);border-radius:4px;padding:6px 8px;"><span style="color:var(--muted);">Hashrate (EH/s)</span><span style="float:right;font-family:'JetBrains Mono',monospace;color:var(--ag-yellow);" id="nh-hashrate">—</span></div>
+          <div style="background:rgba(255,255,255,.02);border-radius:4px;padding:6px 8px;"><span style="color:var(--muted);">Drawdown from ATH</span><span style="float:right;font-family:'JetBrains Mono',monospace;color:var(--ag-yellow);" id="nh-drawdown">—</span></div>
+          <div style="background:rgba(255,255,255,.02);border-radius:4px;padding:6px 8px;"><span style="color:var(--muted);">Fee Rate (sat/vB)</span><span style="float:right;font-family:'JetBrains Mono',monospace;color:var(--ag-green);" id="nh-feerate">—</span></div>
+          <div style="background:rgba(255,255,255,.02);border-radius:4px;padding:6px 8px;"><span style="color:var(--muted);">Difficulty (T)</span><span style="float:right;font-family:'JetBrains Mono',monospace;color:var(--muted);" id="nh-difficulty">—</span></div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -501,6 +563,12 @@ function renderTrapEnv(data){
   renderGroup('options',groups.options);
 
   document.getElementById('te-update').textContent='Environment data: '+(data._collected||'—');
+  // Downstream action
+  var ac=document.getElementById('action-card');
+  var actions={TRAP_ACTIVE:{icon:'🛑',title:'DEFENSIVE POSTURE',desc:'Legacy environment risk >= 6/8 — aggressive selling likely.',context:'Reduce long exposure. Consider hedging with protective puts or moving to stablecoins. Wait for composite to drop below 3/8 before re-adding risk.'},CAUTION:{icon:'⚠️',title:'REDUCE SIZE — BE SELECTIVE',desc:'Elevated risk (3-5/8). Not a trap call yet — but environment is deteriorating.',context:'Tighten stops to break-even on existing positions. Use smaller position sizes for new entries. Prefer high-timeframe confirmation.'},CLEAR:{icon:'✅',title:'PROCEED NORMALLY',desc:'Risk composite < 3/8. No systemic trap signals detected.',context:'Standard trading rules apply. Long/short decisions should be driven by Level 2 (AEGIS Verdict) and Level 3 (Breakout/Trap detection), not environmental fear.'}};
+  var a=actions[status];
+  if(a&&ac){ac.style.display='';ac.style.background=status==='TRAP_ACTIVE'?'rgba(244,63,94,.06)':status==='CAUTION'?'rgba(245,158,11,.04)':'rgba(16,185,129,.04)';ac.style.border='1px solid '+(status==='TRAP_ACTIVE'?'rgba(244,63,94,.25)':status==='CAUTION'?'rgba(245,158,11,.2)':'rgba(16,185,129,.2)');document.getElementById('action-icon').textContent=a.icon;document.getElementById('action-title').textContent=a.title;document.getElementById('action-desc').textContent=a.desc;document.getElementById('action-context').textContent=a.context}
+  else if(ac){ac.style.display='none'}
 }
 
 // ─── SECTION 4: Crash Precursor ───
@@ -516,6 +584,16 @@ function renderCrashPrecursor(d){
   var list=document.getElementById('cp-signals');
   list.innerHTML=Object.entries(CP_LABELS).map(function(e){var v=signals[e[0]]||0,fired=v>0;return'<div class="ag-cp-row '+(fired?'fired':'clear')+'"><span>'+e[1]+'</span><span>'+(fired?'● ACTIVE':'○ clear')+'</span></div>'}).join('');
   document.getElementById('cp-update').textContent='Crash precursor: '+(d._collected||d.timestamp||'—');
+  // Network Health (BRK Tier 3)
+  var nh=d.network_health,nhPanel=document.getElementById('cp-network');
+  if(nh&&nhPanel){nhPanel.hidden=false;
+    var hr=nh.hash_rate_ehs;document.getElementById('nh-hashrate').textContent=hr!=null?(hr/1e18).toFixed(2)+' EH/s':'—';
+    var dd=nh.hash_rate_drawdown_pct,ddEl=document.getElementById('nh-drawdown');
+    ddEl.textContent=dd!=null?dd.toFixed(1)+'%':'—';
+    ddEl.style.color=dd!=null&&dd<-20?'var(--ag-red)':dd!=null&&dd<-10?'var(--ag-yellow)':'var(--ag-green)';
+    document.getElementById('nh-feerate').textContent=nh.fee_rate_sat_vb!=null?nh.fee_rate_sat_vb.toFixed(3)+' sat/vB':'—';
+    var diff=nh.difficulty;document.getElementById('nh-difficulty').textContent=diff!=null?(diff/1e12).toFixed(1)+' T':'—';
+  }else if(nhPanel){nhPanel.hidden=true}
 }
 
 // ─── Structural Backdrop — Accumulation Zone ───
@@ -560,12 +638,29 @@ function renderAccumulation(cycle){
 }
 
 // ─── Fetch all ───
+var _lastTrap=null,_lastCrash=null;
+function renderCombinedAlert(){
+  var t=_lastTrap,c=_lastCrash,el=document.getElementById('combined-alert');
+  if(!t||!c||el===undefined){return}
+  var trapFiring=t.score!==undefined&&t.risk==='TRAP_ACTIVE';
+  var crashFiring=c.composite!==undefined&&c.composite>=3&&(c.status==='ELEVATED'||c.status==='DANGER');
+  if(trapFiring&&crashFiring){
+    el.hidden=false;
+    document.getElementById('combined-title').textContent='⚡ AGGRESSIVE SELLING + SYSTEMIC CRASH RISK ⚡';
+    document.getElementById('combined-detail').textContent='Trap: '+t.score+'/'+(t.max_score||8)+' — Crash: '+c.composite+'/5 ('+c.status+') — BOTH SYSTEMS FLASHING RED';
+    document.getElementById('combined-action').textContent='⛔ DO NOT LONG. Consider shorts or full exit. Both trap conditions AND systemic breakdown risk are elevated simultaneously.';
+  }else{el.hidden=true}
+}
 function fetchStatic(){
   Promise.all([
     fetch(TM_URL).then(function(r){return r.json()}).catch(function(){return null}),
     fetch(CRASH_URL).then(function(r){return r.json()}).catch(function(){return null}),
     fetch(CYCLE_URL).then(function(r){return r.json()}).catch(function(){return null})
-  ]).then(function(r){renderTrapEnv(r[0]);renderCrashPrecursor(r[1]);renderAccumulation(r[2])})
+  ]).then(function(r){
+    _lastTrap=r[0];_lastCrash=r[1];
+    renderTrapEnv(r[0]);renderCrashPrecursor(r[1]);renderAccumulation(r[2]);
+    renderCombinedAlert()
+  })
 }
 
 // ─── Start ───
