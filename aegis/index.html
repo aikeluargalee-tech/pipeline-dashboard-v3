@@ -288,6 +288,18 @@
       </div>
     </div>
     <div class="ag-muted-note" id="te-update">Environment data: —</div>
+
+    <!-- Structural Backdrop — Accumulation Zone -->
+    <div class="ag-panel" id="accum-panel" style="margin-top:14px;background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.12);">
+      <h3 style="color:var(--ag-green);">📊 Structural Backdrop — Accumulation Zone</h3>
+      <div class="ag-dl">
+        <div><dt>MVRV Z-Score</dt><dd id="accum-mvrv" style="color:var(--ag-green);">—</dd><small style="font-size:.68em;color:var(--muted)" id="accum-mvrv-label">—</small></div>
+        <div><dt>SOPR</dt><dd id="accum-sopr" style="color:var(--ag-yellow);">—</dd><small style="font-size:.68em;color:var(--muted)" id="accum-sopr-label">—</small></div>
+        <div><dt>NUPL</dt><dd id="accum-nupl" style="color:var(--ag-yellow);">—</dd><small style="font-size:.68em;color:var(--muted)" id="accum-nupl-label">—</small></div>
+        <div><dt>LTH-SOPR</dt><dd id="accum-lth-sopr" style="color:var(--ag-green);">—</dd><small style="font-size:.68em;color:var(--muted)" id="accum-lth-sopr-label">—</small></div>
+      </div>
+      <div style="margin-top:12px;font-size:.78em;color:var(--muted);line-height:1.45;" id="accum-note">—</div>
+    </div>
   </section>
 
   <!-- ═══════════ SECTION 4: CRASH PRECURSOR ═══════════ -->
@@ -338,6 +350,7 @@ var API_BASE=(function(){var p=new URLSearchParams(window.location.search);if(p.
 var WS_URL=API_BASE.replace(/^http/,'ws')+'/ws/live';
 var TM_URL='../data/trap_monitor.json';
 var CRASH_URL='../data/crash_precursor.json';
+var CYCLE_URL='../data/cycle.json';
 var AEGIS_ONLINE=false;
 
 // ─── Formatting ───
@@ -505,12 +518,54 @@ function renderCrashPrecursor(d){
   document.getElementById('cp-update').textContent='Crash precursor: '+(d._collected||d.timestamp||'—');
 }
 
+// ─── Structural Backdrop — Accumulation Zone ───
+function renderAccumulation(cycle){
+  if(!cycle)return;
+  var mvrv=cycle.mvrv_z,sopr=cycle.sopr,nupl=cycle.nupl,lth=cycle.lth_sopr_24h,sp=cycle.supply_in_profit_share;
+  function set(id,val,color,label){
+    var el=document.getElementById(id);if(el&&val!=null){el.textContent=typeof val==='number'?val.toFixed(4):val;el.style.color=color}
+    var lb=document.getElementById(id+'-label');if(lb&&label)lb.textContent=label
+  }
+  if(mvrv!=null){
+    if(mvrv<0)set('accum-mvrv',mvrv,'var(--ag-green)','below zero — historic accumulation');
+    else if(mvrv<1)set('accum-mvrv',mvrv,'var(--ag-green)','below 1.0 — undervalued zone');
+    else if(mvrv>3)set('accum-mvrv',mvrv,'var(--ag-red)','above 3.0 — cycle top zone');
+    else set('accum-mvrv',mvrv,'var(--ag-yellow)','mid-cycle — fair value')
+  }
+  if(sopr!=null){
+    if(sopr<0.995)set('accum-sopr',sopr,'var(--ag-green)','capitulation territory');
+    else if(sopr<1.0)set('accum-sopr',sopr,'var(--ag-yellow)','break-even — nearing capitulation');
+    else if(sopr<1.01)set('accum-sopr',sopr,'var(--ag-yellow)','slight profit');
+    else set('accum-sopr',sopr,'var(--ag-green)','healthy profit-taking')
+  }
+  if(nupl!=null){
+    if(nupl<0)set('accum-nupl',nupl,'var(--ag-green)','capitulation (red)');
+    else if(nupl<0.25)set('accum-nupl',nupl,'var(--ag-yellow)','hope/fear — early cycle');
+    else if(nupl<0.5)set('accum-nupl',nupl,'var(--ag-cyan)','optimism — mid cycle');
+    else if(nupl<0.75)set('accum-nupl',nupl,'var(--ag-orange)','belief — late cycle');
+    else set('accum-nupl',nupl,'var(--ag-red)','euphoria — cycle top')
+  }
+  if(lth!=null){
+    if(lth<0.9)set('accum-lth-sopr',lth,'var(--ag-green)','LTH selling at loss — accumulation signal');
+    else if(lth<1.0)set('accum-lth-sopr',lth,'var(--ag-yellow)','LTH near break-even');
+    else set('accum-lth-sopr',lth,'var(--ag-green)','LTH in profit — distribution phase')
+  }
+  // Summary note
+  var note='';
+  if(mvrv!=null&&mvrv<1&&lth!=null&&lth<0.9)note='🟢 Accumulation zone confirmed. MVRV-Z near cycle floor + LTH selling at loss. This is not a short signal — structural backdrop favors treating dips as high-conviction add zones, not breakdowns. Red spikes mark capitulation; they do not mark the exact tick bottom.';
+  else if(mvrv!=null&&mvrv<1)note='🟢 MVRV-Z below 1.0 — undervalued territory. Structural backdrop neutral-to-bullish for accumulation.';
+  else if(nupl!=null&&nupl>0.7)note='🔴 NUPL in belief/euphoria zone — distribution phase. Caution on new longs.';
+  else note='🟡 Mixed signals — no strong accumulation or distribution signal.';
+  var noteEl=document.getElementById('accum-note');if(noteEl)noteEl.textContent=note
+}
+
 // ─── Fetch all ───
 function fetchStatic(){
   Promise.all([
     fetch(TM_URL).then(function(r){return r.json()}).catch(function(){return null}),
-    fetch(CRASH_URL).then(function(r){return r.json()}).catch(function(){return null})
-  ]).then(function(r){renderTrapEnv(r[0]);renderCrashPrecursor(r[1])})
+    fetch(CRASH_URL).then(function(r){return r.json()}).catch(function(){return null}),
+    fetch(CYCLE_URL).then(function(r){return r.json()}).catch(function(){return null})
+  ]).then(function(r){renderTrapEnv(r[0]);renderCrashPrecursor(r[1]);renderAccumulation(r[2])})
 }
 
 // ─── Start ───
