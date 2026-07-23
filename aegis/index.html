@@ -6,13 +6,13 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>BTC AEGIS — Evidence-Gated Trap Avoidance | Pipeline Dashboard</title>
-<meta name="description" content="BTC AEGIS Control Centre: real-time evidence-gated Bitcoin breakout analysis. Gate 0 data validation, trap probability scoring, level interaction tracking, and catalyst monitoring. Read-only decision support.">
+<title>BTC AEGIS — Trap Avoidance Control Centre | Pipeline Dashboard</title>
+<meta name="description" content="BTC AEGIS Control Centre: evidence-gated Bitcoin trap avoidance. Breakout validation, trap environment monitoring, crash precursor detection, and auditable evidence ledger — read-only decision support.">
 <link rel="canonical" href="https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/aegis/">
 
-<meta property="og:title" content="BTC AEGIS — Evidence-Gated BTC Trap Avoidance">
+<meta property="og:title" content="BTC AEGIS — Trap Avoidance Control Centre">
 <meta property="og:type" content="website">
-<meta property="og:description" content="Real-time Bitcoin breakout verification engine. Gate 0 data validation, trap probability scoring, and evidence-ledger tracking.">
+<meta property="og:description" content="Evidence-gated Bitcoin trap avoidance. Breakout validation, trap environment, crash precursor, evidence ledger.">
 <meta property="og:site_name" content="BTC Pipeline Dashboard">
 <meta property="og:url" content="https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/aegis/">
 
@@ -34,122 +34,295 @@
 <meta property="og:image" content="https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/assets/social-card.png">
 
 <style>
-:root { --aegis-green:#10b981;--aegis-red:#f43f5e;--aegis-yellow:#f59e0b;--aegis-orange:#f97316;--aegis-cyan:#22d3ee; }
-.aegis-hero{text-align:center;padding:48px 24px 32px;border-bottom:1px solid var(--border);margin-bottom:24px}
-.aegis-hero .eyebrow{font-size:.72em;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin-bottom:8px;font-weight:600}
-.aegis-hero h1{font-size:2.8em;font-weight:900;background:linear-gradient(135deg,var(--aegis-cyan),var(--aegis-green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.03em}
-.aegis-hero .subtitle{font-size:1.05em;color:var(--muted);margin-top:4px;font-weight:500}
-.conn-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:.72em;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-top:12px}
-.conn-badge.live{background:rgba(16,185,129,.15);color:var(--aegis-green);border:1px solid rgba(16,185,129,.3)}
-.conn-badge.connecting{background:rgba(245,158,11,.15);color:var(--aegis-yellow);border:1px solid rgba(245,158,11,.3)}
-.conn-badge.error{background:rgba(244,63,94,.15);color:var(--aegis-red);border:1px solid rgba(244,63,94,.3)}
-.conn-badge.degraded{background:rgba(249,115,22,.15);color:var(--aegis-orange);border:1px solid rgba(249,115,22,.3)}
-.aegis-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:24px}
-.aegis-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
-.aegis-card .card-label{font-size:.7em;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px;font-weight:600}
-.aegis-card .card-value{font-family:'JetBrains Mono',monospace;font-size:1.6em;font-weight:700;letter-spacing:-.02em}
-.aegis-card .card-sub{font-size:.78em;color:var(--muted);margin-top:4px}
-.aegis-card.danger{border-color:rgba(244,63,94,.4);background:rgba(244,63,94,.06)}.aegis-card.danger .card-value{color:var(--aegis-red)}
-.aegis-card.good{border-color:rgba(16,185,129,.4);background:rgba(16,185,129,.06)}.aegis-card.good .card-value{color:var(--aegis-green)}
-.aegis-card.warn{border-color:rgba(245,158,11,.4);background:rgba(245,158,11,.06)}.aegis-card.warn .card-value{color:var(--aegis-yellow)}
-.aegis-panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
-.aegis-panel h2{font-size:1.05em;font-weight:700;margin-bottom:14px;letter-spacing:-.01em}
-.aegis-panel .panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.state-badge{padding:3px 12px;border-radius:12px;font-size:.7em;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
-.state-badge.CROSSED,.state-badge.AWAITING_CONFIRMATION{background:rgba(245,158,11,.15);color:var(--aegis-yellow)}
-.state-badge.ACCEPTED{background:rgba(16,185,129,.15);color:var(--aegis-green)}
-.state-badge.REJECTED{background:rgba(244,63,94,.15);color:var(--aegis-red)}
-.state-badge.EXPIRED{background:rgba(136,136,147,.15);color:var(--muted)}
-.aegis-dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.aegis-dl dt{font-size:.72em;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:2px;font-weight:600}
-.aegis-dl dd{font-family:'JetBrains Mono',monospace;font-size:.95em;font-weight:500}
-.aegis-two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
-.evidence-row{display:grid;grid-template-columns:110px 1fr 70px;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:center;font-size:.85em}
-.evidence-row:last-child{border-bottom:none}
-.ev-row .ev-group{font-weight:700;text-transform:uppercase;font-size:.72em;letter-spacing:.06em;color:var(--aegis-cyan)}
-.ev-row .ev-effect{font-family:'JetBrains Mono',monospace;text-align:right;font-weight:600}
-.ev-row .ev-effect.positive{color:var(--aegis-red)}.ev-row .ev-effect.negative{color:var(--aegis-green)}
-.levels-list{display:flex;flex-direction:column;gap:8px}
-.level-row{display:grid;grid-template-columns:140px 1fr 90px;gap:12px;padding:10px 14px;background:rgba(255,255,255,.02);border-radius:8px;border:1px solid var(--border);align-items:center;font-size:.88em}
-.level-row .lv-price{font-family:'JetBrains Mono',monospace;font-weight:700}
-.level-row .lv-kind{font-size:.72em;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;text-align:right}
-.empty-state{color:var(--muted);font-style:italic;padding:20px 0;text-align:center;font-size:.88em}
-.aegis-disclaimer{text-align:center;padding:24px;color:var(--muted);font-size:.8em;border-top:1px solid var(--border);margin-top:32px}
-@media(max-width:768px){.aegis-hero h1{font-size:2em}.aegis-grid{grid-template-columns:1fr}.aegis-two-col{grid-template-columns:1fr}.aegis-dl{grid-template-columns:1fr 1fr}}
+:root{--ag-green:#10b981;--ag-red:#f43f5e;--ag-yellow:#f59e0b;--ag-orange:#f97316;--ag-cyan:#22d3ee;--ag-purple:#8b5cf6}
+.ag-hero{text-align:center;padding:40px 24px 28px;border-bottom:1px solid var(--border);margin-bottom:20px}
+.ag-hero .eyebrow{font-size:.7em;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);margin-bottom:6px;font-weight:600}
+.ag-hero h1{font-size:2.6em;font-weight:900;background:linear-gradient(135deg,var(--ag-cyan),var(--ag-green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.03em}
+.ag-hero .subtitle{font-size:1em;color:var(--muted);margin-top:4px;font-weight:500}
+
+/* Connection badge */
+.ag-conn{display:inline-block;padding:3px 12px;border-radius:16px;font-size:.68em;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-top:10px}
+.ag-conn.live{background:rgba(16,185,129,.15);color:var(--ag-green);border:1px solid rgba(16,185,129,.3)}
+.ag-conn.connecting{background:rgba(245,158,11,.12);color:var(--ag-yellow);border:1px solid rgba(245,158,11,.25)}
+.ag-conn.error{background:rgba(244,63,94,.12);color:var(--ag-red);border:1px solid rgba(244,63,94,.25)}
+.ag-conn.offline{background:rgba(136,136,147,.1);color:var(--muted);border:1px solid rgba(136,136,147,.2)}
+
+/* Card grid */
+.ag-grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:20px}
+.ag-grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:20px}
+.ag-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+.ag-card .cl{font-size:.66em;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:6px;font-weight:600}
+.ag-card .cv{font-family:'JetBrains Mono',monospace;font-size:1.45em;font-weight:700;letter-spacing:-.02em}
+.ag-card .cs{font-size:.74em;color:var(--muted);margin-top:3px}
+.ag-card.danger{border-color:rgba(244,63,94,.4);background:rgba(244,63,94,.05)}.ag-card.danger .cv{color:var(--ag-red)}
+.ag-card.good{border-color:rgba(16,185,129,.4);background:rgba(16,185,129,.05)}.ag-card.good .cv{color:var(--ag-green)}
+.ag-card.warn{border-color:rgba(245,158,11,.4);background:rgba(245,158,11,.05)}.ag-card.warn .cv{color:var(--ag-yellow)}
+
+/* Section panels */
+.ag-section{margin-bottom:28px;scroll-margin-top:20px}
+.ag-section h2{font-size:1.1em;font-weight:700;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.ag-section h2 .sec-num{font-family:'JetBrains Mono',monospace;font-size:.7em;color:var(--ag-cyan);background:rgba(34,211,238,.1);padding:2px 8px;border-radius:4px;font-weight:600}
+.ag-panel{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+.ag-panel h3{font-size:.92em;font-weight:700;margin-bottom:12px;color:var(--text)}
+.ag-panel .ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+
+/* State badge */
+.ag-state{display:inline-block;padding:2px 10px;border-radius:10px;font-size:.65em;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.ag-state.CROSSED,.ag-state.AWAITING_CONFIRMATION,.ag-state.UNCONFIRMED{background:rgba(245,158,11,.15);color:var(--ag-yellow)}
+.ag-state.ACCEPTED{background:rgba(16,185,129,.15);color:var(--ag-green)}
+.ag-state.REJECTED{background:rgba(244,63,94,.15);color:var(--ag-red)}
+.ag-state.EXPIRED{background:rgba(136,136,147,.12);color:var(--muted)}
+.ag-state.IDLE{background:rgba(136,136,147,.08);color:var(--muted)}
+
+/* Data list */
+.ag-dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.ag-dl dt{font-size:.68em;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:2px;font-weight:600}
+.ag-dl dd{font-family:'JetBrains Mono',monospace;font-size:.9em;font-weight:500}
+
+/* Why section — evidence summary */
+.ag-why{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.ag-why-item{background:rgba(255,255,255,.02);border-radius:8px;padding:10px 12px;border:1px solid var(--border)}
+.ag-why-item .wn{font-size:.7em;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:4px;font-weight:600}
+.ag-why-item .wv{font-family:'JetBrains Mono',monospace;font-size:.85em;font-weight:600}
+.ag-why-item .wv.risk{color:var(--ag-red)}.ag-why-item .wv.ok{color:var(--ag-green)}.ag-why-item .wv.mid{color:var(--ag-yellow)}
+
+/* Trap Environment signal cards */
+.ag-te-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.ag-te-group{border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.ag-te-group-title{font-size:.75em;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:8px 14px}
+.ag-te-group-title.leverage{background:rgba(244,63,94,.08);color:var(--ag-red);border-bottom:1px solid rgba(244,63,94,.15)}
+.ag-te-group-title.orderflow{background:rgba(34,211,238,.08);color:var(--ag-cyan);border-bottom:1px solid rgba(34,211,238,.15)}
+.ag-te-group-title.onchain{background:rgba(139,92,246,.08);color:var(--ag-purple);border-bottom:1px solid rgba(139,92,246,.15)}
+.ag-te-group-title.options{background:rgba(245,158,11,.08);color:var(--ag-yellow);border-bottom:1px solid rgba(245,158,11,.15)}
+.ag-te-signal{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);display:flex;justify-content:space-between;align-items:center;font-size:.82em}
+.ag-te-signal:last-child{border-bottom:none}
+.ag-te-val{font-family:'JetBrains Mono',monospace;font-size:.82em;font-weight:600}
+.ag-te-verdict{font-size:.68em;font-weight:700;text-transform:uppercase;padding:1px 8px;border-radius:8px;letter-spacing:.04em}
+.ag-te-verdict.TRAP{background:rgba(244,63,94,.12);color:var(--ag-red)}
+.ag-te-verdict.CLEAR{background:rgba(16,185,129,.12);color:var(--ag-green)}
+.ag-te-verdict.NEUTRAL{background:rgba(255,255,255,.04);color:var(--muted)}
+.ag-te-verdict.PENDING{background:rgba(99,102,241,.1);color:#818cf8}
+
+/* Legacy environment risk index banner */
+.ag-env-banner{padding:12px 18px;border-radius:10px;margin-bottom:16px;text-align:center;font-weight:600;font-size:.85em}
+.ag-env-banner.TRAP_ACTIVE{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.25);color:var(--ag-red)}
+.ag-env-banner.CAUTION{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:var(--ag-yellow)}
+.ag-env-banner.CLEAR{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);color:var(--ag-green)}
+
+/* Crash Precursor */
+.ag-cp-status{font-size:.78em;font-weight:700;text-transform:uppercase;padding:3px 14px;border-radius:12px;letter-spacing:.05em}
+.ag-cp-status.NORMAL{background:rgba(16,185,129,.12);color:var(--ag-green)}
+.ag-cp-status.CAUTION{background:rgba(245,158,11,.12);color:var(--ag-yellow)}
+.ag-cp-status.ELEVATED{background:rgba(249,115,22,.12);color:var(--ag-orange)}
+.ag-cp-status.DANGER{background:rgba(244,63,94,.12);color:var(--ag-red)}
+.ag-cp-row{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-radius:6px;font-size:.8em;margin-bottom:3px}
+.ag-cp-row.fired{background:rgba(244,63,94,.07);color:var(--ag-red)}
+.ag-cp-row.clear{background:rgba(255,255,255,.015);color:var(--muted)}
+
+/* Evidence */
+.ag-ev-row{display:grid;grid-template-columns:90px 1fr 65px;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);align-items:center;font-size:.82em}
+.ag-ev-row:last-child{border-bottom:none}
+.ag-ev-row .eg{font-weight:700;text-transform:uppercase;font-size:.68em;letter-spacing:.05em;color:var(--ag-cyan)}
+.ag-ev-row .ef{font-family:'JetBrains Mono',monospace;text-align:right;font-weight:600}
+.ag-ev-row .ef.pos{color:var(--ag-red)}.ag-ev-row .ef.neg{color:var(--ag-green)}
+
+/* Levels */
+.ag-lvl-row{display:grid;grid-template-columns:130px 1fr 80px;gap:10px;padding:8px 12px;background:rgba(255,255,255,.015);border-radius:6px;border:1px solid var(--border);align-items:center;font-size:.85em;margin-bottom:6px}
+.ag-lvl-row .lp{font-family:'JetBrains Mono',monospace;font-weight:700}
+.ag-lvl-row .lk{font-size:.68em;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;text-align:right}
+
+/* Disclaimer */
+.ag-disc{text-align:center;padding:22px;color:var(--muted);font-size:.78em;border-top:1px solid var(--border);margin-top:30px}
+.ag-verdict-highlight{font-family:'JetBrains Mono',monospace;font-size:1.7em;font-weight:800;letter-spacing:-.02em;line-height:1.2}
+.ag-verdict-highlight.trap{color:var(--ag-red)}.ag-verdict-highlight.accept{color:var(--ag-green)}.ag-verdict-highlight.review{color:var(--ag-yellow)}.ag-verdict-highlight.neutral{color:var(--muted)}
+
+/* Empty / placeholder */
+.ag-empty{color:var(--muted);font-style:italic;padding:16px 0;text-align:center;font-size:.85em}
+.ag-muted-note{font-size:.74em;color:var(--muted);margin-top:8px;font-style:italic}
+
+/* Section nav */
+.ag-nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:0 0 18px;border-bottom:1px solid var(--border);margin-bottom:24px}
+.ag-nav a{font-size:.76em;color:var(--muted);text-decoration:none;padding:5px 14px;border-radius:16px;border:1px solid var(--border);transition:all .2s;font-weight:500}
+.ag-nav a:hover,.ag-nav a:target{color:var(--ag-cyan);border-color:rgba(34,211,238,.3);background:rgba(34,211,238,.06)}
+
+@media(max-width:768px){.ag-hero h1{font-size:1.9em}.ag-te-grid{grid-template-columns:1fr}.ag-grid2,.ag-grid4{grid-template-columns:1fr}.ag-dl{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 <div id="nav-placeholder"></div>
 
 <main id="main">
-  <section class="aegis-hero">
-    <p class="eyebrow">Auditable Evidence-Gated Intelligence System</p>
+  <!-- Hero -->
+  <section class="ag-hero">
+    <p class="eyebrow">Trap Avoidance Control Centre</p>
     <h1>BTC AEGIS</h1>
-    <p class="subtitle">Avoid the trap. Verify the move.</p>
-    <div id="conn-badge" class="conn-badge connecting">CONNECTING</div>
+    <p class="subtitle">One system. One verdict. Evidence-gated.</p>
+    <div id="ag-conn" class="ag-conn connecting">CONNECTING</div>
   </section>
 
-  <section class="aegis-grid" id="hero-cards">
-    <article class="aegis-card" id="card-health">
-      <div class="card-label">Gate 0 · Data Health</div>
-      <div class="card-value" id="val-health">—</div>
-      <div class="card-sub" id="sub-health">Awaiting data…</div>
-    </article>
-    <article class="aegis-card" id="card-price">
-      <div class="card-label">BTC Price</div>
-      <div class="card-value" id="val-price">—</div>
-      <div class="card-sub" id="sub-price">—</div>
-    </article>
-    <article class="aegis-card" id="card-verdict">
-      <div class="card-label">Current Verdict</div>
-      <div class="card-value" id="val-verdict">—</div>
-      <div class="card-sub" id="sub-risk">No active event</div>
-    </article>
-    <article class="aegis-card" id="card-trap">
-      <div class="card-label">Trap Probability</div>
-      <div class="card-value" id="val-trap">—</div>
-      <div class="card-sub" id="sub-confidence">—</div>
-    </article>
-  </section>
+  <!-- Section quick-nav -->
+  <nav class="ag-nav">
+    <a href="#overview">Overview</a>
+    <a href="#breakout">Breakout Validator</a>
+    <a href="#trap-environment">Trap Environment</a>
+    <a href="#crash-precursor">Crash Precursor</a>
+    <a href="#evidence">Evidence Ledger</a>
+    <a href="#levels">Approved Levels</a>
+  </nav>
 
-  <div class="aegis-two-col">
-    <section class="aegis-panel" id="panel-level">
-      <div class="panel-header">
-        <h2>Level Interaction</h2>
-        <span class="state-badge" id="event-state">IDLE</span>
-      </div>
-      <dl class="aegis-dl">
-        <div><dt>Nearest Level</dt><dd id="lv-nearest">—</dd></div>
-        <div><dt>Distance</dt><dd id="lv-distance">—</dd></div>
-        <div><dt>Direction</dt><dd id="lv-direction">—</dd></div>
-        <div><dt>Bars Observed</dt><dd id="lv-bars">—</dd></div>
-      </dl>
-    </section>
-    <section class="aegis-panel" id="panel-market">
-      <h2>Market Evidence</h2>
-      <dl class="aegis-dl">
-        <div><dt>Relative Volume</dt><dd id="mv-volume">—</dd></div>
-        <div><dt>Taker Buy/Sell</dt><dd id="mv-taker">—</dd></div>
-        <div><dt>Funding Rate</dt><dd id="mv-funding">—</dd></div>
-        <div><dt>OI Δ (5m)</dt><dd id="mv-oi">—</dd></div>
-      </dl>
-    </section>
-  </div>
+  <!-- ═══════════ SECTION 1: OVERVIEW ═══════════ -->
+  <section class="ag-section" id="overview">
+    <h2><span class="sec-num">1</span> Overview</h2>
 
-  <section class="aegis-panel" id="panel-evidence">
-    <div class="panel-header">
-      <h2>Evidence Ledger</h2>
-      <span id="ev-explanation" style="font-size:.78em;color:var(--muted)">—</span>
+    <div class="ag-grid4">
+      <article class="ag-card" id="card-health">
+        <div class="cl">Gate 0 · Data Health</div>
+        <div class="cv" id="ov-health">—</div>
+        <div class="cs" id="ov-health-sub">Awaiting data…</div>
+      </article>
+      <article class="ag-card" id="card-price">
+        <div class="cl">BTC Price</div>
+        <div class="cv" id="ov-price">—</div>
+        <div class="cs" id="ov-price-sub">—</div>
+      </article>
+      <article class="ag-card" id="card-level">
+        <div class="cl">Active Level</div>
+        <div class="cv" id="ov-level">—</div>
+        <div class="cs" id="ov-level-sub">—</div>
+      </article>
+      <article class="ag-card" id="card-event">
+        <div class="cl">Event State</div>
+        <div class="cv" id="ov-event-state">IDLE</div>
+        <div class="cs" id="ov-event-sub">—</div>
+      </article>
     </div>
-    <div id="evidence-list"><p class="empty-state">Evidence appears when a configured level is crossed.</p></div>
+
+    <!-- AEGIS Verdict card -->
+    <div class="ag-panel" id="verdict-panel" style="text-align:center">
+      <div style="font-size:.7em;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px">AEGIS Verdict</div>
+      <div class="ag-verdict-highlight neutral" id="ov-verdict">NO ACTIVE VERDICT</div>
+      <div style="display:flex;justify-content:center;gap:24px;margin-top:12px;flex-wrap:wrap">
+        <div><span style="color:var(--muted);font-size:.72em">Trap Probability</span><br><span style="font-family:'JetBrains Mono',monospace;font-size:1.2em;font-weight:700" id="ov-trap">—</span></div>
+        <div><span style="color:var(--muted);font-size:.72em">Confidence</span><br><span style="font-family:'JetBrains Mono',monospace;font-size:1.1em;font-weight:600" id="ov-confidence">—</span></div>
+      </div>
+      <div style="margin-top:14px;padding:10px 18px;border-radius:8px;font-weight:600;font-size:.88em" id="ov-risk">No active event</div>
+    </div>
+
+    <div class="ag-muted-note" id="ov-update">Last update: —</div>
   </section>
 
-  <section class="aegis-panel" id="panel-levels">
-    <h2>Approved Levels</h2>
-    <div class="levels-list" id="levels-list"><p class="empty-state">No levels configured. Add current approved levels through the authenticated API.</p></div>
+  <!-- ═══════════ SECTION 2: BREAKOUT VALIDATOR ═══════════ -->
+  <section class="ag-section" id="breakout">
+    <h2><span class="sec-num">2</span> Breakout Validator</h2>
+    <p style="font-size:.82em;color:var(--muted);margin-bottom:14px">Tracks price interaction with configured levels — validation of a specific move, not general market conditions.</p>
+
+    <div class="ag-grid2">
+      <div class="ag-panel">
+        <div class="ph"><h3>Level Interaction</h3><span class="ag-state" id="bv-state">IDLE</span></div>
+        <dl class="ag-dl">
+          <div><dt>Nearest Level</dt><dd id="bv-nearest">—</dd></div>
+          <div><dt>Distance</dt><dd id="bv-distance">—</dd></div>
+          <div><dt>Direction</dt><dd id="bv-direction">—</dd></div>
+          <div><dt>Bars Observed</dt><dd id="bv-bars">—</dd></div>
+          <div><dt>Close Beyond Level</dt><dd id="bv-close-beyond">—</dd></div>
+          <div><dt>Retest Result</dt><dd id="bv-retest">—</dd></div>
+        </dl>
+      </div>
+      <div class="ag-panel">
+        <h3>Market Evidence</h3>
+        <dl class="ag-dl">
+          <div><dt>Relative Volume</dt><dd id="bv-volume">—</dd></div>
+          <div><dt>Taker Buy/Sell</dt><dd id="bv-taker">—</dd></div>
+          <div><dt>Funding Rate</dt><dd id="bv-funding">—</dd></div>
+          <div><dt>OI Δ (5m)</dt><dd id="bv-oi">—</dd></div>
+          <div><dt>ATR (14)</dt><dd id="bv-atr">—</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <!-- Why section -->
+    <div class="ag-panel">
+      <h3>Why This Verdict</h3>
+      <div class="ag-why" id="why-grid">
+        <div class="ag-why-item"><div class="wn">Price Acceptance</div><div class="wv mid" id="why-acceptance">—</div></div>
+        <div class="ag-why-item"><div class="wn">Participation</div><div class="wv mid" id="why-participation">—</div></div>
+        <div class="ag-why-item"><div class="wn">Aggression</div><div class="wv mid" id="why-aggression">—</div></div>
+        <div class="ag-why-item"><div class="wn">Leverage</div><div class="wv mid" id="why-leverage">—</div></div>
+        <div class="ag-why-item"><div class="wn">Catalyst</div><div class="wv mid" id="why-catalyst">—</div></div>
+        <div class="ag-why-item"><div class="wn">Environment Risk</div><div class="wv mid" id="why-env">—</div></div>
+      </div>
+    </div>
   </section>
 
-  <footer class="aegis-disclaimer">
+  <!-- ═══════════ SECTION 3: TRAP ENVIRONMENT ═══════════ -->
+  <section class="ag-section" id="trap-environment">
+    <h2><span class="sec-num">3</span> Trap Environment <span style="font-size:.6em;color:var(--muted);font-weight:400">— Legacy Environment Risk Index</span></h2>
+    <p style="font-size:.8em;color:var(--muted);margin-bottom:14px">General market positioning and risk context. Does <strong>not</strong> independently declare a specific breakout is a trap. These signals inform the AEGIS Verdict as environmental context.</p>
+
+    <!-- Environment risk banner -->
+    <div class="ag-env-banner CLEAR" id="env-banner">
+      Legacy Environment Risk Index: <span id="env-score">—/8</span> — <span id="env-status">CLEAR</span>
+      <span style="font-size:.72em;display:block;margin-top:4px;opacity:.7" id="env-direction"></span>
+    </div>
+
+    <div class="ag-te-grid" id="te-groups">
+      <!-- Leverage group -->
+      <div class="ag-te-group">
+        <div class="ag-te-group-title leverage">Leverage</div>
+        <div id="te-leverage"></div>
+      </div>
+      <!-- Order Flow group -->
+      <div class="ag-te-group">
+        <div class="ag-te-group-title orderflow">Order Flow</div>
+        <div id="te-orderflow"></div>
+      </div>
+      <!-- On-chain Context -->
+      <div class="ag-te-group">
+        <div class="ag-te-group-title onchain">On-Chain Context</div>
+        <div id="te-onchain"></div>
+      </div>
+      <!-- Options -->
+      <div class="ag-te-group">
+        <div class="ag-te-group-title options">Options</div>
+        <div id="te-options"></div>
+      </div>
+    </div>
+    <div class="ag-muted-note" id="te-update">Environment data: —</div>
+  </section>
+
+  <!-- ═══════════ SECTION 4: CRASH PRECURSOR ═══════════ -->
+  <section class="ag-section" id="crash-precursor">
+    <h2><span class="sec-num">4</span> Crash Precursor <span style="font-size:.6em;color:var(--muted);font-weight:400">— Systemic Breakdown Risk</span></h2>
+    <p style="font-size:.8em;color:var(--muted);margin-bottom:14px">Assesses broad market flush or systemic breakdown risk. Separate from breakout-specific trap detection. Never merged silently into the breakout verdict.</p>
+
+    <div class="ag-panel" id="cp-panel">
+      <div class="ph">
+        <h3>Crash Precursor Status</h3>
+        <span class="ag-cp-status NORMAL" id="cp-status">NORMAL</span>
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:1.3em;font-weight:800;margin-bottom:12px" id="cp-composite">0/5</div>
+      <div id="cp-signals"></div>
+      <div class="ag-muted-note" id="cp-update">Crash precursor: —</div>
+    </div>
+  </section>
+
+  <!-- ═══════════ SECTION 5: EVIDENCE LEDGER ═══════════ -->
+  <section class="ag-section" id="evidence">
+    <h2><span class="sec-num">5</span> Evidence Ledger</h2>
+    <div class="ag-panel">
+      <div id="ev-list"><p class="ag-empty">Evidence appears when a configured level is crossed and an event is active.</p></div>
+    </div>
+  </section>
+
+  <!-- ═══════════ SECTION 6: APPROVED LEVELS ═══════════ -->
+  <section class="ag-section" id="levels">
+    <h2><span class="sec-num">6</span> Approved Levels</h2>
+    <div class="ag-panel">
+      <div id="lv-list"><p class="ag-empty">No levels configured. Add current approved levels through the authenticated API.</p></div>
+    </div>
+  </section>
+
+  <footer class="ag-disc">
     Read-only decision support. Not financial advice. BTC AEGIS can reduce uncertainty; it cannot guarantee that a trap will be avoided.
   </footer>
 </main>
@@ -157,70 +330,193 @@
 <div id="footer-placeholder"></div>
 <script src="../assets/nav.js"></script>
 <script>
+// ═══════════════════════════════════════════
+// BTC AEGIS — Consolidated Control Centre
+// ═══════════════════════════════════════════
 (function(){
 var API_BASE=(function(){var p=new URLSearchParams(window.location.search);if(p.get('api'))return p.get('api');return'http://localhost:8000'})();
 var WS_URL=API_BASE.replace(/^http/,'ws')+'/ws/live';
+var TM_URL='../data/trap_monitor.json';
+var CRASH_URL='../data/crash_precursor.json';
+var AEGIS_ONLINE=false;
 
+// ─── Formatting ───
 function money(v){if(v==null)return'—';return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v)}
 function pct(v,s){if(s===undefined)s=100;if(v==null)return'—';return(v*s).toFixed(4)+'%'}
 function ago(ts){if(!ts)return'—';var s=(Date.now()-new Date(ts).getTime())/1000;if(s<60)return Math.round(s)+'s ago';if(s<3600)return Math.round(s/60)+'m ago';return Math.round(s/3600)+'h ago'}
-function toneClass(v){if(!v)return'';if(v==='LIVE')return'good';if(v.indexOf('INVALID')!==-1||v.indexOf('STALE')!==-1||v.indexOf('MISSING')!==-1||v.indexOf('TRAP')!==-1||v==='REJECTED')return'danger';if(v.indexOf('HEALTHY')!==-1||v==='ACCEPTED'||v.indexOf('ACCEPTED_BREAK')!==-1)return'good';return'warn'}
+function tc(v){if(!v)return'';if(v==='LIVE')return'good';if(v.indexOf('INVALID')!==-1||v.indexOf('STALE')!==-1||v.indexOf('MISSING')!==-1||v.indexOf('TRAP')!==-1||v==='REJECTED')return'danger';if(v.indexOf('HEALTHY')!==-1||v==='ACCEPTED'||v.indexOf('ACCEPTED_BREAK')!==-1)return'good';return'warn'}
 
-function updateUI(status){
+// ─── SECTION 1+2: AEGIS Live API ───
+function renderAegis(status){
+  AEGIS_ONLINE=true;
+  document.getElementById('ag-conn').textContent='LIVE';
+  document.getElementById('ag-conn').className='ag-conn live';
   var s=status.snapshot||{},v=status.latest_verdict||{},e=status.active_event||{},nl=status.nearest_level;
-  document.getElementById('conn-badge').textContent='LIVE';
-  document.getElementById('conn-badge').className='conn-badge live';
+
+  // Overview cards
   var dh=(s.data_health||'NO DATA').replace(/_/g,' ');
-  document.getElementById('val-health').textContent=dh;
-  document.getElementById('sub-health').textContent=(s.health_reasons||[]).join(' · ')||'All required feeds passed validation.';
-  document.getElementById('card-health').className='aegis-card '+toneClass(s.data_health);
-  document.getElementById('val-price').textContent=money(s.price);
-  document.getElementById('sub-price').textContent=s.observed_at?'Snapshot '+ago(s.observed_at):'Awaiting worker';
+  document.getElementById('ov-health').textContent=dh;
+  document.getElementById('ov-health-sub').textContent=(s.health_reasons||[]).join(' · ')||'All feeds passed.';
+  document.getElementById('card-health').className='ag-card '+tc(s.data_health);
+
+  document.getElementById('ov-price').textContent=money(s.price);
+  document.getElementById('ov-price-sub').textContent=s.observed_at?ago(s.observed_at):'—';
+
+  document.getElementById('ov-level').textContent=nl?money(nl.price):'No level';
+  document.getElementById('ov-level-sub').textContent=nl?nl.label+' ('+nl.kind+')':'—';
+
+  document.getElementById('ov-event-state').textContent=e.state||'IDLE';
+  document.getElementById('ov-event-sub').textContent=e.direction?e.direction.toUpperCase():'No active event';
+  document.getElementById('card-event').className='ag-card '+tc(e.state);
+
+  // Verdict
   var verdict=v.verdict||'NO ACTIVE VERDICT';
-  document.getElementById('val-verdict').textContent=verdict.replace(/_/g,' ');
-  document.getElementById('sub-risk').textContent=v.risk_action||'No level event is active.';
-  document.getElementById('card-verdict').className='aegis-card '+toneClass(verdict);
-  document.getElementById('val-trap').textContent=v.trap_probability!=null?Math.round(v.trap_probability*100)+'%':'—';
-  document.getElementById('sub-confidence').textContent='Confidence: '+(v.confidence||'—');
-  document.getElementById('lv-nearest').textContent=nl?money(nl.price)+' · '+nl.label:'No enabled level';
-  document.getElementById('lv-distance').textContent=nl?nl.distance_bps.toFixed(1)+' bps':'—';
-  document.getElementById('lv-direction').textContent=e.direction?e.direction.toUpperCase():'—';
-  document.getElementById('lv-bars').textContent=e.bars_observed!=null?e.bars_observed:'—';
-  var sb=document.getElementById('event-state');sb.textContent=e.state||'IDLE';sb.className='state-badge '+(e.state||'');
-  document.getElementById('mv-volume').textContent=s.volume_ratio!=null?s.volume_ratio.toFixed(2)+'×':'—';
-  document.getElementById('mv-taker').textContent=s.taker_ratio!=null?s.taker_ratio.toFixed(3):'—';
-  document.getElementById('mv-funding').textContent=pct(s.funding_rate);
-  document.getElementById('mv-oi').textContent=s.oi_delta_pct!=null?s.oi_delta_pct.toFixed(3)+'%':'—';
-  document.getElementById('ev-explanation').textContent=v.explanation||'No verdict yet';
-  var ev=v.evidence||[];ev=ev.slice().sort(function(a,b){return Math.abs(b.effect)-Math.abs(a.effect)});
-  var el=document.getElementById('evidence-list');
-  if(ev.length===0){el.innerHTML='<p class="empty-state">Evidence appears when a configured level is crossed.</p>'}
-  else{el.innerHTML=ev.map(function(i){var c=i.effect>0?'positive':'negative';return'<div class="evidence-row"><span class="ev-group">'+i.group+'</span><span>'+i.reason.replace(/_/g,' ')+'</span><span class="ev-effect '+c+'">'+(i.effect>0?'+':'')+i.effect.toFixed(2)+'</span></div>'}).join('')}
+  var vel=document.getElementById('ov-verdict');
+  vel.textContent=verdict.replace(/_/g,' ');
+  vel.className='ag-verdict-highlight '+(verdict.indexOf('TRAP')!==-1?'trap':verdict.indexOf('ACCEPTED')!==-1?'accept':verdict.indexOf('REVIEW')!==-1||verdict==='UNCONFIRMED_BREAK'?'review':'neutral');
+
+  document.getElementById('ov-trap').textContent=v.trap_probability!=null?Math.round(v.trap_probability*100)+'%':'—';
+  document.getElementById('ov-confidence').textContent=v.confidence||'—';
+
+  var riskEl=document.getElementById('ov-risk');
+  riskEl.textContent=v.risk_action||'No active event';
+  riskEl.style.background=verdict.indexOf('TRAP')!==-1?'rgba(244,63,94,.08)':verdict.indexOf('ACCEPTED')!==-1?'rgba(16,185,129,.08)':'rgba(255,255,255,.02)';
+
+  document.getElementById('ov-update').textContent='Snapshot: '+(s.observed_at?new Date(s.observed_at).toLocaleString():'—');
+
+  // Breakout Validator
+  document.getElementById('bv-nearest').textContent=nl?money(nl.price)+' · '+nl.label:'No level';
+  document.getElementById('bv-distance').textContent=nl?nl.distance_bps.toFixed(1)+' bps':'—';
+  document.getElementById('bv-direction').textContent=e.direction?e.direction.toUpperCase():'—';
+  document.getElementById('bv-bars').textContent=e.bars_observed!=null?e.bars_observed:'—';
+  document.getElementById('bv-state').textContent=e.state||'IDLE';
+  document.getElementById('bv-state').className='ag-state '+(e.state||'IDLE');
+
+  // Close beyond / retest
+  var ctx=e.context||{};
+  document.getElementById('bv-close-beyond').textContent=ctx.acceptance_count!=null?ctx.acceptance_count+' closes':'—';
+  document.getElementById('bv-retest').textContent=ctx.last_bar_at?'Bar at '+new Date(ctx.last_bar_at).toLocaleTimeString():'—';
+
+  // Market evidence
+  document.getElementById('bv-volume').textContent=s.volume_ratio!=null?s.volume_ratio.toFixed(2)+'×':'—';
+  document.getElementById('bv-taker').textContent=s.taker_ratio!=null?s.taker_ratio.toFixed(3):'—';
+  document.getElementById('bv-funding').textContent=pct(s.funding_rate);
+  document.getElementById('bv-oi').textContent=s.oi_delta_pct!=null?s.oi_delta_pct.toFixed(3)+'%':'—';
+  document.getElementById('bv-atr').textContent=s.atr!=null?'$'+s.atr.toFixed(1):'—';
+
+  // Why section
+  var ev=v.evidence||[];
+  function why(group,elId){var item=null;for(var i=0;i<ev.length;i++){if(ev[i].group===group){item=ev[i];break}}
+    var el=document.getElementById(elId);if(!item){el.textContent='Neutral';el.className='wv mid';return}
+    el.textContent=item.reason.replace(/_/g,' ');el.className='wv '+(item.effect>0.3?'risk':item.effect<-0.3?'ok':'mid')}
+  why('acceptance','why-acceptance');why('participation','why-participation');why('aggression','why-aggression');
+  why('leverage','why-leverage');why('catalyst','why-catalyst');
+
+  // Environment risk from trap-monitor data (filled by renderTrapEnv)
+  document.getElementById('why-env').textContent=window._envRisk||'—';
+  document.getElementById('why-env').className='wv '+(window._envRisk==='TRAP_ACTIVE'?'risk':window._envRisk==='CAUTION'?'mid':'ok');
+
+  // Evidence ledger
+  var evList=document.getElementById('ev-list');
+  if(ev.length===0){evList.innerHTML='<p class="ag-empty">Evidence appears when a configured level is crossed.</p>'}
+  else{evList.innerHTML=ev.sort(function(a,b){return Math.abs(b.effect)-Math.abs(a.effect)}).map(function(i){var c=i.effect>0?'pos':'neg';return'<div class="ag-ev-row"><span class="eg">'+i.group+'</span><span>'+i.reason.replace(/_/g,' ')+'</span><span class="ef '+c+'">'+(i.effect>0?'+':'')+i.effect.toFixed(2)+'</span></div>'}).join('')}
 }
 
 function updateLevels(levels){
-  var en=levels.filter(function(l){return l.enabled}),list=document.getElementById('levels-list');
-  if(en.length===0){list.innerHTML='<p class="empty-state">No levels configured. Add current approved levels through the authenticated API.</p>';return}
-  list.innerHTML=en.map(function(l){return'<div class="level-row"><span class="lv-price">'+money(l.price)+'</span><span>'+l.label+'</span><span class="lv-kind">'+l.kind+'</span></div>'}).join('')
+  var en=levels.filter(function(l){return l.enabled}),list=document.getElementById('lv-list');
+  if(en.length===0){list.innerHTML='<p class="ag-empty">No levels configured.</p>';return}
+  list.innerHTML=en.map(function(l){return'<div class="ag-lvl-row"><span class="lp">'+money(l.price)+'</span><span>'+l.label+'</span><span class="lk">'+l.kind+'</span></div>'}).join('')
 }
 
-function fetchData(){
-  fetch(API_BASE+'/api/v1/status').then(function(r){return r.json()}).then(updateUI).catch(function(){
-    document.getElementById('conn-badge').textContent='API ERROR';document.getElementById('conn-badge').className='conn-badge error'
+function fetchAegis(){
+  fetch(API_BASE+'/api/v1/status').then(function(r){return r.json()}).then(function(d){
+    renderAegis(d);
+  }).catch(function(){
+    document.getElementById('ag-conn').textContent='API OFFLINE';
+    document.getElementById('ag-conn').className='ag-conn offline';
+    AEGIS_ONLINE=false;
   });
-  fetch(API_BASE+'/api/v1/levels').then(function(r){return r.json()}).then(updateLevels).catch(function(){})
+  fetch(API_BASE+'/api/v1/levels').then(function(r){return r.json()}).then(updateLevels).catch(function(){});
 }
 
+// ─── WebSocket ───
 function connectWS(){
   var ws=new WebSocket(WS_URL);
-  ws.onopen=function(){document.getElementById('conn-badge').textContent='LIVE';document.getElementById('conn-badge').className='conn-badge live'};
-  ws.onmessage=function(ev){updateUI(JSON.parse(ev.data))};
-  ws.onerror=function(){document.getElementById('conn-badge').textContent='DEGRADED';document.getElementById('conn-badge').className='conn-badge degraded'};
-  ws.onclose=function(){document.getElementById('conn-badge').textContent='RECONNECTING';document.getElementById('conn-badge').className='conn-badge connecting';setTimeout(connectWS,3000)}
+  ws.onopen=function(){document.getElementById('ag-conn').textContent='LIVE';document.getElementById('ag-conn').className='ag-conn live'};
+  ws.onmessage=function(ev){renderAegis(JSON.parse(ev.data))};
+  ws.onerror=function(){document.getElementById('ag-conn').textContent='DEGRADED';document.getElementById('ag-conn').className='ag-conn connecting'};
+  ws.onclose=function(){document.getElementById('ag-conn').textContent='RECONNECTING';document.getElementById('ag-conn').className='ag-conn connecting';setTimeout(connectWS,3000)}
 }
 
-fetchData();connectWS();
+// ─── SECTION 3: Trap Environment (from static JSON) ───
+var TE_SIGNALS={
+  s1_liq_asymmetry:{id:'S1',name:'Liquidation Asymmetry',group:'leverage'},
+  s2_oi_divergence:{id:'S2',name:'OI–Price Divergence',group:'leverage'},
+  s3_funding:{id:'S3',name:'Funding Level',group:'leverage'},
+  s4_bid_ask_absorption:{id:'S4',name:'Bid/Ask Absorption',group:'orderflow'},
+  s5_taker_cvd:{id:'S5',name:'Taker–CVD Split',group:'orderflow'},
+  s6_exchange_netflow:{id:'S6',name:'Exchange Netflow',group:'onchain'},
+  s7_utxo_bands:{id:'S7',name:'UTXO Age Bands',group:'onchain'},
+  s8_options_skew:{id:'S8',name:'Options 25Δ Skew',group:'options'}
+};
+
+function renderTrapEnv(data){
+  if(!data){return}
+  var composite=data.composite||0,actualMax=data.actual_max||8,status=data.status||'CLEAR',direction=data.direction||'NEUTRAL';
+  var signals=data.signals||{};
+  window._envRisk=status;
+
+  // Banner
+  var banner=document.getElementById('env-banner');
+  banner.className='ag-env-banner '+status;
+  document.getElementById('env-score').textContent=composite+'/'+actualMax;
+  document.getElementById('env-status').textContent=status.replace(/_/g,' ');
+  var dirText=direction==='LONG_TRAP'?'Bullish trap signals dominant — downside risk':direction==='SHORT_TRAP'?'Bearish trap signals dominant — upside risk':'';
+  document.getElementById('env-direction').textContent=dirText;
+
+  // Grouped signals
+  var groups={leverage:[],orderflow:[],onchain:[],options:[]};
+  Object.entries(TE_SIGNALS).forEach(function(e){var k=e[0],s=e[1],sig=signals[k];if(sig)groups[s.group].push({id:s.id,name:s.name,sig:sig})});
+
+  function renderGroup(groupId,items){
+    var el=document.getElementById('te-'+groupId);
+    el.innerHTML=items.map(function(i){var v=i.sig.verdict||'NEUTRAL';return'<div class="ag-te-signal"><span>'+i.name+' <small style="color:var(--muted)">'+i.id+'</small></span><span><span class="ag-te-val">'+i.sig.value+'</span> <span class="ag-te-verdict '+v+'">'+v+'</span></span></div>'}).join('')
+  }
+  renderGroup('leverage',groups.leverage);
+  renderGroup('orderflow',groups.orderflow);
+  renderGroup('onchain',groups.onchain);
+  renderGroup('options',groups.options);
+
+  document.getElementById('te-update').textContent='Environment data: '+(data._collected||'—');
+}
+
+// ─── SECTION 4: Crash Precursor ───
+var CP_LABELS={taker:'Aggressive Sell Orders',bid_wall:'Support Wall Retreat',funding:'Futures Holding Fees',oi_implosion:'Leverage Flushes',divergence:'Momentum Divergence'};
+function renderCrashPrecursor(d){
+  if(!d||d.composite===undefined){document.getElementById('cp-panel').style.display='none';return}
+  document.getElementById('cp-panel').style.display='';
+  var comp=d.composite||0,status=d.status||'NORMAL',signals=d.signals||{};
+  document.getElementById('cp-composite').textContent=comp+'/5';
+  var cs=document.getElementById('cp-status');
+  cs.textContent=status;cs.className='ag-cp-status '+status;
+
+  var list=document.getElementById('cp-signals');
+  list.innerHTML=Object.entries(CP_LABELS).map(function(e){var v=signals[e[0]]||0,fired=v>0;return'<div class="ag-cp-row '+(fired?'fired':'clear')+'"><span>'+e[1]+'</span><span>'+(fired?'● ACTIVE':'○ clear')+'</span></div>'}).join('');
+  document.getElementById('cp-update').textContent='Crash precursor: '+(d._collected||d.timestamp||'—');
+}
+
+// ─── Fetch all ───
+function fetchStatic(){
+  Promise.all([
+    fetch(TM_URL).then(function(r){return r.json()}).catch(function(){return null}),
+    fetch(CRASH_URL).then(function(r){return r.json()}).catch(function(){return null})
+  ]).then(function(r){renderTrapEnv(r[0]);renderCrashPrecursor(r[1])})
+}
+
+// ─── Start ───
+fetchAegis();fetchStatic();connectWS();
 setInterval(function(){fetch(API_BASE+'/api/v1/levels').then(function(r){return r.json()}).then(updateLevels).catch(function(){})},30000);
+setInterval(fetchStatic,60000);
 })();
 </script>
 </body>

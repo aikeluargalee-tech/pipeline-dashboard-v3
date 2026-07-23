@@ -79,8 +79,7 @@
       <ul class="site-nav-links" role="menubar">
         <li role="none"><a role="menuitem" href="${BASE}/dashboard/">Dashboard</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/packet/">Data Packet</a></li>
-        <li role="none"><a role="menuitem" href="${BASE}/trap-monitor/" style="color:var(--yellow)">Trap Monitor</a></li>
-        <li role="none"><a role="menuitem" href="${BASE}/aegis/" style="color:var(--aegis-cyan)">AEGIS</a></li>
+        <li role="none"><a role="menuitem" href="${BASE}/aegis/" style="color:var(--aegis-cyan)">BTC AEGIS</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/ai-factors/">AI Factors</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/methodology/">Methodology</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/research/">Research</a></li>
@@ -110,7 +109,6 @@
         <ul>
           <li><a href="${BASE}/dashboard/">Live Dashboard</a></li>
           <li><a href="${BASE}/packet/">Data Packet</a></li>
-          <li><a href="${BASE}/trap-monitor/">Trap Monitor</a></li>
           <li><a href="${BASE}/aegis/">BTC AEGIS</a></li>
           <li><a href="${BASE}/ai-factors/">AI Factors</a></li>
           <li><a href="${BASE}/verdicts/">Verdict Archive</a></li>
