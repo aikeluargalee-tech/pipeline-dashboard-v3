@@ -1,28 +1,25 @@
 {
-  "updated": "2026-07-19T17:16:07.403100+00:00",
+  "updated": "2026-07-23T15:15:13.197884+00:00",
   "active": [
     {
-      "pattern_name": "CUP_AND_HANDLE",
-      "tf": "1D",
+      "pattern_name": "CHANNEL_UP",
+      "tf": "4H",
       "direction": "bullish",
       "state": "FORMING",
-      "confidence": 50,
-      "candles_span": 36,
-      "volume_confirmed": true,
+      "confidence": 68,
+      "candles_span": 144,
+      "volume_confirmed": false,
       "key_levels": {
-        "left_rim": 65765.6,
-        "right_rim": 64713.9,
-        "rim_level": 65239.8,
-        "cup_bottom": 57770.0,
-        "handle_low": 61667.1,
-        "target": 70095.1,
-        "stop": 61050.4
+        "upper_channel": 67857.4,
+        "lower_channel": 64564.0,
+        "target": 69214.6,
+        "stop": 63918.4
       },
-      "description": "Cup & Handle forming \u2014 handle at $61,667",
-      "invalidation_price": 61050.4,
-      "timestamp": "2026-07-19T17:16:07.402061+00:00",
-      "btc_price": 64793.0,
-      "pattern_id": "CNH_1D_48"
+      "description": "Channel Up active \u2014 bullish trend, buy zone near lower channel",
+      "invalidation_price": 63918.4,
+      "timestamp": "2026-07-23T15:15:13.195835+00:00",
+      "btc_price": 65526.0,
+      "pattern_id": "CHUP_4H_383"
     }
   ],
   "archived": [
@@ -65,6 +62,7 @@
     "DBOT_4H_450",
     "DBOT_4H_451",
     "DTOP_4H_382",
+    "DTOP_4H_383",
     "DTOP_4H_396",
     "DTOP_4H_397",
     "DTOP_4H_398",

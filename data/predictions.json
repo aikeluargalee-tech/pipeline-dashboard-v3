@@ -59,9 +59,15 @@
           "max_price": 65622.83,
           "direction_correct": false
         },
-        "30d": null
+        "30d": {
+          "price_then": 64869.8,
+          "price_change_pct": 2.19,
+          "min_price": 57800.19,
+          "max_price": 65622.83,
+          "direction_correct": true
+        }
       },
-      "resolved": false
+      "resolved": true
     },
     {
       "id": "regime_8cfb9e5f",
@@ -122,9 +128,15 @@
           "max_price": 65622.83,
           "direction_correct": false
         },
-        "30d": null
+        "30d": {
+          "price_then": 64540.01,
+          "price_change_pct": 1.75,
+          "min_price": 57800.19,
+          "max_price": 65622.83,
+          "direction_correct": false
+        }
       },
-      "resolved": false
+      "resolved": true
     },
     {
       "id": "signal_8a52625e",
@@ -229,9 +241,15 @@
           "max_price": 65622.83,
           "direction_correct": false
         },
-        "30d": null
+        "30d": {
+          "price_then": 64540.01,
+          "price_change_pct": 1.76,
+          "min_price": 57800.19,
+          "max_price": 65622.83,
+          "direction_correct": true
+        }
       },
-      "resolved": false
+      "resolved": true
     },
     {
       "id": "regime_444de799",
@@ -292,9 +310,15 @@
           "max_price": 65622.83,
           "direction_correct": false
         },
-        "30d": null
+        "30d": {
+          "price_then": 64128.0,
+          "price_change_pct": 0.64,
+          "min_price": 57800.19,
+          "max_price": 65622.83,
+          "direction_correct": false
+        }
       },
-      "resolved": false
+      "resolved": true
     },
     {
       "id": "regime_5c83676f",
@@ -355,9 +379,15 @@
           "max_price": 65622.83,
           "direction_correct": false
         },
-        "30d": null
+        "30d": {
+          "price_then": 65522.01,
+          "price_change_pct": 1.72,
+          "min_price": 57800.19,
+          "max_price": 65799.0,
+          "direction_correct": true
+        }
       },
-      "resolved": false
+      "resolved": true
     },
     {
       "id": "signal_4f3fa5ad",
@@ -462,9 +492,15 @@
           "max_price": 65622.83,
           "direction_correct": false
         },
-        "30d": null
+        "30d": {
+          "price_then": 66210.0,
+          "price_change_pct": 3.04,
+          "min_price": 57800.19,
+          "max_price": 66956.15,
+          "direction_correct": false
+        }
       },
-      "resolved": false
+      "resolved": true
     },
     {
       "id": "signal_549a15ff",
@@ -1117,7 +1153,13 @@
           "max_price": 65600.0,
           "direction_correct": true
         },
-        "7d": null,
+        "7d": {
+          "price_then": 66046.02,
+          "price_change_pct": 1.93,
+          "min_price": 62537.56,
+          "max_price": 66956.15,
+          "direction_correct": true
+        },
         "30d": null
       },
       "resolved": false
@@ -1175,7 +1217,13 @@
           "max_price": 65600.0,
           "direction_correct": true
         },
-        "7d": null,
+        "7d": {
+          "price_then": 66046.02,
+          "price_change_pct": 2.14,
+          "min_price": 62537.56,
+          "max_price": 66956.15,
+          "direction_correct": true
+        },
         "30d": null
       },
       "resolved": false
@@ -1232,7 +1280,13 @@
           "max_price": 65470.0,
           "direction_correct": true
         },
-        "7d": null,
+        "7d": {
+          "price_then": 66047.39,
+          "price_change_pct": 0.89,
+          "min_price": 62537.56,
+          "max_price": 66956.15,
+          "direction_correct": true
+        },
         "30d": null
       },
       "resolved": false
@@ -1332,11 +1386,12 @@
         "regime_label": "CAUTIOUS NEUTRAL"
       },
       "outcomes": {
-        "1d": null,
-        "7d": null,
-        "30d": null
+        "outcome": "win",
+        "exit_price": 65150.0,
+        "resolved_at": "2026-07-20T15:00:00+00:00",
+        "price_change_pct": 3.25
       },
-      "resolved": false
+      "resolved": true
     }
   ]
 }
