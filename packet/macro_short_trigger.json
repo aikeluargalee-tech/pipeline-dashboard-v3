@@ -1,42 +1,42 @@
 {
-  "packet_id": 91,
-  "captured_at": "2026-07-23T15:46:54Z",
+  "packet_id": 92,
+  "captured_at": "2026-07-23T16:02:57Z",
   "btc": {
-    "price": 64868.06,
+    "price": 64868.29,
     "session_high": 66384.0,
     "session_low": 64728.0,
-    "change_pct": -1.67,
-    "vwap": 65589.02962269,
-    "volume_btc": 13297.73054,
-    "volume_usd": 872185242.302648,
+    "change_pct": -1.75,
+    "vwap": 65574.09598382,
+    "volume_btc": 13430.17446,
+    "volume_usd": 880671549.1195189,
     "break_level": 58872,
-    "gap_to_break_pct": 10.18
+    "gap_to_break_pct": 10.19
   },
   "funding_rate": {
-    "value_pct": 0.0073,
+    "value_pct": 0.0082,
     "next_settlement_utc": null,
     "trend": "rising",
     "consecutive_negative_count": 0
   },
   "taker_volume": {
-    "ratio_24h": 0.839,
-    "delta_sum_6": -1156.34,
+    "ratio_24h": 0.85,
+    "delta_sum_6": -962.74,
     "delta_trend": "STRONG_SELLING",
     "deltas_6": [
-      -173.84,
       -70.42,
       -78.05,
       -204.37,
       -16.23,
-      -613.43
+      -571.92,
+      -21.75
     ]
   },
   "mstr": {
-    "price": 92.75,
+    "price": 93.0,
     "prev_close": 100.01,
-    "change_pct": -7.26,
-    "volume": 7059876,
-    "avg_volume": 23027718,
+    "change_pct": -7.01,
+    "volume": 7563978,
+    "avg_volume": 23052923,
     "ma_50": 122.41,
     "ma_200": 164.78,
     "buy_window": {
@@ -47,11 +47,11 @@
       "announcement_detected": false,
       "consecutive_silent_sessions": 0
     },
-    "gap_to_trigger_pct": 23.66,
+    "gap_to_trigger_pct": 24.0,
     "trigger_price": 75.0
   },
   "vix": {
-    "value": 19.55,
+    "value": 20.13,
     "source": "FRED",
     "captured_at": "2026-07-23",
     "trigger_threshold": 25.0,
@@ -67,11 +67,11 @@
     "stale": false
   },
   "usdjpy": {
-    "value": 163.83,
+    "value": 163.79,
     "source": "live",
-    "captured_at": "2026-07-23T15:46:54Z",
+    "captured_at": "2026-07-23T16:02:57Z",
     "structural_above_162": true,
-    "consecutive_packets_above_162": 3,
+    "consecutive_packets_above_162": 4,
     "spike_threshold_pct": 2.0,
     "spike_detected": false,
     "compound_triggered": false
@@ -85,7 +85,7 @@
   },
   "triggers": {
     "T1_mstr": "green",
-    "T2_vix": "green",
+    "T2_vix": "yellow",
     "T3_us10y": "red",
     "T4_usdjpy": "yellow",
     "triggered_count": 1,
