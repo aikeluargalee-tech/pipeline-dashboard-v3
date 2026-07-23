@@ -134,6 +134,29 @@
 .ag-lvl-row .lp{font-family:'JetBrains Mono',monospace;font-weight:700}
 .ag-lvl-row .lk{font-size:.68em;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;text-align:right}
 
+/* Bottom Line — synthesis card */
+.ag-bottom-line{text-align:center;padding:28px 24px;border-radius:14px;border:2px solid var(--border);background:var(--card);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+.ag-bottom-line.defensive{border-color:rgba(244,63,94,.45);background:rgba(244,63,94,.04)}
+.ag-bottom-line.caution{border-color:rgba(249,115,22,.35);background:rgba(249,115,22,.03)}
+.ag-bottom-line.guarded{border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.03)}
+.ag-bottom-line.bullish{border-color:rgba(16,185,129,.35);background:rgba(16,185,129,.04)}
+.ag-bottom-line.neutral{border-color:rgba(136,136,147,.25);background:rgba(136,136,147,.03)}
+.ag-bl-posture{font-family:'JetBrains Mono',monospace;font-size:1.8em;font-weight:900;letter-spacing:-.02em;margin-bottom:12px;line-height:1.1}
+.ag-bl-synthesis{font-size:1em;font-weight:600;line-height:1.5;margin-bottom:12px;max-width:640px;margin-left:auto;margin-right:auto}
+.ag-bl-action{font-size:.82em;line-height:1.5;padding:10px 18px;border-radius:8px;max-width:560px;margin:0 auto 14px;font-weight:500}
+.ag-bottom-line.defensive .ag-bl-action{background:rgba(244,63,94,.08);color:#fca5af}
+.ag-bottom-line.caution .ag-bl-action{background:rgba(249,115,22,.06);color:#fed7aa}
+.ag-bottom-line.guarded .ag-bl-action{background:rgba(245,158,11,.06);color:#fde68a}
+.ag-bottom-line.bullish .ag-bl-action{background:rgba(16,185,129,.08);color:#6ee7b7}
+.ag-bottom-line.neutral .ag-bl-action{background:rgba(255,255,255,.03);color:var(--muted)}
+.ag-bl-drivers{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;font-size:.72em;margin-top:8px}
+.ag-bl-drivers span{padding:3px 10px;border-radius:12px;font-weight:600;border:1px solid rgba(255,255,255,.08)}
+.ag-bl-drivers span.red{background:rgba(244,63,94,.1);color:var(--ag-red)}
+.ag-bl-drivers span.orange{background:rgba(249,115,22,.08);color:var(--ag-orange)}
+.ag-bl-drivers span.yellow{background:rgba(245,158,11,.08);color:var(--ag-yellow)}
+.ag-bl-drivers span.green{background:rgba(16,185,129,.1);color:var(--ag-green)}
+.ag-bl-drivers span.gray{background:rgba(255,255,255,.04);color:var(--muted)}
+
 /* Disclaimer */
 .ag-disc{text-align:center;padding:22px;color:var(--muted);font-size:.78em;border-top:1px solid var(--border);margin-top:30px}
 .ag-verdict-highlight{font-family:'JetBrains Mono',monospace;font-size:1.7em;font-weight:800;letter-spacing:-.02em;line-height:1.2}
@@ -166,6 +189,7 @@
   <!-- Section quick-nav -->
   <nav class="ag-nav">
     <a href="#overview">Overview</a>
+    <a href="#bottom-line">Bottom Line</a>
     <a href="#breakout">Breakout Validator</a>
     <a href="#trap-environment">Trap Environment</a>
     <a href="#crash-precursor">Crash Precursor</a>
@@ -212,6 +236,18 @@
     </div>
 
     <div class="ag-muted-note" id="ov-update">Last update: —</div>
+  </section>
+
+  <!-- ═══════════ BOTTOM LINE ─ SYNTHESIS CARD ═══════════ -->
+  <section class="ag-section" id="bottom-line">
+    <h2><span class="sec-num">•</span> Bottom Line</h2>
+    <div class="ag-bottom-line" id="bl-card">
+      <div class="ag-bl-posture" id="bl-posture">—</div>
+      <div class="ag-bl-synthesis" id="bl-synthesis">Awaiting data…</div>
+      <div class="ag-bl-action" id="bl-action">—</div>
+      <div class="ag-bl-drivers" id="bl-drivers"></div>
+    </div>
+    <div class="ag-muted-note" id="bl-update">Synthesized from all AEGIS data layers</div>
   </section>
 
   <!-- ═══════════ SECTION 2: BREAKOUT VALIDATOR ═══════════ -->
@@ -446,6 +482,9 @@ function renderAegis(status){
 
   // Verdict
   var verdict=v.verdict||'NO ACTIVE VERDICT';
+  window._lastVerdict=v;
+  window._lastSnapshot=s;
+  window._lastEvent=e;
   var vel=document.getElementById('ov-verdict');
   vel.textContent=verdict.replace(/_/g,' ');
   vel.className='ag-verdict-highlight '+(verdict.indexOf('TRAP')!==-1?'trap':verdict.indexOf('ACCEPTED')!==-1?'accept':verdict.indexOf('REVIEW')!==-1||verdict==='UNCONFIRMED_BREAK'?'review':'neutral');
@@ -518,7 +557,7 @@ function fetchAegis(){
 function connectWS(){
   var ws=new WebSocket(WS_URL);
   ws.onopen=function(){document.getElementById('ag-conn').textContent='LIVE';document.getElementById('ag-conn').className='ag-conn live'};
-  ws.onmessage=function(ev){renderAegis(JSON.parse(ev.data))};
+  ws.onmessage=function(ev){renderAegis(JSON.parse(ev.data));if(window._lastTrap||window._lastCrash)renderBottomLine()};
   ws.onerror=function(){document.getElementById('ag-conn').textContent='DEGRADED';document.getElementById('ag-conn').className='ag-conn connecting'};
   ws.onclose=function(){document.getElementById('ag-conn').textContent='RECONNECTING';document.getElementById('ag-conn').className='ag-conn connecting';setTimeout(connectWS,3000)}
 }
@@ -599,6 +638,7 @@ function renderCrashPrecursor(d){
 // ─── Structural Backdrop — Accumulation Zone ───
 function renderAccumulation(cycle){
   if(!cycle)return;
+  window._lastCycle=cycle;
   var mvrv=cycle.mvrv_z,sopr=cycle.sopr,nupl=cycle.nupl,lth=cycle.lth_sopr_24h,sp=cycle.supply_in_profit_share;
   function set(id,val,color,label){
     var el=document.getElementById(id);if(el&&val!=null){el.textContent=typeof val==='number'?val.toFixed(4):val;el.style.color=color}
@@ -637,6 +677,104 @@ function renderAccumulation(cycle){
   var noteEl=document.getElementById('accum-note');if(noteEl)noteEl.textContent=note
 }
 
+// ─── Bottom Line — synthesis from all data layers ───
+function renderBottomLine(){
+  var trap=_lastTrap,crash=_lastCrash,cycle=window._lastCycle;
+  var v=window._lastVerdict||{},e=window._lastEvent||{};
+  // Gather inputs
+  var trapStatus=trap?trap.status:'UNKNOWN';
+  var trapScore=trap?trap.composite:0;
+  var trapMax=trap?trap.actual_max||8:8;
+  var crashComp=crash?crash.composite:0;
+  var crashStatus=crash?crash.status:'UNKNOWN';
+  var mvrvZ=cycle?cycle.mvrv_z:null;
+  var lthSopr=cycle?cycle.lth_sopr_24h:null;
+  var nupl=cycle?cycle.nupl:null;
+  var hashrateDD=(crash&&crash.network_health)?crash.network_health.hash_rate_drawdown_pct:null;
+  var eventActive=e.state&&e.state!=='IDLE';
+  var aegisVerdict=v.verdict||'';
+
+  // Synthesis logic
+  var posture='NEUTRAL',klass='neutral',synthesis='',action='',drivers=[];
+
+  if(trapStatus==='TRAP_ACTIVE'&&crashComp>=3&&(crashStatus==='ELEVATED'||crashStatus==='DANGER')){
+    posture='DEFENSIVE';klass='defensive';
+    synthesis='Both trap environment AND systemic crash risk are elevated simultaneously. This is the highest-risk combination — multiple independent systems agree on danger.';
+    action='⛔ DO NOT LONG. Consider full exit or hedging with protective puts. Wait for at least one system to clear before re-entering.';
+    drivers.push({label:'Trap '+trapScore+'/'+trapMax,color:'red'});
+    drivers.push({label:'Crash '+crashComp+'/5 '+crashStatus,color:'red'});
+  }else if(trapStatus==='TRAP_ACTIVE'){
+    posture='DEFENSIVE';klass='defensive';
+    synthesis='Trap environment is elevated ('+trapScore+'/'+trapMax+'). Multiple trap signals are firing — the market is positioning aggressively against the current move.';
+    action='⛔ Reduce position sizes. Tighten stops. Do not add to longs until composite drops below 3/'+trapMax+'. Consider hedging with protective puts.';
+    drivers.push({label:'Trap '+trapScore+'/'+trapMax,color:'red'});
+  }else if(crashComp>=3&&(crashStatus==='ELEVATED'||crashStatus==='DANGER')){
+    posture='CAUTION';klass='caution';
+    synthesis='Crash precursor elevated ('+crashComp+'/5 '+crashStatus+'). Systemic breakdown risk is real — not just a local trap, but broad market fragility that can precede significant drawdowns.';
+    action='⚠️ Reduce exposure across the board. These signals precede significant drawdowns — do not fade them. Tighten stops aggressively.';
+    drivers.push({label:'Crash '+crashComp+'/5 '+crashStatus,color:'orange'});
+  }else if(trapStatus==='CAUTION'){
+    posture='GUARDED';klass='guarded';
+    synthesis='Trap environment shows elevated risk ('+trapScore+'/'+trapMax+') but not yet at critical. Some trap signals are deteriorating — worth attention.';
+    action='⚡ Proceed with smaller size. Be ready to cut if signals escalate to TRAP ACTIVE. Prefer higher-timeframe confirmation for new entries.';
+    drivers.push({label:'Trap '+trapScore+'/'+trapMax,color:'yellow'});
+  }else if(mvrvZ!=null&&mvrvZ<0&&lthSopr!=null&&lthSopr<0.9){
+    posture='BULLISH';klass='bullish';
+    synthesis='Deep accumulation confirmed: MVRV-Z '+mvrvZ.toFixed(2)+' (near cycle floor) + LTH selling at loss. Historically a high-conviction buy zone.';
+    action='✅ Dips are accumulation opportunities. Structural backdrop favors treating pullbacks as add zones, not breakdowns. Red spikes mark zones, not exact tick bottoms.';
+    drivers.push({label:'MVRV-Z '+mvrvZ.toFixed(2),color:'green'});
+    drivers.push({label:'LTH at loss',color:'green'});
+    if(nupl!=null){drivers.push({label:'NUPL '+nupl.toFixed(3),color:'green'})}
+  }else if(mvrvZ!=null&&mvrvZ<1){
+    posture='BULLISH';klass='bullish';
+    synthesis='MVRV-Z '+mvrvZ.toFixed(2)+' — undervalued territory. Not as extreme as cycle floor, but structurally favorable for accumulation.';
+    action='✅ Favorable accumulation backdrop. Dips have higher probability of being buyable than breakdowns. Standard position sizing.';
+    drivers.push({label:'MVRV-Z '+mvrvZ.toFixed(2),color:'green'});
+  }else if(nupl!=null&&nupl>0.7){
+    posture='BEARISH';klass='caution';
+    synthesis='NUPL '+nupl.toFixed(3)+' in euphoria/distribution zone. Cycle tops are historically heavy — favor caution on new longs.';
+    action='⚠️ Reduce long exposure. Take partial profits. Do not add new longs at these structural levels. Wait for reset before re-entering.';
+    drivers.push({label:'NUPL '+nupl.toFixed(3),color:'orange'});
+  }else if(hashrateDD!=null&&hashrateDD<-30){
+    posture='GUARDED';klass='guarded';
+    synthesis='Network health degraded: hashrate drawdown '+hashrateDD.toFixed(1)+'% from ATH. Significant miner stress can precede volatility.';
+    action='⚡ Proceed with awareness. Hashrate drawdown adds fragility to the backdrop. Monitor for further degradation.';
+    drivers.push({label:'Hashrate DD '+hashrateDD.toFixed(1)+'%',color:'yellow'});
+  }else if(eventActive){
+    posture='ACTIVE';klass='neutral';
+    synthesis='A breakout event is in progress — follow the AEGIS verdict above. The system is actively validating this move with real-time evidence.';
+    action='Follow the AEGIS verdict. This is an active monitoring state — the system will update as evidence accumulates.';
+    drivers.push({label:'Event active',color:'gray'});
+  }else{
+    posture='NEUTRAL';klass='neutral';
+    synthesis='No dominant signal across any data layer. Trap environment clear, crash precursor normal, structural backdrop mid-cycle. Market in wait mode.';
+    action='No high-conviction setup. Wait for a breakout event or a structural signal to develop before committing capital. Patience is the play.';
+  }
+
+  // Add green confirmations for silent systems
+  if(trapStatus==='CLEAR'&&drivers.filter(function(d){return d.color==='yellow'||d.color==='orange'||d.color==='red'}).length===0){
+    drivers.push({label:'Trap clear',color:'green'})
+  }
+  if(crashComp===0&&drivers.filter(function(d){return d.label.indexOf('Crash')===0}).length===0){
+    drivers.push({label:'Crash normal',color:'green'})
+  }
+
+  // Render
+  var card=document.getElementById('bl-card');
+  if(!card)return;
+  card.className='ag-bottom-line '+klass;
+  document.getElementById('bl-posture').textContent=posture;
+  document.getElementById('bl-posture').style.color=
+    klass==='defensive'?'var(--ag-red)':
+    klass==='caution'?'var(--ag-orange)':
+    klass==='guarded'?'var(--ag-yellow)':
+    klass==='bullish'?'var(--ag-green)':'var(--text)';
+  document.getElementById('bl-synthesis').textContent=synthesis;
+  document.getElementById('bl-action').textContent=action;
+  document.getElementById('bl-drivers').innerHTML=drivers.map(function(d){return'<span class="'+d.color+'">'+d.label+'</span>'}).join('');
+  document.getElementById('bl-update').textContent='Synthesized: '+new Date().toLocaleString();
+}
+
 // ─── Fetch all ───
 var _lastTrap=null,_lastCrash=null;
 function renderCombinedAlert(){
@@ -659,7 +797,7 @@ function fetchStatic(){
   ]).then(function(r){
     _lastTrap=r[0];_lastCrash=r[1];
     renderTrapEnv(r[0]);renderCrashPrecursor(r[1]);renderAccumulation(r[2]);
-    renderCombinedAlert()
+    renderCombinedAlert();renderBottomLine()
   })
 }
 
