@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>BTC AEGIS — Evidence-Gated Trap Avoidance | Pipeline Dashboard</title>
+<meta name="description" content="BTC AEGIS Control Centre: real-time evidence-gated Bitcoin breakout analysis. Gate 0 data validation, trap probability scoring, level interaction tracking, and catalyst monitoring. Read-only decision support.">
+<link rel="canonical" href="https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/aegis/">
+
+<meta property="og:title" content="BTC AEGIS — Evidence-Gated BTC Trap Avoidance">
+<meta property="og:type" content="website">
+<meta property="og:description" content="Real-time Bitcoin breakout verification engine. Gate 0 data validation, trap probability scoring, and evidence-ledger tracking.">
+<meta property="og:site_name" content="BTC Pipeline Dashboard">
+<meta property="og:url" content="https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/aegis/">
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"BTC AEGIS Control Centre","url":"https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/aegis/","description":"Auditable Evidence-Gated Intelligence System for Bitcoin breakout verification and trap avoidance.","applicationCategory":"FinanceApplication","operatingSystem":"Web","author":{"@type":"Organization","name":"BTC Pipeline"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/"},{"@type":"ListItem","position":2,"name":"BTC AEGIS","item":"https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/aegis/"}]}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css?v=12">
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+<link rel="apple-touch-icon" href="../assets/logo.png">
+<meta name="theme-color" content="#05070d">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/assets/social-card.png">
+
+<style>
+:root { --aegis-green:#10b981;--aegis-red:#f43f5e;--aegis-yellow:#f59e0b;--aegis-orange:#f97316;--aegis-cyan:#22d3ee; }
+.aegis-hero{text-align:center;padding:48px 24px 32px;border-bottom:1px solid var(--border);margin-bottom:24px}
+.aegis-hero .eyebrow{font-size:.72em;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin-bottom:8px;font-weight:600}
+.aegis-hero h1{font-size:2.8em;font-weight:900;background:linear-gradient(135deg,var(--aegis-cyan),var(--aegis-green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.03em}
+.aegis-hero .subtitle{font-size:1.05em;color:var(--muted);margin-top:4px;font-weight:500}
+.conn-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:.72em;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-top:12px}
+.conn-badge.live{background:rgba(16,185,129,.15);color:var(--aegis-green);border:1px solid rgba(16,185,129,.3)}
+.conn-badge.connecting{background:rgba(245,158,11,.15);color:var(--aegis-yellow);border:1px solid rgba(245,158,11,.3)}
+.conn-badge.error{background:rgba(244,63,94,.15);color:var(--aegis-red);border:1px solid rgba(244,63,94,.3)}
+.conn-badge.degraded{background:rgba(249,115,22,.15);color:var(--aegis-orange);border:1px solid rgba(249,115,22,.3)}
+.aegis-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:24px}
+.aegis-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+.aegis-card .card-label{font-size:.7em;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px;font-weight:600}
+.aegis-card .card-value{font-family:'JetBrains Mono',monospace;font-size:1.6em;font-weight:700;letter-spacing:-.02em}
+.aegis-card .card-sub{font-size:.78em;color:var(--muted);margin-top:4px}
+.aegis-card.danger{border-color:rgba(244,63,94,.4);background:rgba(244,63,94,.06)}.aegis-card.danger .card-value{color:var(--aegis-red)}
+.aegis-card.good{border-color:rgba(16,185,129,.4);background:rgba(16,185,129,.06)}.aegis-card.good .card-value{color:var(--aegis-green)}
+.aegis-card.warn{border-color:rgba(245,158,11,.4);background:rgba(245,158,11,.06)}.aegis-card.warn .card-value{color:var(--aegis-yellow)}
+.aegis-panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+.aegis-panel h2{font-size:1.05em;font-weight:700;margin-bottom:14px;letter-spacing:-.01em}
+.aegis-panel .panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.state-badge{padding:3px 12px;border-radius:12px;font-size:.7em;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.state-badge.CROSSED,.state-badge.AWAITING_CONFIRMATION{background:rgba(245,158,11,.15);color:var(--aegis-yellow)}
+.state-badge.ACCEPTED{background:rgba(16,185,129,.15);color:var(--aegis-green)}
+.state-badge.REJECTED{background:rgba(244,63,94,.15);color:var(--aegis-red)}
+.state-badge.EXPIRED{background:rgba(136,136,147,.15);color:var(--muted)}
+.aegis-dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.aegis-dl dt{font-size:.72em;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:2px;font-weight:600}
+.aegis-dl dd{font-family:'JetBrains Mono',monospace;font-size:.95em;font-weight:500}
+.aegis-two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.evidence-row{display:grid;grid-template-columns:110px 1fr 70px;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:center;font-size:.85em}
+.evidence-row:last-child{border-bottom:none}
+.ev-row .ev-group{font-weight:700;text-transform:uppercase;font-size:.72em;letter-spacing:.06em;color:var(--aegis-cyan)}
+.ev-row .ev-effect{font-family:'JetBrains Mono',monospace;text-align:right;font-weight:600}
+.ev-row .ev-effect.positive{color:var(--aegis-red)}.ev-row .ev-effect.negative{color:var(--aegis-green)}
+.levels-list{display:flex;flex-direction:column;gap:8px}
+.level-row{display:grid;grid-template-columns:140px 1fr 90px;gap:12px;padding:10px 14px;background:rgba(255,255,255,.02);border-radius:8px;border:1px solid var(--border);align-items:center;font-size:.88em}
+.level-row .lv-price{font-family:'JetBrains Mono',monospace;font-weight:700}
+.level-row .lv-kind{font-size:.72em;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;text-align:right}
+.empty-state{color:var(--muted);font-style:italic;padding:20px 0;text-align:center;font-size:.88em}
+.aegis-disclaimer{text-align:center;padding:24px;color:var(--muted);font-size:.8em;border-top:1px solid var(--border);margin-top:32px}
+@media(max-width:768px){.aegis-hero h1{font-size:2em}.aegis-grid{grid-template-columns:1fr}.aegis-two-col{grid-template-columns:1fr}.aegis-dl{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div id="nav-placeholder"></div>
+
+<main id="main">
+  <section class="aegis-hero">
+    <p class="eyebrow">Auditable Evidence-Gated Intelligence System</p>
+    <h1>BTC AEGIS</h1>
+    <p class="subtitle">Avoid the trap. Verify the move.</p>
+    <div id="conn-badge" class="conn-badge connecting">CONNECTING</div>
+  </section>
+
+  <section class="aegis-grid" id="hero-cards">
+    <article class="aegis-card" id="card-health">
+      <div class="card-label">Gate 0 · Data Health</div>
+      <div class="card-value" id="val-health">—</div>
+      <div class="card-sub" id="sub-health">Awaiting data…</div>
+    </article>
+    <article class="aegis-card" id="card-price">
+      <div class="card-label">BTC Price</div>
+      <div class="card-value" id="val-price">—</div>
+      <div class="card-sub" id="sub-price">—</div>
+    </article>
+    <article class="aegis-card" id="card-verdict">
+      <div class="card-label">Current Verdict</div>
+      <div class="card-value" id="val-verdict">—</div>
+      <div class="card-sub" id="sub-risk">No active event</div>
+    </article>
+    <article class="aegis-card" id="card-trap">
+      <div class="card-label">Trap Probability</div>
+      <div class="card-value" id="val-trap">—</div>
+      <div class="card-sub" id="sub-confidence">—</div>
+    </article>
+  </section>
+
+  <div class="aegis-two-col">
+    <section class="aegis-panel" id="panel-level">
+      <div class="panel-header">
+        <h2>Level Interaction</h2>
+        <span class="state-badge" id="event-state">IDLE</span>
+      </div>
+      <dl class="aegis-dl">
+        <div><dt>Nearest Level</dt><dd id="lv-nearest">—</dd></div>
+        <div><dt>Distance</dt><dd id="lv-distance">—</dd></div>
+        <div><dt>Direction</dt><dd id="lv-direction">—</dd></div>
+        <div><dt>Bars Observed</dt><dd id="lv-bars">—</dd></div>
+      </dl>
+    </section>
+    <section class="aegis-panel" id="panel-market">
+      <h2>Market Evidence</h2>
+      <dl class="aegis-dl">
+        <div><dt>Relative Volume</dt><dd id="mv-volume">—</dd></div>
+        <div><dt>Taker Buy/Sell</dt><dd id="mv-taker">—</dd></div>
+        <div><dt>Funding Rate</dt><dd id="mv-funding">—</dd></div>
+        <div><dt>OI Δ (5m)</dt><dd id="mv-oi">—</dd></div>
+      </dl>
+    </section>
+  </div>
+
+  <section class="aegis-panel" id="panel-evidence">
+    <div class="panel-header">
+      <h2>Evidence Ledger</h2>
+      <span id="ev-explanation" style="font-size:.78em;color:var(--muted)">—</span>
+    </div>
+    <div id="evidence-list"><p class="empty-state">Evidence appears when a configured level is crossed.</p></div>
+  </section>
+
+  <section class="aegis-panel" id="panel-levels">
+    <h2>Approved Levels</h2>
+    <div class="levels-list" id="levels-list"><p class="empty-state">No levels configured. Add current approved levels through the authenticated API.</p></div>
+  </section>
+
+  <footer class="aegis-disclaimer">
+    Read-only decision support. Not financial advice. BTC AEGIS can reduce uncertainty; it cannot guarantee that a trap will be avoided.
+  </footer>
+</main>
+
+<div id="footer-placeholder"></div>
+<script src="../assets/nav.js"></script>
+<script>
+(function(){
+var API_BASE=(function(){var p=new URLSearchParams(window.location.search);if(p.get('api'))return p.get('api');return'http://localhost:8000'})();
+var WS_URL=API_BASE.replace(/^http/,'ws')+'/ws/live';
+
+function money(v){if(v==null)return'—';return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v)}
+function pct(v,s){if(s===undefined)s=100;if(v==null)return'—';return(v*s).toFixed(4)+'%'}
+function ago(ts){if(!ts)return'—';var s=(Date.now()-new Date(ts).getTime())/1000;if(s<60)return Math.round(s)+'s ago';if(s<3600)return Math.round(s/60)+'m ago';return Math.round(s/3600)+'h ago'}
+function toneClass(v){if(!v)return'';if(v==='LIVE')return'good';if(v.indexOf('INVALID')!==-1||v.indexOf('STALE')!==-1||v.indexOf('MISSING')!==-1||v.indexOf('TRAP')!==-1||v==='REJECTED')return'danger';if(v.indexOf('HEALTHY')!==-1||v==='ACCEPTED'||v.indexOf('ACCEPTED_BREAK')!==-1)return'good';return'warn'}
+
+function updateUI(status){
+  var s=status.snapshot||{},v=status.latest_verdict||{},e=status.active_event||{},nl=status.nearest_level;
+  document.getElementById('conn-badge').textContent='LIVE';
+  document.getElementById('conn-badge').className='conn-badge live';
+  var dh=(s.data_health||'NO DATA').replace(/_/g,' ');
+  document.getElementById('val-health').textContent=dh;
+  document.getElementById('sub-health').textContent=(s.health_reasons||[]).join(' · ')||'All required feeds passed validation.';
+  document.getElementById('card-health').className='aegis-card '+toneClass(s.data_health);
+  document.getElementById('val-price').textContent=money(s.price);
+  document.getElementById('sub-price').textContent=s.observed_at?'Snapshot '+ago(s.observed_at):'Awaiting worker';
+  var verdict=v.verdict||'NO ACTIVE VERDICT';
+  document.getElementById('val-verdict').textContent=verdict.replace(/_/g,' ');
+  document.getElementById('sub-risk').textContent=v.risk_action||'No level event is active.';
+  document.getElementById('card-verdict').className='aegis-card '+toneClass(verdict);
+  document.getElementById('val-trap').textContent=v.trap_probability!=null?Math.round(v.trap_probability*100)+'%':'—';
+  document.getElementById('sub-confidence').textContent='Confidence: '+(v.confidence||'—');
+  document.getElementById('lv-nearest').textContent=nl?money(nl.price)+' · '+nl.label:'No enabled level';
+  document.getElementById('lv-distance').textContent=nl?nl.distance_bps.toFixed(1)+' bps':'—';
+  document.getElementById('lv-direction').textContent=e.direction?e.direction.toUpperCase():'—';
+  document.getElementById('lv-bars').textContent=e.bars_observed!=null?e.bars_observed:'—';
+  var sb=document.getElementById('event-state');sb.textContent=e.state||'IDLE';sb.className='state-badge '+(e.state||'');
+  document.getElementById('mv-volume').textContent=s.volume_ratio!=null?s.volume_ratio.toFixed(2)+'×':'—';
+  document.getElementById('mv-taker').textContent=s.taker_ratio!=null?s.taker_ratio.toFixed(3):'—';
+  document.getElementById('mv-funding').textContent=pct(s.funding_rate);
+  document.getElementById('mv-oi').textContent=s.oi_delta_pct!=null?s.oi_delta_pct.toFixed(3)+'%':'—';
+  document.getElementById('ev-explanation').textContent=v.explanation||'No verdict yet';
+  var ev=v.evidence||[];ev=ev.slice().sort(function(a,b){return Math.abs(b.effect)-Math.abs(a.effect)});
+  var el=document.getElementById('evidence-list');
+  if(ev.length===0){el.innerHTML='<p class="empty-state">Evidence appears when a configured level is crossed.</p>'}
+  else{el.innerHTML=ev.map(function(i){var c=i.effect>0?'positive':'negative';return'<div class="evidence-row"><span class="ev-group">'+i.group+'</span><span>'+i.reason.replace(/_/g,' ')+'</span><span class="ev-effect '+c+'">'+(i.effect>0?'+':'')+i.effect.toFixed(2)+'</span></div>'}).join('')}
+}
+
+function updateLevels(levels){
+  var en=levels.filter(function(l){return l.enabled}),list=document.getElementById('levels-list');
+  if(en.length===0){list.innerHTML='<p class="empty-state">No levels configured. Add current approved levels through the authenticated API.</p>';return}
+  list.innerHTML=en.map(function(l){return'<div class="level-row"><span class="lv-price">'+money(l.price)+'</span><span>'+l.label+'</span><span class="lv-kind">'+l.kind+'</span></div>'}).join('')
+}
+
+function fetchData(){
+  fetch(API_BASE+'/api/v1/status').then(function(r){return r.json()}).then(updateUI).catch(function(){
+    document.getElementById('conn-badge').textContent='API ERROR';document.getElementById('conn-badge').className='conn-badge error'
+  });
+  fetch(API_BASE+'/api/v1/levels').then(function(r){return r.json()}).then(updateLevels).catch(function(){})
+}
+
+function connectWS(){
+  var ws=new WebSocket(WS_URL);
+  ws.onopen=function(){document.getElementById('conn-badge').textContent='LIVE';document.getElementById('conn-badge').className='conn-badge live'};
+  ws.onmessage=function(ev){updateUI(JSON.parse(ev.data))};
+  ws.onerror=function(){document.getElementById('conn-badge').textContent='DEGRADED';document.getElementById('conn-badge').className='conn-badge degraded'};
+  ws.onclose=function(){document.getElementById('conn-badge').textContent='RECONNECTING';document.getElementById('conn-badge').className='conn-badge connecting';setTimeout(connectWS,3000)}
+}
+
+fetchData();connectWS();
+setInterval(function(){fetch(API_BASE+'/api/v1/levels').then(function(r){return r.json()}).then(updateLevels).catch(function(){})},30000);
+})();
+</script>
+</body>
+</html>
