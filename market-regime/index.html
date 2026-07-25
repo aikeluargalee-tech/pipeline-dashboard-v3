@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Market Regime Detector — Causal K-Means | Pipeline Dashboard</title>
+<meta name="description" content="Real-time Bitcoin market regime detection using causal K-means clustering with switching penalty. Bull, Neutral, Bear regimes classified from price features without look-ahead bias.">
+<link rel="canonical" href="https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/market-regime/">
+<meta property="og:title" content="Market Regime Detector — BTC Statistical Regime Classification">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="../assets/styles.css?v=12">
+<style>
+  .regime-hero {
+    display: flex;
+    gap: 16px;
+    margin: 24px 0;
+    flex-wrap: wrap;
+  }
+  .regime-stat {
+    flex: 1;
+    min-width: 140px;
+    background: var(--bg-card, #111827);
+    border: 1px solid var(--border, #1f2937);
+    border-radius: 12px;
+    padding: 16px 20px;
+    text-align: center;
+  }
+  .regime-stat .stat-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted, #6b7280);
+    margin-bottom: 6px;
+  }
+  .regime-stat .stat-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text, #f9fafb);
+  }
+  .regime-stat.bull-stat  { border-color: #166534; background: #0d2818; }
+  .regime-stat.bear-stat { border-color: #7f1d1d; background: #2d1414; }
+  .regime-stat.bull-stat .stat-value  { color: #34d399; }
+  .regime-stat.bear-stat .stat-value { color: #f87171; }
+  .regime-stat.neutral-stat .stat-value { color: #60a5fa; }
+  .regime-stat.neutral-stat { border-color: #1e3a5f; background: #0f1923; }
+
+  .chart-wrap {
+    background: var(--bg-card, #111827);
+    border: 1px solid var(--border, #1f2937);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 24px 0;
+  }
+  .chart-wrap h2 {
+    font-size: 14px;
+    color: var(--muted, #6b7280);
+    margin: 0 0 12px;
+    font-weight: 600;
+  }
+  #regime-chart {
+    width: 100%;
+    height: 320px;
+  }
+  .chart-legend {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 10px;
+    font-size: 12px;
+  }
+  .chart-legend span { display: flex; align-items: center; gap: 6px; }
+  .legend-dot {
+    width: 10px; height: 10px; border-radius: 50%; display: inline-block;
+  }
+  .legend-dot.bull { background: #34d399; }
+  .legend-dot.neutral { background: #60a5fa; }
+  .legend-dot.bear { background: #f87171; }
+
+  .regime-table-wrap {
+    background: var(--bg-card, #111827);
+    border: 1px solid var(--border, #1f2937);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 24px 0;
+    overflow-x: auto;
+  }
+  .regime-table-wrap h2 {
+    font-size: 14px;
+    color: var(--muted, #6b7280);
+    margin: 0 0 12px;
+    font-weight: 600;
+  }
+  #regime-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  #regime-table th {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border, #1f2937);
+    color: var(--muted, #6b7280);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  #regime-table td {
+    padding: 6px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text, #d1d5db);
+  }
+  #regime-table .td-bull { color: #34d399; font-weight: 600; }
+  #regime-table .td-bear { color: #f87171; font-weight: 600; }
+  #regime-table .td-neutral { color: #60a5fa; font-weight: 600; }
+
+  .model-info {
+    background: var(--bg-card, #111827);
+    border: 1px solid var(--border, #1f2937);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 24px 0;
+  }
+  .model-info h2 { font-size: 16px; margin: 0 0 12px; color: var(--text, #f9fafb); }
+  .model-info p, .model-info li { font-size: 13px; color: var(--muted, #9ca3af); line-height: 1.65; }
+  .model-info ul { padding-left: 18px; margin: 8px 0; }
+  .model-info code {
+    background: rgba(255,255,255,0.06);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  .download-btn {
+    display: inline-block;
+    background: #1f2937;
+    color: #9ca3af;
+    border: 1px solid #374151;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .download-btn:hover { background: #374151; color: #f9fafb; }
+
+  .stale-warning {
+    background: #2d2014;
+    border: 1px solid #7c2d12;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 16px 0;
+    color: #fb923c;
+    font-size: 12px;
+  }
+  .hidden { display: none; }
+
+  .split-bars {
+    display: flex;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .split-bars .bar-bull { background: #34d399; }
+  .split-bars .bar-neutral { background: #60a5fa; }
+  .split-bars .bar-bear { background: #f87171; }
+</style>
+</head>
+<body>
+<div id="nav-placeholder"></div>
+
+<main class="page-container-wide">
+  <div class="breadcrumb"><a href="../">Home</a><span>›</span> Market Regime</div>
+
+  <h1 style="font-size:2em;font-weight:800;margin-bottom:4px">📊 Market Regime Detector</h1>
+  <p style="color:var(--muted);margin-bottom:24px;max-width:640px">
+    Causal K-means clustering with switching penalty (λ=4.0). Classifies each day as <strong style="color:#34d399">Bull</strong>, <strong style="color:#60a5fa">Neutral</strong>, or <strong style="color:#f87171">Bear</strong> using only past data — no look-ahead bias.
+  </p>
+
+  <div id="stale-warning" class="stale-warning hidden">⚠ Data may be stale — last updated more than 24 hours ago.</div>
+
+  <!-- Hero stats -->
+  <div class="regime-hero" id="regime-hero">
+    <div class="regime-stat" id="stat-regime"><div class="stat-label">Current Regime</div><div class="stat-value">—</div></div>
+    <div class="regime-stat" id="stat-price"><div class="stat-label">BTC Price</div><div class="stat-value">—</div></div>
+    <div class="regime-stat" id="stat-switches"><div class="stat-label">Switches / Year</div><div class="stat-value">—</div></div>
+    <div class="regime-stat" id="stat-duration"><div class="stat-label">Avg Duration</div><div class="stat-value">—</div></div>
+  </div>
+
+  <!-- Regime split bar -->
+  <div id="regime-split" style="margin-bottom:8px"></div>
+  <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:24px">
+    <span id="split-bull"></span><span id="split-neutral"></span><span id="split-bear"></span>
+  </div>
+
+  <!-- Price chart -->
+  <div class="chart-wrap">
+    <h2>Price & Regime Classification (Last 90 Days)</h2>
+    <canvas id="regime-chart"></canvas>
+    <div class="chart-legend">
+      <span><span class="legend-dot bull"></span> Bull</span>
+      <span><span class="legend-dot neutral"></span> Neutral</span>
+      <span><span class="legend-dot bear"></span> Bear</span>
+    </div>
+  </div>
+
+  <!-- Recent table -->
+  <div class="regime-table-wrap">
+    <h2>Recent Classifications</h2>
+    <table id="regime-table">
+      <thead><tr><th>Date</th><th>Close</th><th>Regime</th><th>Raw</th><th>Momentum</th><th>Volatility</th><th>Drawdown</th><th>Switched</th></tr></thead>
+      <tbody id="regime-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- Model info -->
+  <div class="model-info">
+    <h2>How It Works</h2>
+    <p>This is a <strong>causal K-means regime detector</strong> with a fixed switching penalty (λ).</p>
+    <ol style="color:var(--muted);font-size:13px;line-height:1.8;padding-left:18px">
+      <li>Build four backward-looking features: <code>log_return</code>, <code>momentum_20</code>, <code>volatility_20</code>, <code>drawdown</code></li>
+      <li>Fit 3-means clustering using <strong>past data only</strong> — the current row is never in its own training set</li>
+      <li>Label clusters: highest momentum center = <strong style="color:#34d399">Bull</strong>, lowest = <strong style="color:#f87171">Bear</strong>, middle = <strong style="color:#60a5fa">Neutral</strong></li>
+      <li>When classifying, add λ to any cluster that differs from the previous regime</li>
+      <li>Higher λ = fewer switches = more stable (but slower to react to real changes)</li>
+    </ol>
+    <p style="margin-top:12px">
+      Based on the jump model described in <em>"How do quants detect a market regime change in real time?"</em> — 2024 Princeton research using k-means with switching costs.
+      Backtest showed S&P drawdown reduced from ~55% to ~27% with λ tuning.
+    </p>
+  </div>
+
+  <a class="download-btn" id="download-btn" href="#" download="market_regime.csv">📥 Download CSV</a>
+</main>
+
+<script src="../assets/nav.js"></script>
+<script>
+// ── Constants ──────────────────────────────────
+const DATA_URL = '../data/market_regime.json';
+
+const REGIME_COLORS = { Bull: '#34d399', Neutral: '#60a5fa', Bear: '#f87171' };
+const REGIME_BG = { Bull: 'rgba(52,211,153,0.08)', Neutral: 'rgba(96,165,250,0.08)', Bear: 'rgba(248,113,113,0.08)' };
+
+// ── Format helpers ──────────────────────────────
+const fmtUSD = (n) => n != null ? '$' + Number(n).toLocaleString(undefined, {maximumFractionDigits: 0}) : '—';
+const fmtPct = (n) => n != null ? (n >= 0 ? '+' : '') + (n * 100).toFixed(2) + '%' : '—';
+
+// ── Render ─────────────────────────────────────
+async function load() {
+  try {
+    const res = await fetch(DATA_URL + '?t=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    render(data);
+  } catch (err) {
+    document.getElementById('regime-hero').innerHTML =
+      '<div style="color:#f87171;padding:20px">Failed to load regime data: ' + err.message + '</div>';
+  }
+}
+
+function render(data) {
+  const latest = data.latest;
+  const summary = data.summary;
+  const history = data.history || [];
+  const counts = data.regime_counts || {};
+
+  // Stale check
+  const ageMin = (Date.now() - new Date(data.generated_at).getTime()) / 60000;
+  if (ageMin > 1440) document.getElementById('stale-warning').classList.remove('hidden');
+
+  // Hero stats
+  const statRegime = document.getElementById('stat-regime');
+  statRegime.className = 'regime-stat ' + (latest?.regime === 'Bull' ? 'bull-stat' : latest?.regime === 'Bear' ? 'bear-stat' : 'neutral-stat');
+  statRegime.querySelector('.stat-value').textContent = latest?.regime || '—';
+
+  document.getElementById('stat-price').querySelector('.stat-value').textContent = fmtUSD(latest?.close);
+  document.getElementById('stat-switches').querySelector('.stat-value').textContent = summary?.switches_per_year?.toFixed(1) || '—';
+  document.getElementById('stat-duration').querySelector('.stat-value').textContent = (summary?.average_duration_days || 0) + ' days';
+
+  // Regime split bar
+  const total = (counts.Bull || 0) + (counts.Neutral || 0) + (counts.Bear || 0) || 1;
+  const bullPct = ((counts.Bull || 0) / total * 100).toFixed(0);
+  const neutralPct = ((counts.Neutral || 0) / total * 100).toFixed(0);
+  const bearPct = ((counts.Bear || 0) / total * 100).toFixed(0);
+  document.getElementById('regime-split').innerHTML =
+    `<div class="split-bars">
+      <div class="bar-bear" style="width:${bearPct}%"></div>
+      <div class="bar-neutral" style="width:${neutralPct}%"></div>
+      <div class="bar-bull" style="width:${bullPct}%"></div>
+    </div>`;
+  document.getElementById('split-bear').textContent = 'Bear ' + bearPct + '%';
+  document.getElementById('split-neutral').textContent = 'Neutral ' + neutralPct + '%';
+  document.getElementById('split-bull').textContent = 'Bull ' + bullPct + '%';
+
+  // Chart
+  drawChart(history);
+
+  // Table (last 30 rows)
+  const tbody = document.getElementById('regime-tbody');
+  const rows = history.slice(-30).reverse();
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td>${r.date}</td>
+      <td>${fmtUSD(r.close)}</td>
+      <td class="td-${r.regime?.toLowerCase()}">${r.regime}</td>
+      <td>${r.raw_regime}</td>
+      <td>${fmtPct(r.momentum_20)}</td>
+      <td>${(r.volatility_20 * 100).toFixed(1)}%</td>
+      <td>${fmtPct(r.drawdown)}</td>
+      <td>${r.switched ? '⚠ Yes' : '—'}</td>
+    </tr>
+  `).join('');
+
+  // CSV download
+  const csv = 'date,close,regime,raw_regime,switched,log_return,momentum_20,volatility_20,drawdown\n' +
+    history.map(r => [r.date, r.close, r.regime, r.raw_regime, r.switched, r.log_return, r.momentum_20, r.volatility_20, r.drawdown].join(',')).join('\n');
+  document.getElementById('download-btn').href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+}
+
+// ── Canvas Chart ────────────────────────────────
+function drawChart(history) {
+  const canvas = document.getElementById('regime-chart');
+  if (!canvas || !history.length) return;
+
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = 320 * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = '320px';
+
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const W = rect.width;
+  const H = 320;
+  const PAD = { top: 20, right: 20, bottom: 40, left: 60 };
+  const plotW = W - PAD.left - PAD.right;
+  const plotH = H - PAD.top - PAD.bottom;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#0d1117';
+  ctx.fillRect(0, 0, W, H);
+
+  // Data ranges
+  const closes = history.map(r => r.close);
+  const minPrice = Math.min(...closes) * 0.98;
+  const maxPrice = Math.max(...closes) * 1.02;
+  const priceRange = maxPrice - minPrice;
+
+  const toX = (i) => PAD.left + (i / (history.length - 1)) * plotW;
+  const toY = (p) => PAD.top + plotH - ((p - minPrice) / priceRange) * plotH;
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i < 5; i++) {
+    const y = PAD.top + (plotH / 4) * i;
+    ctx.beginPath(); ctx.moveTo(PAD.left, y); ctx.lineTo(W - PAD.right, y); ctx.stroke();
+  }
+
+  // Regime background bands (draw before line)
+  let prevRegime = null;
+  let bandStart = 0;
+  for (let i = 0; i < history.length; i++) {
+    if (history[i].regime !== prevRegime) {
+      if (prevRegime && i - bandStart > 1) {
+        ctx.fillStyle = REGIME_BG[prevRegime] || 'rgba(0,0,0,0)';
+        ctx.fillRect(toX(bandStart), PAD.top, toX(i) - toX(bandStart), plotH);
+      }
+      prevRegime = history[i].regime;
+      bandStart = i;
+    }
+  }
+  // Last band
+  if (prevRegime) {
+    ctx.fillStyle = REGIME_BG[prevRegime] || 'rgba(0,0,0,0)';
+    ctx.fillRect(toX(bandStart), PAD.top, toX(history.length - 1) - toX(bandStart), plotH);
+  }
+
+  // Price line
+  ctx.strokeStyle = '#f9fafb';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  for (let i = 0; i < history.length; i++) {
+    const x = toX(i), y = toY(history[i].close);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // Regime markers
+  for (let i = 0; i < history.length; i++) {
+    // Only mark switches and every 7th point to avoid clutter
+    if (history[i].switched || i % 7 === 0 || i === history.length - 1) {
+      const x = toX(i), y = toY(history[i].close);
+      ctx.fillStyle = REGIME_COLORS[history[i].regime] || '#888';
+      ctx.beginPath();
+      ctx.arc(x, y, history[i].switched ? 4 : 3, 0, Math.PI * 2);
+      ctx.fill();
+      if (history[i].switched) {
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+  }
+
+  // Y-axis labels
+  ctx.fillStyle = '#6b7280';
+  ctx.font = '10px JetBrains Mono, monospace';
+  ctx.textAlign = 'right';
+  for (let i = 0; i <= 4; i++) {
+    const price = minPrice + (priceRange / 4) * i;
+    ctx.fillText('$' + Math.round(price).toLocaleString(), PAD.left - 8, toY(price) + 4);
+  }
+
+  // Current regime label (top-left)
+  const latest = history[history.length - 1];
+  ctx.fillStyle = REGIME_COLORS[latest.regime] || '#888';
+  ctx.font = 'bold 13px Inter, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText(latest.regime.toUpperCase(), PAD.left + 4, PAD.top + 16);
+}
+
+// ── Init ───────────────────────────────────────
+load();
+window.addEventListener('resize', () => {
+  fetch(DATA_URL + '?t=' + Date.now()).then(r => r.json()).then(data => drawChart(data.history || []));
+});
+</script>
+</body>
+</html>
