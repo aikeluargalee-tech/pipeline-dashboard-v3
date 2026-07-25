@@ -1088,6 +1088,51 @@ details[open] .methodology-arrow {
 }
 .site-nav-cta:hover { opacity: 0.9; color: #05070d !important; }
 
+/* "More" dropdown */
+.nav-more-container { position: relative; }
+.nav-more-btn {
+  color: var(--muted);
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 4px 0;
+  transition: color 0.2s;
+}
+.nav-more-btn:hover { color: var(--text); }
+.nav-more-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  min-width: 180px;
+  background: rgba(5, 7, 13, 0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 0;
+  margin-top: 8px;
+  list-style: none;
+  z-index: 10001;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+}
+.nav-more-dropdown.open { display: block; }
+.nav-more-dropdown a {
+  display: block;
+  padding: 8px 16px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.nav-more-dropdown a:hover {
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+}
+
 /* Mobile nav */
 .site-nav-toggle {
   display: none;

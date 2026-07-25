@@ -84,14 +84,19 @@
         <li role="none"><a role="menuitem" href="${BASE}/market-regime/">Market Regime</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/volume-profile/">Volume Profile</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/whale-wake/">Whale Wake</a></li>
-        <li role="none"><a role="menuitem" href="${BASE}/methodology/">Methodology</a></li>
-        <li role="none"><a role="menuitem" href="${BASE}/research/">Research</a></li>
-        <li role="none"><a role="menuitem" href="${BASE}/glossary/">Glossary</a></li>
-        <li role="none"><a role="menuitem" href="${BASE}/events-and-disruptions/">Events</a></li>
-        <li role="none"><a role="menuitem" href="${BASE}/verdicts/">Verdicts</a></li>
-        <li role="none"><a role="menuitem" href="${BASE}/track-record/">Track Record</a></li>
-        <li role="none"><a role="menuitem" href="${BASE}/compare/">Compare</a></li>
-        <li role="none"><a role="menuitem" href="${BASE}/faq/">FAQ</a></li>
+        <li role="none" class="nav-more-container">
+          <button class="nav-more-btn" aria-haspopup="true" aria-expanded="false">More ▾</button>
+          <ul class="nav-more-dropdown" role="menu">
+            <li role="none"><a role="menuitem" href="${BASE}/methodology/">Methodology</a></li>
+            <li role="none"><a role="menuitem" href="${BASE}/research/">Research</a></li>
+            <li role="none"><a role="menuitem" href="${BASE}/glossary/">Glossary</a></li>
+            <li role="none"><a role="menuitem" href="${BASE}/events-and-disruptions/">Events</a></li>
+            <li role="none"><a role="menuitem" href="${BASE}/verdicts/">Verdicts</a></li>
+            <li role="none"><a role="menuitem" href="${BASE}/track-record/">Track Record</a></li>
+            <li role="none"><a role="menuitem" href="${BASE}/compare/">Compare</a></li>
+            <li role="none"><a role="menuitem" href="${BASE}/faq/">FAQ</a></li>
+          </ul>
+        </li>
         <li role="none"><a role="menuitem" href="${BASE}/dashboard/" class="site-nav-cta">Live Dashboard →</a></li>
       </ul>
     </div>
@@ -173,6 +178,32 @@
       link.setAttribute('aria-current', 'page');
     }
   });
+
+  // Wire up "More" dropdown toggle
+  const moreBtn = document.querySelector('.nav-more-btn');
+  const moreDropdown = document.querySelector('.nav-more-dropdown');
+  if (moreBtn && moreDropdown) {
+    moreBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const isOpen = moreDropdown.classList.toggle('open');
+      moreBtn.setAttribute('aria-expanded', isOpen);
+    });
+    // Close on outside click
+    document.addEventListener('click', function(e) {
+      if (!moreBtn.contains(e.target) && !moreDropdown.contains(e.target)) {
+        moreDropdown.classList.remove('open');
+        moreBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+    // Close on Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && moreDropdown.classList.contains('open')) {
+        moreDropdown.classList.remove('open');
+        moreBtn.setAttribute('aria-expanded', 'false');
+        moreBtn.focus();
+      }
+    });
+  }
 
   // Wire up mobile nav toggle with ARIA
   const toggle = document.querySelector('.site-nav-toggle');
