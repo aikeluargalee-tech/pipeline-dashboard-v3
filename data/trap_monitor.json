@@ -1,9 +1,9 @@
 {
-  "composite": 4,
+  "composite": 3,
   "actual_max": 7,
   "status": "CAUTION",
-  "direction": "NEUTRAL",
-  "long_trap_signals": 1,
+  "direction": "LONG_TRAP",
+  "long_trap_signals": 2,
   "short_trap_signals": 0,
   "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
   "signals": {
@@ -11,9 +11,9 @@
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "2L/1S",
+      "value": "4L/1S",
       "threshold": "\u22652\u00d7 asymmetry",
-      "note": "Long=2 below, Short=1 \u2014 asymmetry favors shorts"
+      "note": "Long=4 below, Short=1 \u2014 asymmetry favors shorts"
     },
     "s2_oi_divergence": {
       "score": 0,
@@ -27,25 +27,25 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "0.0083%",
+      "value": "0.0079%",
       "threshold": "|Funding| > 0.01%",
-      "note": "Funding 0.0083% \u2014 neutral"
+      "note": "Funding 0.0079% \u2014 neutral"
     },
     "s4_bid_ask_absorption": {
-      "score": 1,
-      "verdict": "TRAP",
+      "score": 0,
+      "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:3 Ask:1",
+      "value": "Bid:4 Ask:5",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid/Ask wall ratio 3.0\u00d7 \u2014 bid support trap"
+      "note": "Bid=4, Ask=5 \u2014 balanced"
     },
     "s5_taker_cvd": {
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "Taker:1.1774 CVD:-7574.61",
+      "value": "Taker:1.2513 CVD:-6601.75",
       "threshold": "Taker > 1.0 + CVD < 0",
-      "note": "Taker 1.18 (aggressive buying) + CVD -7575 negative \u2014 divergence trap"
+      "note": "Taker 1.25 (aggressive buying) + CVD -6602 negative \u2014 divergence trap"
     },
     "s6_exchange_netflow": {
       "score": 1,
@@ -67,11 +67,11 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "-4.0%",
+      "value": "-3.8%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -4.0% \u2014 neutral"
+      "note": "Skew -3.8% \u2014 neutral"
     }
   },
-  "btc_price": 64190.93,
-  "_collected": "2026-07-25 04:48 UTC"
+  "btc_price": 64150.0,
+  "_collected": "2026-07-25 05:18 UTC"
 }
