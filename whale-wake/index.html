@@ -6,24 +6,21 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Whale Wake — Local BTC Shock Detector | Pipeline Dashboard</title>
-<meta name="description" content="Whale Wake runs locally on your machine. It watches Binance and Coinbase in real time, detects cross-venue BTC shocks, and separates genuine moves from traps.">
+<title>Whale Wake — BTC Shock Detector | Pipeline Dashboard</title>
+<meta name="description" content="Whale Wake is a local BTC shock detection research tool. Cross-venue impulse detection with trap vetoes.">
 <link rel="canonical" href="https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/whale-wake/">
 <link rel="stylesheet" href="../assets/styles.css?v=12">
 <style>
-.ww-local{max-width:720px;margin:40px auto;padding:0 20px}
-.ww-local h1{font-size:28px;margin-bottom:8px}
-.ww-local .sub{color:var(--muted);font-size:14px;margin-bottom:32px}
+.ww-local{max-width:600px;margin:40px auto;padding:0 20px}
+.ww-local h1{font-size:28px;margin-bottom:4px}
+.ww-local .sub{color:var(--muted);font-size:14px;margin-bottom:28px}
 .ww-local .card{background:var(--bg-glass);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;backdrop-filter:blur(24px)}
-.ww-local .card h3{font-size:15px;margin-bottom:12px;color:var(--cyan)}
+.ww-local .card h3{font-size:15px;margin-bottom:10px;color:var(--cyan)}
 .ww-local .card p{color:var(--muted);font-size:13px;line-height:1.7}
 .ww-local code{background:rgba(255,255,255,.06);padding:3px 8px;border-radius:5px;font-size:12px;color:var(--green)}
-.ww-local .launch{display:inline-block;background:var(--cyan);color:#05070d;padding:14px 32px;border-radius:10px;font-weight:700;font-size:16px;text-decoration:none;margin-top:16px;transition:opacity .15s}
+.ww-local .launch{display:inline-block;background:var(--cyan);color:#05070d;padding:14px 32px;border-radius:10px;font-weight:700;font-size:16px;text-decoration:none;margin-top:8px;transition:opacity .15s}
 .ww-local .launch:hover{opacity:.85}
-.ww-local .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.ww-local .stat{font-size:32px;font-weight:900;font-family:'JetBrains Mono',monospace}
-.ww-local .stat-label{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-top:4px}
-@media(max-width:600px){.ww-local .grid2{grid-template-columns:1fr}}
+.ww-local .disclaimer{background:rgba(255,180,0,.08);border:1px solid rgba(255,180,0,.25);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:12px;color:var(--yellow);line-height:1.6}
 </style>
 </head>
 <body>
@@ -32,52 +29,26 @@
 
 <main id="main" class="ww-local">
 <h1>🐋 Whale Wake</h1>
-<p class="sub">Cross-venue BTC shock detector — runs locally on your machine</p>
+<p class="sub">Cross-venue BTC shock detector — research prototype</p>
 
-<div class="grid2">
-  <div class="card">
-    <div class="stat" style="color:var(--green)">7</div>
-    <div class="stat-label">Detection States</div>
-    <p style="margin-top:8px">IDLE → IMPULSE → PULLBACK → ARMED → TRIGGERED → FAILED → COOLDOWN</p>
-  </div>
-  <div class="card">
-    <div class="stat" style="color:var(--cyan)">8</div>
-    <div class="stat-label">Decision Gates</div>
-    <p style="margin-top:8px">Venue agreement, spot confirmation, order flow, book support, spread, pullback, data health</p>
-  </div>
-  <div class="card">
-    <div class="stat" style="color:var(--yellow)">3</div>
-    <div class="stat-label">Exchange Feeds</div>
-    <p style="margin-top:8px">Binance Futures · Binance Spot · Coinbase Spot — all public, no API key needed</p>
-  </div>
-  <div class="card">
-    <div class="stat" style="color:var(--purple)">13</div>
-    <div class="stat-label">Trap Vetoes</div>
-    <p style="margin-top:8px">Futures-only moves, spread explosions, deep retraces, order flow reversals, feed failures</p>
-  </div>
+<div class="disclaimer">
+⚠️ <strong>Research software — not trading intelligence.</strong> No validated edge, no calibrated thresholds, no historical evidence of positive expectancy. Observation and paper signals only. No orders, no API keys, no exchange access.
 </div>
 
 <div class="card" style="text-align:center">
-  <h3>🔴 Running on your machine</h3>
-  <p>Whale Wake runs as a local server on port 8787. It watches live exchange feeds and scores every BTC shock in real time.</p>
-  <p style="margin-top:8px"><strong>No orders. No API keys. No exchange access.</strong> Observation and paper signals only.</p>
+  <h3>🔴 Runs locally on your machine</h3>
+  <p>Watches Binance Futures, Binance Spot, and Coinbase Spot for cross-venue BTC impulses. Detects genuine multi-venue moves and flags futures-only traps.</p>
+  <p style="margin-top:6px"><strong>No orders. No API keys. No exchange access.</strong></p>
   <a href="http://127.0.0.1:8787" class="launch">🚀 Open Whale Wake</a>
-  <p style="color:var(--muted);font-size:11px;margin-top:12px">Link only works when the backend is running on your machine</p>
+  <p style="color:var(--muted);font-size:11px;margin-top:12px">Only works when the backend is running on your machine</p>
 </div>
 
 <div class="card">
   <h3>Quick Start</h3>
-  <p>From the project directory:</p>
-  <p style="margin-top:8px"><code>cd ~/projects/whale-wake</code><br>
+  <p><code>cd ~/projects/whale-wake</code><br>
   <code>./START_WHALE_WAKE.sh</code></p>
-  <p style="margin-top:12px">Then open <code>http://127.0.0.1:8787</code> or click the button above.</p>
-  <p style="margin-top:8px;color:var(--muted);font-size:12px">Demo mode works without internet. Live mode needs Binance + Coinbase connectivity.</p>
-</div>
-
-<div class="card">
-  <h3>What it detects</h3>
-  <p>Whale Wake watches for sudden, unexplained BTC movement across three independent venues. When all three agree on direction with volume confirmation, it scores the move 0–10 and tracks it through a pullback → continuation cycle. If futures move sharply but spot venues disagree, it calls a trap veto — the most dangerous pattern for retail traders chasing candles.</p>
-  <p style="margin-top:8px">It also tracks <strong>FOMC probability shifts</strong> (hike/hold/cut) via the FedWatch integration, detecting policy repricing events that may drive BTC moves.</p>
+  <p style="margin-top:8px">Then open <code>http://127.0.0.1:8787</code></p>
+  <p style="margin-top:4px;color:var(--muted);font-size:12px">Demo mode works offline. Live mode needs exchange connectivity.</p>
 </div>
 </main>
 
