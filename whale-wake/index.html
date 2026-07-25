@@ -320,7 +320,7 @@ function render(d){
   const a=document.getElementById('action');
   a.textContent=d.action;
   a.className='ww-action '+(d.action.includes('ABORT')?'bad':d.action.includes('SIGNAL')?'ok':'warn');
-  document.getElementById('reason').textContent=d.reason+' · DEMO / '+d.scenario.toUpperCase();
+  document.getElementById('reason').textContent=d.reason;
   document.getElementById('vetoes').innerHTML=d.vetoes.length?'<div class="ww-veto">⚠️ VETO: '+d.vetoes.join(', ')+'</div>':'';
 
   document.getElementById('gates').innerHTML=Object.entries(d.gates).map(([k,v])=>`<tr><td>${k}</td><td><span class="ww-pill ${cls(v)}">${v}</span></td></tr>`).join('');
