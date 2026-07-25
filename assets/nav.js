@@ -83,6 +83,7 @@
         <li role="none"><a role="menuitem" href="${BASE}/ai-factors/">AI Factors</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/market-regime/">Market Regime</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/volume-profile/">Volume Profile</a></li>
+        <li role="none"><a role="menuitem" href="${BASE}/whale-wake/">Whale Wake</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/methodology/">Methodology</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/research/">Research</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/glossary/">Glossary</a></li>
