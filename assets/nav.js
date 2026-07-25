@@ -83,6 +83,7 @@
         <li role="none"><a role="menuitem" href="${BASE}/ai-factors/">AI Factors</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/market-regime/">Market Regime</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/volume-profile/">Volume Profile</a></li>
+        <li role="none"><a role="menuitem" href="${BASE}/whale-wake/">Whale Wake</a></li>
         <li role="none" class="nav-more-container">
           <button class="nav-more-btn" aria-haspopup="true" aria-expanded="false">More ▾</button>
           <ul class="nav-more-dropdown" role="menu">
