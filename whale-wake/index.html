@@ -73,6 +73,14 @@
   <div class="ww-card"><div class="ww-label">Event Age</div><div id="age" class="ww-value">0.0s</div></div>
 </section>
 
+<section class="ww-cards" style="padding:0 20px">
+  <div class="ww-card"><div class="ww-label">Hike Probability</div><div id="fed-hike" class="ww-value">—</div><div id="fed-hike-delta" style="font-size:11px;color:var(--muted);margin-top:2px"></div></div>
+  <div class="ww-card"><div class="ww-label">Hold Probability</div><div id="fed-hold" class="ww-value">—</div></div>
+  <div class="ww-card"><div class="ww-label">Cut Probability</div><div id="fed-cut" class="ww-value">—</div><div id="fed-cut-delta" style="font-size:11px;color:var(--muted);margin-top:2px"></div></div>
+  <div class="ww-card"><div class="ww-label">Policy Repricing</div><div id="fed-policy" class="ww-value">— / 100</div><div id="fed-shift" style="font-size:11px;color:var(--muted);margin-top:2px"></div></div>
+  <div class="ww-card"><div class="ww-label">Dominant</div><div id="fed-dominant" class="ww-value">—</div></div>
+</section>
+
 <section class="ww-main" style="padding:0 20px">
   <div class="ww-chart-panel">
     <div class="ww-label">Cross-Venue 3s Log Returns (bps)</div>
@@ -134,6 +142,9 @@
 <script>
 // ── Whale Wake JS Demo Engine ──
 const PHASE={IDLE:'IDLE',IMPULSE:'IMPULSE',PULLBACK:'PULLBACK',ARMED:'ARMED',TRIGGERED:'TRIGGERED',FAILED:'FAILED',COOLDOWN:'COOLDOWN'};
+// FedWatch simulation state
+let fedHike=0.05,fedHold=0.875,fedCut=0.075,fedPrevHike=0.05,fedPrevHold=0.875,fedPrevCut=0.075,fedDominant='hold',fedDominantChanged=false;
+let fedPolicyScore=0,fedShift15m=0,fedShift1h=0,fedStarted=Date.now();
 let scenario='bull',phase=PHASE.IDLE,direction=0,eventStart=0,eventStartPrice=0,eventExtreme=0;
 let triggeredAt=0,cooldownUntil=0,lastReason='Waiting for market data';
 let log=[],frame=0,audioCtx;
@@ -150,6 +161,22 @@ function median(arr){if(!arr.length)return 0;const s=[...arr].sort((a,b)=>a-b),m
 function robustZ(x,hist){if(hist.length<20)return 0;const m=median(hist),deviations=hist.map(v=>Math.abs(v-m)),mad=Math.max(median(deviations),1e-9);return 0.6744897501960817*(x-m)/mad}
 function imbalance(buy,sell){const t=buy+sell;return t<=0?0:clamp((buy-sell)/t,-1,1)}
 
+function tickFed(){
+  const elapsed=(Date.now()-fedStarted)/1000,cycle=elapsed%52;
+  fedPrevHike=fedHike;fedPrevHold=fedHold;fedPrevCut=fedCut;
+  if(cycle<20){}else if(cycle<28){const p=(cycle-20)/8;fedHike=0.05+0.25*p;fedHold=0.875-0.10*p;fedCut=0.075-0.15*p}
+  else if(cycle<32){fedHike=0.30;fedHold=0.65;fedCut=0.05}
+  else if(cycle<38){const p=(cycle-32)/6;fedHike=0.30-0.28*p;fedHold=0.65-0.10*p;fedCut=0.05+0.38*p}
+  else if(cycle<44){fedHike=0.02;fedHold=0.55;fedCut=0.43}
+  else{const p=(cycle-44)/8;fedHike=0.02+0.03*p;fedHold=0.55+0.325*p;fedCut=0.43-0.355*p}
+  const t=fedHike+fedHold+fedCut;fedHike/=t;fedHold/=t;fedCut/=t;
+  fedShift15m=Math.round(Math.max(Math.abs(fedHike-fedPrevHike),Math.abs(fedHold-fedPrevHold),Math.abs(fedCut-fedPrevCut))*1000)/10;
+  fedShift1h=Math.round(fedShift15m*0.6*10)/10;
+  fedPolicyScore=Math.round(Math.min(100,fedShift15m/8*100*0.55+fedShift1h/15*100*0.45)*10)/10;
+  const d=maxKey({hike25:fedHike,hold:fedHold,cut25:fedCut});
+  fedDominantChanged=fedDominant!==d;fedDominant=d;
+}
+function maxKey(o){return Object.entries(o).reduce((a,b)=>a[1]>b[1]?a:b)[0]}
 function calculate(timestamp){
   // Demo simulator — shape the market
   const cycle=(timestamp/1000)%26;
@@ -278,7 +305,13 @@ function calculate(timestamp){
     returns_bps:{binance_futures:Math.round(returns.binance_futures*100)/100,binance_spot:Math.round(returns.binance_spot*100)/100,coinbase_spot:Math.round(returns.coinbase_spot*100)/100},
     prices:{binance_futures:Math.round(prices.binance_futures*100)/100,binance_spot:Math.round(prices.binance_spot*100)/100,coinbase_spot:Math.round(prices.coinbase_spot*100)/100},
     features:{return_z:Math.round(returnZ*100)/100,volume_ratio:Math.round(volRatio*100)/100,ofi_1s:Math.round(ofi1s*1000)/1000,ofi_3s:Math.round(ofi3s*1000)/1000,book_imbalance:Math.round(bookImb*1000)/1000,spread_bps:Math.round(spreadBps*1000)/1000,spread_ratio:Math.round(spreadRatio*100)/100,retention:Math.round(retention*1000)/1000,pullback_depth:Math.round(pullbackDepth*1000)/1000,liquidation_notional_3s:volMult>6?Math.round(150000*volMult):0},
-    gates,vetoes,scenario,log:[...log].slice(0,15)
+    gates,vetoes,scenario,
+    fed_policy:{
+      score:fedPolicyScore,dominant:fedDominant,dominant_changed:fedDominantChanged,
+      shift_15m_bps:fedShift15m,shift_1h_bps:fedShift1h,
+      probabilities:{meeting_id:'FOMC-2026-07-29',hike25:Math.round(fedHike*10000)/10000,hold:Math.round(fedHold*10000)/10000,cut25:Math.round(fedCut*10000)/10000}
+    },
+    log:[...log].slice(0,15)
   };
 }
 
@@ -317,6 +350,21 @@ function render(d){
   paint('latency',d.maxLatencyMs+' ms',d.maxLatencyMs>2000?'bad':'');
   paint('age',(d.eventAgeMs/1000).toFixed(1)+' s');
 
+  // FedWatch rendering
+  if(d.fed_policy&&d.fed_policy.probabilities){
+    const fp=d.fed_policy,p=fp.probabilities;
+    document.getElementById('fed-hike').textContent=(p.hike25*100).toFixed(1)+'%';
+    document.getElementById('fed-hold').textContent=(p.hold*100).toFixed(1)+'%';
+    document.getElementById('fed-cut').textContent=(p.cut25*100).toFixed(1)+'%';
+    document.getElementById('fed-hike-delta').textContent=fp.shift_15m_bps>0?'+'+fp.shift_15m_bps+' bp 15m':'';
+    document.getElementById('fed-cut-delta').textContent=fp.shift_1h_bps>0?'+'+fp.shift_1h_bps+' bp 1h':'';
+    document.getElementById('fed-policy').textContent=fp.score+' / 100';
+    document.getElementById('fed-policy').className='ww-value '+(fp.score>=70?'ok':fp.score>=40?'warn':'');
+    document.getElementById('fed-shift').textContent=fp.dominant_changed?'⚠️ Dominant flipped':fp.shift_1h_bps>5?'Repricing':'Calm';
+    document.getElementById('fed-dominant').textContent=fp.dominant==='hike25'?'HIKE':fp.dominant==='cut25'?'CUT':'HOLD';
+    document.getElementById('fed-dominant').className='ww-value '+(fp.dominant==='hike25'?'bad':fp.dominant==='cut25'?'ok':'');
+  }
+
   const a=document.getElementById('action');
   a.textContent=d.action;
   a.className='ww-action '+(d.action.includes('ABORT')?'bad':d.action.includes('SIGNAL')?'ok':'warn');
@@ -351,6 +399,7 @@ function render(d){
 // ── Main loop ──
 function tick(){
   frame++;
+  tickFed();
   const ts=Date.now();
   const d=calculate(ts);
   render(d);
