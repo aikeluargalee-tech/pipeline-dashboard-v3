@@ -230,21 +230,6 @@
     position: relative;
     top: -1px;
   }
-  .quadrant-threshold {
-    position: absolute;
-    pointer-events: none;
-  }
-  .quadrant-threshold-v {
-    top: 0; bottom: 0;
-    width: 1px;
-    border-left: 1px dashed rgba(255,255,255,0.08);
-  }
-  .quadrant-threshold-h {
-    left: 0; right: 0;
-    height: 1px;
-    border-top: 1px dashed rgba(255,255,255,0.08);
-  }
-
   .verdict-banner {
     padding: 18px 20px;
     border-radius: var(--card-radius);
@@ -555,8 +540,8 @@
 
     // Extract data
     const price = d.enriched?.btc_price || d.header?.btc_price || 0;
-    const vix = d.enriched?.vix || 0;
-    const dxy = d.enriched?.dxy || 0;
+    const vix = d.enriched?.vix ?? 15;   // neutral default: score = 0
+    const dxy = d.enriched?.dxy ?? 100;  // neutral default: score = 0
     const correlation = d.enriched?.btc_equity_correlation ?? 0;
     const funding = d.enriched?.funding_rate || 0;
     const oi_trend = d.enriched?.oi_trend || '';
@@ -670,22 +655,22 @@
     var qRORO = roroScore > 15 ? 'risk-on' : roroScore < -15 ? 'risk-off' : 'neutral';
     var qROT = rotScore > 15 ? 'into' : rotScore < -15 ? 'away' : 'neutral';
 
-    var quadrant, quadrantLabel, quadrantDesc, quadrantClass, bannerClass, glowClass;
+    var quadrant, quadrantLabel, quadrantDesc, bannerClass, glowClass;
     if (qRORO === 'risk-on' && qROT === 'into') {
       quadrant = 'Q1'; quadrantLabel = 'Risk-On + Into BTC'; quadrantDesc = 'Confident market, money flowing into Bitcoin — strongest setup. Favor BTC over alts.';
-      quadrantClass = 'q1'; bannerClass = 'q1-banner'; glowClass = 'q1-glow';
+      bannerClass = 'q1-banner'; glowClass = 'q1-glow';
     } else if (qRORO === 'risk-off' && qROT === 'into') {
       quadrant = 'Q2'; quadrantLabel = 'Risk-Off + Into BTC'; quadrantDesc = 'Markets are scared but Bitcoin is holding strong — a safe-haven or decoupling moment. Defensive positioning.';
-      quadrantClass = 'q2'; bannerClass = 'q2-banner'; glowClass = 'q2-glow';
+      bannerClass = 'q2-banner'; glowClass = 'q2-glow';
     } else if (qRORO === 'risk-on' && qROT === 'away') {
       quadrant = 'Q3'; quadrantLabel = 'Risk-On + Away from BTC'; quadrantDesc = 'The market is hungry for risk but ignoring Bitcoin — money is chasing altcoins or other assets instead.';
-      quadrantClass = 'q3'; bannerClass = 'q3-banner'; glowClass = 'q3-glow';
+      bannerClass = 'q3-banner'; glowClass = 'q3-glow';
     } else if (qRORO === 'risk-off' && qROT === 'away') {
       quadrant = 'Q4'; quadrantLabel = 'Risk-Off + Away from BTC'; quadrantDesc = 'Fear everywhere, everything being sold — the riskiest environment. Reduce exposure.';
-      quadrantClass = 'q4'; bannerClass = 'q4-banner'; glowClass = 'q4-glow';
+      bannerClass = 'q4-banner'; glowClass = 'q4-glow';
     } else {
       quadrant = 'TRANSITION'; quadrantLabel = 'Transitional / No Clear Quadrant'; quadrantDesc = 'Scores in neutral band (±15). Wait for conviction before allocating.';
-      quadrantClass = 'neutral-status'; bannerClass = 'neutral-banner'; glowClass = '';
+      bannerClass = 'neutral-banner'; glowClass = '';
     }
 
     // Verdict banner
@@ -723,8 +708,27 @@
     document.getElementById('rotation-score-val').className = 'score-value ' + (rotScore > 15 ? 'good' : rotScore < -15 ? 'bad' : 'warn');
     document.getElementById('rotation-needle').style.left = ((rotScore + 100) / 200 * 100) + '%';
 
-    // ===== RORO COMPONENTS CARD =====
+    // ===== RORO GAUGE CARD — concise input summary =====
     var scoreColor = function(s) { return s > 15 ? 'good' : s < -15 ? 'bad' : 'warn'; };
+    document.getElementById('roro-data').innerHTML =
+      roroInputs.map(function(inp) {
+        return row(inp.label,
+          (typeof inp.value === 'number' ? fmtNum(inp.value, 2) : inp.value) + ' · score ' + fmtNum(inp.score, 1),
+          scoreColor(inp.score));
+      }).join('');
+
+    // ===== ROTATION GAUGE CARD — concise input summary =====
+    document.getElementById('rotation-data').innerHTML =
+      rotInputs.map(function(inp) {
+        var display = typeof inp.value === 'number' ?
+          (inp.label.includes('Rate') ? fmtPct(inp.value, 3) :
+           inp.label.includes('Change') ? fmtPct(inp.value, 1) :
+           inp.label.includes('Vol') ? fmtNum(inp.value, 1) + '%' :
+           fmtNum(inp.value, 2)) : inp.value;
+        return row(inp.label, display + ' · score ' + fmtNum(inp.score, 1), scoreColor(inp.score));
+      }).join('');
+
+    // ===== RORO COMPONENTS CARD =====
     document.getElementById('rcomp-data').innerHTML =
       roroInputs.map(function(inp) {
         return row(inp.label,
