@@ -195,14 +195,40 @@
   .quadrant-marker-label {
     position: absolute;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72em;
-    font-weight: 700;
+    font-size: 0.85em;
+    font-weight: 800;
     white-space: nowrap;
     pointer-events: none;
-    background: rgba(0,0,0,0.8);
-    padding: 3px 8px;
-    border-radius: 4px;
+    background: rgba(0,0,0,0.85);
+    padding: 5px 10px;
+    border-radius: 5px;
     z-index: 11;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .quadrant-legend {
+    margin: 12px 16px 0;
+    font-size: 0.75em;
+    color: var(--muted);
+    line-height: 1.7;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+  .quadrant-legend-item {
+    padding: 2px 0;
+  }
+  .quadrant-legend-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 8px rgba(255,255,255,0.4);
+    margin-right: 6px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
   }
   .quadrant-threshold {
     position: absolute;
@@ -360,8 +386,8 @@
       height: 10px;
     }
     .quadrant-marker-label {
-      font-size: 0.62em;
-      padding: 2px 6px;
+      font-size: 0.72em;
+      padding: 3px 7px;
     }
     .score-gauge .score-value {
       font-size: 1.4em;
@@ -423,16 +449,21 @@
     <div class="quadrant-chart" id="quadrant-chart">
       <div class="quadrant-axis-v"></div>
       <div class="quadrant-axis-h"></div>
-      <div class="quadrant-label axis-top">BTC Rotation: INTO</div>
-      <div class="quadrant-label axis-bottom">BTC Rotation: AWAY</div>
-      <div class="quadrant-label axis-left">RORO: RISK-OFF</div>
-      <div class="quadrant-label axis-right">RORO: RISK-ON</div>
-      <div class="quadrant-box q1"><span class="q-num">Q1</span><span class="q-label">Risk-On + Into BTC</span><span class="q-desc">Strongest Bull Case</span></div>
-      <div class="quadrant-box q2"><span class="q-num">Q2</span><span class="q-label">Risk-On + Away BTC</span><span class="q-desc">Alt Season Pattern</span></div>
-      <div class="quadrant-box q3"><span class="q-num">Q3</span><span class="q-label">Risk-Off + Into BTC</span><span class="q-desc">Banking Crisis Decoupling</span></div>
-      <div class="quadrant-box q4"><span class="q-num">Q4</span><span class="q-label">Risk-Off + Away BTC</span><span class="q-desc">Default Risk-Off</span></div>
+      <div class="quadrant-label axis-top">↑ Into BTC</div>
+      <div class="quadrant-label axis-bottom">↓ Away</div>
+      <div class="quadrant-label axis-left">← Fear</div>
+      <div class="quadrant-label axis-right">Greed →</div>
+      <div class="quadrant-box q1"><span class="q-num">Q1</span><span class="q-label">Risk-On + Into BTC</span><span class="q-desc">The market is confident and money is flowing into Bitcoin — everything is working.</span></div>
+      <div class="quadrant-box q2"><span class="q-num">Q2</span><span class="q-label">Risk-Off + Into BTC</span><span class="q-desc">Markets are scared but Bitcoin is holding strong — a safe-haven or decoupling moment.</span></div>
+      <div class="quadrant-box q3"><span class="q-num">Q3</span><span class="q-label">Risk-On + Away BTC</span><span class="q-desc">The market is hungry for risk but ignoring Bitcoin — money is chasing altcoins or other assets instead.</span></div>
+      <div class="quadrant-box q4"><span class="q-num">Q4</span><span class="q-label">Risk-Off + Away BTC</span><span class="q-desc">Fear is everywhere and Bitcoin is being sold alongside everything else — the riskiest environment.</span></div>
       <div class="quadrant-marker" id="quadrant-marker"></div>
       <div class="quadrant-marker-label" id="quadrant-marker-label"></div>
+    </div>
+    <div class="quadrant-legend">
+      <div class="quadrant-legend-item"><span class="quadrant-legend-dot"></span> White dot = current position</div>
+      <div class="quadrant-legend-item">X‑axis (← →) = risk appetite: left = fear, right = greed</div>
+      <div class="quadrant-legend-item">Y‑axis (↑ ↓) = where money is flowing: top = into BTC, bottom = away from BTC</div>
     </div>
   </div>
 
@@ -641,16 +672,16 @@
 
     var quadrant, quadrantLabel, quadrantDesc, quadrantClass, bannerClass, glowClass;
     if (qRORO === 'risk-on' && qROT === 'into') {
-      quadrant = 'Q1'; quadrantLabel = 'Risk-On + Into BTC'; quadrantDesc = 'Strongest bull case. Full risk budget. Favor BTC over alts.';
+      quadrant = 'Q1'; quadrantLabel = 'Risk-On + Into BTC'; quadrantDesc = 'Confident market, money flowing into Bitcoin — strongest setup. Favor BTC over alts.';
       quadrantClass = 'q1'; bannerClass = 'q1-banner'; glowClass = 'q1-glow';
-    } else if (qRORO === 'risk-on' && qROT === 'away') {
-      quadrant = 'Q2'; quadrantLabel = 'Risk-On + Away from BTC'; quadrantDesc = 'Alt season pattern. Rotate into ETH/alts. Reduce BTC overweight.';
-      quadrantClass = 'q2'; bannerClass = 'q2-banner'; glowClass = 'q2-glow';
     } else if (qRORO === 'risk-off' && qROT === 'into') {
-      quadrant = 'Q3'; quadrantLabel = 'Risk-Off + Into BTC'; quadrantDesc = 'Banking crisis / decoupling. BTC as safe haven. Defensive positioning.';
+      quadrant = 'Q2'; quadrantLabel = 'Risk-Off + Into BTC'; quadrantDesc = 'Markets are scared but Bitcoin is holding strong — a safe-haven or decoupling moment. Defensive positioning.';
+      quadrantClass = 'q2'; bannerClass = 'q2-banner'; glowClass = 'q2-glow';
+    } else if (qRORO === 'risk-on' && qROT === 'away') {
+      quadrant = 'Q3'; quadrantLabel = 'Risk-On + Away from BTC'; quadrantDesc = 'The market is hungry for risk but ignoring Bitcoin — money is chasing altcoins or other assets instead.';
       quadrantClass = 'q3'; bannerClass = 'q3-banner'; glowClass = 'q3-glow';
     } else if (qRORO === 'risk-off' && qROT === 'away') {
-      quadrant = 'Q4'; quadrantLabel = 'Risk-Off + Away from BTC'; quadrantDesc = 'Default risk-off. Reduce exposure. Cash / stables overweight.';
+      quadrant = 'Q4'; quadrantLabel = 'Risk-Off + Away from BTC'; quadrantDesc = 'Fear everywhere, everything being sold — the riskiest environment. Reduce exposure.';
       quadrantClass = 'q4'; bannerClass = 'q4-banner'; glowClass = 'q4-glow';
     } else {
       quadrant = 'TRANSITION'; quadrantLabel = 'Transitional / No Clear Quadrant'; quadrantDesc = 'Scores in neutral band (±15). Wait for conviction before allocating.';
