@@ -351,7 +351,8 @@ function tsMeta(observed, collected, packetTs, freq) {
     collected_at_utc: collected || packetTs,
     packet_generated_at_utc: packetTs,
     age_calculated_at_utc: calculatedAt,
-    source_update_frequency_seconds: freq,
+    collector_interval_seconds: freq,
+    source_update_frequency_seconds: null,
     age_seconds: age,
     freshness: fclass
   };
@@ -394,13 +395,23 @@ function m(value, unit, sourceKey, source, instrument, window_, dataType, calcId
     collected_at_utc: meta.collected_at_utc,
     packet_generated_at_utc: meta.packet_generated_at_utc,
     age_calculated_at_utc: meta.age_calculated_at_utc,
+    collector_interval_seconds: meta.collector_interval_seconds,
     source_update_frequency_seconds: meta.source_update_frequency_seconds,
     age_seconds: meta.age_seconds,
     freshness: freshness,
     data_type: dataType || 'raw',
     formula: calcId || null,
     dependencies: deps || [],
-    eligible_for_analysis: eligible
+    eligible_for_analysis: (details && (details.eligible_for || details.not_eligible_for)) ? undefined : eligible,
+    reproducibility_status: (dataType || 'raw') === 'derived' ? (
+      (calcId && deps && deps.length > 0 && !(details && details._derivation_gap))
+        ? 'FULLY_REPRODUCIBLE'
+        : (calcId && (!deps || deps.length === 0))
+          ? 'PARTIALLY_REPRODUCIBLE'
+          : (details && details._derivation_gap)
+            ? 'REPORTED_NOT_REPRODUCIBLE'
+            : 'UNVERIFIED'
+    ) : null
   };
   // Merge extra detail fields (current_value, previous_value, window_start_utc, etc.)
   if (details && typeof details === 'object') Object.assign(obj, details);
@@ -872,8 +883,11 @@ function buildStructuredJson(d, srcTs) {
           window: '24h',
           population: 'all_accounts',
           measurement_type: 'volume_ratio',
-          endpoint: 'Binance futures/data/takerlongshortRatio (assumed)',
-          _note: 'window, population, and endpoint metadata inferred — not confirmed by pipeline source'
+          endpoint: null,
+          endpoint_status: 'UNCONFIRMED',
+          possible_endpoint: 'Binance futures/data/takerlongshortRatio',
+          metadata_confidence: 'LOW',
+          _note: 'endpoint, population, and measurement_type metadata inferred — not confirmed by pipeline source'
         })
       }
     },
@@ -884,18 +898,24 @@ function buildStructuredJson(d, srcTs) {
         formula: cvdMethodology.formula,
         dependencies: cvdMethodology.dependencies,
         unit: cvdMethodology.unit,
+        eligible_for: ['aggregate_order_flow'],
+        not_eligible_for: ['spot_vs_futures_leadership', 'spot_led_classification', 'futures_led_classification'],
         _derivation_gap: 'composite CVD (spot + futures combined); raw trade data, session bounds, and buyer-maker classification not available for audit'
       }),
       cvd_4h: m((c.cvd_per_tf || {})['4H'], 'USD', 'amt', 'Binance', 'composite spot + perpetual', '4h', 'derived', null, null, {
         formula: cvdMethodology.formula,
         dependencies: cvdMethodology.dependencies,
         unit: cvdMethodology.unit,
+        eligible_for: ['aggregate_order_flow'],
+        not_eligible_for: ['spot_vs_futures_leadership', 'spot_led_classification', 'futures_led_classification'],
         _derivation_gap: 'composite CVD — see cvd_methodology'
       }),
       cvd_24h: m(ctx.cvd_24h, 'USD', 'amt', 'Binance', 'composite spot + perpetual', '24h', 'derived', null, null, {
         formula: cvdMethodology.formula,
         dependencies: cvdMethodology.dependencies,
         unit: cvdMethodology.unit,
+        eligible_for: ['aggregate_order_flow'],
+        not_eligible_for: ['spot_vs_futures_leadership', 'spot_led_classification', 'futures_led_classification'],
         _derivation_gap: 'composite CVD — see cvd_methodology'
       }),
       coinbase_premium: m(ctx.coinbase_premium, 'percent', 'coinbase', 'Coinbase', 'BTC-USD spot'),
@@ -903,13 +923,18 @@ function buildStructuredJson(d, srcTs) {
         formula: cvdMethodology.formula,
         dependencies: cvdMethodology.dependencies,
         unit: cvdMethodology.unit,
+        eligible_for: ['aggregate_order_flow'],
+        not_eligible_for: ['spot_vs_futures_leadership', 'spot_led_classification', 'futures_led_classification'],
         _derivation_gap: 'composite CVD — see cvd_methodology'
       }),
       long_short_ratio: m(ctx.long_short_ratio, 'ratio', 'amt', 'Binance', 'BTCUSDT perpetual', null, 'raw', null, null, {
         population: 'all_accounts',
         measurement_type: 'account_count_ratio',
         window: '1h',
-        endpoint: 'Binance futures/data/globalLongShortAccountRatio (assumed)',
+        endpoint: null,
+        endpoint_status: 'UNCONFIRMED',
+        possible_endpoint: 'Binance futures/data/globalLongShortAccountRatio',
+        metadata_confidence: 'LOW',
         _note: 'population, measurement_type, and endpoint metadata inferred — not confirmed by pipeline source'
       })
     },
