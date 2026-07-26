@@ -301,7 +301,16 @@ const SOURCE_IDS = {
     exchange: null,
     market_type: 'sentiment',
     _note: 'Fear & Greed Index, refreshed daily'
-  }
+  },
+  'coinbase': {
+    provider: 'Coinbase',
+    endpoint: 'exchange.coinbase.com (public REST)',
+    api_series_id: null,
+    symbol: 'BTC-USD',
+    exchange: 'Coinbase',
+    market_type: 'spot',
+    _note: 'Coinbase premium calculated as (Coinbase BTC-USD - Binance BTCUSDT) / Binance BTCUSDT * 100'
+  },
 };
 
 // ─── Metric row helper for telemetry brief ───
@@ -356,6 +365,12 @@ function m(value, unit, sourceKey, source, instrument, window_, dataType, calcId
 
   const meta = tsMeta(srcObj.observed_at_utc, srcObj.collected_at_utc, packetTsSnapshot, srcObj.frequency_sec);
 
+  // For AMT (aggregator bot): source_observed_at_utc is actually the aggregator snapshot,
+  // not the original Binance observation time. Preserve it as aggregator_snapshot_at_utc.
+  const isAggregator = (sourceKey === 'amt');
+  const sourceObserved = isAggregator ? null : meta.source_observed_at_utc;
+  const aggregatorSnapshot = isAggregator ? meta.source_observed_at_utc : null;
+
   // Null value NEVER fresh
   let freshness = meta.freshness;
   let eligible = true;
@@ -373,7 +388,8 @@ function m(value, unit, sourceKey, source, instrument, window_, dataType, calcId
     source_identifier: sourceKey || null,
     instrument: instrument || null,
     window: window_ || null,
-    source_observed_at_utc: meta.source_observed_at_utc,
+    source_observed_at_utc: sourceObserved,
+    aggregator_snapshot_at_utc: aggregatorSnapshot,
     pipeline_snapshot_at_utc: meta.pipeline_snapshot_at_utc,
     collected_at_utc: meta.collected_at_utc,
     packet_generated_at_utc: meta.packet_generated_at_utc,
@@ -584,7 +600,7 @@ function buildBrief(d, srcTs) {
 
   // Macro
   html = '<h2>🌐 Macro & Capital Flows</h2>';
-  html += metric('DXY', ctx.dxy, null, 'FRED', fresh('fred'));
+  html += metric('Broad Trade-Weighted USD', ctx.dxy, null, 'FRED', fresh('fred'));
   html += metric('US 10Y Yield', ctx.us10y, '%', 'FRED', fresh('fred'));
   html += metric('VIX', ctx.vix || enr.vix, null, 'Yahoo Finance', fresh('yahoo'));
   html += metric('Equities', ctx.equities, null, 'Yahoo Finance', fresh('yahoo'));
@@ -687,6 +703,7 @@ function computeDataQuality(packetJson) {
     reproducible_derived_metrics_count: reproducible,
     non_reproducible_derived_metrics_count: nonReproducible,
     source_partial_count: 0,  // populated after source health
+    source_unavailable_count: 0,
     source_error_count: 0
   };
 }
@@ -702,10 +719,12 @@ function computeSourceHealth(packetJson) {
     const srcId = obj.source_identifier || src.toLowerCase();
     if (!bySource[src]) {
       bySource[src] = {
-        status: 'OK',
+        transport_status: 'OK',
+        auditability_status: 'OK',
         age_seconds: null,
         successful_metrics: [],
         affected_metrics: [],
+        non_auditable_metrics: [],
         source_identifier_ref: srcId
       };
     }
@@ -716,9 +735,14 @@ function computeSourceHealth(packetJson) {
 
     if (obj.value == null || obj.freshness === 'unavailable' || !obj.eligible_for_analysis) {
       bySource[src].affected_metrics.push(path);
-      bySource[src].status = 'PARTIAL';
+      bySource[src].auditability_status = 'PARTIAL';
     } else {
       bySource[src].successful_metrics.push(path);
+      // Check for derivation gaps — non-auditable even if transport is OK
+      if (obj._derivation_gap) {
+        bySource[src].non_auditable_metrics.push(path);
+        bySource[src].auditability_status = 'PARTIAL';
+      }
     }
 
     // ERROR state: if ALL metrics in a source are affected
@@ -728,15 +752,18 @@ function computeSourceHealth(packetJson) {
     }
   }
 
-  // Finalize: UNAVAILABLE if zero successful, OK if zero affected, else PARTIAL
+  // Finalize transport_status and auditability_status
   for (const [src, info] of Object.entries(bySource)) {
+    // Transport: no successful metrics at all → UNAVAILABLE
     if (info.successful_metrics.length === 0) {
-      info.status = 'UNAVAILABLE';
-    } else if (info.affected_metrics.length === 0) {
-      info.status = 'OK';
-    } else {
-      info.status = 'PARTIAL';
+      info.transport_status = 'UNAVAILABLE';
     }
+    // Auditability: non-auditable metrics present → PARTIAL
+    if (info.non_auditable_metrics.length === 0 && info.affected_metrics.length === 0) {
+      info.auditability_status = 'OK';
+    }
+    // Clean up internal tracking arrays (not needed in output)
+    // Keep in output for transparency
   }
 
   return bySource;
@@ -871,7 +898,7 @@ function buildStructuredJson(d, srcTs) {
         unit: cvdMethodology.unit,
         _derivation_gap: 'composite CVD — see cvd_methodology'
       }),
-      coinbase_premium: m(ctx.coinbase_premium, 'percent', 'amt', 'Coinbase', 'BTCUSD spot'),
+      coinbase_premium: m(ctx.coinbase_premium, 'percent', 'coinbase', 'Coinbase', 'BTC-USD spot'),
       session_cvd: m(c.session_cvd, 'USD', 'amt', 'Binance', 'composite spot + perpetual', 'session', 'derived', null, null, {
         formula: cvdMethodology.formula,
         dependencies: cvdMethodology.dependencies,
@@ -939,7 +966,7 @@ function buildStructuredJson(d, srcTs) {
     },
 
     macro: {
-      dxy: m(ctx.dxy, null, 'fred', 'FRED', 'DTWEXBGS (Trade Weighted USD Broad)', null, 'raw', null, null, {
+      broad_trade_weighted_usd: m(ctx.dxy, null, 'fred', 'FRED', 'DTWEXBGS (Trade Weighted U.S. Dollar Index: Broad, Goods and Services)', null, 'raw', null, null, {
         _derivation_gap: 'source observation timestamp unavailable — FRED publishes daily; pipeline does not capture publication date'
       }),
       us10y: m(ctx.us10y, 'percent', 'fred', 'FRED', 'DGS10 (10-Year Treasury)', null, 'raw', null, null, {
@@ -985,11 +1012,11 @@ function buildStructuredJson(d, srcTs) {
       mvrv: m(brk.mvrv, null, 'onchain', 'Glassnode', 'BTC', null, 'raw'),
       mvrv_z: m(cyc.mvrv_z ? Number(cyc.mvrv_z) : null, null, 'onchain', 'Glassnode', 'BTC', null, 'raw'),
       nupl: m(nupl, 'fraction', 'onchain', 'Glassnode', 'BTC', null, 'derived', 'nupl', ['on_chain.mvrv']),
-      sopr: m(brk.sopr_24h ? Number(brk.sopr_24h) : null, null, 'onchain', 'Glassnode', 'BTC', null, '24h'),
-      lth_sopr: m(brk.lth_sopr_24h ? Number(brk.lth_sopr_24h) : null, null, 'onchain', 'Glassnode', 'BTC', null, '24h'),
-      sth_sopr: m(brk.sth_sopr_24h ? Number(brk.sth_sopr_24h) : null, null, 'onchain', 'Glassnode', 'BTC', null, '24h'),
+      sopr: m(brk.sopr_24h ? Number(brk.sopr_24h) : null, null, 'onchain', 'Glassnode', 'BTC', '24h', 'raw'),
+      lth_sopr: m(brk.lth_sopr_24h ? Number(brk.lth_sopr_24h) : null, null, 'onchain', 'Glassnode', 'BTC', '24h', 'raw'),
+      sth_sopr: m(brk.sth_sopr_24h ? Number(brk.sth_sopr_24h) : null, null, 'onchain', 'Glassnode', 'BTC', '24h', 'raw'),
       realized_price: m(brk.realized_price, 'USD', 'onchain', 'Glassnode', 'BTC'),
-      netflow_7d: m(cyc.netflow_7d ? Number(cyc.netflow_7d) : null, 'BTC', 'onchain', 'Glassnode', 'BTC', null, '7d'),
+      netflow_7d: m(cyc.netflow_7d ? Number(cyc.netflow_7d) : null, 'BTC', 'onchain', 'Glassnode', 'BTC', '7d', 'raw'),
       supply_in_profit_pct: m(brk.supply_in_profit_share, 'percent', 'onchain', 'Glassnode', 'BTC')
     }
   };
@@ -998,13 +1025,16 @@ function buildStructuredJson(d, srcTs) {
   const dq = computeDataQuality(packet);
   const sh = computeSourceHealth(packet);
 
-  // Update source_partial_count and source_error_count from source health
-  let partialCount = 0, errorCount = 0;
+  // Update source counts from source health
+  let partialCount = 0, unavailableCount = 0, errorCount = 0;
   for (const [src, info] of Object.entries(sh)) {
-    if (info.status === 'PARTIAL') partialCount++;
-    if (info.status === 'UNAVAILABLE' || info.status === 'ERROR') errorCount++;
+    if (info.transport_status === 'OK' && info.non_auditable_metrics && info.non_auditable_metrics.length > 0) partialCount++;
+    if (info.transport_status === 'PARTIAL') partialCount++;
+    if (info.transport_status === 'UNAVAILABLE') unavailableCount++;
+    if (info.transport_status === 'ERROR') errorCount++;
   }
   dq.source_partial_count = partialCount;
+  dq.source_unavailable_count = unavailableCount;
   dq.source_error_count = errorCount;
 
   // Inject post-hoc
@@ -1064,6 +1094,8 @@ async function loadAll() {
     'ts valid ' + dq.timestamp_validity_percent + '% · ' +
     'reproducible ' + dq.reproducible_derived_metrics_count + ' · ' +
     'partial src ' + dq.source_partial_count + ' · ' +
+    'partial src ' + dq.source_partial_count + ' · ' +
+    'unavail src ' + dq.source_unavailable_count + ' · ' +
     'error src ' + dq.source_error_count;
 
   // Hero freshness
