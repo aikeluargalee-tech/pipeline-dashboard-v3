@@ -1,19 +1,19 @@
 {
-  "composite": 4,
+  "composite": 3,
   "actual_max": 7,
   "status": "CAUTION",
-  "direction": "LONG_TRAP",
-  "long_trap_signals": 2,
+  "direction": "NEUTRAL",
+  "long_trap_signals": 1,
   "short_trap_signals": 0,
   "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
   "signals": {
     "s1_liq_asymmetry": {
-      "score": 1,
-      "verdict": "TRAP",
+      "score": 0,
+      "verdict": "CLEAR",
       "max": 1,
-      "value": "3L/1S",
+      "value": "3L/2S",
       "threshold": "\u22652\u00d7 asymmetry",
-      "note": "Long=3 below, Short=1 \u2014 asymmetry favors shorts"
+      "note": "Long=3, Short=2 \u2014 balanced"
     },
     "s2_oi_divergence": {
       "score": 1,
@@ -21,23 +21,23 @@
       "max": 1,
       "value": "-0.7%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI -0.7% \u2014 unwinding while price $64510 \u2014 divergence"
+      "note": "OI -0.7% \u2014 unwinding while price $64508 \u2014 divergence"
     },
     "s3_funding": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "0.0086%",
+      "value": "0.0088%",
       "threshold": "|Funding| > 0.01%",
-      "note": "Funding 0.0086% \u2014 neutral"
+      "note": "Funding 0.0088% \u2014 neutral"
     },
     "s4_bid_ask_absorption": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:3 Ask:5",
+      "value": "Bid:3 Ask:3",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=3, Ask=5 \u2014 balanced"
+      "note": "Bid=3, Ask=3 \u2014 balanced"
     },
     "s5_taker_cvd": {
       "score": 0,
@@ -67,11 +67,11 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "-4.3%",
+      "value": "-4.2%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -4.3% \u2014 neutral"
+      "note": "Skew -4.2% \u2014 neutral"
     }
   },
-  "btc_price": 64510.18,
-  "_collected": "2026-07-26 11:17 UTC"
+  "btc_price": 64508.01,
+  "_collected": "2026-07-26 11:48 UTC"
 }
