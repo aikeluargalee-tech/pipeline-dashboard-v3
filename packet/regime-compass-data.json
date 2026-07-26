@@ -1,28 +1,39 @@
 {
-  "updated": "2026-07-26T11:37:42Z",
+  "updated": "2026-07-26T12:08:41Z",
   "btc_eth": {
-    "btc_price": 64500.8,
-    "eth_price": 1887.73,
-    "btc_eth_ratio": 34.17,
-    "btc_24h_pct": 0.67,
-    "eth_24h_pct": 1.61,
-    "rel_perf_24h_pct": -0.94,
-    "label": "BTC +0.7% vs ETH +1.6%"
+    "btc_price": 64620.0,
+    "eth_price": 1890.06,
+    "btc_eth_ratio": 34.19,
+    "btc_24h_pct": 0.85,
+    "eth_24h_pct": 1.72,
+    "rel_perf_24h_pct": -0.88,
+    "label": "BTC +0.8% vs ETH +1.7%"
   },
-  "btc_gold": null,
-  "credit_spread": null,
+  "btc_gold": {
+    "btc_price": 64620.0,
+    "gold_price": 4070.8,
+    "btc_gold_ratio": 15.87,
+    "label": "1 BTC = 15.9 oz gold"
+  },
+  "credit_spread": {
+    "hyg_price": 79.23,
+    "lqd_price": 106.23,
+    "hyg_lqd_ratio": 0.74583,
+    "spread_display": "-2700 bps",
+    "label": "Risk-Off (LQD > HYG)"
+  },
   "etf_flows": {
     "latest_date": "25 Jul 2026",
     "latest_daily_m": 400.0,
     "weekly_net_m": 6233.1,
     "direction": "strong_inflow",
     "label": "\ud83d\udfe2 Strong Inflow",
-    "age_hours": 2.1
+    "age_hours": 2.6
   },
   "btc_dominance": {
     "dominance_pct": 56.5,
     "label": "BTC 56.5% of total crypto market cap"
   },
-  "available": 3,
+  "available": 5,
   "total": 5
 }
