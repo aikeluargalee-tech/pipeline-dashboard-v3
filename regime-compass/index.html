@@ -513,6 +513,7 @@
 <script>
 (async function() {
   const DATA_URL = '../packet/data.json';
+  const COMPASS_URL = '../packet/regime-compass-data.json';
   const CACHE_BUST = '?ts=' + Date.now();
 
   function fmtUSD(n) {
@@ -537,6 +538,13 @@
     const resp = await fetch(DATA_URL + CACHE_BUST);
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     const d = await resp.json();
+
+    // Fetch compass data (optional — graceful fallback if missing)
+    var compass = null;
+    try {
+      var compResp = await fetch(COMPASS_URL + CACHE_BUST);
+      if (compResp.ok) compass = await compResp.json();
+    } catch(e) { /* silently ignore */ }
 
     // Extract data
     const price = d.enriched?.btc_price || d.header?.btc_price || 0;
@@ -769,11 +777,32 @@
 
     // ===== MISSING DATA CARD =====
     document.getElementById('missing-data').innerHTML =
-      row('BTC/ETH Relative Performance', '0.00% (offline)', 'neutral') +
-      row('BTC/Gold Relative Performance', '0.00% (offline)', 'neutral') +
-      row('HYG vs LQD Credit Spreads', '0 bps (offline)', 'neutral') +
-      row('ETF Net Flows', '$0M (offline)', 'neutral') +
-      row('BTC Dominance Change', '0.00% (offline)', 'neutral');
+      (compass && compass.btc_eth ? row('BTC/ETH Relative Performance',
+        compass.btc_eth.label, compass.btc_eth.rel_perf_24h_pct > 0 ? 'good' : 'bad') :
+        row('BTC/ETH Relative Performance', '0.00% (offline)', 'neutral')) +
+      (compass && compass.btc_gold ? row('BTC/Gold Relative Performance',
+        compass.btc_gold.label, 'neutral') :
+        row('BTC/Gold Relative Performance', '0.00% (offline)', 'neutral')) +
+      (compass && compass.credit_spread ? row('HYG vs LQD Credit Spreads',
+        compass.credit_spread.spread_display + ' · ' + compass.credit_spread.label, 'neutral') :
+        row('HYG vs LQD Credit Spreads', '0 bps (offline)', 'neutral')) +
+      (compass && compass.etf_flows ? row('ETF Net Flows (5d)',
+        '$' + (compass.etf_flows.weekly_net_m >= 0 ? '+' : '') + compass.etf_flows.weekly_net_m.toFixed(0) + 'M · ' + compass.etf_flows.label,
+        compass.etf_flows.direction === 'strong_inflow' ? 'good' : compass.etf_flows.direction.includes('outflow') ? 'bad' : 'warn') :
+        row('ETF Net Flows', '$0M (offline)', 'neutral')) +
+      (compass && compass.btc_dominance ? row('BTC Dominance',
+        compass.btc_dominance.label, 'neutral') :
+        row('BTC Dominance Change', '0.00% (offline)', 'neutral'));
+
+    // Update badge based on live data
+    if (compass && compass.available > 0) {
+      var badge = document.querySelector('.missing-badge');
+      if (badge) {
+        badge.textContent = compass.available + '/' + compass.total + ' LIVE';
+        badge.style.background = compass.available >= 4 ? 'rgba(0,212,170,0.15)' : 'rgba(240,185,11,0.12)';
+        badge.style.color = compass.available >= 4 ? 'var(--good)' : 'var(--warn)';
+      }
+    }
 
   } catch (e) {
     document.getElementById('verdict').innerHTML = '<div style="color:var(--bad)">⚠️ Could not load data: ' + e.message + '</div>';
