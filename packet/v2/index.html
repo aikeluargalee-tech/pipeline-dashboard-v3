@@ -190,17 +190,20 @@ function extractSourceTimestamps(d) {
 function tsMeta(srcKey, d, srcTs, overrideObserved) {
   const h = d.header || {};
   const packetTs = h.generated_timestamp || nowUtc();
+  const calculatedAt = nowUtc();
   const src = (srcTs && srcTs[srcKey]) || {};
-  const observed = overrideObserved || src.observed_at_utc || packetTs;
+  const observed = overrideObserved || src.observed_at_utc || null;
   const collected = src.collected_at_utc || packetTs;
-  const age = ageSec(observed);
   const freq = src.frequency_sec || 900;
+  // Fix 1: age_seconds = AGE_CALCULATED_AT_UTC - observed_at_utc
+  const age = observed ? Math.round((new Date(calculatedAt).getTime() - new Date(observed).getTime()) / 1000) : null;
   const fclass = !observed ? 'unavailable' : age < freq * 0.5 ? 'fresh' : age < freq * 2 ? 'delayed' : age < freq * 6 ? 'stale' : 'unavailable';
 
   return {
     observed_at_utc: isoOk(observed) ? observed : null,
     collected_at_utc: isoOk(collected) ? collected : packetTs,
     packet_generated_at_utc: packetTs,
+    age_calculated_at_utc: calculatedAt,
     source_update_frequency_seconds: freq,
     age_seconds: age,
     freshness: fclass
@@ -363,60 +366,65 @@ function computeCompleteness(d, srcTs) {
   const enr = d.enriched || {}, reg = d.regime || {}, src = d.sources || {};
   const brk = (d.reference && d.reference.brk) || {};
   const ai = d.ai_factors || {};
-  const packetTs = h.generated_timestamp;
 
-  // Define critical metrics with their source keys
+  // Fix 2: Each metric must have value + valid timestamp + acceptable freshness
+  function isEligible(srcKey, value, maxAgeSec) {
+    if (value == null) return { ok: false, reason: 'no_value' };
+    const s = (srcTs && srcTs[srcKey]) || {};
+    const obs = s.observed_at_utc;
+    if (!obs) return { ok: false, reason: 'no_timestamp' };
+    const age = ageSec(obs);
+    if (age != null && age > (maxAgeSec || s.frequency_sec * 2 || 1800))
+      return { ok: false, reason: 'stale (' + Math.round(age/60) + 'm)' };
+    return { ok: true };
+  }
+
   const critical = [
-    { key: 'amt', label: 'Price', ok: !!h.btc_price },
-    { key: 'amt', label: '24h Change', ok: h.change_24h != null },
-    { key: 'amt', label: 'Spread', ok: h.spread != null },
-    { key: 'amt', label: 'OI USD', ok: !!c.oi_absolute_usd_billions },
-    { key: 'amt', label: 'Funding', ok: ctx.funding_rate != null },
-    { key: 'amt', label: 'DXY', ok: !!ctx.dxy },
-    { key: 'amt', label: 'US10Y', ok: !!ctx.us10y },
-    { key: 'amt', label: 'VIX', ok: !!(ctx.vix || enr.vix) },
-    { key: 'amt', label: 'CVD', ok: ctx.cvd_24h != null },
-    { key: 'amt', label: 'Coinbase Prem', ok: ctx.coinbase_premium != null },
-    { key: 'amt', label: 'L/S Ratio', ok: !!ctx.long_short_ratio },
-    { key: 'amt', label: 'Taker', ok: enr.taker_buy_ratio != null },
-    { key: 'amt', label: 'F&G', ok: !!(enr.fng_value || ctx.fng_value) },
-    { key: 'amt', label: 'ETF Flow', ok: ctx.etf_flow_daily != null },
-    { key: 'onchain', label: 'MVRV', ok: !!brk.mvrv },
-    { key: 'onchain', label: 'SOPR', ok: brk.sopr_24h != null },
-    { key: 'onchain', label: 'Realized Price', ok: !!brk.realized_price },
-    { key: 'vp', label: 'POC', ok: !!(src.volume_profile && src.volume_profile.poc) },
-    { key: 'amt', label: 'ADX', ok: !!(src.amt && src.amt.adx) },
-    { key: 'pipeline', label: 'Regime', ok: !!reg.label },
-    { key: 'pipeline', label: 'Trap Monitor', ok: !!(src.trap_monitor && src.trap_monitor.score) },
-    { key: 'aifactors', label: 'AI Factors', ok: !!(ai.s9_vix_roc) },
-    { key: 'pipeline', label: 'Black Swan', ok: enr.black_swan_score != null },
-    { key: 'amt', label: 'Delta Trend', ok: !!c.delta_trend },
-    { key: 'amt', label: 'S/R Bands', ok: !!(d.reference && (d.reference.sr_1h || d.reference.sr_1d)) },
+    { srcKey: 'amt', label: 'Price', value: h.btc_price, maxAge: 900 },
+    { srcKey: 'amt', label: '24h Change', value: h.change_24h, maxAge: 900 },
+    { srcKey: 'amt', label: 'Spread', value: h.spread, maxAge: 900 },
+    { srcKey: 'amt', label: 'OI USD', value: c.oi_absolute_usd_billions, maxAge: 900 },
+    { srcKey: 'amt', label: 'Funding', value: ctx.funding_rate, maxAge: 900 },
+    { srcKey: 'amt', label: 'DXY', value: ctx.dxy, maxAge: 900 },
+    { srcKey: 'amt', label: 'US10Y', value: ctx.us10y, maxAge: 900 },
+    { srcKey: 'amt', label: 'VIX', value: ctx.vix || enr.vix, maxAge: 900 },
+    { srcKey: 'amt', label: 'CVD', value: ctx.cvd_24h, maxAge: 900 },
+    { srcKey: 'amt', label: 'Coinbase Prem', value: ctx.coinbase_premium, maxAge: 900 },
+    { srcKey: 'amt', label: 'L/S Ratio', value: ctx.long_short_ratio, maxAge: 900 },
+    { srcKey: 'amt', label: 'Taker', value: enr.taker_buy_ratio, maxAge: 900 },
+    { srcKey: 'amt', label: 'F&G', value: enr.fng_value || ctx.fng_value, maxAge: 900 },
+    { srcKey: 'amt', label: 'ETF Flow', value: ctx.etf_flow_daily, maxAge: 900 },
+    { srcKey: 'onchain', label: 'MVRV', value: brk.mvrv, maxAge: 86400 },
+    { srcKey: 'onchain', label: 'SOPR', value: brk.sopr_24h, maxAge: 86400 },
+    { srcKey: 'onchain', label: 'Realized Price', value: brk.realized_price, maxAge: 86400 },
+    { srcKey: 'vp', label: 'POC', value: (src.volume_profile || {}).poc, maxAge: 3600 },
+    { srcKey: 'amt', label: 'ADX', value: (src.amt || {}).adx, maxAge: 900 },
+    { srcKey: 'pipeline', label: 'Regime', value: reg.label, maxAge: 3600 },
+    { srcKey: 'pipeline', label: 'Trap Monitor', value: (src.trap_monitor || {}).score, maxAge: 3600 },
+    { srcKey: 'aifactors', label: 'AI Factors', value: (ai.s9_vix_roc || {}).score, maxAge: 1800 },
+    { srcKey: 'pipeline', label: 'Black Swan', value: enr.black_swan_score, maxAge: 3600 },
+    { srcKey: 'amt', label: 'Delta Trend', value: c.delta_trend, maxAge: 900 },
+    { srcKey: 'pipeline', label: 'Correlation', value: enr.correlation_r || ctx.correlation_r, maxAge: 3600 },
+    { srcKey: 'amt', label: 'Liquidations', value: ctx.liq_clusters || null, maxAge: 900 },
   ];
 
   const total = critical.length;
-  let available = 0, fresh = 0, hasSource = 0, hasType = 0;
+  let available = 0, fresh = 0, hasSource = 0;
 
   for (const m of critical) {
-    if (m.ok) {
-      available++;
-      // Freshness: check source timestamp age vs expected frequency
-      const s = (srcTs && srcTs[m.key]) || {};
-      const freq = s.frequency_sec || 900;
-      const age = ageSec(s.observed_at_utc || packetTs);
-      if (age != null && age < freq * 2) fresh++;
-      // Source integrity: does the source key exist?
-      if (srcTs && srcTs[m.key] && srcTs[m.key].observed_at_utc) hasSource++;
-      // Metadata: does it have a source label?
-      hasType++; // all critical metrics have source labels in buildStructuredJson
-    }
+    const eligibility = isEligible(m.srcKey, m.value, m.maxAge);
+    if (!eligibility.ok) continue; // Fix 2: unavailable/stale don't count as available
+    available++;
+    const s = (srcTs && srcTs[m.srcKey]) || {};
+    const age = ageSec(s.observed_at_utc);
+    if (age != null && age < (m.maxAge || 900)) fresh++;
+    if (srcTs && srcTs[m.srcKey] && srcTs[m.srcKey].observed_at_utc) hasSource++;
   }
 
   const availPct = Math.round((available / total) * 100);
   const freshPct = available > 0 ? Math.round((fresh / available) * 100) : 0;
-  const metaPct = available > 0 ? Math.round((hasType / available) * 100) : 0;
+  const metaPct = available > 0 ? 100 : 0; // all eligible metrics have metadata
   const sourcePct = available > 0 ? Math.round((hasSource / available) * 100) : 0;
-  // Critical readiness: all 5 dimensions must be strong
   const criticalPct = Math.round((availPct * 0.4 + freshPct * 0.3 + sourcePct * 0.2 + metaPct * 0.1));
 
   return {
@@ -436,96 +444,142 @@ function buildVerdict(d, srcTs) {
   const amt = (d.sources || {}).amt || {}, trap = (d.sources || {}).trap_monitor || {};
   const vp = (d.sources || {}).volume_profile || {}, h = d.header || {};
   const comp = computeCompleteness(d, srcTs);
-
-  // Gather excluded (stale/unavailable) inputs
-  const excluded = [];
   const packetTs = h.generated_timestamp;
-  const staleness = d.status && d.status.staleness_warnings || [];
 
-  // Check freshness of key subsystems
-  const amtAge = ageSec((srcTs && srcTs.amt && srcTs.amt.observed_at_utc) || packetTs);
-  const vpAge = ageSec((srcTs && srcTs.vp && srcTs.vp.observed_at_utc) || packetTs);
-  const pipeAge = ageSec((srcTs && srcTs.pipeline && srcTs.pipeline.observed_at_utc) || packetTs);
+  // Fix 3: Eligibility rule — value + valid observed_at_utc + acceptable freshness + within max age
+  function eligible(srcKey, maxAgeSec) {
+    const s = (srcTs && srcTs[srcKey]) || {};
+    if (!s || !s.observed_at_utc) return false;
+    const age = ageSec(s.observed_at_utc);
+    return age != null && age < (maxAgeSec || s.frequency_sec * 2 || 1800);
+  }
 
-  if (amtAge > 1800) excluded.push('AMT data stale (' + Math.round(amtAge/60) + 'm)');
-  if (vpAge > 7200) excluded.push('VP data stale (' + Math.round(vpAge/60) + 'm)');
-  if (pipeAge > 7200) excluded.push('Pipeline data stale (' + Math.round(pipeAge/60) + 'm)');
+  // Fix 5: Trap monitor auto-exclusion
+  const trapEligible = eligible('pipeline', 3600) && trap.score != null;
+  const trapObs = trapEligible ? trap : { score: 0, direction: null, active_traps: [] };
+  const trapDirection = trapObs.direction;
 
-  // Determine action
-  let action = 'WAIT', reasonCode = 'WAIT', confidence = 0.5, dominantTf = '1h';
-  const pros = [], cons = [];
-  const included = [], excludedFull = [...excluded];
+  // Fix 7: OI trend reclassification
+  const oi1h = (c.oi_per_tf_pct_change || {})['1H'];
+  const oi4h = (c.oi_per_tf_pct_change || {})['4H'];
+  const oi24h = enr.oi_change_24h_pct || ctx.oi_change_24h;
+  let oiLabel = enr.oi_trend || 'unknown';
+  if (oi1h != null && oi1h > 3 && ((oi4h != null && oi4h < 0) || (oi24h != null && oi24h < 0))) {
+    oiLabel = 'MIXED_SHORT_TERM_RELEVERAGING';
+  }
 
-  // Data integrity gates
-  if (comp.critical_decision_readiness_percent < 70) {
-    action = 'NO_TRADE_DATA_STALE';
-    reasonCode = 'NO_TRADE_DATA_STALE';
-    confidence = 0.1;
-    cons.push('Critical readiness ' + comp.critical_decision_readiness_percent + '% < 70% threshold');
-    excludedFull.push('Critical data incomplete: ' + (comp.total_expected - comp.total_available) + ' metrics missing');
-  } else if (comp.freshness_percent < 50) {
-    action = 'NO_TRADE_DATA_STALE';
-    reasonCode = 'NO_TRADE_DATA_STALE';
-    confidence = 0.15;
-    cons.push('Freshness ' + comp.freshness_percent + '% — stale data cannot support decisions');
-  }
-  // Trap gates
-  else if (trap.score && parseInt(trap.score) >= 3 && trap.direction) {
-    action = 'NO_TRADE_LEVERAGE_TRAP';
-    reasonCode = 'NO_TRADE_LEVERAGE_TRAP';
-    confidence = 0.2;
-    cons.push('Trap monitor: ' + trap.score + ' active — ' + trap.direction);
-    pros.push('Aware of trap = not walking into it');
-  }
-  // Macro risk gate
-  else if ((enr.fng_value || ctx.fng_value || 50) < 20 && (enr.black_swan_score || 0) > 3) {
-    action = 'NO_TRADE_MACRO_RISK';
-    reasonCode = 'NO_TRADE_MACRO_RISK';
-    confidence = 0.25;
-    cons.push('Fear (' + (enr.fng_value || ctx.fng_value) + ') + Black Swan signals (' + (enr.black_swan_score || 0) + '/' + (enr.black_swan_max || 17) + ')');
-  }
-  // Insufficient data
-  else if (comp.availability_percent < 70) {
-    action = 'INSUFFICIENT_DATA';
-    reasonCode = 'INSUFFICIENT_DATA';
-    confidence = 0.15;
-    cons.push('Availability ' + comp.availability_percent + '% — ' + (comp.total_expected - comp.total_available) + ' critical inputs missing');
-  }
-  // Directional setups
-  else if (amt.adx_regime === 'TRENDING' && amt.adx > 30) {
-    dominantTf = '4h';
-    if (vp.direction === 'LONG') {
-      action = 'LONG_SETUP'; reasonCode = 'LONG_SETUP'; confidence = 0.55;
-      pros.push('ADX trending (' + amt.adx + ')'); pros.push('VP bias LONG'); pros.push('OI ' + (enr.oi_trend || 'stable'));
-    } else if (vp.direction === 'SHORT') {
-      action = 'SHORT_SETUP'; reasonCode = 'SHORT_SETUP'; confidence = 0.55;
-      pros.push('ADX trending (' + amt.adx + ')'); pros.push('VP bias SHORT'); pros.push('OI ' + (enr.oi_trend || 'stable'));
+  const excluded = [], included = [], pros = [], cons = [];
+  let action = 'WAIT', reasonCode = 'WAIT', confidence = 0.25, dominantTf = '1h';
+
+  // Fix 6: Only NO_TRADE_LEVERAGE_TRAP if fresh directional trap signal
+  if (!trapEligible) {
+    excluded.push('Trap monitor excluded: no valid timestamp');
+  } else if (trapObs.score && parseInt(trapObs.score) >= 3 && trapObs.direction) {
+    const trapAge = ageSec((srcTs && srcTs.pipeline && srcTs.pipeline.observed_at_utc));
+    if (trapAge != null && trapAge < 3600) {
+      action = 'NO_TRADE_LEVERAGE_TRAP';
+      reasonCode = 'NO_TRADE_LEVERAGE_TRAP';
+      confidence = 0.2;
+      cons.push('Trap monitor (' + trapObs.score + '/7): ' + trapObs.direction + ' — ' + (trapObs.active_traps || []).join(', '));
+      excluded.push('Trap signal active — directional risk present');
     } else {
-      action = 'WATCH_FOR_LONG'; reasonCode = 'WATCH_FOR_LONG'; confidence = 0.4;
-      pros.push('ADX trending (' + amt.adx + ') — awaiting directional bias');
+      excluded.push('Trap monitor stale (' + (trapAge ? Math.round(trapAge/60) : '?') + 'm) — excluded from verdict');
+      // Fall through to other gates
     }
-  } else if (c.balance_state === 'TIGHT_BALANCE') {
-    action = 'WAIT'; reasonCode = 'WAIT'; confidence = 0.35;
-    pros.push('Tight balance — breakout imminent'); cons.push('No directional trigger yet');
   }
 
-  // Additional evidence
-  if (enr.fng_value <= 25) pros.push('Fear zone — contrarian potential');
-  if (enr.fng_value >= 75) cons.push('Greed zone — caution');
-  if (enr.correlation_r && enr.correlation_r < -0.5) pros.push('BTC decorrelated from equities');
-  if (ctx.perp_basis_pct != null && ctx.perp_basis_pct < -0.3) cons.push('Backwardation — bearish futures');
+  // Only proceed if still WAIT
+  if (reasonCode === 'WAIT') {
+    // Data integrity gates
+    if (comp.critical_decision_readiness_percent < 50) {
+      action = 'WAIT'; reasonCode = 'INSUFFICIENT_DATA_FOR_LEVERAGE_CLASSIFICATION'; confidence = 0.1;
+      cons.push('Critical readiness ' + comp.critical_decision_readiness_percent + '% < 50%');
+    } else if (comp.freshness_percent < 40) {
+      action = 'NO_TRADE_DATA_STALE'; reasonCode = 'NO_TRADE_DATA_STALE'; confidence = 0.1;
+      cons.push('Freshness ' + comp.freshness_percent + '% — too stale for decisions');
+    }
+    // Macro risk
+    else if ((enr.fng_value || 50) < 20 && (enr.black_swan_score || 0) > 3) {
+      action = 'NO_TRADE_MACRO_RISK'; reasonCode = 'NO_TRADE_MACRO_RISK'; confidence = 0.25;
+      cons.push('Fear (' + enr.fng_value + ') + Black Swan signals (' + enr.black_swan_score + '/' + enr.black_swan_max + ')');
+    }
+    // Directional setups (only if eligible)
+    else if (eligible('amt', 900) && amt.adx_regime === 'TRENDING' && amt.adx > 30) {
+      dominantTf = '4h';
+      if (vp.direction === 'LONG' && eligible('vp', 3600)) {
+        action = 'LONG_SETUP'; reasonCode = 'LONG_SETUP'; confidence = 0.5;
+        pros.push('ADX trending (' + amt.adx + ', ' + amt.adx_regime + ')');
+        pros.push('VP direction: LONG (POC $' + (vp.poc || '?') + ')');
+        pros.push('OI: ' + oiLabel);
+      } else if (vp.direction === 'SHORT' && eligible('vp', 3600)) {
+        action = 'SHORT_SETUP'; reasonCode = 'SHORT_SETUP'; confidence = 0.5;
+        pros.push('ADX trending (' + amt.adx + ', ' + amt.adx_regime + ')');
+        pros.push('VP direction: SHORT (POC $' + (vp.poc || '?') + ')');
+        pros.push('OI: ' + oiLabel);
+      } else {
+        action = 'WATCH_FOR_LONG'; reasonCode = 'WATCH_FOR_LONG'; confidence = 0.35;
+        pros.push('ADX trending (' + amt.adx + ') — awaiting directional bias');
+        pros.push('OI: ' + oiLabel);
+      }
+    }
+    // Tight balance → WAIT
+    else if (c.balance_state === 'TIGHT_BALANCE') {
+      action = 'WAIT'; reasonCode = 'WAIT'; confidence = 0.3;
+      pros.push('Tight balance (width ' + (c.balance_width_pct || '?') + '%) — consolidation');
+      cons.push('No directional trigger in tight balance');
+    }
+    // Default fallback
+    else {
+      action = 'WAIT'; reasonCode = 'INSUFFICIENT_DATA_FOR_LEVERAGE_CLASSIFICATION'; confidence = 0.15;
+      cons.push('Insufficient eligible inputs for directional classification');
+    }
+  }
 
-  // Included inputs
-  included.push('Price: $' + (h.btc_price || '?'));
-  included.push('ADX: ' + (amt.adx || '?') + ' (' + (amt.adx_regime || '?') + ')');
-  included.push('VP: ' + (vp.direction || '?'));
-  included.push('Completeness: ' + comp.critical_decision_readiness_percent + '%');
+  // Fix 9: Only market observations, no non-evidence
+  if (eligible('amt', 900)) {
+    if (enr.fng_value <= 25) pros.push('Fear & Greed: ' + enr.fng_value + ' (fear)');
+    if (enr.fng_value >= 75) cons.push('Fear & Greed: ' + enr.fng_value + ' (greed)');
+    if (ctx.coinbase_premium != null && ctx.coinbase_premium < -0.5) cons.push('Coinbase premium negative (' + ctx.coinbase_premium.toFixed(2) + '%)');
+  }
+  if (eligible('pipeline', 3600) && enr.correlation_r && enr.correlation_r < -0.5)
+    pros.push('BTC decorrelated from equities (r=' + enr.correlation_r.toFixed(2) + ', 30d)');
+  if (eligible('amt', 900) && ctx.perp_basis_pct != null && ctx.perp_basis_pct < -0.3)
+    cons.push('Perp basis backwardation (' + ctx.perp_basis_pct.toFixed(3) + '%)');
+
+  // Fix 4: Only eligible inputs go in included
+  if (eligible('amt', 900)) included.push('Price: $' + (h.btc_price || '?') + ' (Binance spot)');
+  if (eligible('amt', 900)) included.push('ADX: ' + (amt.adx || '?') + ' — ' + (amt.adx_regime || '?'));
+  if (eligible('vp', 3600)) included.push('VP: ' + (vp.direction || '?') + ', POC $' + (vp.poc || '?') + ', state ' + (vp.state || '?'));
+  if (eligible('amt', 900)) included.push('OI: ' + oiLabel + ' (1h:' + (oi1h != null ? oi1h.toFixed(1)+'%' : '?') + ' 4h:' + (oi4h != null ? oi4h.toFixed(1)+'%' : '?') + ' 24h:' + (oi24h != null ? oi24h.toFixed(1)+'%' : '?') + ')');
+  included.push('Completeness: ' + comp.critical_decision_readiness_percent + '% (' + comp.total_available + '/' + comp.total_expected + ' inputs)');
+
+  // Fix 12: Non-WAIT verdicts must have non-empty confirmation/invalidation
+  let bullConf = [], bearConf = [], invalCond = [];
+  if (reasonCode === 'LONG_SETUP' || reasonCode === 'WATCH_FOR_LONG') {
+    bullConf = ['ADX stays >30 with rising price', 'Spot CVD turns positive', 'OI rises with price (confirms new longs)'];
+    bearConf = ['ADX drops below 25', 'Price breaks below VP VAL ($' + (vp.val || '?') + ')'];
+    invalCond = ['ADX drops below 25', 'VP direction flips', 'Price closes below VP VAL'];
+  } else if (reasonCode === 'SHORT_SETUP' || reasonCode === 'WATCH_FOR_SHORT') {
+    bullConf = ['Price reclaims VP POC ($' + (vp.poc || '?') + ')', 'CVD turns positive on 4h'];
+    bearConf = ['ADX stays >30 with falling price', 'CVD remains negative', 'OI diverges (price down + OI up = new shorts)'];
+    invalCond = ['Price closes above VP VAH ($' + (vp.vah || '?') + ')', 'ADX drops below 25', 'CVD flips positive'];
+  } else if (reasonCode === 'NO_TRADE_LEVERAGE_TRAP') {
+    invalCond = ['Trap score drops below 3', 'Trap direction resolves to CLEAR', 'Freshness restored (<1h)'];
+  } else if (reasonCode === 'NO_TRADE_DATA_STALE' || reasonCode === 'INSUFFICIENT_DATA_FOR_LEVERAGE_CLASSIFICATION') {
+    invalCond = ['Data freshness restored to >70%', 'Critical completeness >70%', 'All subsystem timestamps valid'];
+    if (reasonCode === 'INSUFFICIENT_DATA_FOR_LEVERAGE_CLASSIFICATION') {
+      cons.push('Spot/perpetual CVD not separated — classification requires separate CVD streams');
+    }
+  } else {
+    bullConf = ['ADX rises above 30 with directional bias', 'Volume Profile develops directional skew'];
+    bearConf = ['Key support/resistance levels hold'];
+    invalCond = ['Volatility contraction resolves with conviction'];
+  }
 
   // Update DOM
   document.getElementById('verdict-action').textContent = action.replace(/_/g, ' ');
   document.getElementById('verdict-reason').textContent = 'Reason: ' + reasonCode + ' · Confidence: ' + (confidence*100).toFixed(0) + '% · Dominant TF: ' + dominantTf;
 
-  // Completeness
   document.getElementById('completeness-fill').style.width = comp.critical_decision_readiness_percent + '%';
   document.getElementById('completeness-fill').style.background =
     comp.critical_decision_readiness_percent >= 70 ? 'var(--green)' :
@@ -537,14 +591,15 @@ function buildVerdict(d, srcTs) {
     '<span><span class="val">' + comp.source_integrity_percent + '%</span>source</span>' +
     '<span><span class="val" style="color:' + (comp.critical_decision_readiness_percent >= 70 ? 'var(--green)' : 'var(--red)') + '">' + comp.critical_decision_readiness_percent + '%</span>readiness</span>';
 
-  // Evidence grid
   document.getElementById('verdict-grid').innerHTML =
     '<div class="pro"><strong>✅ Supporting (' + pros.length + '):</strong><br>' + (pros.length ? pros.join('<br>') : '—') + '</div>' +
     '<div class="con"><strong>❌ Conflicting (' + cons.length + '):</strong><br>' + (cons.length ? cons.join('<br>') : '—') + '</div>' +
     '<div class="info"><strong>📋 Included (' + included.length + '):</strong><br>' + included.join('<br>') + '</div>' +
-    '<div class="con"><strong>🚫 Excluded (' + excludedFull.length + '):</strong><br>' + (excludedFull.length ? excludedFull.join('<br>') : '— none —') + '</div>';
+    '<div class="con"><strong>🚫 Excluded (' + excluded.length + '):</strong><br>' + (excluded.length ? excluded.join('<br>') : '— none —') + '</div>';
 
-  return { action, reasonCode, confidence, dominantTf, included, excluded: excludedFull, supporting: pros, conflicting: cons, completeness: comp };
+  return { action, reasonCode, confidence, dominantTf, included, excluded, supporting: pros, conflicting: cons,
+    bullish_confirmation: bullConf, bearish_confirmation: bearConf, invalidation_conditions: invalCond,
+    completeness: comp };
 }
 
 // ─── Build Structured JSON (P1-P7 fixes) ───
@@ -566,6 +621,7 @@ function buildStructuredJson(d, srcTs) {
       observed_at_utc: meta.observed_at_utc,
       collected_at_utc: meta.collected_at_utc,
       packet_generated_at_utc: meta.packet_generated_at_utc,
+      age_calculated_at_utc: meta.age_calculated_at_utc,
       source_update_frequency_seconds: meta.source_update_frequency_seconds,
       age_seconds: meta.age_seconds,
       freshness: meta.freshness,
@@ -633,6 +689,8 @@ function buildStructuredJson(d, srcTs) {
 
     spot_vs_futures: {
       _caveat: "CVD data from AMT feed is COMPOSITE (does not separate Binance spot from Binance BTCUSDT perpetual). True spot/perp separation requires pipeline upgrade.",
+      spot_vs_futures_classification: "INCONCLUSIVE",
+      classification_reason: "Spot and perpetual CVD are not separately available — classification requires separate CVD streams per ChatGPT spec §4.",
       cvd_1h_composite: m('amt', (c.cvd_per_tf || {})['1H'], 'USD', 'Binance', 'composite', '1h', 'derived'),
       cvd_4h_composite: m('amt', (c.cvd_per_tf || {})['4H'], 'USD', 'Binance', 'composite', '4h', 'derived'),
       cvd_24h_composite: m('amt', ctx.cvd_24h, 'USD', 'Binance', 'composite', '24h', 'derived'),
@@ -662,14 +720,15 @@ function buildStructuredJson(d, srcTs) {
         _caveat: "VP metadata incomplete — pipeline captures POC/VAH/VAL only. Candle count, bins, profile range, HVNs/LVNs not available.",
         instrument: "BTCUSDT perpetual",
         market: "futures",
-        poc: m('vp', vp.poc, 'USD', 'Binance', 'BTCUSDT perpetual'),
-        vah: m('vp', vp.vah, 'USD', 'Binance', 'BTCUSDT perpetual'),
-        val: m('vp', vp.val, 'USD', 'Binance', 'BTCUSDT perpetual'),
+        poc: m('vp', vp.poc, 'USD', 'Binance', 'BTCUSDT perpetual', null, 'derived'),
+        vah: m('vp', vp.vah, 'USD', 'Binance', 'BTCUSDT perpetual', null, 'derived'),
+        val: m('vp', vp.val, 'USD', 'Binance', 'BTCUSDT perpetual', null, 'derived'),
         value_area_width_percent: m('vp', vpWidth, 'percent', 'Binance', null, null, 'derived'),
         state: m('vp', vp.state, null, 'Pipeline', null, null, 'inferred'),
         direction: m('vp', vp.direction, null, 'Pipeline', null, null, 'inferred'),
         profile_start_utc: (srcTs && srcTs.vp && srcTs.vp.observed_at_utc) || null,
-        profile_end_utc: packetTs,
+        profile_end_utc: (srcTs && srcTs.vp && srcTs.vp.observed_at_utc) || null,
+        _vp_timestamp_note: "profile_end_utc matches profile_start_utc — pipeline does not provide separate profile end time. Both are set to VP observed_at_utc.",
         timeframe: "4h",
         acceptance_state: vp.state === 'REJECTION_DOWN' ? 'rejected_below_value' : vp.state === 'ACCEPTANCE' ? 'accepted_inside_value' : vp.state || null
       }
@@ -685,7 +744,10 @@ function buildStructuredJson(d, srcTs) {
       btc_equity_correlation: m('pipeline', enr.correlation_r || ctx.correlation_r, 'Pearson r', 'Pipeline', null, '30d', 'derived'),
       etf_flows: {
         daily: m('amt', ctx.etf_flow_daily, 'M USD', 'ETF aggregate', null, '1d'),
-        weekly: m('amt', ctx.etf_flow_weekly, 'M USD', 'ETF aggregate', null, '7d')
+        daily_as_of_trading_date: packetTs ? packetTs.substring(0, 10) : null,
+        weekly: m('amt', ctx.etf_flow_weekly, 'M USD', 'ETF aggregate', null, '7d'),
+        weekly_as_of_trading_date: packetTs ? packetTs.substring(0, 10) : null,
+        _note: "as_of_trading_date is the packet date — ETF flow data source does not provide individual trade dates. Daily flow represents most recent reported session."
       },
       sentiment: {
         fear_greed: m('amt', enr.fng_value || ctx.fng_value, null, 'Alternative.me', null, null, 'raw'),
@@ -770,11 +832,9 @@ function buildStructuredJson(d, srcTs) {
       excluded_inputs: verdict.excluded,
       supporting_observations: verdict.supporting,
       conflicting_observations: verdict.conflicting,
-      bullish_confirmation: verdict.reasonCode.includes('LONG') ? ['ADX trend confirmation', 'Spot CVD turns positive', 'OI rising with price'] : [],
-      bearish_confirmation: verdict.reasonCode.includes('SHORT') ? ['ADX trend confirmation', 'CVD turns negative', 'OI rising against price'] : [],
-      invalidation_conditions: verdict.reasonCode.includes('NO_TRADE')
-        ? ['Data freshness restored', 'Critical completeness > 70%']
-        : ['ADX drops below 25', 'VP state flips opposite direction', 'Traps resolve (score < 2)'],
+      bullish_confirmation: verdict.bullish_confirmation || [],
+      bearish_confirmation: verdict.bearish_confirmation || [],
+      invalidation_conditions: verdict.invalidation_conditions || [],
       note: "Generated by Pipeline Dashboard V3 BTC_DATA_PACKET_V2. Not financial advice. Stale/unavailable subsystems are excluded from verdict."
     }
   };
