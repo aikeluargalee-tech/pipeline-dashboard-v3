@@ -1982,6 +1982,7 @@ function buildCopyText(data) {
   out += `TELEMETRY BRIEF    = plain English (read this first)\n`;
   out += `COMPOSITE SCORES   = RORO, Rotation, Quadrant, Psych Score (computed)\n`;
   out += `MACRO CORRELATIONS = BTC/ETH, BTC/Gold, HYG/LQD, BTC.D\n`;
+  out += `ON-CHAIN & POS      = NUPL, COT Signal, Liquidity Verdict\n`;
   out += `SOURCE HUB         = dashboard signals snapshot\n`;
   out += `TERMINAL DETAIL    = full packet data for AI & pros:\n`;
   out += `  [CRITICAL] = price action & derivatives\n`;
@@ -2035,11 +2036,32 @@ function buildCopyText(data) {
     out += `\n`;
   }
 
-  // Future data (coming soon)
-  out += `═══ FUTURE DATA (next pipeline update) ═══\n`;
-  out += `NUPL (Net Unrealized P/L): — not yet collected\n`;
-  out += `Liquidity Verdict (HEALTHY/TIGHT/DRAINING): — not yet collected\n`;
-  out += `COT Signal (Commitments of Traders): — not yet collected\n`;
+  // On-Chain & Positioning (from enriched pipeline data)
+  out += `═══ ON-CHAIN & POSITIONING ═══\n`;
+  const enr = data.enriched || {};
+  // NUPL derived from MVRV: NUPL = (MV - RV) / MV = 1 - 1/MVRV
+  const brk = data.reference && data.reference.brk ? data.reference.brk : {};
+  const mvrv = brk.mvrv;
+  const nupl = mvrv ? (1 - 1 / mvrv) : null;
+  const nuplLabel = nupl != null
+    ? (nupl > 0.75 ? 'Euphoria — Greed' : nupl > 0.50 ? 'Belief — Denial' : nupl > 0.25 ? 'Optimism — Anxiety' : nupl > 0 ? 'Hope — Fear' : 'Capitulation')
+    : 'N/A';
+  if (nupl != null) {
+    out += `NUPL: ${(nupl * 100).toFixed(1)}% (${nuplLabel})`;
+    out += `  [MVRV ${mvrv.toFixed(3)}, realized ${brk.realized_price ? '$' + brk.realized_price.toLocaleString() : 'N/A'}]\n`;
+  } else {
+    out += `NUPL: — (MVRV unavailable)\n`;
+  }
+  if (enr.cot_signal) {
+    out += `COT Signal: ${enr.cot_signal}\n`;
+  } else {
+    out += `COT Signal: — (not available)\n`;
+  }
+  if (enr.liquidity_verdict) {
+    out += `Liquidity Verdict: ${enr.liquidity_verdict}\n`;
+  } else {
+    out += `Liquidity Verdict: — (not available)\n`;
+  }
   out += `\n`;
 
   // Source hub
