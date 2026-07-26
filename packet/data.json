@@ -1,29 +1,29 @@
 {
   "header": {
-    "generated_timestamp": "2026-07-26T03:57:46Z",
-    "btc_price": 64534.0,
+    "generated_timestamp": "2026-07-26T09:31:35Z",
+    "btc_price": 64513.0,
     "change_24h": 0.723,
-    "bid": 64533.92,
-    "ask": 64533.93,
+    "bid": 64522.97,
+    "ask": 64522.98,
     "spread": 0.01,
-    "volume_24h": 511992212.44
+    "volume_24h": 463293167.39
   },
   "critical": {
-    "btc_price": 64534.0,
+    "btc_price": 64513.0,
     "amt_adx": 42.0,
     "amt_mtf": "1D BEARISH [INVALIDATED_CVD=+1,772] | 4H NEUTRAL [DIVERGES_CVD=+2,874] | 1H BULLISH",
-    "candle_delta": 127.47,
+    "candle_delta": -5.25,
     "candle_deltas_6": [
-      -66.93,
-      141.0,
       345.5,
       87.72,
       -209.15,
-      127.47
+      155.49,
+      -189.89,
+      -5.25
     ],
-    "delta_sum_6": 425.61,
-    "delta_trend": "BUYING",
-    "delta_interp": "Buyers dominated. Last candle +127.5.",
+    "delta_sum_6": 184.42,
+    "delta_trend": "DETERIORATING",
+    "delta_interp": "Buyers dominated early candles but momentum fading. Last candle -5.2.",
     "cvd_per_tf": {
       "1D": 1771.67,
       "4H": 2874.31,
@@ -39,16 +39,16 @@
       "4H": -5.61,
       "1H": 5.4
     },
-    "session_cvd": -1298.63,
-    "oi_absolute_usd_billions": 6.93,
-    "taker_ratio_24h": 1.113,
+    "session_cvd": -1045.6,
+    "oi_absolute_usd_billions": 6.91,
+    "taker_ratio_24h": 1.067,
     "vp_poc": 64578,
     "vp_vah": 64582,
     "vp_val": 64572,
     "vp_shape": "b",
     "vp_state": "REJECTION_DOWN",
     "balance_state": "TIGHT_BALANCE",
-    "balance_width_pct": 2.48,
+    "balance_width_pct": 1.11,
     "adx_regime": "TRENDING"
   },
   "context": {
@@ -66,51 +66,51 @@
     "cvd_24h": 849.29,
     "black_swan_score": "0/17",
     "correlation_r": -0.6069,
-    "liq_clusters": "Long: $64,500 (-0.05%), $63,800 (-1.14%), $63,750 (-1.21%) | Short: $64,550 (+0.02%), $64,600 (+0.10%)",
-    "perp_basis_pct": -0.0459,
+    "liq_clusters": "Long: $64,500 (-0.02%), $63,800 (-1.11%), $63,750 (-1.19%) | Short: $64,550 (+0.05%), $64,600 (+0.13%)",
+    "perp_basis_pct": -0.0451,
     "order_book_top5": {
       "bids": [
         {
-          "price": 64533.92,
-          "size": 4.03132
+          "price": 64522.97,
+          "size": 3.92943
         },
         {
-          "price": 64533.91,
-          "size": 0.68651
+          "price": 64522.96,
+          "size": 0.15688
         },
         {
-          "price": 64533.9,
-          "size": 0.00016
+          "price": 64522.95,
+          "size": 0.0504
         },
         {
-          "price": 64533.57,
+          "price": 64522.91,
           "size": 0.00018
         },
         {
-          "price": 64533.56,
-          "size": 0.06742
+          "price": 64522.9,
+          "size": 0.05016
         }
       ],
       "asks": [
         {
-          "price": 64533.93,
-          "size": 2.90684
+          "price": 64522.98,
+          "size": 0.83865
         },
         {
-          "price": 64533.94,
-          "size": 0.00096
+          "price": 64522.99,
+          "size": 3.34554
         },
         {
-          "price": 64533.95,
-          "size": 0.00686
+          "price": 64523.0,
+          "size": 9.35213
         },
         {
-          "price": 64533.99,
-          "size": 0.00018
+          "price": 64523.01,
+          "size": 0.24878
         },
         {
-          "price": 64534.0,
-          "size": 0.02076
+          "price": 64523.21,
+          "size": 0.07666
         }
       ]
     },
@@ -118,7 +118,7 @@
     "realized_vol_1d_pct": 53.08,
     "mstr_close": 91.67,
     "usdjpy": 163.791,
-    "daily_rsi_14": 46.6
+    "daily_rsi_14": 46.5
   },
   "reference": {
     "sr_1h": "S: $64,233 / $63,988 / $63,726 | R: $64,706 / $65,097 / $65,282",
@@ -132,25 +132,25 @@
     "cycle_composite": 31.3,
     "sth_realized_price": null,
     "options_skew_25d": -4.1,
-    "brk_summary": "LTH marginally profitable (sopr 2.014), STH underwater (sopr 0.999), miner stress moderate (puell 0.74), hashrate -36.6%, rhodl 0",
+    "brk_summary": "LTH marginally profitable (sopr 1.953), STH marginally profitable (sopr 1.000), miner stress moderate (puell 0.74), hashrate -32.5%, rhodl 0",
     "brk": {
-      "mvrv": 1.2180999517440796,
-      "realized_price": 52868.36,
-      "sopr_24h": 1.0098196493430396,
-      "lth_sopr_24h": 2.013865889396867,
-      "sth_sopr_24h": 0.999401345491413,
-      "nupl": 0.17900000512599945,
-      "rhodl_ratio": 0.08259999752044678,
-      "puell_multiple": 0.7365000247955322,
-      "lth_net_realized_pnl": -227856.64,
-      "sth_net_realized_pnl": 1686087.79,
-      "supply_in_profit_share": 55.5,
-      "utxos_1y_sopr": 2.8070125019376992,
-      "hash_rate_ehs": 8.659503111599961e+20,
-      "hash_rate_drawdown_pct": -36.59000015258789,
-      "fee_rate_sat_vb": 2.637,
+      "mvrv": 1.2194000482559204,
+      "realized_price": 52868.88,
+      "sopr_24h": 1.0102684474061978,
+      "lth_sopr_24h": 1.9527882246657933,
+      "sth_sopr_24h": 1.0004913626570164,
+      "nupl": 0.17980000376701355,
+      "rhodl_ratio": 0.08609999716281891,
+      "puell_multiple": 0.7378000020980835,
+      "lth_net_realized_pnl": -765386.29,
+      "sth_net_realized_pnl": -8352.4,
+      "supply_in_profit_share": 55.44000244140625,
+      "utxos_1y_sopr": 2.8884916376145116,
+      "hash_rate_ehs": 9.224253314530392e+20,
+      "hash_rate_drawdown_pct": -32.46000289916992,
+      "fee_rate_sat_vb": 1.004,
       "difficulty": 126231507121868.19,
-      "fetched_at": "2026-07-25T23:55:19.888650+00:00"
+      "fetched_at": "2026-07-26T09:31:20.549797+00:00"
     }
   },
   "enriched": {
@@ -182,7 +182,7 @@
     "sr_1d_resistance": 67377.7,
     "atr_1h_pct": 0.178,
     "atr_1d_pct": 2.34,
-    "btc_price": 64534.0,
+    "btc_price": 64513.0,
     "coinbase_premium": -0.0852,
     "vix": 18.58,
     "funding_rate": 4.81e-05
@@ -210,17 +210,17 @@
       "as_of": "2026-07-26",
       "prior_date": "2026-07-26"
     },
-    "last_updated": "2026-07-26T03:57:33Z",
+    "last_updated": "2026-07-26T09:31:26Z",
     "s11_volume_anomaly": {
       "score": 0,
       "label": "NEUTRAL",
       "threshold": 3.0,
-      "ratio": 0.41,
-      "vol_now": 897.17506,
-      "vol_mean_20p": 2163.8325720000003,
+      "ratio": 0.15,
+      "vol_now": 310.98569,
+      "vol_mean_20p": 2128.8247725,
       "candle_bearish": false,
       "window": 20,
-      "as_of": "2026-07-26T03:57:31Z"
+      "as_of": "2026-07-26T09:31:25Z"
     },
     "layer0_5": {
       "forced_sell_risk": "MEDIUM",
@@ -252,7 +252,7 @@
         ],
         "as_of": "2026-07-26"
       },
-      "as_of": "2026-07-26T03:57:32Z"
+      "as_of": "2026-07-26T09:31:26Z"
     },
     "tripwires": {
       "TW1_CH1_CAPITAL_REVERSAL": {
@@ -319,13 +319,13 @@
     "tripwire_summary": {
       "active_count": 0,
       "total": 6,
-      "as_of": "2026-07-26T03:57:33Z"
+      "as_of": "2026-07-26T09:31:26Z"
     }
   },
   "regime": {
     "label": "mid_cycle",
     "confidence": 0.6,
-    "prev_label": "mid_cycle",
+    "prev_label": null,
     "transitioned": false,
     "transition_at": null,
     "transition_trigger": null,
@@ -356,7 +356,7 @@
         "mstr_weak"
       ]
     },
-    "as_of": "2026-07-26T03:57:33Z"
+    "as_of": "2026-07-26T09:31:26Z"
   },
   "heatmap": {
     "data_available": false,
@@ -364,12 +364,16 @@
   },
   "status": {
     "source_timestamps": {
-      "amt": "2026-07-26T03:57:29.895406+00:00",
+      "amt": "2026-07-26T09:31:24.413148+00:00",
       "vp": "2026-07-26T03:47:25.156724+00:00",
       "pipeline": "regime=2026-07-26 03:47 UTC | macro=2026-07-26 03:47 UTC"
     },
     "staleness_warnings": [
-      "STALE brk: 242m behind AMT"
+      "STALE regime: 344m behind AMT",
+      "STALE macro: 344m behind AMT",
+      "STALE derivs: 344m behind AMT",
+      "STALE cycle: 344m behind AMT",
+      "STALE vp: 343m behind AMT"
     ]
   },
   "sources": {
@@ -400,11 +404,11 @@
       "error": "unavailable"
     },
     "amt": {
-      "price": 64534.0,
-      "change_24h": 0.704,
+      "price": 64513.0,
+      "change_24h": 0.89,
       "balance_state": "TIGHT_BALANCE",
-      "aggression_score": 0.38,
-      "net_delta": -1298.63,
+      "aggression_score": 0.59,
+      "net_delta": -1045.6,
       "whale_pivot": null,
       "whale_conviction": 0,
       "mtf_signal": "NEUTRAL_NONE",
