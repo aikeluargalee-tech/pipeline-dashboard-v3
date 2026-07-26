@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Regime Compass — Live RORO × BTC Rotation Map | Pipeline Dashboard</title>
+<meta name="description" content="Live two-axis regime compass: Macro Risk-On/Risk-Off score crossed with BTC Relative Rotation score. Four-quadrant framework showing bullish, alt season, decoupling, and risk-off regimes. Auto-refreshed every 15 minutes from the Pipeline data packet.">
+<link rel="canonical" href="https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/regime-compass/">
+<meta property="og:title" content="Regime Compass — Live RORO × BTC Rotation Map">
+<meta property="og:type" content="article">
+<meta property="og:description" content="Two-axis framework tracking Macro Risk-On/Risk-Off score crossed with BTC Relative Rotation score. Four quadrants — from strongest bull case to default risk-off.">
+<meta property="og:site_name" content="BTC Pipeline Dashboard">
+<meta property="og:url" content="https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/regime-compass/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Regime Compass — RORO × BTC Rotation",
+  "url": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/regime-compass/",
+  "description": "Live two-axis regime compass tracking Macro Risk-On/Risk-Off score and BTC Relative Rotation score in a four-quadrant framework.",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "BTC Pipeline Dashboard",
+    "url": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/"
+  }
+}
+</script>
+<link rel="stylesheet" href="../assets/styles.css?v=13">
+<style>
+  :root {
+    --card-bg: rgba(255,255,255,0.03);
+    --card-border: rgba(255,255,255,0.06);
+    --card-radius: 14px;
+    --good: #00d4aa;
+    --warn: #f0b90b;
+    --bad: #ef4444;
+    --neutral: #94a3b8;
+    --muted: #64748b;
+    --q1: #00d4aa;
+    --q2: #a855f7;
+    --q3: #3b82f6;
+    --q4: #ef4444;
+  }
+  .compass-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .compass-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--card-radius);
+    padding: 18px 20px;
+  }
+  .compass-card h3 {
+    margin: 0 0 12px 0;
+    font-size: 0.85em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+  }
+  .compass-card h3 .indicator { margin-right: 6px; }
+  .compass-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  .compass-row:last-child { border-bottom: none; }
+  .compass-label { color: var(--muted); font-size: 0.85em; }
+  .compass-value { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.9em; }
+  .compass-value.good { color: var(--good); }
+  .compass-value.warn { color: var(--warn); }
+  .compass-value.bad { color: var(--bad); }
+  .compass-value.neutral { color: var(--neutral); }
+  .compass-value.big {
+    font-size: 1.8em;
+    font-weight: 800;
+  }
+  .compass-score-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.06);
+    margin-top: 4px;
+    overflow: hidden;
+  }
+  .compass-score-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.5s ease;
+  }
+  .compass-score-fill.good { background: var(--good); }
+  .compass-score-fill.warn { background: var(--warn); }
+  .compass-score-fill.bad { background: var(--bad); }
+  .compass-status {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75em;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .compass-status.q1 { background: rgba(0,212,170,0.15); color: var(--q1); }
+  .compass-status.q2 { background: rgba(168,85,247,0.15); color: var(--q2); }
+  .compass-status.q3 { background: rgba(59,130,246,0.15); color: var(--q3); }
+  .compass-status.q4 { background: rgba(239,68,68,0.15); color: var(--q4); }
+  .compass-status.risk-on { background: rgba(0,212,170,0.15); color: var(--good); }
+  .compass-status.risk-off { background: rgba(239,68,68,0.15); color: var(--bad); }
+  .compass-status.into { background: rgba(0,212,170,0.15); color: var(--good); }
+  .compass-status.away { background: rgba(239,68,68,0.15); color: var(--bad); }
+  .compass-status.neutral-status { background: rgba(148,163,184,0.12); color: var(--neutral); }
+
+  /* Quadrant Chart */
+  .quadrant-chart {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    aspect-ratio: 1 / 1;
+    margin: 20px auto;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--card-border);
+    border-radius: var(--card-radius);
+    overflow: hidden;
+  }
+  .quadrant-axis-v,
+  .quadrant-axis-h {
+    position: absolute;
+    background: rgba(255,255,255,0.1);
+  }
+  .quadrant-axis-v {
+    left: 50%;
+    top: 0; bottom: 0;
+    width: 1px;
+    transform: translateX(-0.5px);
+  }
+  .quadrant-axis-h {
+    top: 50%;
+    left: 0; right: 0;
+    height: 1px;
+    transform: translateY(-0.5px);
+  }
+  .quadrant-label {
+    position: absolute;
+    font-size: 0.68em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    pointer-events: none;
+  }
+  .quadrant-label.axis-top { top: 6px; left: 50%; transform: translateX(-50%); color: var(--neutral); }
+  .quadrant-label.axis-bottom { bottom: 6px; left: 50%; transform: translateX(-50%); color: var(--neutral); }
+  .quadrant-label.axis-left { left: 8px; top: 50%; transform: translateY(-50%) rotate(-90deg); color: var(--neutral); }
+  .quadrant-label.axis-right { right: 8px; top: 50%; transform: translateY(-50%) rotate(90deg); color: var(--neutral); }
+  .quadrant-box {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.7em;
+    padding: 8px;
+    pointer-events: none;
+  }
+  .quadrant-box.q1 { top: 8%; left: 52%; right: 4%; bottom: 52%; color: var(--q1); }
+  .quadrant-box.q2 { top: 8%; left: 4%; right: 52%; bottom: 52%; color: var(--q2); }
+  .quadrant-box.q3 { top: 52%; left: 52%; right: 4%; bottom: 8%; color: var(--q3); }
+  .quadrant-box.q4 { top: 52%; left: 4%; right: 52%; bottom: 8%; color: var(--q4); }
+  .quadrant-box .q-num { font-size: 2.2em; font-weight: 900; line-height: 1; opacity: 0.3; }
+  .quadrant-box .q-label { font-size: 0.75em; font-weight: 700; opacity: 0.7; margin-top: 2px; line-height: 1.2; }
+  .quadrant-box .q-desc { font-size: 0.65em; opacity: 0.5; margin-top: 1px; line-height: 1.2; }
+  .quadrant-marker {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid rgba(255,255,255,0.9);
+    box-shadow: 0 0 16px rgba(255,255,255,0.5), 0 0 32px rgba(255,255,255,0.2);
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1), top 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .quadrant-marker.q1-glow { box-shadow: 0 0 16px rgba(0,212,170,0.7), 0 0 32px rgba(0,212,170,0.3); }
+  .quadrant-marker.q2-glow { box-shadow: 0 0 16px rgba(168,85,247,0.7), 0 0 32px rgba(168,85,247,0.3); }
+  .quadrant-marker.q3-glow { box-shadow: 0 0 16px rgba(59,130,246,0.7), 0 0 32px rgba(59,130,246,0.3); }
+  .quadrant-marker.q4-glow { box-shadow: 0 0 16px rgba(239,68,68,0.7), 0 0 32px rgba(239,68,68,0.3); }
+  .quadrant-marker-label {
+    position: absolute;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72em;
+    font-weight: 700;
+    white-space: nowrap;
+    pointer-events: none;
+    background: rgba(0,0,0,0.8);
+    padding: 3px 8px;
+    border-radius: 4px;
+    z-index: 11;
+  }
+  .quadrant-threshold {
+    position: absolute;
+    pointer-events: none;
+  }
+  .quadrant-threshold-v {
+    top: 0; bottom: 0;
+    width: 1px;
+    border-left: 1px dashed rgba(255,255,255,0.08);
+  }
+  .quadrant-threshold-h {
+    left: 0; right: 0;
+    height: 1px;
+    border-top: 1px dashed rgba(255,255,255,0.08);
+  }
+
+  .verdict-banner {
+    padding: 18px 20px;
+    border-radius: var(--card-radius);
+    margin: 20px 0;
+    font-weight: 600;
+    text-align: center;
+  }
+  .verdict-banner.q1-banner { background: rgba(0,212,170,0.08); border: 1px solid rgba(0,212,170,0.2); color: var(--q1); }
+  .verdict-banner.q2-banner { background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.2); color: var(--q2); }
+  .verdict-banner.q3-banner { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); color: var(--q3); }
+  .verdict-banner.q4-banner { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); color: var(--q4); }
+  .verdict-banner.neutral-banner { background: rgba(148,163,184,0.04); border: 1px solid rgba(148,163,184,0.1); color: var(--neutral); }
+
+  .refresh-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.78em;
+    color: var(--muted);
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 8px;
+  }
+  .refresh-bar .pulse { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--good); margin-right: 6px; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .missing-card {
+    border: 1px dashed rgba(240,185,11,0.3) !important;
+    background: rgba(240,185,11,0.03) !important;
+  }
+  .missing-card h3 { color: var(--warn); }
+  .missing-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.68em;
+    font-weight: 700;
+    background: rgba(240,185,11,0.12);
+    color: var(--warn);
+    margin-left: 6px;
+  }
+
+  /* Score gauge */
+  .score-gauge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+  }
+  .score-gauge .score-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2em;
+    font-weight: 800;
+    min-width: 80px;
+  }
+  .score-gauge .score-bar-wrap {
+    flex: 1;
+    height: 10px;
+    border-radius: 5px;
+    background: linear-gradient(to right, var(--bad), var(--warn), var(--neutral), var(--good));
+    position: relative;
+    overflow: visible;
+  }
+  .score-gauge .score-needle {
+    position: absolute;
+    top: -4px;
+    width: 3px;
+    height: 18px;
+    border-radius: 2px;
+    background: #fff;
+    box-shadow: 0 0 8px rgba(255,255,255,0.4);
+    transition: left 0.5s ease;
+    z-index: 2;
+  }
+  .score-gauge .score-zero {
+    position: absolute;
+    top: -2px;
+    width: 1px;
+    height: 14px;
+    background: rgba(255,255,255,0.3);
+    left: 50%;
+    z-index: 1;
+  }
+
+  /* === MOBILE FIXES === */
+  @media (max-width: 768px) {
+    html, body {
+      overflow-x: hidden;
+      max-width: 100vw;
+    }
+    .compass-grid {
+      grid-template-columns: 1fr;
+    }
+    .compass-card {
+      padding: 14px 12px;
+    }
+    .compass-row {
+      flex-wrap: wrap;
+      gap: 2px;
+    }
+    .compass-label {
+      font-size: 0.78em;
+      max-width: 55%;
+      word-break: break-word;
+    }
+    .compass-value {
+      font-size: 0.82em;
+      word-break: break-word;
+      text-align: right;
+      max-width: 45%;
+    }
+    .verdict-banner {
+      padding: 14px 12px;
+      font-size: 0.9em;
+      word-break: break-word;
+    }
+    .verdict-banner div:first-child {
+      font-size: 1.05em !important;
+    }
+    .refresh-bar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      font-size: 0.72em;
+    }
+    .quadrant-chart {
+      max-width: 100%;
+      aspect-ratio: 1 / 1;
+    }
+    .quadrant-box .q-num { font-size: 1.4em; }
+    .quadrant-box .q-label { font-size: 0.62em; }
+    .quadrant-box .q-desc { font-size: 0.55em; }
+    .quadrant-marker {
+      width: 10px;
+      height: 10px;
+    }
+    .quadrant-marker-label {
+      font-size: 0.62em;
+      padding: 2px 6px;
+    }
+    .score-gauge .score-value {
+      font-size: 1.4em;
+      min-width: 60px;
+    }
+    h1 {
+      font-size: 1.3em !important;
+    }
+    .compass-card h3 {
+      font-size: 0.78em;
+      word-break: break-word;
+    }
+    .cta-row {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
+    .cta-row .cta-button {
+      margin-left: 0 !important;
+      text-align: center;
+      display: block;
+    }
+  }
+  @media (max-width: 400px) {
+    .compass-label {
+      font-size: 0.72em;
+      max-width: 50%;
+    }
+    .compass-value {
+      font-size: 0.75em;
+      max-width: 50%;
+    }
+  }
+</style>
+</head>
+<body>
+<div id="nav-placeholder"></div>
+<main class="page-container-wide">
+  <div class="breadcrumb"><a href="../">Home</a><span>›</span> Regime Compass</div>
+
+  <div class="refresh-bar">
+    <span><span class="pulse"></span> Live from Pipeline data packet · updates every 15 min</span>
+    <span id="refresh-time">Loading…</span>
+  </div>
+
+  <h1 style="font-size:1.6em;font-weight:800;margin:0 0 4px 0">Regime Compass</h1>
+  <p style="color:var(--muted);margin:0 0 20px 0">Two-axis framework: Macro Risk-On/Risk-Off score crossed with BTC Relative Rotation score — four quadrants, one regime thesis.</p>
+
+  <!-- Verdict Banner -->
+  <div id="verdict" class="verdict-banner">Loading…</div>
+
+  <!-- Quadrant Chart -->
+  <div class="compass-card" style="margin-bottom:16px">
+    <h3>🧭 RORO × BTC Rotation Quadrant Map</h3>
+    <div class="quadrant-chart" id="quadrant-chart">
+      <div class="quadrant-axis-v"></div>
+      <div class="quadrant-axis-h"></div>
+      <div class="quadrant-label axis-top">BTC Rotation: INTO</div>
+      <div class="quadrant-label axis-bottom">BTC Rotation: AWAY</div>
+      <div class="quadrant-label axis-left">RORO: RISK-OFF</div>
+      <div class="quadrant-label axis-right">RORO: RISK-ON</div>
+      <div class="quadrant-box q1"><span class="q-num">Q1</span><span class="q-label">Risk-On + Into BTC</span><span class="q-desc">Strongest Bull Case</span></div>
+      <div class="quadrant-box q2"><span class="q-num">Q2</span><span class="q-label">Risk-On + Away BTC</span><span class="q-desc">Alt Season Pattern</span></div>
+      <div class="quadrant-box q3"><span class="q-num">Q3</span><span class="q-label">Risk-Off + Into BTC</span><span class="q-desc">Banking Crisis Decoupling</span></div>
+      <div class="quadrant-box q4"><span class="q-num">Q4</span><span class="q-label">Risk-Off + Away BTC</span><span class="q-desc">Default Risk-Off</span></div>
+      <div class="quadrant-marker" id="quadrant-marker"></div>
+      <div class="quadrant-marker-label" id="quadrant-marker-label"></div>
+    </div>
+  </div>
+
+  <!-- Score Gauges -->
+  <div class="compass-grid">
+    <div class="compass-card" id="card-roro">
+      <h3>🌐 Macro RORO Score</h3>
+      <div class="score-gauge">
+        <span class="score-value" id="roro-score-val">--</span>
+        <div class="score-bar-wrap">
+          <div class="score-zero"></div>
+          <div class="score-needle" id="roro-needle" style="left:50%"></div>
+        </div>
+      </div>
+      <div id="roro-data">Loading…</div>
+    </div>
+    <div class="compass-card" id="card-rotation">
+      <h3>🔄 BTC Rotation Score</h3>
+      <div class="score-gauge">
+        <span class="score-value" id="rotation-score-val">--</span>
+        <div class="score-bar-wrap">
+          <div class="score-zero"></div>
+          <div class="score-needle" id="rotation-needle" style="left:50%"></div>
+        </div>
+      </div>
+      <div id="rotation-data">Loading…</div>
+    </div>
+  </div>
+
+  <!-- Component Cards -->
+  <div class="compass-grid">
+    <div class="compass-card" id="card-rcomp">
+      <h3>📊 RORO Components</h3>
+      <div id="rcomp-data">Loading…</div>
+    </div>
+    <div class="compass-card" id="card-bcomp">
+      <h3>📈 BTC Rotation Components</h3>
+      <div id="bcomp-data">Loading…</div>
+    </div>
+    <div class="compass-card" id="card-macro">
+      <h3>🌍 Macro & Context</h3>
+      <div id="macro-data">Loading…</div>
+    </div>
+  </div>
+
+  <!-- Missing Data Card -->
+  <div class="compass-card missing-card" style="margin:20px 0">
+    <h3>⚠️ Missing Inputs <span class="missing-badge">PLACEHOLDER ZEROS</span></h3>
+    <p style="color:var(--muted);font-size:0.82em;margin:0 0 12px 0">These data sources are not yet integrated into the pipeline. They are accepted as zero in the scoring model for now — once connected, quadrant shifts will become more precise.</p>
+    <div id="missing-data">Loading…</div>
+  </div>
+
+  <!-- Cross-links -->
+  <div class="cta-row" style="margin:20px 0;text-align:center">
+    <a href="../dashboard/" class="cta-button primary">View Full Dashboard →</a>
+    <a href="../psychological-levels/" class="cta-button secondary" style="margin-left:8px">Psychological Levels →</a>
+    <a href="../market-regime/" class="cta-button secondary" style="margin-left:8px">Market Regime →</a>
+  </div>
+</main>
+<div id="footer-placeholder"></div>
+<script src="../assets/nav.js?v=13"></script>
+<script>
+(async function() {
+  const DATA_URL = '../packet/data.json';
+  const CACHE_BUST = '?ts=' + Date.now();
+
+  function fmtUSD(n) {
+    if (n == null || isNaN(n)) return 'N/A';
+    if (n >= 1000) return '$' + n.toLocaleString('en-US', {maximumFractionDigits:0});
+    return '$' + n.toFixed(2);
+  }
+  function fmtPct(n, decimals) {
+    if (n == null || isNaN(n)) return 'N/A';
+    return (n >= 0 ? '+' : '') + n.toFixed(decimals || 2) + '%';
+  }
+  function fmtNum(n, d) {
+    if (n == null || isNaN(n)) return 'N/A';
+    return n.toFixed(d || 2);
+  }
+  function row(label, value, colorClass) {
+    return '<div class="compass-row"><span class="compass-label">' + label + '</span><span class="compass-value ' + (colorClass || '') + '">' + value + '</span></div>';
+  }
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+  try {
+    const resp = await fetch(DATA_URL + CACHE_BUST);
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const d = await resp.json();
+
+    // Extract data
+    const price = d.enriched?.btc_price || d.header?.btc_price || 0;
+    const vix = d.enriched?.vix || 0;
+    const dxy = d.enriched?.dxy || 0;
+    const correlation = d.enriched?.btc_equity_correlation ?? 0;
+    const funding = d.enriched?.funding_rate || 0;
+    const oi_trend = d.enriched?.oi_trend || '';
+    const oi_change = d.enriched?.oi_change_24h_pct || 0;
+    const black_swan = d.enriched?.black_swan_score ?? 0;
+    const black_swan_status = d.enriched?.black_swan_status || '';
+    const fng = d.enriched?.fng_value;
+    const fng_class = d.enriched?.fng_classification || '';
+    const regime = d.regime?.label || '';
+    const change_24h = d.header?.change_24h || 0;
+    const realized_vol = d.enriched?.realized_vol_1d_pct || 0;
+    const cb_premium = d.enriched?.coinbase_premium ?? 0;
+    const funding_signal = d.enriched?.funding_signal || '';
+    const gen_time = d.header?.generated_timestamp || '';
+
+    // Update refresh time
+    document.getElementById('refresh-time').textContent = 'Packet: ' + new Date(gen_time).toLocaleTimeString();
+
+    // ===== RORO SCORE COMPUTATION =====
+    // Inputs normalized to -100/+100 contribution each, then averaged
+    var roroInputs = [];
+
+    // VIX: low VIX → risk-on (positive), high VIX → risk-off (negative)
+    // Map: VIX 12-40 → +100 to -100. VIX < 15 bullish, VIX > 30 bearish
+    var vixScore = clamp(((15 - vix) / 15) * 100, -100, 100);
+    roroInputs.push({label: 'VIX', value: vix, score: vixScore, weight: 30});
+
+    // DXY: low DXY → risk-on, high DXY → risk-off
+    // Map: DXY 95-110 → +100 to -100. DXY < 100 bullish, DXY > 106 bearish
+    var dxyScore = clamp(((100 - dxy) / 6) * 100, -100, 100);
+    roroInputs.push({label: 'DXY', value: dxy, score: dxyScore, weight: 25});
+
+    // BTC-Equity Correlation: positive → risk-on (BTC trades like risk asset), negative → decoupling
+    // Map: corr -1 to +1 → -30 to +100. Positive = risk-on alignment, negative = decoupling (neutral to slight negative)
+    var corrScore = clamp(correlation * 65, -100, 100);
+    roroInputs.push({label: 'BTC-Equity Corr', value: correlation, score: corrScore, weight: 20});
+
+    // Black Swan: 0 = risk-on, 5+ = risk-off
+    var bsScore = clamp(-black_swan * 20, -100, 100);
+    roroInputs.push({label: 'Black Swan Score', value: black_swan, score: bsScore, weight: 15});
+
+    // FNG: fear (0-40) = risk-off, greed (60-100) = risk-on (with caution at extremes)
+    var fngScore = 0;
+    if (fng != null) {
+      if (fng <= 20) fngScore = -60;
+      else if (fng <= 40) fngScore = -20;
+      else if (fng <= 60) fngScore = 10;
+      else if (fng <= 80) fngScore = 30;
+      else fngScore = 0; // extreme greed neutral
+    }
+    roroInputs.push({label: 'Fear & Greed', value: fng != null ? fng + '/100' : 'N/A', score: fngScore, weight: 10});
+
+    // Weighted RORO score
+    var roroScore = 0;
+    var roroTotalWeight = 0;
+    for (var i = 0; i < roroInputs.length; i++) {
+      roroScore += roroInputs[i].score * roroInputs[i].weight;
+      roroTotalWeight += roroInputs[i].weight;
+    }
+    roroScore = clamp(roroScore / roroTotalWeight, -100, 100);
+
+    // ===== BTC ROTATION SCORE COMPUTATION =====
+    var rotInputs = [];
+
+    // Funding Rate: neutral-positive (0 to 0.01%) = healthy demand = into BTC
+    // Negative or excessively high (>0.05%) = away
+    var fundingScore = 0;
+    var fundingPct = funding * 100;
+    if (fundingPct > 0 && fundingPct <= 0.005) fundingScore = 60;
+    else if (fundingPct > 0.005 && fundingPct <= 0.01) fundingScore = 30;
+    else if (fundingPct > 0.01 && fundingPct <= 0.05) fundingScore = 0;
+    else if (fundingPct > 0.05) fundingScore = -30;
+    else if (fundingPct <= 0) fundingScore = -40;
+    rotInputs.push({label: 'Funding Rate', value: fundingPct, score: fundingScore, weight: 25});
+
+    // OI Trend: rising = into, stable = neutral, declining = away
+    var oiScore = 0;
+    if (oi_trend === 'rising' && oi_change > 3) oiScore = 50;
+    else if (oi_trend === 'rising') oiScore = 25;
+    else if (oi_trend === 'stable') oiScore = 10;
+    else if (oi_trend === 'declining') oiScore = oi_change < -3 ? -50 : -25;
+    rotInputs.push({label: 'OI Trend (24h)', value: oi_change, score: oiScore, weight: 30});
+
+    // 24h BTC Change: positive = into, negative = away
+    var changeScore = clamp(change_24h * 12, -100, 100);
+    rotInputs.push({label: 'BTC 24h Change', value: change_24h, score: changeScore, weight: 25});
+
+    // Realized Vol: moderate vol (20-50) = healthy rotation, extreme vol (>80) = chaotic = away
+    var volScore = 0;
+    if (realized_vol < 30) volScore = 20;
+    else if (realized_vol < 60) volScore = 10;
+    else if (realized_vol < 80) volScore = -10;
+    else volScore = -40;
+    rotInputs.push({label: 'Realized Vol (1D)', value: realized_vol, score: volScore, weight: 10});
+
+    // Coinbase Premium: positive = US demand into BTC
+    var cbScore = clamp(cb_premium * 60, -100, 100);
+    rotInputs.push({label: 'Coinbase Premium', value: cb_premium, score: cbScore, weight: 10});
+
+    // Weighted Rotation score
+    var rotScore = 0;
+    var rotTotalWeight = 0;
+    for (var j = 0; j < rotInputs.length; j++) {
+      rotScore += rotInputs[j].score * rotInputs[j].weight;
+      rotTotalWeight += rotInputs[j].weight;
+    }
+    rotScore = clamp(rotScore / rotTotalWeight, -100, 100);
+
+    // ===== QUADRANT DETERMINATION =====
+    // Threshold: ±15 (neutral band around zero on both axes)
+    var qRORO = roroScore > 15 ? 'risk-on' : roroScore < -15 ? 'risk-off' : 'neutral';
+    var qROT = rotScore > 15 ? 'into' : rotScore < -15 ? 'away' : 'neutral';
+
+    var quadrant, quadrantLabel, quadrantDesc, quadrantClass, bannerClass, glowClass;
+    if (qRORO === 'risk-on' && qROT === 'into') {
+      quadrant = 'Q1'; quadrantLabel = 'Risk-On + Into BTC'; quadrantDesc = 'Strongest bull case. Full risk budget. Favor BTC over alts.';
+      quadrantClass = 'q1'; bannerClass = 'q1-banner'; glowClass = 'q1-glow';
+    } else if (qRORO === 'risk-on' && qROT === 'away') {
+      quadrant = 'Q2'; quadrantLabel = 'Risk-On + Away from BTC'; quadrantDesc = 'Alt season pattern. Rotate into ETH/alts. Reduce BTC overweight.';
+      quadrantClass = 'q2'; bannerClass = 'q2-banner'; glowClass = 'q2-glow';
+    } else if (qRORO === 'risk-off' && qROT === 'into') {
+      quadrant = 'Q3'; quadrantLabel = 'Risk-Off + Into BTC'; quadrantDesc = 'Banking crisis / decoupling. BTC as safe haven. Defensive positioning.';
+      quadrantClass = 'q3'; bannerClass = 'q3-banner'; glowClass = 'q3-glow';
+    } else if (qRORO === 'risk-off' && qROT === 'away') {
+      quadrant = 'Q4'; quadrantLabel = 'Risk-Off + Away from BTC'; quadrantDesc = 'Default risk-off. Reduce exposure. Cash / stables overweight.';
+      quadrantClass = 'q4'; bannerClass = 'q4-banner'; glowClass = 'q4-glow';
+    } else {
+      quadrant = 'TRANSITION'; quadrantLabel = 'Transitional / No Clear Quadrant'; quadrantDesc = 'Scores in neutral band (±15). Wait for conviction before allocating.';
+      quadrantClass = 'neutral-status'; bannerClass = 'neutral-banner'; glowClass = '';
+    }
+
+    // Verdict banner
+    document.getElementById('verdict').className = 'verdict-banner ' + bannerClass;
+    document.getElementById('verdict').innerHTML =
+      '<div style="font-size:1.3em">' + quadrant + ': ' + quadrantLabel + '</div>' +
+      '<div style="font-size:0.85em;margin-top:4px;opacity:0.7">' + quadrantDesc + '</div>' +
+      '<div style="font-size:0.72em;margin-top:6px;opacity:0.5">RORO: ' + fmtNum(roroScore, 1) + ' · BTC Rotation: ' + fmtNum(rotScore, 1) + '</div>';
+
+    // ===== QUADRANT CHART MARKER =====
+    // Map scores [-100, 100] to chart position [8%, 92%]
+    // RORO = X axis (left=-100/risk-off, right=+100/risk-on)
+    // Rotation = Y axis (top=+100/into, bottom=-100/away) — inverted because CSS top=0 is top
+    var chartX = ((roroScore + 100) / 200) * 84 + 8; // 8% to 92%
+    var chartY = ((100 - rotScore) / 200) * 84 + 8;  // 8% to 92% (inverted: high rotation = top)
+    var marker = document.getElementById('quadrant-marker');
+    marker.style.left = chartX + '%';
+    marker.style.top = chartY + '%';
+    marker.className = 'quadrant-marker ' + glowClass;
+
+    var markerLabel = document.getElementById('quadrant-marker-label');
+    markerLabel.textContent = 'RORO ' + fmtNum(roroScore, 1) + ' · ROT ' + fmtNum(rotScore, 1);
+    // Position label near marker but avoid edges
+    var labelLeft = chartX > 60 ? chartX - 10 : chartX + 5;
+    var labelTop = chartY > 60 ? chartY - 8 : chartY + 5;
+    markerLabel.style.left = clamp(labelLeft, 5, 85) + '%';
+    markerLabel.style.top = clamp(labelTop, 3, 90) + '%';
+
+    // ===== SCORE GAUGES =====
+    document.getElementById('roro-score-val').textContent = fmtNum(roroScore, 1);
+    document.getElementById('roro-score-val').className = 'score-value ' + (roroScore > 15 ? 'good' : roroScore < -15 ? 'bad' : 'warn');
+    document.getElementById('roro-needle').style.left = ((roroScore + 100) / 200 * 100) + '%';
+
+    document.getElementById('rotation-score-val').textContent = fmtNum(rotScore, 1);
+    document.getElementById('rotation-score-val').className = 'score-value ' + (rotScore > 15 ? 'good' : rotScore < -15 ? 'bad' : 'warn');
+    document.getElementById('rotation-needle').style.left = ((rotScore + 100) / 200 * 100) + '%';
+
+    // ===== RORO COMPONENTS CARD =====
+    var scoreColor = function(s) { return s > 15 ? 'good' : s < -15 ? 'bad' : 'warn'; };
+    document.getElementById('rcomp-data').innerHTML =
+      roroInputs.map(function(inp) {
+        return row(inp.label,
+          (typeof inp.value === 'number' ? fmtNum(inp.value, 2) : inp.value) + ' · score ' + fmtNum(inp.score, 1),
+          scoreColor(inp.score));
+      }).join('') +
+      row('→ RORO Score (weighted)', fmtNum(roroScore, 1), scoreColor(roroScore));
+
+    // ===== BTC ROTATION COMPONENTS CARD =====
+    document.getElementById('bcomp-data').innerHTML =
+      rotInputs.map(function(inp) {
+        var display = typeof inp.value === 'number' ?
+          (inp.label.includes('Rate') ? fmtPct(inp.value, 3) :
+           inp.label.includes('Change') ? fmtPct(inp.value, 1) :
+           inp.label.includes('Vol') ? fmtNum(inp.value, 1) + '%' :
+           fmtNum(inp.value, 2)) : inp.value;
+        return row(inp.label, display + ' · score ' + fmtNum(inp.score, 1), scoreColor(inp.score));
+      }).join('') +
+      row('→ Rotation Score (weighted)', fmtNum(rotScore, 1), scoreColor(rotScore));
+
+    // ===== MACRO CONTEXT CARD =====
+    document.getElementById('macro-data').innerHTML =
+      row('BTC Price', fmtUSD(price), 'neutral') +
+      row('BTC 24h Change', fmtPct(change_24h, 2), change_24h > 0 ? 'good' : 'bad') +
+      row('Fear & Greed', (fng != null ? fng + '/100' : 'N/A') + ' · ' + fng_class, fng <= 25 ? 'warn' : fng >= 75 ? 'bad' : 'neutral') +
+      row('Market Regime', regime, regime === 'mid_cycle' ? 'neutral' : 'warn') +
+      row('Black Swan', black_swan + '/17 · ' + black_swan_status, black_swan > 3 ? 'bad' : 'good') +
+      row('Funding Signal', funding_signal, 'neutral');
+
+    // ===== MISSING DATA CARD =====
+    document.getElementById('missing-data').innerHTML =
+      row('BTC/ETH Relative Performance', '0.00% (offline)', 'neutral') +
+      row('BTC/Gold Relative Performance', '0.00% (offline)', 'neutral') +
+      row('HYG vs LQD Credit Spreads', '0 bps (offline)', 'neutral') +
+      row('ETF Net Flows', '$0M (offline)', 'neutral') +
+      row('BTC Dominance Change', '0.00% (offline)', 'neutral');
+
+  } catch (e) {
+    document.getElementById('verdict').innerHTML = '<div style="color:var(--bad)">⚠️ Could not load data: ' + e.message + '</div>';
+    document.getElementById('verdict').className = 'verdict-banner q4-banner';
+  }
+})();
+</script>
+</body>
+</html>
