@@ -492,11 +492,8 @@ function parseSrLevels(srText, timeframe, enrichedSupport, enrichedResistance) {
   return levels;
 }
 
-// ─── Globals for m() helper ───
-let srcTsCache = {};
-let packetTsSnapshot = '';
 
-// ─── Build Telemetry Brief ───
+
 function buildBrief(d, srcTs) {
   const h = d.header || {}, c = d.critical || {}, ctx = d.context || {};
   const ref = d.reference || {}, enr = d.enriched || {};
