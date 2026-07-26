@@ -1,5 +1,5 @@
 {
-  "composite": 3,
+  "composite": 4,
   "actual_max": 7,
   "status": "CAUTION",
   "direction": "NEUTRAL",
@@ -21,23 +21,23 @@
       "max": 1,
       "value": "-0.53%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI -0.5% \u2014 unwinding while price $64494 \u2014 divergence"
+      "note": "OI -0.5% \u2014 unwinding while price $64466 \u2014 divergence"
     },
     "s3_funding": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "0.0043%",
+      "value": "0.0040%",
       "threshold": "|Funding| > 0.01%",
-      "note": "Funding 0.0043% \u2014 neutral"
+      "note": "Funding 0.0040% \u2014 neutral"
     },
     "s4_bid_ask_absorption": {
-      "score": 0,
-      "verdict": "CLEAR",
+      "score": 1,
+      "verdict": "TRAP",
       "max": 1,
-      "value": "Bid:2 Ask:1",
+      "value": "Bid:7 Ask:2",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=2, Ask=1 \u2014 balanced"
+      "note": "Bid/Ask wall ratio 3.5\u00d7 \u2014 bid support trap"
     },
     "s5_taker_cvd": {
       "score": 0,
@@ -51,9 +51,9 @@
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-3616 BTC",
+      "value": "-5825 BTC",
       "threshold": "|Netflow| > 2,000 BTC",
-      "note": "Netflow -3616 BTC \u2014 large outflow = accumulation trap (FOMO bait)"
+      "note": "Netflow -5825 BTC \u2014 large outflow = accumulation trap (FOMO bait)"
     },
     "s7_utxo_bands": {
       "score": 1,
@@ -67,11 +67,11 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "-4.3%",
+      "value": "-4.2%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -4.3% \u2014 neutral"
+      "note": "Skew -4.2% \u2014 neutral"
     }
   },
-  "btc_price": 64494.52,
-  "_collected": "2026-07-26 01:17 UTC"
+  "btc_price": 64466.0,
+  "_collected": "2026-07-26 01:48 UTC"
 }
