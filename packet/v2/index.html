@@ -51,14 +51,6 @@
 .copy-btn:hover { background: rgba(34,211,238,0.18); }
 .copy-btn.copied { background: rgba(16,185,129,0.12); border-color: var(--green); color: var(--green); }
 .json-block { background: rgba(5,7,13,0.7); border: 1px solid var(--border); border-radius: 10px; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.78em; line-height: 1.55; color: #cbd5e1; overflow-x: auto; max-height: 70vh; overflow-y: auto; white-space: pre-wrap; word-break: break-word; }
-.verdict-banner { background: rgba(18,20,31,0.55); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; margin-bottom: 16px; backdrop-filter: blur(12px); }
-.verdict-action { font-size: 1.4em; font-weight: 900; font-family: 'JetBrains Mono', monospace; margin-bottom: 4px; }
-.verdict-reason { font-size: 0.78em; font-family: 'JetBrains Mono', monospace; color: var(--muted); margin-bottom: 8px; }
-.verdict-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.80em; margin-top: 12px; }
-@media (max-width: 600px) { .verdict-grid { grid-template-columns: 1fr; } }
-.verdict-grid .pro { color: var(--green); } .verdict-grid .con { color: var(--red); }
-.verdict-grid .info { color: var(--cyan); }
-.completeness-bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.06); margin-top: 8px; overflow: hidden; }
 .completeness-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
 .completeness-detail { display: grid; grid-template-columns: repeat(5,1fr); gap: 6px; margin-top: 6px; font-size: 0.68em; font-family: 'JetBrains Mono', monospace; color: var(--muted); text-align: center; }
 @media (max-width: 600px) { .completeness-detail { grid-template-columns: repeat(3,1fr); } }
@@ -84,12 +76,10 @@
     </div>
   </div>
 
-  <div class="verdict-banner" id="verdict-banner">
-    <div class="verdict-action" id="verdict-action">LOADING…</div>
-    <div class="verdict-reason" id="verdict-reason"></div>
-    <div class="completeness-bar"><div class="completeness-fill" id="completeness-fill" style="width:0%"></div></div>
-    <div class="completeness-detail" id="completeness-detail"></div>
-    <div class="verdict-grid" id="verdict-grid"></div>
+  <div class="v2-section" id="data-quality-banner" style="background: rgba(18,20,31,0.45); text-align: center; padding: 12px 20px;">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:0.82em;color:var(--muted)">
+      DATA_QUALITY · <span id="dq-stats">—</span>
+    </span>
   </div>
 
   <div class="v2-section" id="core-price"></div>
