@@ -1,34 +1,34 @@
 {
-  "packet_id": 116,
-  "captured_at": "2026-07-25T23:55:48Z",
+  "packet_id": 117,
+  "captured_at": "2026-07-26T00:11:55Z",
   "btc": {
-    "price": 64363.0,
+    "price": 64422.99,
     "session_high": 64475.28,
     "session_low": 63810.0,
-    "change_pct": 0.33,
-    "vwap": 64116.6765666,
-    "volume_btc": 8849.12882,
-    "volume_usd": 567376730.4481214,
+    "change_pct": 0.44,
+    "vwap": 64119.74820273,
+    "volume_btc": 8837.46647,
+    "volume_usd": 566656124.8064963,
     "break_level": 58872,
-    "gap_to_break_pct": 9.33
+    "gap_to_break_pct": 9.43
   },
   "funding_rate": {
-    "value_pct": 0.0072,
+    "value_pct": 0.0038,
     "next_settlement_utc": null,
-    "trend": "rising",
+    "trend": "stable",
     "consecutive_negative_count": 0
   },
   "taker_volume": {
-    "ratio_24h": 1.097,
-    "delta_sum_6": 408.26,
+    "ratio_24h": 1.099,
+    "delta_sum_6": 334.41,
     "delta_trend": "DETERIORATING",
     "deltas_6": [
-      81.81,
       -66.93,
       141.0,
       345.5,
       87.72,
-      -180.84
+      -209.15,
+      36.27
     ]
   },
   "mstr": {
@@ -43,7 +43,7 @@
       "active": true,
       "window_start": "2026-07-01",
       "window_end": "2026-07-31",
-      "days_remaining": 6,
+      "days_remaining": 5,
       "announcement_detected": false,
       "consecutive_silent_sessions": 0
     },
@@ -53,7 +53,7 @@
   "vix": {
     "value": 18.58,
     "source": "FRED",
-    "captured_at": "2026-07-25",
+    "captured_at": "2026-07-26",
     "trigger_threshold": 25.0,
     "triggered": false,
     "stale": false
@@ -61,7 +61,7 @@
   "us10y": {
     "value": 4.679,
     "source": "FRED",
-    "captured_at": "2026-07-25",
+    "captured_at": "2026-07-26",
     "trigger_threshold": 4.6,
     "triggered": true,
     "stale": false
@@ -69,9 +69,9 @@
   "usdjpy": {
     "value": 163.79,
     "source": "live",
-    "captured_at": "2026-07-25T23:55:48Z",
+    "captured_at": "2026-07-26T00:11:55Z",
     "structural_above_162": true,
-    "consecutive_packets_above_162": 1,
+    "consecutive_packets_above_162": 2,
     "spike_threshold_pct": 2.0,
     "spike_detected": false,
     "compound_triggered": false
