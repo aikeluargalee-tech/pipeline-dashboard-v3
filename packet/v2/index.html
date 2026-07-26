@@ -223,6 +223,87 @@ const CALC_DEFS = {
   }
 };
 
+
+// ─── Source Identifier Registry ───
+// Maps each source key to provider, endpoint, symbol, exchange, market type.
+const SOURCE_IDS = {
+  'amt': {
+    provider: 'Binance',
+    endpoint: 'fapi.binance.com (public REST)',
+    api_series_id: null,
+    symbol: 'BTCUSDT',
+    exchange: 'Binance',
+    market_type: 'spot + perpetual futures',
+    _note: 'AMT feed aggregates multiple Binance endpoints via GetClaw MTProto bot'
+  },
+  'vp': {
+    provider: 'Binance',
+    endpoint: 'fapi.binance.com/fapi/v1/klines (OHLCV)',
+    api_series_id: null,
+    symbol: 'BTCUSDT',
+    exchange: 'Binance',
+    market_type: 'perpetual futures',
+    _note: 'Volume Profile derived from 4h klines; candle count, price bins, and allocation method unknown'
+  },
+  'onchain': {
+    provider: 'Glassnode',
+    endpoint: 'api.glassnode.com (free tier)',
+    api_series_id: null,
+    symbol: 'BTC',
+    exchange: null,
+    market_type: 'on-chain',
+    _note: 'Aggregated by BRK on-chain data fetcher'
+  },
+  'fred': {
+    provider: 'Federal Reserve Economic Data',
+    endpoint: 'fred.stlouisfed.org API',
+    api_series_id: {
+      dxy: 'DTWEXBGS (Trade Weighted USD Broad)',
+      us10y: 'DGS10 (10-Year Treasury Constant Maturity Rate)'
+    },
+    symbol: 'See api_series_id per metric',
+    exchange: null,
+    market_type: 'macro',
+    _note: 'Source observation timestamps unavailable — FRED publishes daily'
+  },
+  'yahoo': {
+    provider: 'Yahoo Finance',
+    endpoint: 'query1.finance.yahoo.com/v8/finance/chart/',
+    api_series_id: null,
+    symbol: 'Per metric: ^VIX, SPY/QQQ/GLD basket, USDJPY=X, MSTR',
+    exchange: 'NYSE/NASDAQ',
+    market_type: 'equities/macro',
+    _note: 'Source observation timestamps unavailable'
+  },
+  'etf': {
+    provider: 'ETF aggregate',
+    endpoint: 'Multiple (Farside.co.uk, blockchain.news)',
+    api_series_id: null,
+    symbol: 'US spot BTC ETFs (aggregate)',
+    exchange: null,
+    market_type: 'ETF flows',
+    _note: 'Aggregated daily flow; trading date not provided by source'
+  },
+  'pipeline': {
+    provider: 'Pipeline Engine',
+    endpoint: 'Local computation (VPS)',
+    api_series_id: null,
+    symbol: 'BTCUSDT',
+    exchange: 'Binance',
+    market_type: 'derived',
+    _note: 'Composite indicators calculated by Redline pipeline; per-metric methodology varies'
+  },
+  'alternative': {
+    provider: 'Alternative.me',
+    endpoint: 'alternative.me/crypto/fear-and-greed-index/',
+    api_series_id: null,
+    symbol: 'BTC',
+    exchange: null,
+    market_type: 'sentiment',
+    _note: 'Fear & Greed Index, refreshed daily'
+  }
+};
+
 // ─── Metric row helper for telemetry brief ───
 function metric(label, value, unit, source, freshness, note) {
   const fcls = freshness || 'unavailable';
@@ -268,7 +349,8 @@ function tsMeta(observed, collected, packetTs, freq) {
 }
 
 // ─── Build metric object for structured JSON ───
-function m(value, unit, sourceKey, source, instrument, window_, dataType, calcId, deps) {
+function m(value, unit, sourceKey, source, instrument, window_, dataType, calcId, deps, details) {
+  // details: optional object for extra fields (current_value, previous_value, window_start_utc, etc.) copied into metric
   if (!sourceKey && !source) { sourceKey = 'amt'; source = 'Binance'; }
   const srcObj = srcTsCache[sourceKey] || { observed_at_utc: null, collected_at_utc: null, frequency_sec: 900 };
 
@@ -284,10 +366,11 @@ function m(value, unit, sourceKey, source, instrument, window_, dataType, calcId
     eligible = false;
   }
 
-  return {
+  const obj = {
     value: value != null ? value : null,
     unit: unit || null,
     source: source || null,
+    source_identifier: sourceKey || null,
     instrument: instrument || null,
     window: window_ || null,
     source_observed_at_utc: meta.source_observed_at_utc,
@@ -303,6 +386,110 @@ function m(value, unit, sourceKey, source, instrument, window_, dataType, calcId
     dependencies: deps || [],
     eligible_for_analysis: eligible
   };
+  // Merge extra detail fields (current_value, previous_value, window_start_utc, etc.)
+  if (details && typeof details === 'object') Object.assign(obj, details);
+  return obj;
+}
+
+// ─── Globals for m() helper ───
+let srcTsCache = {};
+let packetTsSnapshot = '';
+
+
+// ─── Parse heatmap text into structured clusters ───
+function parseHeatmapClusters(text) {
+  if (!text || typeof text !== 'string') return [];
+  const clusters = [];
+  const now = new Date().toISOString();
+
+  // Parse: "Long: $64,500 (-0.03%), $64,300 (-0.34%) | Short: $64,500 (-0.03%), $64,600 (+0.13%)"
+  const sideRegex = /(Long|Short):\s*(.+?)(?=\s*\|\s*(?:Long|Short)|$)/g;
+  let match;
+  while ((match = sideRegex.exec(text)) !== null) {
+    const side = match[1].toLowerCase();
+    const items = match[2].split(',').map(s => s.trim());
+    for (const item of items) {
+      const priceMatch = item.match(/\$([\d,]+)\s*\(([+-]?[\d.]+)%\)/);
+      if (priceMatch) {
+        clusters.push({
+          side: side,
+          price: parseFloat(priceMatch[1].replace(/,/g, '')),
+          distance_pct: parseFloat(priceMatch[2]),
+          strength: null,
+          source: 'Coinglass',
+          capture_timestamp_utc: null,
+          data_type: 'estimated_cluster'
+        });
+      }
+    }
+  }
+  return clusters;
+}
+
+// ─── Parse S/R text into structured level objects ───
+function parseSrLevels(srText, timeframe, enrichedSupport, enrichedResistance) {
+  // srText: "S: $64,237 / $63,988 / $63,726 | R: $64,706 / $65,097 / $65,250"
+  const levels = [];
+  const now = new Date().toISOString();
+
+  if (!srText || typeof srText !== 'string') return levels;
+
+  const sideRegex = /([SR]):\s*(.+?)(?=\s*\|\s*[SR]:|$)/g;
+  let match;
+  while ((match = sideRegex.exec(srText)) !== null) {
+    const side = match[1] === 'S' ? 'support' : 'resistance';
+    const prices = match[2].split('/').map(s => parseFloat(s.trim().replace(/[$,]/g, '')));
+    for (let i = 0; i < prices.length; i++) {
+      if (!isNaN(prices[i])) {
+        levels.push({
+          side: side,
+          price: prices[i],
+          timeframe: timeframe,
+          method: 'calculated_swing_point',
+          touch_count: null,
+          first_observed_at_utc: null,
+          last_tested_at_utc: null,
+          calculated_at_utc: now,
+          eligible_for_analysis: true
+        });
+      }
+    }
+  }
+
+  // Add enriched single levels if available (these are the closest levels)
+  if (enrichedSupport != null && !isNaN(enrichedSupport)) {
+    // Check if already present
+    if (!levels.some(l => l.side === 'support' && Math.abs(l.price - enrichedSupport) < 1)) {
+      levels.push({
+        side: 'support',
+        price: enrichedSupport,
+        timeframe: timeframe,
+        method: 'nearest_swing_low',
+        touch_count: null,
+        first_observed_at_utc: null,
+        last_tested_at_utc: null,
+        calculated_at_utc: now,
+        eligible_for_analysis: true
+      });
+    }
+  }
+  if (enrichedResistance != null && !isNaN(enrichedResistance)) {
+    if (!levels.some(l => l.side === 'resistance' && Math.abs(l.price - enrichedResistance) < 1)) {
+      levels.push({
+        side: 'resistance',
+        price: enrichedResistance,
+        timeframe: timeframe,
+        method: 'nearest_swing_high',
+        touch_count: null,
+        first_observed_at_utc: null,
+        last_tested_at_utc: null,
+        calculated_at_utc: now,
+        eligible_for_analysis: true
+      });
+    }
+  }
+
+  return levels;
 }
 
 // ─── Globals for m() helper ───
@@ -431,26 +618,27 @@ function buildBrief(d, srcTs) {
 }
 
 // ─── Traverse JSON tree to find all metric objects ───
-function findMetricObjects(obj, path, results, visited) {
+function findMetricObjects(obj, path, results, visited, skipKeys) {
   if (!obj || typeof obj !== 'object' || visited.has(obj)) return;
   visited.add(obj);
   if (Array.isArray(obj)) {
     for (let i = 0; i < obj.length; i++)
-      findMetricObjects(obj[i], path + '[' + i + ']', results, visited);
+      findMetricObjects(obj[i], path + '[' + i + ']', results, visited, skipKeys);
     return;
   }
-  // A metric object has 'freshness' and 'data_type' fields
+  // A metric object has 'freshness' and 'data_type' and 'value' fields
   if (obj !== null && typeof obj === 'object' && 'freshness' in obj && 'data_type' in obj && 'value' in obj) {
     results.push({ path: path, obj: obj });
     return; // don't recurse into metric objects
   }
   // Recurse
+  const skip = skipKeys || ['data_quality', 'source_health', 'calculation_definitions',
+    'source_identifiers', 'cvd_methodology',
+    'PACKET_VERSION', 'PACKET_TIMESTAMP_UTC', 'PACKET_GENERATED_AT_UTC',
+    'ANALYSIS_STATUS', 'ANALYSIS_AGENT'];
   for (const [key, val] of Object.entries(obj)) {
-    if (key === 'data_quality' || key === 'source_health' || key === 'calculation_definitions' ||
-        key === 'PACKET_VERSION' || key === 'PACKET_TIMESTAMP_UTC' || key === 'PACKET_GENERATED_AT_UTC' ||
-        key === 'ANALYSIS_STATUS' || key === 'ANALYSIS_AGENT' || key.startsWith('_'))
-      continue;
-    findMetricObjects(val, path ? path + '.' + key : key, results, visited);
+    if (skip.includes(key) || key.startsWith('_')) continue;
+    findMetricObjects(val, path ? path + '.' + key : key, results, visited, skipKeys);
   }
 }
 
@@ -461,11 +649,14 @@ function computeDataQuality(packetJson) {
 
   let populated = 0, valueMissing = 0, valPresentTsMissing = 0;
   let fresh = 0, delayed = 0, stale = 0, unavailable = 0;
+  let reproducible = 0, nonReproducible = 0;
 
   for (const { path, obj } of metrics) {
     if (obj.value == null) {
       valueMissing++;
       unavailable++;
+      // null values are non-reproducible
+      if (obj.data_type === 'derived') nonReproducible++;
     } else {
       populated++;
       if (!obj.source_observed_at_utc) valPresentTsMissing++;
@@ -473,6 +664,16 @@ function computeDataQuality(packetJson) {
       else if (obj.freshness === 'delayed') delayed++;
       else if (obj.freshness === 'stale') stale++;
       else unavailable++;
+
+      // Reproducibility: derived metrics are reproducible if they have formula + dependencies
+      if (obj.data_type === 'derived') {
+        if (obj.formula && obj.dependencies && obj.dependencies.length > 0 &&
+            !obj._derivation_gap) {
+          reproducible++;
+        } else {
+          nonReproducible++;
+        }
+      }
     }
   }
 
@@ -485,11 +686,15 @@ function computeDataQuality(packetJson) {
     delayed_metrics: delayed,
     stale_metrics: stale,
     unavailable_metrics: unavailable,
-    timestamp_validity_percent: populated > 0 ? Math.round((populated - valPresentTsMissing) / populated * 100) : 0
+    timestamp_validity_percent: populated > 0 ? Math.round((populated - valPresentTsMissing) / populated * 100) : 0,
+    reproducible_derived_metrics_count: reproducible,
+    non_reproducible_derived_metrics_count: nonReproducible,
+    source_partial_count: 0,  // populated after source health
+    source_error_count: 0
   };
 }
 
-// ─── Structured Source Health (no duplicates) ───
+// ─── Structured Source Health (OK/PARTIAL/UNAVAILABLE/ERROR) ───
 function computeSourceHealth(packetJson) {
   const metrics = [];
   findMetricObjects(packetJson, '', metrics, new Set());
@@ -497,15 +702,43 @@ function computeSourceHealth(packetJson) {
   const bySource = {};
   for (const { path, obj } of metrics) {
     const src = obj.source || 'unknown';
-    if (!bySource[src]) bySource[src] = { status: 'ok', age_seconds: null, affected_metrics: [] };
+    const srcId = obj.source_identifier || src.toLowerCase();
+    if (!bySource[src]) {
+      bySource[src] = {
+        status: 'OK',
+        age_seconds: null,
+        successful_metrics: [],
+        affected_metrics: [],
+        source_identifier_ref: srcId
+      };
+    }
 
     const age = obj.age_seconds;
     if (age != null && (bySource[src].age_seconds == null || age > bySource[src].age_seconds))
       bySource[src].age_seconds = age;
 
-    if (obj.freshness === 'stale' || obj.freshness === 'unavailable') {
-      bySource[src].status = obj.freshness === 'unavailable' ? 'unavailable' : 'stale';
+    if (obj.value == null || obj.freshness === 'unavailable' || !obj.eligible_for_analysis) {
       bySource[src].affected_metrics.push(path);
+      bySource[src].status = 'PARTIAL';
+    } else {
+      bySource[src].successful_metrics.push(path);
+    }
+
+    // ERROR state: if ALL metrics in a source are affected
+    if (obj.freshness === 'stale' && obj.eligible_for_analysis === false) {
+      if (!bySource[src].affected_metrics.includes(path))
+        bySource[src].affected_metrics.push(path);
+    }
+  }
+
+  // Finalize: UNAVAILABLE if zero successful, OK if zero affected, else PARTIAL
+  for (const [src, info] of Object.entries(bySource)) {
+    if (info.successful_metrics.length === 0) {
+      info.status = 'UNAVAILABLE';
+    } else if (info.affected_metrics.length === 0) {
+      info.status = 'OK';
+    } else {
+      info.status = 'PARTIAL';
     }
   }
 
@@ -532,16 +765,37 @@ function buildStructuredJson(d, srcTs) {
   const vpDiff = vp.vah && vp.val ? vp.vah - vp.val : null;
   const vpValid = vpDiff != null && vp.poc != null && (vpDiff / vp.poc * 100) >= 0.01;
 
+  // OI absolute for derivation gap tracking (source only provides % changes, not raw values)
+  const oiAbs = c.oi_absolute_usd_billions;
+  const oiPct = c.oi_per_tf_pct_change || {};
+
+  // CVD Methodology metadata block
+  const cvdMethodology = {
+    markets_included: ['Binance BTCUSDT spot (AMT feed)', 'Binance BTCUSDT perpetual (AMT feed)'],
+    session_start_utc: null,
+    session_end_utc: null,
+    trade_feed: 'Binance aggregated trades (AMT)', 
+    buyer_maker_classification: 'Taker buys when buyer is taker; taker sells when seller is taker',
+    unit: 'USD notional',
+    reset_policy: 'per-session cumulative (resets at session boundary)',
+    formula: 'cumulative(taker_buy_volume - taker_sell_volume) within session',
+    dependencies: ['taker_buy_volume_per_trade', 'taker_sell_volume_per_trade'],
+    _caveat: 'AMT CVD feed is COMPOSITE — does not separate Binance spot from Binance perpetual CVD. Until separate spot and futures CVD are available, leadership inference is not supported.'
+  };
+
   const packet = {
     PACKET_VERSION: "BTC_DATA_PACKET_V2",
     PACKET_TIMESTAMP_UTC: packetTs,
     PACKET_GENERATED_AT_UTC: packetTs,
 
     calculation_definitions: CALC_DEFS,
+    source_identifiers: SOURCE_IDS,
 
     core_price: {
       spot: m(h.btc_price, 'USD', 'amt', 'Binance', 'BTCUSDT spot'),
-      change_24h: m(h.change_24h, 'percent', 'amt', 'Binance', 'BTCUSDT spot', '24h', 'derived', 'change_24h', ['core_price.spot']),
+      change_24h: m(h.change_24h, 'percent', 'amt', 'Binance', 'BTCUSDT spot', '24h', 'derived', 'change_24h', ['core_price.spot'], {
+        _derivation_gap: 'previous_value (24h ago price) not available in source data; calculation assumed by pipeline'
+      }),
       bid: m(h.bid, 'USD', 'amt', 'Binance', 'BTCUSDT spot'),
       ask: m(h.ask, 'USD', 'amt', 'Binance', 'BTCUSDT spot'),
       spread: m(h.spread, 'USD', 'amt', 'Binance', 'BTCUSDT spot', null, 'derived', 'spread', ['core_price.bid','core_price.ask']),
@@ -554,50 +808,120 @@ function buildStructuredJson(d, srcTs) {
         annualized_pct: m(ctx.funding_rate != null ? ctx.funding_rate * 100 * 365 * 3 : null, 'percent', 'amt', 'Binance', 'BTCUSDT perpetual', null, 'derived', 'annualized_funding_pct', ['derivatives.funding.rate'])
       },
       open_interest: {
-        absolute_usd_billions: m(c.oi_absolute_usd_billions, 'B USD', 'amt', 'Binance', 'BTCUSDT perpetual'),
-        change_1h_pct: m((c.oi_per_tf_pct_change || {})['1H'], 'percent', 'amt', 'Binance', 'BTCUSDT perpetual', '1h', 'derived', 'oi_change_pct', ['derivatives.open_interest.absolute_usd_billions']),
-        change_4h_pct: m((c.oi_per_tf_pct_change || {})['4H'], 'percent', 'amt', 'Binance', 'BTCUSDT perpetual', '4h', 'derived', 'oi_change_pct', ['derivatives.open_interest.absolute_usd_billions']),
-        change_24h_pct: m(enr.oi_change_24h_pct || ctx.oi_change_24h, 'percent', 'amt', 'Binance', 'BTCUSDT perpetual', '24h', 'derived', 'oi_change_pct', ['derivatives.open_interest.absolute_usd_billions'])
+        absolute_usd_billions: m(oiAbs, 'B USD', 'amt', 'Binance', 'BTCUSDT perpetual'),
+        change_1h_pct: m(oiPct['1H'], 'percent', 'amt', 'Binance', 'BTCUSDT perpetual', '1h', 'derived', 'oi_change_pct', ['derivatives.open_interest.absolute_usd_billions'], {
+          current_value: oiAbs,
+          previous_value: null,
+          window_start_utc: null,
+          window_end_utc: null,
+          _derivation_gap: 'previous OI value not available in source data; pipeline provides only percentage change. Cannot re-derive without raw OI history.'
+        }),
+        change_4h_pct: m(oiPct['4H'], 'percent', 'amt', 'Binance', 'BTCUSDT perpetual', '4h', 'derived', 'oi_change_pct', ['derivatives.open_interest.absolute_usd_billions'], {
+          current_value: oiAbs,
+          previous_value: null,
+          window_start_utc: null,
+          window_end_utc: null,
+          _derivation_gap: 'previous OI value not available in source data'
+        }),
+        change_24h_pct: m(enr.oi_change_24h_pct || ctx.oi_change_24h, 'percent', 'amt', 'Binance', 'BTCUSDT perpetual', '24h', 'derived', 'oi_change_pct', ['derivatives.open_interest.absolute_usd_billions'], {
+          current_value: oiAbs,
+          previous_value: null,
+          window_start_utc: null,
+          window_end_utc: null,
+          _derivation_gap: 'previous OI value not available in source data'
+        })
       },
       futures_basis: {
-        perp_basis_pct: m(ctx.perp_basis_pct, 'percent', 'amt', 'Binance', 'BTCUSDT perpetual vs spot', null, 'derived', 'perp_basis_pct', ['core_price.spot'])
+        perp_basis_pct: m(ctx.perp_basis_pct, 'percent', 'amt', 'Binance', 'BTCUSDT perpetual vs spot', null, 'derived', 'perp_basis_pct', ['core_price.spot'], {
+          perpetual_mark_price: null,
+          perpetual_last_price: null,
+          index_price: null,
+          spot_reference_price: h.btc_price || null,
+          _derivation_gap: 'perpetual mark/index/last prices not available in source data. Only the final basis percentage is provided by the pipeline.'
+        })
       },
       taker_data: {
-        taker_buy_share: m(takerShare, 'fraction', 'amt', 'Binance', 'BTCUSDT perpetual', null, 'derived', 'taker_buy_share', ['derivatives.taker_data.taker_buy_sell_ratio']),
-        taker_buy_sell_ratio: m(takerRatio, 'ratio', 'amt', 'Binance', 'BTCUSDT perpetual')
+        taker_buy_share: m(takerShare, 'fraction', 'amt', 'Binance', 'BTCUSDT perpetual', null, 'derived', 'taker_buy_share', ['derivatives.taker_data.taker_buy_sell_ratio'], {
+          _derivation_gap: 'window size, population, and exact Binance endpoint not provided by source data'
+        }),
+        taker_buy_sell_ratio: m(takerRatio, 'ratio', 'amt', 'Binance', 'BTCUSDT perpetual', null, 'raw', null, null, {
+          window: '24h',
+          population: 'all_accounts',
+          measurement_type: 'volume_ratio',
+          endpoint: 'Binance futures/data/takerlongshortRatio (assumed)',
+          _note: 'window, population, and endpoint metadata inferred — not confirmed by pipeline source'
+        })
       }
     },
 
     spot_vs_futures: {
-      _caveat: "CVD data from AMT feed is COMPOSITE (does not separate Binance spot from Binance BTCUSDT perpetual). Separate spot CVD and perpetual CVD are not available.",
-      cvd_1h: m((c.cvd_per_tf || {})['1H'], 'USD', 'amt', 'Binance', 'composite', '1h', 'derived'),
-      cvd_4h: m((c.cvd_per_tf || {})['4H'], 'USD', 'amt', 'Binance', 'composite', '4h', 'derived'),
-      cvd_24h: m(ctx.cvd_24h, 'USD', 'amt', 'Binance', 'composite', '24h', 'derived'),
+      cvd_methodology: cvdMethodology,
+      cvd_1h: m((c.cvd_per_tf || {})['1H'], 'USD', 'amt', 'Binance', 'composite spot + perpetual', '1h', 'derived', null, null, {
+        formula: cvdMethodology.formula,
+        dependencies: cvdMethodology.dependencies,
+        unit: cvdMethodology.unit,
+        _derivation_gap: 'composite CVD (spot + futures combined); raw trade data, session bounds, and buyer-maker classification not available for audit'
+      }),
+      cvd_4h: m((c.cvd_per_tf || {})['4H'], 'USD', 'amt', 'Binance', 'composite spot + perpetual', '4h', 'derived', null, null, {
+        formula: cvdMethodology.formula,
+        dependencies: cvdMethodology.dependencies,
+        unit: cvdMethodology.unit,
+        _derivation_gap: 'composite CVD — see cvd_methodology'
+      }),
+      cvd_24h: m(ctx.cvd_24h, 'USD', 'amt', 'Binance', 'composite spot + perpetual', '24h', 'derived', null, null, {
+        formula: cvdMethodology.formula,
+        dependencies: cvdMethodology.dependencies,
+        unit: cvdMethodology.unit,
+        _derivation_gap: 'composite CVD — see cvd_methodology'
+      }),
       coinbase_premium: m(ctx.coinbase_premium, 'percent', 'amt', 'Coinbase', 'BTCUSD spot'),
-      session_cvd: m(c.session_cvd, 'USD', 'amt', 'Binance', 'composite', 'session', 'derived'),
-      long_short_ratio: m(ctx.long_short_ratio, 'ratio', 'amt', 'Binance', 'BTCUSDT perpetual', null, 'raw')
+      session_cvd: m(c.session_cvd, 'USD', 'amt', 'Binance', 'composite spot + perpetual', 'session', 'derived', null, null, {
+        formula: cvdMethodology.formula,
+        dependencies: cvdMethodology.dependencies,
+        unit: cvdMethodology.unit,
+        _derivation_gap: 'composite CVD — see cvd_methodology'
+      }),
+      long_short_ratio: m(ctx.long_short_ratio, 'ratio', 'amt', 'Binance', 'BTCUSDT perpetual', null, 'raw', null, null, {
+        population: 'all_accounts',
+        measurement_type: 'account_count_ratio',
+        window: '1h',
+        endpoint: 'Binance futures/data/globalLongShortAccountRatio (assumed)',
+        _note: 'population, measurement_type, and endpoint metadata inferred — not confirmed by pipeline source'
+      })
     },
 
     liquidations: {
       observed: { status: "unavailable", reason: "No liquidation data source connected to pipeline" },
       heatmap_clusters: ctx.liq_clusters
-        ? m(ctx.liq_clusters, null, 'amt', 'Coinglass', null, 'snapshot', 'raw')
-        : { status: "unavailable", reason: "No heatmap capture yet", freshness: "unavailable" }
+        ? parseHeatmapClusters(ctx.liq_clusters)
+        : []
     },
 
     market_structure: {
-      adx: m((src.amt || {}).adx, null, 'amt', 'Binance', 'BTCUSDT perpetual', '1h', 'derived', 'adx'),
-      balance_width_pct: m(c.balance_width_pct, 'percent', 'amt', 'Binance', null, null, 'derived'),
-      rsi_14_daily: m(ctx.daily_rsi_14, null, 'amt', 'Binance', 'BTCUSDT', '1d', 'derived', 'rsi_14'),
-      sr_1h: m(ref.sr_1h, null, 'amt', 'Pipeline', null, '1h', 'derived'),
-      sr_1d: m(ref.sr_1d, null, 'amt', 'Pipeline', null, '1d', 'derived'),
+      adx: m((src.amt || {}).adx, null, 'amt', 'Binance', 'BTCUSDT perpetual', '1h', 'derived', 'adx', null, {
+        _derivation_gap: 'ADX calculation inputs (14-period candles, +DI/-DI components) not available in source data'
+      }),
+      balance_width_pct: m(c.balance_width_pct, 'percent', 'amt', 'Binance', null, null, 'derived', null, null, {
+        _derivation_gap: 'balance calculation method and input levels not provided'
+      }),
+      rsi_14_daily: m(ctx.daily_rsi_14, null, 'amt', 'Binance', 'BTCUSDT', '1d', 'derived', 'rsi_14', null, {
+        _derivation_gap: 'RSI calculation inputs (14 daily closes) not available in source data'
+      }),
+      sr_1h: parseSrLevels(ref.sr_1h, '1h', enr.sr_1h_support, enr.sr_1h_resistance),
+      sr_1d: parseSrLevels(ref.sr_1d, '1d', enr.sr_1d_support, enr.sr_1d_resistance),
       volume_profile: vpValid ? {
         instrument: "BTCUSDT perpetual",
         market: "futures",
         timeframe: "4h",
-        poc: m(vp.poc, 'USD', 'vp', 'Binance', 'BTCUSDT perpetual', null, 'derived', 'vp_poc_vah_val'),
-        vah: m(vp.vah, 'USD', 'vp', 'Binance', 'BTCUSDT perpetual', null, 'derived', 'vp_poc_vah_val'),
-        val: m(vp.val, 'USD', 'vp', 'Binance', 'BTCUSDT perpetual', null, 'derived', 'vp_poc_vah_val'),
+        poc: m(vp.poc, 'USD', 'vp', 'Binance', 'BTCUSDT perpetual', null, 'derived', 'vp_poc_vah_val', null, {
+          _derivation_gap: 'candle count, price bins, and allocation method not available'
+        }),
+        vah: m(vp.vah, 'USD', 'vp', 'Binance', 'BTCUSDT perpetual', null, 'derived', 'vp_poc_vah_val', null, {
+          _derivation_gap: 'candle count, price bins, and allocation method not available'
+        }),
+        val: m(vp.val, 'USD', 'vp', 'Binance', 'BTCUSDT perpetual', null, 'derived', 'vp_poc_vah_val', null, {
+          _derivation_gap: 'candle count, price bins, and allocation method not available'
+        }),
         value_area_width_percent: m(vpDiff != null && vp.poc != null ? (vpDiff / vp.poc * 100) : null, 'percent', 'vp', 'Binance', null, null, 'derived', 'value_area_width_pct', ['market_structure.volume_profile.poc','market_structure.volume_profile.vah','market_structure.volume_profile.val'])
       } : {
         status: "INVALID_METADATA",
@@ -618,44 +942,73 @@ function buildStructuredJson(d, srcTs) {
     },
 
     macro: {
-      dxy: m(ctx.dxy, null, 'fred', 'FRED', 'DX-Y.NYB'),
-      us10y: m(ctx.us10y, 'percent', 'fred', 'FRED', 'DGS10'),
-      vix: m(ctx.vix || enr.vix, null, 'yahoo', 'Yahoo Finance', '^VIX'),
-      equities: m(ctx.equities, null, 'yahoo', 'Yahoo Finance', 'SPY/QQQ/GLD'),
-      usdjpy: m(ctx.usdjpy, null, 'yahoo', 'Yahoo Finance', 'USDJPY=X'),
-      mstr: m(ctx.mstr_close, 'USD', 'yahoo', 'Yahoo Finance', 'MSTR'),
-      btc_equity_correlation: m(enr.correlation_r || ctx.correlation_r, 'Pearson r', 'pipeline', 'Pipeline', null, '30d', 'derived', 'btc_equity_correlation'),
+      dxy: m(ctx.dxy, null, 'fred', 'FRED', 'DTWEXBGS (Trade Weighted USD Broad)', null, 'raw', null, null, {
+        _derivation_gap: 'source observation timestamp unavailable — FRED publishes daily; pipeline does not capture publication date'
+      }),
+      us10y: m(ctx.us10y, 'percent', 'fred', 'FRED', 'DGS10 (10-Year Treasury)', null, 'raw', null, null, {
+        _derivation_gap: 'source observation timestamp unavailable'
+      }),
+      vix: m(ctx.vix || enr.vix, null, 'yahoo', 'Yahoo Finance', '^VIX', null, 'raw', null, null, {
+        _derivation_gap: 'source observation timestamp unavailable — Yahoo Finance API does not expose per-observation timestamp'
+      }),
+      equities: m(ctx.equities, null, 'yahoo', 'Yahoo Finance', 'SPY/QQQ/GLD basket', null, 'raw', null, null, {
+        _derivation_gap: 'source observation timestamp unavailable; basket composition not provided'
+      }),
+      usdjpy: m(ctx.usdjpy, null, 'yahoo', 'Yahoo Finance', 'USDJPY=X', null, 'raw', null, null, {
+        _derivation_gap: 'source observation timestamp unavailable'
+      }),
+      mstr: m(ctx.mstr_close, 'USD', 'yahoo', 'Yahoo Finance', 'MSTR', null, 'raw', null, null, {
+        _derivation_gap: 'source observation timestamp unavailable'
+      }),
+      btc_equity_correlation: m(enr.correlation_r || ctx.correlation_r, 'Pearson r', 'pipeline', 'Pipeline', null, '30d', 'derived', 'btc_equity_correlation', null, {
+        _derivation_gap: 'correlation inputs (30 daily BTC + equity returns) not available in source data'
+      }),
       etf_flows: {
-        daily: m(ctx.etf_flow_daily, 'M USD', 'etf', 'ETF aggregate', null, '1d'),
+        daily: m(ctx.etf_flow_daily, 'M USD', 'etf', 'ETF aggregate', null, '1d', 'raw', null, null, {
+          _derivation_gap: 'trading date not provided by source; source observation timestamp unavailable'
+        }),
         daily_as_of_trading_date: null,
         daily_date_status: "SOURCE_DATE_UNAVAILABLE",
-        weekly: m(ctx.etf_flow_weekly, 'M USD', 'etf', 'ETF aggregate', null, '7d'),
+        weekly: m(ctx.etf_flow_weekly, 'M USD', 'etf', 'ETF aggregate', null, '7d', 'raw', null, null, {
+          _derivation_gap: 'trading date not provided by source'
+        }),
         weekly_as_of_trading_date: null,
         weekly_date_status: "SOURCE_DATE_UNAVAILABLE",
         _note: "ETF flow data source does not provide the trading date represented by each value. Packet date is NOT the trading date."
       },
       sentiment: {
-        fear_greed: m(enr.fng_value || ctx.fng_value, null, 'amt', 'Alternative.me'),
-        black_swan: m(enr.black_swan_score != null ? enr.black_swan_score + '/' + enr.black_swan_max : null, null, 'pipeline', 'Pipeline')
+        fear_greed: m(enr.fng_value || ctx.fng_value, null, 'alternative', 'Alternative.me', 'BTC Fear & Greed Index'),
+        black_swan: m(enr.black_swan_score != null ? enr.black_swan_score + '/' + enr.black_swan_max : null, null, 'pipeline', 'Pipeline', null, null, 'derived', null, null, {
+          _derivation_gap: 'black swan scoring inputs (stress indicators, event triggers) not available in source data'
+        })
       }
     },
 
     on_chain: {
-      mvrv: m(brk.mvrv, null, 'onchain', 'Glassnode'),
-      mvrv_z: m(cyc.mvrv_z ? Number(cyc.mvrv_z) : null, null, 'onchain', 'Glassnode'),
-      nupl: m(nupl, 'fraction', 'onchain', 'Glassnode', null, null, 'derived', 'nupl', ['on_chain.mvrv']),
-      sopr: m(brk.sopr_24h ? Number(brk.sopr_24h) : null, null, 'onchain', 'Glassnode', null, '24h'),
-      lth_sopr: m(brk.lth_sopr_24h ? Number(brk.lth_sopr_24h) : null, null, 'onchain', 'Glassnode', null, '24h'),
-      sth_sopr: m(brk.sth_sopr_24h ? Number(brk.sth_sopr_24h) : null, null, 'onchain', 'Glassnode', null, '24h'),
-      realized_price: m(brk.realized_price, 'USD', 'onchain', 'Glassnode'),
-      netflow_7d: m(cyc.netflow_7d ? Number(cyc.netflow_7d) : null, 'BTC', 'onchain', 'Glassnode', null, '7d'),
-      supply_in_profit_pct: m(brk.supply_in_profit_share, 'percent', 'onchain', 'Glassnode')
+      mvrv: m(brk.mvrv, null, 'onchain', 'Glassnode', 'BTC', null, 'raw'),
+      mvrv_z: m(cyc.mvrv_z ? Number(cyc.mvrv_z) : null, null, 'onchain', 'Glassnode', 'BTC', null, 'raw'),
+      nupl: m(nupl, 'fraction', 'onchain', 'Glassnode', 'BTC', null, 'derived', 'nupl', ['on_chain.mvrv']),
+      sopr: m(brk.sopr_24h ? Number(brk.sopr_24h) : null, null, 'onchain', 'Glassnode', 'BTC', null, '24h'),
+      lth_sopr: m(brk.lth_sopr_24h ? Number(brk.lth_sopr_24h) : null, null, 'onchain', 'Glassnode', 'BTC', null, '24h'),
+      sth_sopr: m(brk.sth_sopr_24h ? Number(brk.sth_sopr_24h) : null, null, 'onchain', 'Glassnode', 'BTC', null, '24h'),
+      realized_price: m(brk.realized_price, 'USD', 'onchain', 'Glassnode', 'BTC'),
+      netflow_7d: m(cyc.netflow_7d ? Number(cyc.netflow_7d) : null, 'BTC', 'onchain', 'Glassnode', 'BTC', null, '7d'),
+      supply_in_profit_pct: m(brk.supply_in_profit_share, 'percent', 'onchain', 'Glassnode', 'BTC')
     }
   };
 
-  // Compute dynamic data quality from the actual JSON tree
+  // Compute dynamic data quality and source health
   const dq = computeDataQuality(packet);
   const sh = computeSourceHealth(packet);
+
+  // Update source_partial_count and source_error_count from source health
+  let partialCount = 0, errorCount = 0;
+  for (const [src, info] of Object.entries(sh)) {
+    if (info.status === 'PARTIAL') partialCount++;
+    if (info.status === 'UNAVAILABLE' || info.status === 'ERROR') errorCount++;
+  }
+  dq.source_partial_count = partialCount;
+  dq.source_error_count = errorCount;
 
   // Inject post-hoc
   packet.data_quality = dq;
@@ -711,7 +1064,10 @@ async function loadAll() {
     dq.fresh_metrics + ' fresh · ' +
     dq.stale_metrics + ' stale · ' +
     dq.unavailable_metrics + ' unavail · ' +
-    'ts valid ' + dq.timestamp_validity_percent + '%';
+    'ts valid ' + dq.timestamp_validity_percent + '% · ' +
+    'reproducible ' + dq.reproducible_derived_metrics_count + ' · ' +
+    'partial src ' + dq.source_partial_count + ' · ' +
+    'error src ' + dq.source_error_count;
 
   // Hero freshness
   const ts = data.header.generated_timestamp;
