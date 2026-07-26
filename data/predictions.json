@@ -1404,6 +1404,49 @@
         "price_change_pct": 3.25
       },
       "resolved": true
+    },
+    {
+      "id": "signal_d3237d68",
+      "type": "trading_signal",
+      "signal_name": "VAL_ABSORPTION",
+      "created_at": "2026-07-26T02:18:32.540230+00:00",
+      "btc_price_at_call": 64474.0,
+      "direction": "bullish",
+      "entry": 63900.0,
+      "stop_loss": 63261.0,
+      "target": 65950.0,
+      "confidence": "HIGH",
+      "gate0_status": "TIGHTENED",
+      "regime_label": "CAUTIOUS NEUTRAL",
+      "rationale_snapshot": {
+        "timestamp": "2026-07-26 02:18 UTC",
+        "btc_price": 64474.0,
+        "val": 63900.0,
+        "vah": 65950.0,
+        "distance_pct": 0.9,
+        "position": "approaching_val",
+        "volume_declining": true,
+        "volume_expanding": false,
+        "cvd_holding": true,
+        "cvd_value": 674.36,
+        "cvd_trend": "strengthening",
+        "target": 65950.0,
+        "early_vol_4h": 1236.4,
+        "late_vol_4h": 1009.2,
+        "signal": "VAL_ABSORPTION",
+        "action": "Watch for reclaim inside VA \u2192 Long entry",
+        "stop": "Below swing low",
+        "stop_loss": 63261.0,
+        "confidence": "HIGH",
+        "gate0_status": "TIGHTENED",
+        "regime_label": "CAUTIOUS NEUTRAL"
+      },
+      "outcomes": {
+        "1d": null,
+        "7d": null,
+        "30d": null
+      },
+      "resolved": false
     }
   ]
 }
