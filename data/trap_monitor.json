@@ -1,5 +1,5 @@
 {
-  "composite": 3,
+  "composite": 4,
   "actual_max": 7,
   "status": "CAUTION",
   "direction": "LONG_TRAP",
@@ -8,20 +8,20 @@
   "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
   "signals": {
     "s1_liq_asymmetry": {
-      "score": 0,
-      "verdict": "CLEAR",
+      "score": 1,
+      "verdict": "TRAP",
       "max": 1,
-      "value": "3L/2S",
+      "value": "3L/1S",
       "threshold": "\u22652\u00d7 asymmetry",
-      "note": "Long=3, Short=2 \u2014 balanced"
+      "note": "Long=3 below, Short=1 \u2014 asymmetry favors shorts"
     },
     "s2_oi_divergence": {
       "score": 1,
       "verdict": "TRAP",
       "max": 1,
-      "value": "-0.95%",
+      "value": "-0.7%",
       "threshold": "OI < -0.5% unwinding",
-      "note": "OI -0.9% \u2014 unwinding while price $64554 \u2014 divergence"
+      "note": "OI -0.7% \u2014 unwinding while price $64510 \u2014 divergence"
     },
     "s3_funding": {
       "score": 0,
@@ -35,17 +35,17 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Bid:3 Ask:4",
+      "value": "Bid:3 Ask:5",
       "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Bid=3, Ask=4 \u2014 balanced"
+      "note": "Bid=3, Ask=5 \u2014 balanced"
     },
     "s5_taker_cvd": {
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "Taker:1.2493 CVD:1358.62",
+      "value": "Taker:0.637 CVD:504.23",
       "threshold": "Taker > 1.0 + CVD < 0",
-      "note": "Taker 1.25 + CVD +1359 \u2014 genuine buying"
+      "note": "Taker 0.64, CVD 504 \u2014 mixed"
     },
     "s6_exchange_netflow": {
       "score": 1,
@@ -67,11 +67,11 @@
       "score": 0,
       "verdict": "CLEAR",
       "max": 1,
-      "value": "-4.6%",
+      "value": "-4.3%",
       "threshold": "|Skew| > 5%",
-      "note": "Skew -4.6% \u2014 neutral"
+      "note": "Skew -4.3% \u2014 neutral"
     }
   },
-  "btc_price": 64554.41,
-  "_collected": "2026-07-26 10:47 UTC"
+  "btc_price": 64510.18,
+  "_collected": "2026-07-26 11:17 UTC"
 }
