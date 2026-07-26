@@ -712,7 +712,12 @@
            fmtNum(inp.value, 2)) : inp.value;
         return row(inp.label, display + ' · score ' + fmtNum(inp.score, 1), scoreColor(inp.score));
       }).join('') +
-      row('→ Rotation Score (weighted)', fmtNum(rotScore, 1), scoreColor(rotScore));
+      row('→ Rotation Score (weighted)', fmtNum(rotScore, 1), scoreColor(rotScore)) +
+      '<div style="margin-top:10px;padding:8px 10px;background:rgba(255,255,255,0.03);border-radius:6px;font-size:0.82em;line-height:1.5;color:var(--muted)">' +
+      (rotScore > 15 ? '💡 <strong style="color:var(--good)">Money is rotating into BTC.</strong> BTC is outperforming other assets — capital is choosing Bitcoin over alternatives right now.' :
+       rotScore < -15 ? '💡 <strong style="color:var(--bad)">Money is rotating away from BTC.</strong> Other assets are outperforming Bitcoin — capital is flowing elsewhere.' :
+       '💡 <strong>No clear rotation.</strong> BTC is moving roughly in line with the broader market. Neither attracting nor losing capital relative to other assets.') +
+      '</div>';
 
     // ===== MACRO CONTEXT CARD =====
     document.getElementById('macro-data').innerHTML =
