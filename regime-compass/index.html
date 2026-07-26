@@ -55,6 +55,7 @@
     border: 1px solid var(--card-border);
     border-radius: var(--card-radius);
     padding: 18px 20px;
+    overflow: hidden;
   }
   .compass-card h3 {
     margin: 0 0 12px 0;
@@ -314,6 +315,7 @@
     }
     .compass-card {
       padding: 14px 12px;
+      overflow: hidden;
     }
     .compass-row {
       flex-wrap: wrap;
@@ -322,18 +324,20 @@
     .compass-label {
       font-size: 0.78em;
       max-width: 55%;
-      word-break: break-word;
+      min-width: 0;
+      overflow-wrap: anywhere;
     }
     .compass-value {
       font-size: 0.82em;
-      word-break: break-word;
+      min-width: 0;
+      overflow-wrap: anywhere;
       text-align: right;
       max-width: 45%;
     }
     .verdict-banner {
       padding: 14px 12px;
       font-size: 0.9em;
-      word-break: break-word;
+      overflow-wrap: anywhere;
     }
     .verdict-banner div:first-child {
       font-size: 1.05em !important;
@@ -361,14 +365,17 @@
     }
     .score-gauge .score-value {
       font-size: 1.4em;
-      min-width: 60px;
+      min-width: 52px;
+    }
+    .score-gauge .score-bar-wrap {
+      overflow: hidden;
     }
     h1 {
       font-size: 1.3em !important;
     }
     .compass-card h3 {
       font-size: 0.78em;
-      word-break: break-word;
+      overflow-wrap: anywhere;
     }
     .cta-row {
       flex-direction: column;
@@ -384,11 +391,12 @@
   @media (max-width: 400px) {
     .compass-label {
       font-size: 0.72em;
-      max-width: 50%;
+      max-width: 100%;
     }
     .compass-value {
       font-size: 0.75em;
-      max-width: 50%;
+      max-width: 100%;
+      text-align: left;
     }
   }
 </style>
