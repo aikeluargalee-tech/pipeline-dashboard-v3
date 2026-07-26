@@ -714,9 +714,13 @@
       }).join('') +
       row('→ Rotation Score (weighted)', fmtNum(rotScore, 1), scoreColor(rotScore)) +
       '<div style="margin-top:10px;padding:8px 10px;background:rgba(255,255,255,0.03);border-radius:6px;font-size:0.82em;line-height:1.5;color:var(--muted)">' +
-      (rotScore > 15 ? '💡 <strong style="color:var(--good)">Money is rotating into BTC.</strong> BTC is outperforming other assets — capital is choosing Bitcoin over alternatives right now.' :
-       rotScore < -15 ? '💡 <strong style="color:var(--bad)">Money is rotating away from BTC.</strong> Other assets are outperforming Bitcoin — capital is flowing elsewhere.' :
-       '💡 <strong>No clear rotation.</strong> BTC is moving roughly in line with the broader market. Neither attracting nor losing capital relative to other assets.') +
+      (roroScore > 15 && rotScore > 15 ? '💡 <strong style="color:var(--good)">Risk-on + money flowing into BTC.</strong> A strong environment — risk appetite is high and capital is choosing Bitcoin over other assets.'
+       : roroScore > 15 && rotScore < -15 ? '💡 <strong style="color:var(--warn)">Risk-on but money is leaving BTC.</strong> Broad market is hungry for risk, but capital is rotating into altcoins or other assets instead of Bitcoin.'
+       : roroScore < -15 && rotScore > 15 ? '💡 <strong style="color:var(--good)">Risk-off but BTC is holding strong.</strong> Fear is driving money out of risk assets, yet Bitcoin is bucking the trend — a potential safe-haven or banking-crisis decoupling signal.'
+       : roroScore < -15 && rotScore < -15 ? '💡 <strong style="color:var(--bad)">Risk-off and money leaving BTC.</strong> Fear is driving capital away from risk, and Bitcoin is being sold alongside everything else. This is the highest-risk quadrant.'
+       : rotScore > 15 ? '💡 <strong style="color:var(--good)">Money is rotating into BTC.</strong> BTC is outperforming other assets — capital is choosing Bitcoin over alternatives right now.'
+       : rotScore < -15 ? '💡 <strong style="color:var(--bad)">Money is rotating away from BTC.</strong> Other assets are outperforming Bitcoin — capital is flowing elsewhere.'
+       : '💡 <strong>No clear rotation.</strong> BTC is moving roughly in line with the broader market. Neither attracting nor losing capital relative to other assets.') +
       '</div>';
 
     // ===== MACRO CONTEXT CARD =====
