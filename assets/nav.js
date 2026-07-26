@@ -82,6 +82,7 @@
         <li role="none"><a role="menuitem" href="${BASE}/aegis/" style="color:var(--aegis-cyan)">BTC AEGIS</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/ai-factors/">AI Factors</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/market-regime/">Market Regime</a></li>
+        <li role="none"><a role="menuitem" href="${BASE}/psychological-levels/">Psych Levels</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/volume-profile/">Volume Profile</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/whale-wake/">Whale Wake</a></li>
         <li role="none" class="nav-more-container">
@@ -119,6 +120,7 @@
           <li><a href="${BASE}/packet/">Data Packet</a></li>
           <li><a href="${BASE}/aegis/">BTC AEGIS</a></li>
           <li><a href="${BASE}/ai-factors/">AI Factors</a></li>
+          <li><a href="${BASE}/psychological-levels/">Psych Levels</a></li>
           <li><a href="${BASE}/verdicts/">Verdict Archive</a></li>
           <li><a href="${BASE}/track-record/">Track Record</a></li>
           <li><a href="${BASE}/compare/">Comparisons</a></li>

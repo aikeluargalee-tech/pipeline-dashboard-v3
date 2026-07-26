@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Psychological Levels — Live BTC Cost‑Basis & Sentiment Map | Pipeline Dashboard</title>
+<meta name="description" content="Live Bitcoin psychological levels: realized price, STH/LTH cost basis, S/R bands, volume profile POC, Fear & Greed, funding, positioning. Auto-refreshed every 15 minutes from the Pipeline data packet.">
+<link rel="canonical" href="https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/psychological-levels/">
+<meta property="og:title" content="Psychological Levels — Live BTC Cost‑Basis & Sentiment Map">
+<meta property="og:type" content="article">
+<link rel="stylesheet" href="../assets/styles.css?v=12">
+<style>
+  :root {
+    --card-bg: rgba(255,255,255,0.03);
+    --card-border: rgba(255,255,255,0.06);
+    --card-radius: 14px;
+    --good: #00d4aa;
+    --warn: #f0b90b;
+    --bad: #ef4444;
+    --neutral: #94a3b8;
+    --muted: #64748b;
+  }
+  .psyche-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .psyche-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--card-radius);
+    padding: 18px 20px;
+  }
+  .psyche-card h3 {
+    margin: 0 0 12px 0;
+    font-size: 0.85em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+  }
+  .psyche-card h3 .indicator { margin-right: 6px; }
+  .psyche-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  .psyche-row:last-child { border-bottom: none; }
+  .psyche-label { color: var(--muted); font-size: 0.85em; }
+  .psyche-value { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.9em; }
+  .psyche-value.good { color: var(--good); }
+  .psyche-value.warn { color: var(--warn); }
+  .psyche-value.bad { color: var(--bad); }
+  .psyche-value.neutral { color: var(--neutral); }
+  .psyche-value.big {
+    font-size: 1.6em;
+    font-weight: 800;
+  }
+  .psyche-score-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.06);
+    margin-top: 4px;
+    overflow: hidden;
+  }
+  .psyche-score-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.5s ease;
+  }
+  .psyche-score-fill.good { background: var(--good); }
+  .psyche-score-fill.warn { background: var(--warn); }
+  .psyche-score-fill.bad { background: var(--bad); }
+  .psyche-status {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75em;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .psyche-status.bullish { background: rgba(0,212,170,0.15); color: var(--good); }
+  .psyche-status.bearish { background: rgba(239,68,68,0.15); color: var(--bad); }
+  .psyche-status.neutral { background: rgba(148,163,184,0.12); color: var(--neutral); }
+  .psyche-status.warn { background: rgba(240,185,11,0.12); color: var(--warn); }
+  .scoring-table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+  .scoring-table th { text-align: left; color: var(--muted); font-weight: 500; padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .scoring-table td { padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+  .scoring-table .dim { color: var(--muted); font-size: 0.8em; }
+  .verdict-banner {
+    padding: 18px 20px;
+    border-radius: var(--card-radius);
+    margin: 20px 0;
+    font-weight: 600;
+    text-align: center;
+  }
+  .verdict-banner.breakout { background: rgba(0,212,170,0.08); border: 1px solid rgba(0,212,170,0.2); color: var(--good); }
+  .verdict-banner.choppy { background: rgba(240,185,11,0.06); border: 1px solid rgba(240,185,11,0.15); color: var(--warn); }
+  .verdict-banner.risk-off { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15); color: var(--bad); }
+  .verdict-banner.no-edge { background: rgba(148,163,184,0.04); border: 1px solid rgba(148,163,184,0.1); color: var(--neutral); }
+  .refresh-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.78em;
+    color: var(--muted);
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 8px;
+  }
+  .refresh-bar .pulse { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--good); margin-right: 6px; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .price-bar {
+    position: relative;
+    height: 28px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 4px;
+    margin: 10px 0;
+    overflow: visible;
+  }
+  .price-bar .marker {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 2px;
+    border-radius: 1px;
+  }
+  .price-bar .marker.current { background: #fff; width: 3px; z-index: 3; }
+  .price-bar .marker.realized { background: var(--good); z-index: 2; }
+  .price-bar .marker.sr-low { background: rgba(239,68,68,0.5); z-index: 1; }
+  .price-bar .marker.sr-high { background: rgba(0,212,170,0.5); z-index: 1; }
+  .price-bar .label {
+    position: absolute;
+    top: 30px;
+    font-size: 0.65em;
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+    transform: translateX(-50%);
+  }
+  .price-bar .label.current { color: #fff; font-weight: 700; }
+  .price-bar .label.realized { color: var(--good); }
+  .price-bar .label.sr { color: var(--muted); }
+</style>
+</head>
+<body>
+<div id="nav-placeholder"></div>
+<main class="page-container-wide">
+  <div class="breadcrumb"><a href="../">Home</a><span>›</span> Psychological Levels</div>
+
+  <div class="refresh-bar">
+    <span><span class="pulse"></span> Live from Pipeline data packet · updates every 15 min</span>
+    <span id="refresh-time">Loading…</span>
+  </div>
+
+  <h1 style="font-size:1.6em;font-weight:800;margin:0 0 4px 0">Psychological Levels Map</h1>
+  <p style="color:var(--muted);margin:0 0 20px 0">Where BTC sits relative to cost‑basis anchors, sentiment extremes, and structural levels — the levels that actually move behavior.</p>
+
+  <!-- Verdict Banner -->
+  <div id="verdict" class="verdict-banner">Loading…</div>
+
+  <!-- Price Position Bar -->
+  <div class="psyche-card" style="margin-bottom:16px">
+    <h3>📍 Price vs Key Anchors</h3>
+    <div id="price-bar" class="price-bar" style="margin:20px 0 40px 0">Loading…</div>
+  </div>
+
+  <!-- Tier 1: Cost-Basis Anchors -->
+  <div class="psyche-grid">
+    <div class="psyche-card" id="card-cost-basis">
+      <h3>💰 Cost‑Basis Anchors</h3>
+      <div id="cost-basis-data">Loading…</div>
+    </div>
+    <div class="psyche-card" id="card-holders">
+      <h3>👥 Holder Profitability</h3>
+      <div id="holders-data">Loading…</div>
+    </div>
+    <div class="psyche-card" id="card-structure">
+      <h3>🏗️ Structural Levels</h3>
+      <div id="structure-data">Loading…</div>
+    </div>
+  </div>
+
+  <!-- Tier 2: Sentiment & Positioning -->
+  <div class="psyche-grid">
+    <div class="psyche-card" id="card-sentiment">
+      <h3>🧠 Sentiment Gauges</h3>
+      <div id="sentiment-data">Loading…</div>
+    </div>
+    <div class="psyche-card" id="card-positioning">
+      <h3>📊 Derivatives Positioning</h3>
+      <div id="positioning-data">Loading…</div>
+    </div>
+    <div class="psyche-card" id="card-macro">
+      <h3>🌐 Macro Context</h3>
+      <div id="macro-data">Loading…</div>
+    </div>
+  </div>
+
+  <!-- 10-Point Scoring Model (live) -->
+  <h2 style="font-size:1.2em;font-weight:700;margin:32px 0 12px 0">10‑Point Predictive Score</h2>
+  <div class="psyche-card" style="overflow-x:auto">
+    <table class="scoring-table" id="scoring-table">
+      <thead><tr><th>#</th><th>Dimension</th><th>Value</th><th>Signal</th><th>Basis</th></tr></thead>
+      <tbody id="scoring-body">Loading…</tbody>
+    </table>
+  </div>
+
+  <div style="margin:20px 0;text-align:center">
+    <a href="../dashboard/" class="cta-button primary">View Full Dashboard →</a>
+    <a href="../research/psychological-price-levels/" class="cta-button secondary" style="margin-left:8px">Read the Research →</a>
+  </div>
+</main>
+<div id="footer-placeholder"></div>
+<script src="../assets/nav.js?v=12"></script>
+<script>
+(async function() {
+  const DATA_URL = '../packet/data.json';
+  const CACHE_BUST = '?ts=' + Date.now();
+
+  function fmtUSD(n) {
+    if (n == null || isNaN(n)) return 'N/A';
+    if (n >= 1000) return '$' + n.toLocaleString('en-US', {maximumFractionDigits:0});
+    return '$' + n.toFixed(2);
+  }
+  function fmtPct(n, decimals) {
+    if (n == null || isNaN(n)) return 'N/A';
+    return (n >= 0 ? '+' : '') + n.toFixed(decimals || 2) + '%';
+  }
+  function fmtNum(n, d) {
+    if (n == null || isNaN(n)) return 'N/A';
+    return n.toFixed(d || 2);
+  }
+  function cls(val, thresholds) {
+    if (val == null) return 'neutral';
+    for (const [t, c] of thresholds) { if (val >= t[0] && val <= t[1]) return c; }
+    return 'neutral';
+  }
+  function row(label, value, colorClass) {
+    return `<div class="psyche-row"><span class="psyche-label">${label}</span><span class="psyche-value ${colorClass || ''}">${value}</span></div>`;
+  }
+
+  try {
+    const resp = await fetch(DATA_URL + CACHE_BUST);
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const d = await resp.json();
+
+    const price = d.enriched?.btc_price || d.header?.btc_price || 0;
+    const realized = d.reference?.brk?.realized_price || 0;
+    const mvrv = d.reference?.brk?.mvrv || 0;
+    const sth_sopr = d.reference?.brk?.sth_sopr_24h || 0;
+    const lth_sopr = d.reference?.brk?.lth_sopr_24h || 0;
+    const nupl = d.reference?.brk?.nupl || 0;
+    const fng = d.enriched?.fng_value;
+    const fng_class = d.enriched?.fng_classification || '';
+    const funding = d.enriched?.funding_rate || 0;
+    const funding_signal = d.enriched?.funding_signal || '';
+    const oi_trend = d.enriched?.oi_trend || '';
+    const oi_change = d.enriched?.oi_change_24h_pct || 0;
+    const black_swan = d.enriched?.black_swan_score ?? 0;
+    const black_swan_status = d.enriched?.black_swan_status || '';
+    const crash = d.enriched?.crash_score ?? 0;
+    const crash_status = d.enriched?.crash_status || '';
+    const vix = d.enriched?.vix || 0;
+    const dxy = d.enriched?.dxy || 0;
+    const correlation = d.enriched?.btc_equity_correlation ?? 0;
+    const cb_premium = d.enriched?.coinbase_premium ?? 0;
+    const taker = d.enriched?.taker_buy_ratio || 0;
+    const vol_1d = d.enriched?.realized_vol_1d_pct || 0;
+    const sr_1d_s = d.enriched?.sr_1d_support || 0;
+    const sr_1d_r = d.enriched?.sr_1d_resistance || 0;
+    const sr_1h_s = d.enriched?.sr_1h_support || 0;
+    const sr_1h_r = d.enriched?.sr_1h_resistance || 0;
+    const vp_poc = d.critical?.vp_poc || 0;
+    const vp_vah = d.critical?.vp_vah || 0;
+    const vp_val = d.critical?.vp_val || 0;
+    const vp_state = d.critical?.vp_state || '';
+    const regime = d.regime?.label || '';
+    const balance = d.critical?.balance_state || '';
+    const balance_w = d.critical?.balance_width_pct || 0;
+    const cycle_comp = d.reference?.cycle_composite || 0;
+    const adx_regime = d.critical?.adx_regime || '';
+    const gen_time = d.header?.generated_timestamp || '';
+
+    // Update refresh time
+    document.getElementById('refresh-time').textContent = 'Packet: ' + new Date(gen_time).toLocaleTimeString();
+
+    // === 10-POINT SCORING ===
+    const scores = {bullish: 0, bearish: 0, neutral: 0};
+    const scoreRows = [];
+
+    function scoreDim(num, label, valueStr, signal, basis) {
+      scoreRows.push({num, label, value: valueStr, signal, basis});
+      if (signal === 'bullish') scores.bullish++;
+      else if (signal === 'bearish') scores.bearish++;
+      else scores.neutral++;
+    }
+
+    // 1. Macro
+    let macroSignal = 'neutral', macroLabel = 'Neutral';
+    if (vix > 30 || dxy > 106) { macroSignal = 'bearish'; macroLabel = 'Risk-Off'; }
+    else if (vix < 18 && dxy < 103) { macroSignal = 'bullish'; macroLabel = 'Risk-On'; }
+    else { macroSignal = 'neutral'; macroLabel = 'Transitional'; }
+    scoreDim(1, 'Macro Regime', `VIX ${fmtNum(vix,1)} · DXY ${fmtNum(dxy,1)}`, macroSignal, macroLabel);
+
+    // 2. ETF Flows (not available — use Coinbase premium as proxy)
+    const etfProxy = cb_premium > 0.5 ? 'bullish' : cb_premium < -0.5 ? 'bearish' : 'neutral';
+    const etfLabel = cb_premium > 0.5 ? 'US premium' : cb_premium < -0.5 ? 'US discount' : 'Flat';
+    scoreDim(2, 'Coinbase Premium (ETF proxy)', fmtPct(cb_premium, 2), etfProxy, etfLabel);
+
+    // 3. Spot vs Realized Price
+    const rpRatio = realized > 0 ? ((price / realized - 1) * 100) : 0;
+    const sthrpSignal = rpRatio > 15 ? 'bullish' : rpRatio < 5 ? 'bearish' : 'neutral';
+    scoreDim(3, 'Spot vs Realized Price', fmtPct(rpRatio, 1) + ' above RP', sthrpSignal, rpRatio > 15 ? 'Comfortably above' : rpRatio < 5 ? 'Near cost basis' : 'Moderate');
+
+    // 4. LTH Behavior (SOPR proxy)
+    const lthSignal = lth_sopr > 1.5 ? 'bullish' : lth_sopr < 1.0 ? 'bearish' : 'neutral';
+    const lthLabel = lth_sopr > 1.5 ? 'Accumulating' : lth_sopr < 1.0 ? 'Distributing' : 'Flat';
+    scoreDim(4, 'LTH SOPR (24h)', fmtNum(lth_sopr, 3), lthSignal, lthLabel);
+
+    // 5. Funding
+    const fundSignal = funding > 0 && funding <= 0.0005 ? 'bullish' : funding > 0.001 || funding < 0 ? 'bearish' : 'neutral';
+    scoreDim(5, 'Funding Rate', fmtPct(funding * 100, 3), fundSignal, funding_signal);
+
+    // 6. OI Level
+    const oiSignal = oi_trend === 'stable' ? 'neutral' : oi_trend === 'rising' && oi_change > 5 ? 'bearish' : 'neutral';
+    scoreDim(6, 'OI 24h Change', fmtPct(oi_change, 1), oiSignal, oi_trend);
+
+    // 7. Liquidation Clusters — not available
+    scoreDim(7, 'Liquidation Clusters', 'N/A (heatmap offline)', 'neutral', 'No data');
+
+    // 8. Options Skew
+    const skew = d.reference?.options_skew_25d;
+    const skewSignal = skew != null ? (skew > -3 ? 'bullish' : skew < -10 ? 'bearish' : 'neutral') : 'neutral';
+    scoreDim(8, 'Options 25Δ Skew', skew != null ? fmtNum(skew, 1) + '%' : 'N/A', skewSignal, skew != null ? (skew > -3 ? 'Mild hedging' : 'Crash protection bid') : 'No data');
+
+    // 9. ETF P&L — not available directly
+    scoreDim(9, 'ETF Cohort P&L', rpRatio > 10 ? 'In profit' : 'Near breakeven', rpRatio > 10 ? 'bullish' : 'neutral', rpRatio > 10 ? 'Above est. ETF bands' : 'Check external data');
+
+    // 10. Sentiment
+    let sentSignal = 'neutral', sentLabel = 'Neutral';
+    if (fng != null) {
+      if (fng <= 25) { sentSignal = 'bullish'; sentLabel = 'Fear (contrarian buy)'; }
+      else if (fng >= 75) { sentSignal = 'bearish'; sentLabel = 'Greed (contrarian sell)'; }
+      else if (fng >= 45 && fng <= 65) { sentSignal = 'neutral'; sentLabel = 'Neutral'; }
+    }
+    scoreDim(10, 'Fear & Greed', fng != null ? fng + ' (' + fng_class + ')' : 'N/A', sentSignal, sentLabel);
+
+    const totalScore = scores.bullish - scores.bearish;
+
+    // Render scoring table
+    const sigEmoji = {bullish: '🟢 +1', bearish: '🔴 −1', neutral: '⚪ 0'};
+    document.getElementById('scoring-body').innerHTML = scoreRows.map(r =>
+      `<tr>
+        <td>${r.num}</td>
+        <td><strong>${r.label}</strong><br><span class="dim">${r.basis}</span></td>
+        <td style="font-family:'JetBrains Mono',monospace">${r.value}</td>
+        <td><span class="psyche-status ${r.signal}">${sigEmoji[r.signal]}</span></td>
+        <td class="dim">${r.basis}</td>
+      </tr>`
+    ).join('');
+
+    // Verdict banner
+    let verdictClass, verdictText, verdictSub;
+    if (totalScore >= 5) {
+      verdictClass = 'breakout';
+      verdictText = '🟢 BREAKOUT BIAS · Score: +' + totalScore;
+      verdictSub = 'Favor continuation. Buy break-and-retest. Full risk budget.';
+    } else if (totalScore >= 2) {
+      verdictClass = 'choppy';
+      verdictText = '🟡 CHOPPY / MIXED · Score: +' + totalScore;
+      verdictSub = 'Expect two-sided action. Smaller size, tighter stops.';
+    } else if (totalScore >= -1) {
+      verdictClass = 'no-edge';
+      verdictText = '⚪ NO EDGE · Score: ' + totalScore;
+      verdictSub = 'No statistical advantage either direction. Stand aside.';
+    } else {
+      verdictClass = 'risk-off';
+      verdictText = '🔴 RISK-OFF / REJECTION · Score: ' + totalScore;
+      verdictSub = 'High rejection probability. Take profits, hedge, do not add.';
+    }
+    document.getElementById('verdict').className = 'verdict-banner ' + verdictClass;
+    document.getElementById('verdict').innerHTML = `<div style="font-size:1.3em">${verdictText}</div><div style="font-size:0.85em;margin-top:4px;opacity:0.7">${verdictSub}</div>`;
+
+    // === PRICE POSITION BAR ===
+    const anchors = [];
+    if (realized > 0) anchors.push({price: realized, label: 'Realized Price', cls: 'realized'});
+    if (vp_poc > 0) anchors.push({price: vp_poc, label: 'VP POC', cls: 'sr'});
+    if (sr_1d_s > 0) anchors.push({price: sr_1d_s, label: 'S/R 1D Supp', cls: 'sr'});
+    if (sr_1d_r > 0) anchors.push({price: sr_1d_r, label: 'S/R 1D Res', cls: 'sr'});
+    if (sr_1h_s > 0) anchors.push({price: sr_1h_s, label: 'S/R 1H Supp', cls: 'sr'});
+    if (sr_1h_r > 0) anchors.push({price: sr_1h_r, label: 'S/R 1H Res', cls: 'sr'});
+
+    const allPrices = [price, ...anchors.map(a => a.price)];
+    const minP = Math.min(...allPrices) * 0.98;
+    const maxP = Math.max(...allPrices) * 1.02;
+    const range = maxP - minP;
+
+    let barHTML = '';
+    // Anchors
+    for (const a of anchors) {
+      const pct = ((a.price - minP) / range) * 100;
+      barHTML += `<div class="marker ${a.cls}" style="left:${pct}%"></div>`;
+      barHTML += `<div class="label ${a.cls}" style="left:${pct}%">${fmtUSD(a.price)}<br>${a.label}</div>`;
+    }
+    // Current price
+    const pricePct = ((price - minP) / range) * 100;
+    barHTML += `<div class="marker current" style="left:${pricePct}%"></div>`;
+    barHTML += `<div class="label current" style="left:${pricePct}%;top:-22px">BTC ${fmtUSD(price)}</div>`;
+    document.getElementById('price-bar').innerHTML = barHTML;
+
+    // === COST BASIS CARD ===
+    document.getElementById('cost-basis-data').innerHTML =
+      row('Realized Price (on‑chain)', fmtUSD(realized), 'good') +
+      row('MVRV Ratio', fmtNum(mvrv, 3), mvrv > 2.5 ? 'warn' : 'good') +
+      row('Price / Realized', fmtPct(rpRatio, 1), rpRatio > 15 ? 'good' : rpRatio < 5 ? 'bad' : 'warn') +
+      row('NUPL', fmtNum(nupl, 3), nupl > 0.5 ? 'warn' : nupl < 0 ? 'bad' : 'good') +
+      row('VP POC (volume anchor)', fmtUSD(vp_poc), 'neutral') +
+      row('VP State', vp_state, vp_state.includes('REJECTION') ? 'bad' : 'neutral');
+
+    // === HOLDER PROFITABILITY CARD ===
+    document.getElementById('holders-data').innerHTML =
+      row('LTH SOPR (24h)', fmtNum(lth_sopr, 3), lth_sopr > 1 ? 'good' : 'bad') +
+      row('STH SOPR (24h)', fmtNum(sth_sopr, 3), sth_sopr >= 1 ? 'good' : 'bad') +
+      row('LTH Signal', lth_sopr > 1.5 ? '🟢 Accumulating' : lth_sopr > 1 ? '🟡 Holding' : '🔴 Distributing', lth_sopr > 1.5 ? 'good' : lth_sopr < 1 ? 'bad' : 'warn') +
+      row('STH Signal', sth_sopr >= 1.01 ? '🟢 In profit' : sth_sopr >= 0.99 ? '🟡 Breakeven' : '🔴 Underwater', sth_sopr >= 1.01 ? 'good' : sth_sopr < 0.99 ? 'bad' : 'warn') +
+      row('Cycle Composite', fmtNum(cycle_comp, 1) + '/100', cycle_comp < 25 ? 'good' : cycle_comp > 75 ? 'bad' : 'warn') +
+      row('BTC-Equity Corr', fmtNum(correlation, 3), Math.abs(correlation) > 0.7 ? 'warn' : 'neutral');
+
+    // === STRUCTURAL LEVELS CARD ===
+    document.getElementById('structure-data').innerHTML =
+      row('S/R 1D Support', fmtUSD(sr_1d_s), 'bad') +
+      row('S/R 1D Resistance', fmtUSD(sr_1d_r), 'good') +
+      row('S/R 1H Support', fmtUSD(sr_1h_s), 'bad') +
+      row('S/R 1H Resistance', fmtUSD(sr_1h_r), 'good') +
+      row('VP VAH → VAL', fmtUSD(vp_val) + ' → ' + fmtUSD(vp_vah), 'neutral') +
+      row('ADX Regime', adx_regime, adx_regime === 'TRENDING' ? 'good' : 'neutral');
+
+    // === SENTIMENT CARD ===
+    let fngColor = 'neutral';
+    if (fng != null) { fngColor = fng <= 25 ? 'good' : fng >= 75 ? 'bad' : 'neutral'; }
+    document.getElementById('sentiment-data').innerHTML =
+      row('Fear & Greed', (fng != null ? fng + '/100' : 'N/A') + ' · ' + fng_class, fngColor) +
+      row('Black Swan Score', black_swan + '/17 · ' + black_swan_status, black_swan > 3 ? 'bad' : 'good') +
+      row('Crash Score', crash + ' · ' + crash_status, crash > 5 ? 'bad' : 'good') +
+      row('Coinbase Premium', fmtPct(cb_premium, 2), cb_premium > 0.5 ? 'good' : cb_premium < -0.5 ? 'bad' : 'neutral') +
+      row('Taker Buy Ratio', fmtNum(taker, 3), taker > 0.55 ? 'good' : taker < 0.45 ? 'bad' : 'neutral') +
+      row('Realized Vol (1D)', fmtNum(vol_1d, 1) + '%', vol_1d > 60 ? 'warn' : 'neutral');
+
+    // === POSITIONING CARD ===
+    document.getElementById('positioning-data').innerHTML =
+      row('Funding Rate', fmtPct(funding * 100, 3), funding > 0.001 ? 'warn' : funding < 0 ? 'bad' : 'good') +
+      row('Funding Signal', funding_signal, 'neutral') +
+      row('OI 24h Change', fmtPct(oi_change, 1), Math.abs(oi_change) > 5 ? 'warn' : 'good') +
+      row('OI Trend', oi_trend, oi_trend === 'rising' ? 'warn' : 'good') +
+      row('Balance State', balance, balance === 'TIGHT_BALANCE' ? 'warn' : 'neutral') +
+      row('Balance Width', fmtPct(balance_w, 1), balance_w < 2 ? 'warn' : balance_w > 5 ? 'good' : 'neutral');
+
+    // === MACRO CARD ===
+    document.getElementById('macro-data').innerHTML =
+      row('VIX', fmtNum(vix, 2), vix > 30 ? 'bad' : vix > 25 ? 'warn' : 'good') +
+      row('DXY', fmtNum(dxy, 2), dxy > 106 ? 'bad' : dxy > 103 ? 'warn' : 'good') +
+      row('BTC-Equity Corr', fmtNum(correlation, 3), Math.abs(correlation) > 0.7 ? 'warn' : 'neutral') +
+      row('Market Regime', regime, regime === 'risk_on' ? 'good' : 'neutral') +
+      row('Liquidity Verdict', d.enriched?.liquidity_verdict || '', 'good') +
+      row('COT Signal', d.enriched?.cot_signal || '', 'neutral');
+
+  } catch (e) {
+    document.getElementById('verdict').innerHTML = '<div style="color:var(--bad)">⚠️ Could not load data: ' + e.message + '</div>';
+    document.getElementById('verdict').className = 'verdict-banner risk-off';
+  }
+})();
+</script>
+</body>
+</html>
