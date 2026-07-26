@@ -149,6 +149,10 @@
 
   /* === MOBILE FIXES === */
   @media (max-width: 768px) {
+    html, body {
+      overflow-x: hidden;
+      max-width: 100vw;
+    }
     .psyche-grid {
       grid-template-columns: 1fr;
     }
@@ -162,18 +166,29 @@
     .psyche-label {
       font-size: 0.78em;
       max-width: 55%;
+      word-break: break-word;
     }
     .psyche-value {
       font-size: 0.82em;
+      word-break: break-word;
+      text-align: right;
+      max-width: 45%;
     }
     .scoring-table {
       font-size: 0.72em;
+      min-width: 500px;
+      table-layout: auto;
     }
     .scoring-table th,
     .scoring-table td {
-      padding: 4px 4px;
+      padding: 4px 6px;
+      white-space: nowrap;
     }
-    /* Make the scoring card horizontally scrollable */
+    .scoring-table td:nth-child(2) {
+      white-space: normal;
+      min-width: 120px;
+    }
+    /* Dedicated wrapper for horizontal scroll */
     .scoring-table-wrapper {
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
@@ -183,6 +198,7 @@
     .verdict-banner {
       padding: 14px 12px;
       font-size: 0.9em;
+      word-break: break-word;
     }
     .verdict-banner div:first-child {
       font-size: 1.05em !important;
@@ -197,18 +213,37 @@
       margin: 10px 0 36px 0;
     }
     .price-bar .label {
-      font-size: 0.6em;
+      font-size: 0.55em;
       top: 30px;
+      max-width: 70px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .price-bar .label.current {
-      font-size: 0.68em;
+      font-size: 0.62em;
       top: -20px;
+      max-width: none;
+      overflow: visible;
+    }
+    .price-bar .label.sr {
+      font-size: 0.5em;
     }
     h1 {
       font-size: 1.3em !important;
     }
     .psyche-card h3 {
       font-size: 0.78em;
+      word-break: break-word;
+    }
+    .cta-row {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
+    .cta-row .cta-button {
+      margin-left: 0 !important;
+      text-align: center;
+      display: block;
     }
   }
   @media (max-width: 400px) {
@@ -221,6 +256,7 @@
     }
     .psyche-value {
       font-size: 0.75em;
+      max-width: 50%;
     }
   }
 </style>
@@ -281,14 +317,16 @@
 
   <!-- 10-Point Scoring Model (live) -->
   <h2 style="font-size:1.2em;font-weight:700;margin:32px 0 12px 0">10‑Point Predictive Score</h2>
-  <div class="psyche-card scoring-table-wrapper">
-    <table class="scoring-table" id="scoring-table">
-      <thead><tr><th>#</th><th>Dimension</th><th>Value</th><th>Signal</th><th>Basis</th></tr></thead>
-      <tbody id="scoring-body">Loading…</tbody>
-    </table>
+  <div class="psyche-card">
+    <div class="scoring-table-wrapper">
+      <table class="scoring-table" id="scoring-table">
+        <thead><tr><th>#</th><th>Dimension</th><th>Value</th><th>Signal</th><th>Basis</th></tr></thead>
+        <tbody id="scoring-body">Loading…</tbody>
+      </table>
+    </div>
   </div>
 
-  <div style="margin:20px 0;text-align:center">
+  <div class="cta-row" style="margin:20px 0;text-align:center">
     <a href="../dashboard/" class="cta-button primary">View Full Dashboard →</a>
     <a href="../research/psychological-price-levels/" class="cta-button secondary" style="margin-left:8px">Read the Research →</a>
   </div>
@@ -479,16 +517,18 @@
     const range = maxP - minP;
 
     let barHTML = '';
+    // Clamp label position to keep translateX(-50%) within bounds (12%/88% safe zone for ~70px labels)
+    function clampLabel(pct) { return Math.max(12, Math.min(88, pct)); }
     // Anchors
     for (const a of anchors) {
       const pct = ((a.price - minP) / range) * 100;
       barHTML += `<div class="marker ${a.cls}" style="left:${pct}%"></div>`;
-      barHTML += `<div class="label ${a.cls}" style="left:${pct}%">${fmtUSD(a.price)}<br>${a.label}</div>`;
+      barHTML += `<div class="label ${a.cls}" style="left:${clampLabel(pct)}%">${fmtUSD(a.price)}<br>${a.label}</div>`;
     }
     // Current price
     const pricePct = ((price - minP) / range) * 100;
     barHTML += `<div class="marker current" style="left:${pricePct}%"></div>`;
-    barHTML += `<div class="label current" style="left:${pricePct}%;top:-22px">BTC ${fmtUSD(price)}</div>`;
+    barHTML += `<div class="label current" style="left:${clampLabel(pricePct)}%;top:-22px">BTC ${fmtUSD(price)}</div>`;
     document.getElementById('price-bar').innerHTML = barHTML;
 
     // === COST BASIS CARD ===
