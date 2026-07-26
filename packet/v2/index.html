@@ -743,14 +743,18 @@ function computeSourceHealth(packetJson) {
     const srcId = obj.source_identifier || src.toLowerCase();
     if (!bySource[src]) {
       bySource[src] = {
-        transport_status: 'OK',
+        transport_status: 'UNKNOWN',
         metadata_status: null,
-        auditability_status: 'OK',
+        auditability_status: 'UNKNOWN',
         age_seconds: null,
-        successful_metrics: [],
-        affected_metrics: [],
-        non_auditable_metrics: [],
-        timestamp_missing_metrics: [],
+        // Metric classification
+        successful_metrics: [],       // value + valid source or aggregator timestamp
+        value_received_metrics: [],   // value exists but source/aggregator timestamp missing
+        affected_metrics: [],         // no usable value
+        non_auditable_metrics: [],    // derived metric with derivation gap
+        timestamp_missing_metrics: [], // missing source_observed_at_utc + aggregator_snapshot_at_utc
+        // Metadata problems (may be array if multiple)
+        metadata_problems: [],
         source_identifier_ref: srcId
       };
     }
@@ -759,46 +763,79 @@ function computeSourceHealth(packetJson) {
     if (age != null && (bySource[src].age_seconds == null || age > bySource[src].age_seconds))
       bySource[src].age_seconds = age;
 
-    // Value missing entirely → transport failure
+    // Check for assumed/unconfirmed endpoints
+    if (obj.endpoint_status === 'UNCONFIRMED' || obj.metadata_confidence === 'LOW') {
+      if (!bySource[src].metadata_problems.includes('ENDPOINT_UNCONFIRMED'))
+        bySource[src].metadata_problems.push('ENDPOINT_UNCONFIRMED');
+    }
+
+    // Check for trading date issues (ETF, daily macro)
+    if (path.includes('etf_flows')) {
+      if (!bySource[src].metadata_problems.includes('TRADING_DATE_MISSING'))
+        bySource[src].metadata_problems.push('TRADING_DATE_MISSING');
+    }
+
+    // Check for derivation gaps
+    if (obj._derivation_gap) {
+      bySource[src].non_auditable_metrics.push(path);
+    }
+
+    // Value missing entirely
     if (obj.value == null) {
       bySource[src].affected_metrics.push(path);
-      bySource[src].auditability_status = 'PARTIAL';
-    } else {
-      // Value received — check timestamp
-      bySource[src].successful_metrics.push(path);
-      if (!obj.source_observed_at_utc && !obj.aggregator_snapshot_at_utc && !obj.pipeline_snapshot_at_utc) {
+    }
+    // Value exists — classify by timestamp presence
+    else {
+      const hasObservedTs = obj.source_observed_at_utc != null;
+      const hasAggregatorTs = obj.aggregator_snapshot_at_utc != null;
+
+      if (hasObservedTs || hasAggregatorTs) {
+        // Properly timestamped — success
+        bySource[src].successful_metrics.push(path);
+      } else {
+        // Value exists but no source or aggregator timestamp
+        bySource[src].value_received_metrics.push(path);
         bySource[src].timestamp_missing_metrics.push(path);
-        bySource[src].metadata_status = 'SOURCE_TIMESTAMP_MISSING';
-      }
-      // Check for derivation gaps
-      if (obj._derivation_gap) {
-        bySource[src].non_auditable_metrics.push(path);
-        bySource[src].auditability_status = 'PARTIAL';
+        if (!bySource[src].metadata_problems.includes('SOURCE_TIMESTAMP_MISSING'))
+          bySource[src].metadata_problems.push('SOURCE_TIMESTAMP_MISSING');
       }
     }
   }
 
-  // Finalize transport_status and auditability_status
+  // Finalize statuses
   for (const [src, info] of Object.entries(bySource)) {
-    // Transport: no successful metrics at all → UNAVAILABLE
-    if (info.successful_metrics.length === 0) {
+    const hasValues = info.successful_metrics.length + info.value_received_metrics.length > 0;
+    const allTimestamped = info.value_received_metrics.length === 0;
+    const allMissing = info.successful_metrics.length === 0 && info.value_received_metrics.length === 0;
+    const hasDerivationGaps = info.non_auditable_metrics.length > 0;
+
+    // Transport status
+    if (allMissing) {
       info.transport_status = 'UNAVAILABLE';
+    } else if (hasValues && allTimestamped) {
+      info.transport_status = 'OK';
+    } else if (hasValues && !allTimestamped) {
+      info.transport_status = 'VALUE_RECEIVED';
+    } else {
+      info.transport_status = 'OK'; // fallback
     }
-    // Transport: value received but timestamp missing → VALUE_RECEIVED
-    else if (info.timestamp_missing_metrics.length > 0 && info.affected_metrics.length === 0) {
-      // Some metrics have values but no timestamps
-      if (info.metadata_status === 'SOURCE_TIMESTAMP_MISSING' && info.timestamp_missing_metrics.length === info.successful_metrics.length) {
-        info.transport_status = 'VALUE_RECEIVED';
-      }
+
+    // Metadata status
+    if (info.metadata_problems.length === 0) {
+      info.metadata_status = null;
+    } else if (info.metadata_problems.length === 1) {
+      info.metadata_status = info.metadata_problems[0];
+    } else {
+      info.metadata_status = info.metadata_problems;
     }
-    // Auditability
-    if (info.non_auditable_metrics.length === 0 && info.affected_metrics.length === 0) {
-      info.auditability_status = 'OK';
+
+    // Auditability status
+    if (allMissing) {
+      info.auditability_status = 'UNAVAILABLE';
+    } else if (!hasDerivationGaps && allTimestamped) {
+      info.auditability_status = 'FULL';
     } else {
       info.auditability_status = 'PARTIAL';
-    }
-    if (info.successful_metrics.length === 0) {
-      info.auditability_status = 'UNAVAILABLE';
     }
   }
 
@@ -1083,7 +1120,7 @@ function buildStructuredJson(d, srcTs) {
     else if (info.transport_status === 'VALUE_RECEIVED') transportValReceived++;
     else if (info.transport_status === 'UNAVAILABLE') transportUnavail++;
     else if (info.transport_status === 'ERROR') transportError++;
-    if (info.auditability_status === 'OK') audFull++;
+    if (info.auditability_status === 'FULL') audFull++;
     else if (info.auditability_status === 'PARTIAL') audPartial++;
     else if (info.auditability_status === 'UNAVAILABLE') audUnavail++;
   }
