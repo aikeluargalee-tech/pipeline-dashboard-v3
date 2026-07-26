@@ -146,6 +146,83 @@
   .price-bar .label.current { color: #fff; font-weight: 700; }
   .price-bar .label.realized { color: var(--good); }
   .price-bar .label.sr { color: var(--muted); }
+
+  /* === MOBILE FIXES === */
+  @media (max-width: 768px) {
+    .psyche-grid {
+      grid-template-columns: 1fr;
+    }
+    .psyche-card {
+      padding: 14px 12px;
+    }
+    .psyche-row {
+      flex-wrap: wrap;
+      gap: 2px;
+    }
+    .psyche-label {
+      font-size: 0.78em;
+      max-width: 55%;
+    }
+    .psyche-value {
+      font-size: 0.82em;
+    }
+    .scoring-table {
+      font-size: 0.72em;
+    }
+    .scoring-table th,
+    .scoring-table td {
+      padding: 4px 4px;
+    }
+    /* Make the scoring card horizontally scrollable */
+    .scoring-table-wrapper {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 0 -12px;
+      padding: 0 12px;
+    }
+    .verdict-banner {
+      padding: 14px 12px;
+      font-size: 0.9em;
+    }
+    .verdict-banner div:first-child {
+      font-size: 1.05em !important;
+    }
+    .refresh-bar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      font-size: 0.72em;
+    }
+    .price-bar {
+      margin: 10px 0 36px 0;
+    }
+    .price-bar .label {
+      font-size: 0.6em;
+      top: 30px;
+    }
+    .price-bar .label.current {
+      font-size: 0.68em;
+      top: -20px;
+    }
+    h1 {
+      font-size: 1.3em !important;
+    }
+    .psyche-card h3 {
+      font-size: 0.78em;
+    }
+  }
+  @media (max-width: 400px) {
+    .scoring-table {
+      font-size: 0.65em;
+    }
+    .psyche-label {
+      font-size: 0.72em;
+      max-width: 50%;
+    }
+    .psyche-value {
+      font-size: 0.75em;
+    }
+  }
 </style>
 </head>
 <body>
@@ -204,7 +281,7 @@
 
   <!-- 10-Point Scoring Model (live) -->
   <h2 style="font-size:1.2em;font-weight:700;margin:32px 0 12px 0">10‑Point Predictive Score</h2>
-  <div class="psyche-card" style="overflow-x:auto">
+  <div class="psyche-card scoring-table-wrapper">
     <table class="scoring-table" id="scoring-table">
       <thead><tr><th>#</th><th>Dimension</th><th>Value</th><th>Signal</th><th>Basis</th></tr></thead>
       <tbody id="scoring-body">Loading…</tbody>
