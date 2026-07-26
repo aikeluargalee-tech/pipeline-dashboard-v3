@@ -1,29 +1,29 @@
 {
   "header": {
-    "generated_timestamp": "2026-07-26T11:39:34Z",
-    "btc_price": 64495.0,
-    "change_24h": 0.697,
-    "bid": 64495.17,
-    "ask": 64495.18,
+    "generated_timestamp": "2026-07-26T11:55:30Z",
+    "btc_price": 64512.0,
+    "change_24h": 0.703,
+    "bid": 64512.0,
+    "ask": 64512.01,
     "spread": 0.01,
-    "volume_24h": 394929398.4
+    "volume_24h": 394895362.07
   },
   "critical": {
-    "btc_price": 64495.0,
+    "btc_price": 64512.0,
     "amt_adx": 42.0,
     "amt_mtf": "1D BEARISH [INVALIDATED_CVD=+1,772] | 4H NEUTRAL [DIVERGES_CVD=+2,874] | 1H BULLISH",
-    "candle_delta": -2.51,
+    "candle_delta": 9.27,
     "candle_deltas_6": [
       345.5,
       87.72,
       -209.15,
       155.49,
       -189.89,
-      -2.51
+      9.27
     ],
-    "delta_sum_6": 187.16,
+    "delta_sum_6": 198.94,
     "delta_trend": "DETERIORATING",
-    "delta_interp": "Buyers dominated early candles but momentum fading. Last candle -2.5.",
+    "delta_interp": "Buyers dominated early candles but momentum fading. Last candle +9.3.",
     "cvd_per_tf": {
       "1D": 1771.67,
       "4H": 2874.31,
@@ -39,14 +39,14 @@
       "4H": -5.61,
       "1H": 5.4
     },
-    "session_cvd": -1042.86,
+    "session_cvd": -1031.08,
     "oi_absolute_usd_billions": 6.93,
-    "taker_ratio_24h": 1.064,
-    "vp_poc": 64518,
-    "vp_vah": 64525,
-    "vp_val": 64518,
-    "vp_shape": "P",
-    "vp_state": "REJECTION_UP",
+    "taker_ratio_24h": 1.068,
+    "vp_poc": 64501,
+    "vp_vah": 64501,
+    "vp_val": 64501,
+    "vp_shape": "b",
+    "vp_state": "REJECTION_DOWN",
     "balance_state": "TIGHT_BALANCE",
     "balance_width_pct": 1.11,
     "adx_regime": "TRENDING"
@@ -56,61 +56,61 @@
     "vix": 18.58,
     "etf_flow_daily": 400.0,
     "etf_flow_weekly": 6233.1,
-    "coinbase_premium": -0.1007,
+    "coinbase_premium": -0.0911,
     "equities": "SPY $739 (+0.1%) | QQQ $684 (-1.1%) | GLD $372 (+0.1%)",
     "dxy": 101.465,
     "us10y": 4.679,
     "oi_change_24h": -0.7,
     "long_short_ratio": 1.7624,
-    "funding_rate": 8.619e-05,
+    "funding_rate": 8.773e-05,
     "cvd_24h": 504.23,
     "black_swan_score": "0/17",
     "correlation_r": -0.6069,
-    "liq_clusters": "Long: $64,450 (-0.07%), $64,300 (-0.30%), $63,800 (-1.08%) | Short: $64,500 (+0.01%), $64,600 (+0.16%)",
-    "perp_basis_pct": -0.0389,
+    "liq_clusters": "Long: $64,500 (-0.02%), $64,300 (-0.33%), $63,800 (-1.10%) | Short: $64,600 (+0.14%)",
+    "perp_basis_pct": -0.0446,
     "order_book_top5": {
       "bids": [
         {
-          "price": 64495.17,
-          "size": 3.88857
+          "price": 64512.0,
+          "size": 1.19075
         },
         {
-          "price": 64495.16,
-          "size": 0.19411
+          "price": 64511.99,
+          "size": 0.00283
         },
         {
-          "price": 64495.15,
-          "size": 0.00016
+          "price": 64511.98,
+          "size": 0.00179
         },
         {
-          "price": 64495.08,
-          "size": 0.00024
+          "price": 64511.75,
+          "size": 0.00127
         },
         {
-          "price": 64495.0,
-          "size": 0.00405
+          "price": 64511.54,
+          "size": 0.00018
         }
       ],
       "asks": [
         {
-          "price": 64495.18,
-          "size": 6.6948
+          "price": 64512.01,
+          "size": 12.72552
         },
         {
-          "price": 64495.19,
-          "size": 0.37029
+          "price": 64512.02,
+          "size": 0.30144
         },
         {
-          "price": 64495.2,
-          "size": 0.05055
+          "price": 64512.03,
+          "size": 0.00016
         },
         {
-          "price": 64495.24,
+          "price": 64512.51,
           "size": 0.00018
         },
         {
-          "price": 64495.25,
-          "size": 0.05024
+          "price": 64512.52,
+          "size": 2.11497
         }
       ]
     },
@@ -118,20 +118,20 @@
     "realized_vol_1d_pct": 53.08,
     "mstr_close": 91.67,
     "usdjpy": 163.791,
-    "daily_rsi_14": 46.2
+    "daily_rsi_14": 46.4
   },
   "reference": {
     "sr_1h": "S: $64,237 / $63,988 / $63,726 | R: $64,494 / $64,706 / $65,097",
     "sr_1h_inverted": "",
     "sr_1d": "S: $63,750 / $62,500 / $61,250 | R: $67,378 / $68,750 / $70,000",
     "cycle": {
-      "mvrv_z": 0.3894,
-      "sopr": 1.0084,
+      "mvrv_z": null,
+      "sopr": null,
       "netflow_7d": -5918.05
     },
     "cycle_composite": 31.3,
     "sth_realized_price": null,
-    "options_skew_25d": -4.3,
+    "options_skew_25d": -4.2,
     "brk_summary": "LTH marginally profitable (sopr 1.953), STH marginally profitable (sopr 1.000), miner stress moderate (puell 0.74), hashrate -32.5%, rhodl 0",
     "brk": {
       "mvrv": 1.2194000482559204,
@@ -173,19 +173,19 @@
     "oi_trend": "stable",
     "oi_change_24h_pct": -0.7,
     "liquidity_verdict": "HEALTHY",
-    "taker_buy_ratio": 0.518,
+    "taker_buy_ratio": 0.516,
     "oi_delta": "FLAT",
     "funding_signal": "POSITIVE",
     "sr_1h_support": 64237.46,
     "sr_1h_resistance": 64494.37,
     "sr_1d_support": 63750.0,
     "sr_1d_resistance": 67377.7,
-    "atr_1h_pct": 0.164,
+    "atr_1h_pct": 0.165,
     "atr_1d_pct": 2.349,
-    "btc_price": 64495.0,
-    "coinbase_premium": -0.1007,
+    "btc_price": 64512.0,
+    "coinbase_premium": -0.0911,
     "vix": 18.58,
-    "funding_rate": 8.619e-05
+    "funding_rate": 8.773e-05
   },
   "ai_factors": {
     "s9_vix_roc": {
@@ -210,17 +210,17 @@
       "as_of": "2026-07-26",
       "prior_date": "2026-07-26"
     },
-    "last_updated": "2026-07-26T11:39:26Z",
+    "last_updated": "2026-07-26T11:55:22Z",
     "s11_volume_anomaly": {
       "score": 0,
       "label": "NEUTRAL",
       "threshold": 3.0,
-      "ratio": 0.3,
-      "vol_now": 629.66632,
+      "ratio": 0.32,
+      "vol_now": 672.38933,
       "vol_mean_20p": 2128.8247725,
       "candle_bearish": false,
       "window": 20,
-      "as_of": "2026-07-26T11:39:25Z"
+      "as_of": "2026-07-26T11:55:20Z"
     },
     "layer0_5": {
       "forced_sell_risk": "MEDIUM",
@@ -252,7 +252,7 @@
         ],
         "as_of": "2026-07-26"
       },
-      "as_of": "2026-07-26T11:39:26Z"
+      "as_of": "2026-07-26T11:55:21Z"
     },
     "tripwires": {
       "TW1_CH1_CAPITAL_REVERSAL": {
@@ -319,7 +319,7 @@
     "tripwire_summary": {
       "active_count": 0,
       "total": 6,
-      "as_of": "2026-07-26T11:39:26Z"
+      "as_of": "2026-07-26T11:55:22Z"
     }
   },
   "regime": {
@@ -336,7 +336,6 @@
     },
     "signals": [
       "strong_outflow_bullish",
-      "mvrv_z_deep_value",
       "lth_sopr_elevated",
       "hashrate_drawdown_gt_25pct",
       "fear",
@@ -345,8 +344,7 @@
       "breadth_data_limited",
       "neutral_funding",
       "moderate_long_bias",
-      "taker_buying_dominant",
-      "coinbase_discount"
+      "taker_buying_dominant"
     ],
     "breadth": {
       "spy_momentum": "flat",
@@ -357,7 +355,7 @@
         "mstr_weak"
       ]
     },
-    "as_of": "2026-07-26T11:39:27Z"
+    "as_of": "2026-07-26T11:55:22Z"
   },
   "heatmap": {
     "data_available": false,
@@ -365,28 +363,26 @@
   },
   "status": {
     "source_timestamps": {
-      "amt": "2026-07-26T11:39:24.216346+00:00",
-      "vp": "2026-07-26T10:47:23.726183+00:00",
-      "pipeline": "regime=2026-07-26 11:17 UTC | macro=2026-07-26 11:17 UTC"
+      "amt": "2026-07-26T11:55:19.669968+00:00",
+      "vp": "2026-07-26T11:47:49.391995+00:00",
+      "pipeline": "regime=2026-07-26 11:48 UTC | macro=2026-07-26 11:48 UTC"
     },
     "staleness_warnings": [
-      "STALE vp: 52m behind AMT",
-      "STALE brk: 128m behind AMT"
+      "STALE brk: 143m behind AMT"
     ]
   },
   "sources": {
     "trap_monitor": {
-      "score": "4/7",
+      "score": "3/7",
       "status": "CAUTION",
-      "direction": "LONG_TRAP",
+      "direction": "NEUTRAL",
       "active_traps": [
-        "s1_liq_asymmetry",
         "s2_oi_divergence",
         "s6_exchange_netflow",
         "s7_utxo_bands"
       ],
       "signals": {
-        "s1_liq_asymmetry": "TRAP",
+        "s1_liq_asymmetry": "CLEAR",
         "s2_oi_divergence": "TRAP",
         "s3_funding": "CLEAR",
         "s4_bid_ask_absorption": "CLEAR",
@@ -396,17 +392,17 @@
         "s8_options_skew": "CLEAR"
       },
       "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
-      "collected": "2026-07-26 11:17 UTC"
+      "collected": "2026-07-26 11:48 UTC"
     },
     "redline": {
       "error": "unavailable"
     },
     "amt": {
-      "price": 64495.0,
-      "change_24h": 0.664,
+      "price": 64512.0,
+      "change_24h": 0.69,
       "balance_state": "TIGHT_BALANCE",
-      "aggression_score": 0.63,
-      "net_delta": -1042.86,
+      "aggression_score": 0.57,
+      "net_delta": -1031.08,
       "whale_pivot": null,
       "whale_conviction": 0,
       "mtf_signal": "NEUTRAL_NONE",
@@ -415,12 +411,12 @@
       "plain_english": ""
     },
     "volume_profile": {
-      "poc": 64518,
-      "vah": 64525,
-      "val": 64518,
-      "shape": "P",
-      "state": "REJECTION_UP",
-      "direction": "LONG",
+      "poc": 64501,
+      "vah": 64501,
+      "val": 64501,
+      "shape": "b",
+      "state": "REJECTION_DOWN",
+      "direction": "SHORT",
       "probability_tier": "BASELINE",
       "active_pattern": "POC_MAGNET"
     },
