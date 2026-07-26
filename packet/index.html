@@ -780,12 +780,14 @@ const POLLING_INTERVAL_SEC = 60;
 let pollingTimeLeft = POLLING_INTERVAL_SEC;
 let pollingTimer = null;
 let currentPacketData = null;
+let currentCompassData = null;
 
 // Paths to attempt loading data.json from
 const DATA_PATHS = [
   'data.json',
   (window.location.pathname.startsWith('/pipeline-dashboard-v3') ? '/pipeline-dashboard-v3' : '') + '/packet/data.json'
 ];
+const COMPASS_PATH = 'regime-compass-data.json';
 
 // --- Value Color Coding Engine ---
 function getValueColorClass(key, val) {
@@ -1390,6 +1392,7 @@ async function fetchPacketData() {
     currentPacketData = loadedData;
     renderPage(loadedData);
     fetchMacroTriggerData();  // also fetch macro short trigger report
+    fetchRegimeCompassData();  // fetch regime compass data for composite scores
     resetTimer();
   } else {
     console.error("Failed to load packet data:", lastError);
@@ -1433,9 +1436,10 @@ function renderSourceCards(data) {
       id: 'redline', icon: '🔴', name: 'Redline · trade engine',
       url: 'https://aikeluargalee-tech.github.io/redline-btc/',
       render: function(s) {
+        if (s.error) return [{label: 'Status', val: 'Offline (' + s.error + ')', cls: 'neutral'}];
         return [
-          {label: 'L0', val: s.l0_regime, cls: s.l0_regime === 'BEAR' ? 'bear' : s.l0_regime === 'BULL' ? 'bull' : 'neutral'},
-          {label: 'Risk', val: s.l1_risk, cls: s.l1_risk === 'ON' ? 'bear' : 'clear'},
+          {label: 'L0', val: s.l0_regime || '—', cls: s.l0_regime === 'BEAR' ? 'bear' : s.l0_regime === 'BULL' ? 'bull' : 'neutral'},
+          {label: 'Risk', val: s.l1_risk || '—', cls: s.l1_risk === 'ON' ? 'bear' : 'clear'},
           {label: 'Swing', val: (s.l3_swing || '—') + (s.l3_swing_blocked ? '🚫' : ''), cls: s.l3_swing === 'NONE' ? 'neutral' : ''},
           {label: 'Intra', val: (s.l4_intraday || '—') + (s.l4_intraday_blocked ? '🚫' : ''), cls: s.l4_intraday === 'SHORT' ? 'bear' : s.l4_intraday === 'LONG' ? 'bull' : 'neutral'},
         ];
@@ -1561,6 +1565,134 @@ async function fetchMacroTriggerData() {
   } catch (e) {
     console.error('Macro trigger fetch failed:', e.message);
   }
+}
+
+// --- Regime Compass Data ---
+async function fetchRegimeCompassData() {
+  try {
+    const res = await fetch(COMPASS_PATH + '?t=' + Date.now());
+    if (res.ok) {
+      currentCompassData = await res.json();
+    }
+  } catch (e) {
+    console.error('Regime compass fetch failed:', e.message);
+  }
+}
+
+// --- Composite Score Computation ---
+function computeCompositeScores(pkt, compass) {
+  const scores = {};
+
+  // --- RORO (Risk-On/Risk-Off) Score: -100 to +100 ---
+  // Inputs: ETF flows, BTC/ETH ratio, BTC.D, VIX, US10Y
+  {
+    let roro = 0;
+    let inputs = 0;
+
+    // ETF flows: strong inflow = risk-on
+    const etf = compass?.etf_flows;
+    if (etf?.net_daily != null) {
+      const dailyM = etf.net_daily / 1e6;
+      roro += Math.min(Math.max(dailyM * 5, -50), 50);
+      inputs++;
+    } else if (pkt?.context?.etf_flow_daily != null) {
+      roro += Math.min(Math.max(pkt.context.etf_flow_daily / 200, -50), 50);
+      inputs++;
+    }
+
+    // BTC/ETH ratio: outperforming ETH = risk-on
+    const btcEth = compass?.btc_eth;
+    if (btcEth?.change_7d != null) {
+      roro += Math.min(Math.max(btcEth.change_7d * 3, -50), 50);
+      inputs++;
+    }
+
+    // BTC Dominance: rising dominance = risk-off (flight to safety)
+    const btcd = compass?.btc_dominance;
+    if (btcd?.change_7d != null) {
+      // Negative: rising BTC.D = risk-off, so subtract
+      roro -= Math.min(Math.max(btcd.change_7d * 3, -50), 50);
+      inputs++;
+    }
+
+    // VIX: high VIX = risk-off
+    const vix = pkt?.context?.vix;
+    if (vix != null) {
+      // Baseline ~20, >20 = risk-off, <15 = risk-on
+      roro += Math.min(Math.max((20 - vix) * 4, -50), 50);
+      inputs++;
+    }
+
+    // US10Y: rising = risk-off (tightening)
+    const us10y = pkt?.context?.us10y;
+    if (us10y != null) {
+      // Compare to ~4.5% baseline
+      roro += Math.min(Math.max((4.5 - us10y) * 30, -50), 50);
+      inputs++;
+    }
+
+    scores.roro = inputs > 0 ? Math.round(Math.max(-100, Math.min(100, roro / inputs))) : 0;
+    scores.roro_inputs = inputs;
+  }
+
+  // --- BTC Rotation Score: -100 to +100 ---
+  {
+    let rot = 0;
+    let inputs = 0;
+
+    // BTC/Gold ratio: rising = rotation into BTC
+    const btcGold = compass?.btc_gold;
+    if (btcGold?.change_7d != null) {
+      rot += Math.min(Math.max(btcGold.change_7d * 3, -50), 50);
+      inputs++;
+    }
+
+    // Credit spread: widening = risk-off rotation
+    const cs = compass?.credit_spread;
+    if (cs?.hyg_lqd_spread != null) {
+      rot -= Math.min(Math.max((cs.hyg_lqd_spread - 3.5) * 15, -50), 50);
+      inputs++;
+    }
+
+    // BTC.D change
+    const btcd = compass?.btc_dominance;
+    if (btcd?.change_7d != null) {
+      rot -= Math.min(Math.max(btcd.change_7d * 3, -50), 50);
+      inputs++;
+    }
+
+    scores.rotation = inputs > 0 ? Math.round(Math.max(-100, Math.min(100, rot / inputs))) : 0;
+    scores.rotation_inputs = inputs;
+  }
+
+  // --- Quadrant ---
+  if (scores.roro > 0 && scores.rotation > 0) scores.quadrant = 'Q1 — Risk-On • Into BTC (ideal bull)';
+  else if (scores.roro <= 0 && scores.rotation > 0) scores.quadrant = 'Q2 — Risk-Off • Into BTC (defensive bid)';
+  else if (scores.roro <= 0 && scores.rotation <= 0) scores.quadrant = 'Q3 — Risk-Off • Away from BTC (bearish)';
+  else scores.quadrant = 'Q4 — Risk-On • Away from BTC (alt season)';
+
+  // --- Psych Score (1-10) ---
+  {
+    let psych = 2; // base neutral
+    const fng = pkt?.context?.fng_value;
+    if (fng != null) {
+      if (fng < 15) psych += 3;    // extreme fear = bullish contrarian
+      else if (fng < 30) psych += 2;
+      else if (fng < 45) psych += 1;
+      else if (fng > 80) psych -= 3;
+      else if (fng > 65) psych -= 2;
+      else if (fng > 55) psych -= 1;
+    }
+    // VIX fear bonus
+    const vix = pkt?.context?.vix;
+    if (vix != null) {
+      if (vix > 30) psych += 1;
+      if (vix > 40) psych += 1;
+    }
+    scores.psych_score = Math.max(1, Math.min(10, psych));
+  }
+
+  return scores;
 }
 
 function triggerColor(score) {
@@ -1715,8 +1847,8 @@ function buildTelemetryBrief(data) {
   const vp = src.volume_profile || {};
   const af = data.ai_factors || {};
 
-  const fmtK = (n) => typeof n === 'number' ? '$' + (n/1000).toFixed(1) + 'K' : '—';
-  const fmPct = (n) => typeof n === 'number' ? (n >= 0 ? '+' : '') + n.toFixed(1) + '%' : '—';
+  const fmtK = (n) => typeof n === 'number' ? '$' + (n/1000).toFixed(1) + 'K' : 'N/A';
+  const fmPct = (n) => typeof n === 'number' ? (n >= 0 ? '+' : '') + n.toFixed(1) + '%' : 'N/A';
 
   let out = '';
 
@@ -1724,6 +1856,7 @@ function buildTelemetryBrief(data) {
   out += `═══ PRICE ═══\n`;
   out += `BTC: ${fmtK(h.btc_price)} (24h: ${fmPct(h.change_24h)})\n`;
   out += `High 24h: ${fmtK(h.high_24h)} | Low 24h: ${fmtK(h.low_24h)}\n`;
+  out += `Bid/Ask: ${fmtK(h.bid)} / ${fmtK(h.ask)} | Spread: ${h.spread != null ? '$' + Number(h.spread).toFixed(2) : 'N/A'}\n`;
   out += `\n`;
 
   // ── 2. LIQUIDITY (Heatmap) ──
@@ -1753,7 +1886,8 @@ function buildTelemetryBrief(data) {
 
   // ── 4. WHALES & VOLUME ──
   out += `═══ WHALES & VOLUME ═══\n`;
-  out += `Whale pivot: ${amt.whale_pivot || '?'}\n`;
+  out += `Whale pivot: ${amt.whale_pivot || (amt.balance_state ? amt.balance_state : 'N/A')}\n`;
+  out += `Whale ADX: ${amt.adx != null ? amt.adx + ' (' + (amt.adx_regime || '—') + ')' : 'N/A'}\n`;
   let vpShapeStr = '?';
   if (vp.shape === 'P') vpShapeStr = 'P-shape (buying trend)';
   else if (vp.shape === 'b') vpShapeStr = 'b-shape (selling trend)';
@@ -1768,8 +1902,12 @@ function buildTelemetryBrief(data) {
 
   // ── 5. REDLINE SIGNALS (raw — no verdict) ──
   out += `═══ REDLINE SIGNALS ═══\n`;
-  out += `Swing (L3): ${rl.l3_swing || 'NONE'}${rl.l3_swing_blocked ? ' [BLOCKED]' : ''}\n`;
-  out += `Intraday (L4): ${rl.l4_intraday || 'NONE'}${rl.l4_intraday_blocked ? ' [BLOCKED]' : ''}\n`;
+  if (rl.error) {
+    out += `Status: OFFLINE (${rl.error})\n`;
+  } else {
+    out += `Swing (L3): ${rl.l3_swing || 'NONE'}${rl.l3_swing_blocked ? ' [BLOCKED]' : ''}\n`;
+    out += `Intraday (L4): ${rl.l4_intraday || 'NONE'}${rl.l4_intraday_blocked ? ' [BLOCKED]' : ''}\n`;
+  }
   out += `\n`;
 
   // ── 6. AI FACTORS ──
@@ -1804,7 +1942,7 @@ function buildSourceHubText(data) {
       return `Price ${fmt(h.btc_price)}  |  Regime ${r.label||'—'}  |  Conf ${(r.confidence||0).toFixed(2)}  |  TW ${tws.active_count||0}/${tws.total||6}`;
     }},
     {icon: '🪤', key: 'TRAPS', name: 'TRAPS    [trap monitor]', render: (s) => `Score ${s.score||'?'}  |  ${s.direction||'—'}  |  ${(s.active_traps||[]).length} active`},
-    {icon: '🔴', key: 'REDLINE', name: 'REDLINE  [trade engine]', render: (s) => `L0 ${s.l0_regime||'—'}  |  Risk ${s.l1_risk||'—'}  |  Swing ${s.l3_swing||'—'}${s.l3_swing_blocked?'🚫':''}  |  Intra ${s.l4_intraday||'—'}${s.l4_intraday_blocked?'🚫':''}`},
+    {icon: '🔴', key: 'REDLINE', name: 'REDLINE  [trade engine]', render: (s) => s.error ? 'Offline' : `L0 ${s.l0_regime||'—'}  |  Risk ${s.l1_risk||'—'}  |  Swing ${s.l3_swing||'—'}${s.l3_swing_blocked?'🚫':''}  |  Intra ${s.l4_intraday||'—'}${s.l4_intraday_blocked?'🚫':''}`},
     {icon: '🐋', key: 'AMT', name: 'AMT      [whale flow]', render: (s) => `Whale ${s.whale_pivot||'—'}  |  MTF ${s.mtf_signal||'—'}  |  ADX ${s.adx_regime||'—'} ${s.adx||''}`},
     {icon: '📊', key: 'VOL', name: 'VOL      [volume prof]', render: (s) => `POC ${fmt(s.poc)}  |  Shape ${s.shape||'—'}  |  State ${s.state||'—'}`},
     {icon: '🤖', key: 'AI', name: 'AI       [Apodex AI]', render: (s) => `S9/S10/S11 ${[s.s9_label,s.s10_label,s.s11_label].filter(Boolean).join('/')||'—'}  |  Mining ${s.forced_sell_risk||'—'}  |  TW ${s.active_tripwires||0}/${s.total_tripwires||6}`},
@@ -1841,9 +1979,11 @@ function buildCopyText(data) {
 
   // Legend — what each section means
   out += `═══ LEGEND ═══\n`;
-  out += `TELEMETRY BRIEF   = plain English (read this first)\n`;
-  out += `SOURCE HUB        = dashboard signals snapshot\n`;
-  out += `TERMINAL DETAIL   = full packet data for AI & pros:\n`;
+  out += `TELEMETRY BRIEF    = plain English (read this first)\n`;
+  out += `COMPOSITE SCORES   = RORO, Rotation, Quadrant, Psych Score (computed)\n`;
+  out += `MACRO CORRELATIONS = BTC/ETH, BTC/Gold, HYG/LQD, BTC.D\n`;
+  out += `SOURCE HUB         = dashboard signals snapshot\n`;
+  out += `TERMINAL DETAIL    = full packet data for AI & pros:\n`;
   out += `  [CRITICAL] = price action & derivatives\n`;
   out += `  [CONTEXT]  = macro environment\n`;
   out += `  [REFERENCE] = on-chain & cycle metrics\n`;
@@ -1857,6 +1997,49 @@ function buildCopyText(data) {
   // Telemetry Brief
   out += `═══ TELEMETRY BRIEF ═══\n`;
   out += buildTelemetryBrief(data);
+  out += `\n`;
+
+  // Composite Scores (computed from packet + regime compass)
+  const scores = computeCompositeScores(data, currentCompassData);
+  out += `═══ COMPOSITE SCORES ═══\n`;
+  out += `10-Point Psych Score: ${scores.psych_score || '—'}/10  (1=bearish, 10=bullish)\n`;
+  out += `RORO Score: ${scores.roro != null ? (scores.roro > 0 ? '+' : '') + scores.roro : '—'}  (-100 Risk-Off  ←→  +100 Risk-On) [${scores.roro_inputs || 0} inputs]\n`;
+  out += `BTC Rotation: ${scores.rotation != null ? (scores.rotation > 0 ? '+' : '') + scores.rotation : '—'}  (-100 Away from BTC  ←→  +100 Into BTC) [${scores.rotation_inputs || 0} inputs]\n`;
+  out += `Quadrant: ${scores.quadrant || '—'}\n`;
+  out += `\n`;
+
+  // Macro Correlations (from regime compass)
+  if (currentCompassData && currentCompassData.available > 0) {
+    const cd = currentCompassData;
+    out += `═══ MACRO CORRELATIONS ═══\n`;
+    if (cd.btc_eth) {
+      out += `BTC/ETH: ${cd.btc_eth.ratio != null ? Number(cd.btc_eth.ratio).toFixed(4) : 'N/A'}`;
+      if (cd.btc_eth.change_7d != null) out += ` (7d: ${cd.btc_eth.change_7d >= 0 ? '+' : ''}${Number(cd.btc_eth.change_7d).toFixed(2)}%)`;
+      out += `\n`;
+    }
+    if (cd.btc_gold) {
+      out += `BTC/Gold: ${cd.btc_gold.ratio != null ? Number(cd.btc_gold.ratio).toFixed(2) : 'N/A'}`;
+      if (cd.btc_gold.change_7d != null) out += ` (7d: ${cd.btc_gold.change_7d >= 0 ? '+' : ''}${Number(cd.btc_gold.change_7d).toFixed(2)}%)`;
+      out += `\n`;
+    }
+    if (cd.credit_spread) {
+      out += `HYG/LQD Spread: ${cd.credit_spread.hyg_lqd_spread != null ? Number(cd.credit_spread.hyg_lqd_spread).toFixed(2) + '%' : 'N/A'}`;
+      if (cd.credit_spread.verdict) out += ` — ${cd.credit_spread.verdict}`;
+      out += `\n`;
+    }
+    if (cd.btc_dominance) {
+      out += `BTC Dominance: ${cd.btc_dominance.value != null ? Number(cd.btc_dominance.value).toFixed(2) + '%' : 'N/A'}`;
+      if (cd.btc_dominance.change_7d != null) out += ` (7d: ${cd.btc_dominance.change_7d >= 0 ? '+' : ''}${Number(cd.btc_dominance.change_7d).toFixed(2)}%)`;
+      out += `\n`;
+    }
+    out += `\n`;
+  }
+
+  // Future data (coming soon)
+  out += `═══ FUTURE DATA (next pipeline update) ═══\n`;
+  out += `NUPL (Net Unrealized P/L): — not yet collected\n`;
+  out += `Liquidity Verdict (HEALTHY/TIGHT/DRAINING): — not yet collected\n`;
+  out += `COT Signal (Commitments of Traders): — not yet collected\n`;
   out += `\n`;
 
   // Source hub
