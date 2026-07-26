@@ -320,7 +320,7 @@
   <div class="psyche-card">
     <div class="scoring-table-wrapper">
       <table class="scoring-table" id="scoring-table">
-        <thead><tr><th>#</th><th>Dimension</th><th>Value</th><th>Signal</th><th>Basis</th></tr></thead>
+        <thead><tr><th>#</th><th>Dimension</th><th>Value</th><th>Signal</th></tr></thead>
         <tbody id="scoring-body">Loading…</tbody>
       </table>
     </div>
@@ -476,7 +476,6 @@
         <td><strong>${r.label}</strong><br><span class="dim">${r.basis}</span></td>
         <td style="font-family:'JetBrains Mono',monospace">${r.value}</td>
         <td><span class="psyche-status ${r.signal}">${sigEmoji[r.signal]}</span></td>
-        <td class="dim">${r.basis}</td>
       </tr>`
     ).join('');
 
