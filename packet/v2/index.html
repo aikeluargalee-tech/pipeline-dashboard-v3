@@ -671,7 +671,9 @@ function computeDataQuality(packetJson) {
   const metrics = [];
   findMetricObjects(packetJson, '', metrics, new Set());
 
-  let populated = 0, valueMissing = 0, valPresentTsMissing = 0;
+  let populated = 0, valueMissing = 0, valPresentSrcTsMissing = 0;
+  let hasSourceObserved = 0, hasAggregatorSnapshot = 0, hasPipelineSnapshot = 0;
+  let hasAnyTimestamp = 0;
   let fresh = 0, delayed = 0, stale = 0, unavailable = 0;
   let reproducible = 0, nonReproducible = 0;
 
@@ -679,17 +681,21 @@ function computeDataQuality(packetJson) {
     if (obj.value == null) {
       valueMissing++;
       unavailable++;
-      // null values are non-reproducible
       if (obj.data_type === 'derived') nonReproducible++;
     } else {
       populated++;
-      if (!obj.source_observed_at_utc) valPresentTsMissing++;
+      // Timestamp coverage — count each type independently
+      if (obj.source_observed_at_utc) hasSourceObserved++;
+      else valPresentSrcTsMissing++;
+      if (obj.aggregator_snapshot_at_utc) hasAggregatorSnapshot++;
+      if (obj.pipeline_snapshot_at_utc) hasPipelineSnapshot++;
+      if (obj.source_observed_at_utc || obj.aggregator_snapshot_at_utc || obj.pipeline_snapshot_at_utc) hasAnyTimestamp++;
+
       if (obj.freshness === 'fresh') fresh++;
       else if (obj.freshness === 'delayed') delayed++;
       else if (obj.freshness === 'stale') stale++;
       else unavailable++;
 
-      // Reproducibility: derived metrics are reproducible if they have formula + dependencies
       if (obj.data_type === 'derived') {
         if (obj.formula && obj.dependencies && obj.dependencies.length > 0 &&
             !obj._derivation_gap) {
@@ -705,21 +711,28 @@ function computeDataQuality(packetJson) {
     expected_metrics: metrics.length,
     populated_metrics: populated,
     value_missing: valueMissing,
-    value_present_timestamp_missing: valPresentTsMissing,
     fresh_metrics: fresh,
     delayed_metrics: delayed,
     stale_metrics: stale,
     unavailable_metrics: unavailable,
-    timestamp_validity_percent: populated > 0 ? Math.round((populated - valPresentTsMissing) / populated * 100) : 0,
+    source_observation_timestamp_coverage_percent: populated > 0 ? Math.round(hasSourceObserved / populated * 100) : 0,
+    aggregator_snapshot_coverage_percent: populated > 0 ? Math.round(hasAggregatorSnapshot / populated * 100) : 0,
+    pipeline_snapshot_coverage_percent: populated > 0 ? Math.round(hasPipelineSnapshot / populated * 100) : 0,
+    effective_usable_timestamp_coverage_percent: populated > 0 ? Math.round(hasAnyTimestamp / populated * 100) : 0,
+    value_present_source_timestamp_missing: valPresentSrcTsMissing,
     reproducible_derived_metrics_count: reproducible,
     non_reproducible_derived_metrics_count: nonReproducible,
-    source_partial_count: 0,  // populated after source health
-    source_unavailable_count: 0,
-    source_error_count: 0
+    transport_ok_count: 0,
+    transport_value_received_count: 0,
+    transport_unavailable_count: 0,
+    transport_error_count: 0,
+    auditability_full_count: 0,
+    auditability_partial_count: 0,
+    auditability_unavailable_count: 0
   };
 }
 
-// ─── Structured Source Health (OK/PARTIAL/UNAVAILABLE/ERROR) ───
+// ─── Structured Source Health — transport + auditability ───
 function computeSourceHealth(packetJson) {
   const metrics = [];
   findMetricObjects(packetJson, '', metrics, new Set());
@@ -731,11 +744,13 @@ function computeSourceHealth(packetJson) {
     if (!bySource[src]) {
       bySource[src] = {
         transport_status: 'OK',
+        metadata_status: null,
         auditability_status: 'OK',
         age_seconds: null,
         successful_metrics: [],
         affected_metrics: [],
         non_auditable_metrics: [],
+        timestamp_missing_metrics: [],
         source_identifier_ref: srcId
       };
     }
@@ -744,22 +759,22 @@ function computeSourceHealth(packetJson) {
     if (age != null && (bySource[src].age_seconds == null || age > bySource[src].age_seconds))
       bySource[src].age_seconds = age;
 
-    if (obj.value == null || obj.freshness === 'unavailable' || !obj.eligible_for_analysis) {
+    // Value missing entirely → transport failure
+    if (obj.value == null) {
       bySource[src].affected_metrics.push(path);
       bySource[src].auditability_status = 'PARTIAL';
     } else {
+      // Value received — check timestamp
       bySource[src].successful_metrics.push(path);
-      // Check for derivation gaps — non-auditable even if transport is OK
+      if (!obj.source_observed_at_utc && !obj.aggregator_snapshot_at_utc && !obj.pipeline_snapshot_at_utc) {
+        bySource[src].timestamp_missing_metrics.push(path);
+        bySource[src].metadata_status = 'SOURCE_TIMESTAMP_MISSING';
+      }
+      // Check for derivation gaps
       if (obj._derivation_gap) {
         bySource[src].non_auditable_metrics.push(path);
         bySource[src].auditability_status = 'PARTIAL';
       }
-    }
-
-    // ERROR state: if ALL metrics in a source are affected
-    if (obj.freshness === 'stale' && obj.eligible_for_analysis === false) {
-      if (!bySource[src].affected_metrics.includes(path))
-        bySource[src].affected_metrics.push(path);
     }
   }
 
@@ -769,12 +784,22 @@ function computeSourceHealth(packetJson) {
     if (info.successful_metrics.length === 0) {
       info.transport_status = 'UNAVAILABLE';
     }
-    // Auditability: non-auditable metrics present → PARTIAL
+    // Transport: value received but timestamp missing → VALUE_RECEIVED
+    else if (info.timestamp_missing_metrics.length > 0 && info.affected_metrics.length === 0) {
+      // Some metrics have values but no timestamps
+      if (info.metadata_status === 'SOURCE_TIMESTAMP_MISSING' && info.timestamp_missing_metrics.length === info.successful_metrics.length) {
+        info.transport_status = 'VALUE_RECEIVED';
+      }
+    }
+    // Auditability
     if (info.non_auditable_metrics.length === 0 && info.affected_metrics.length === 0) {
       info.auditability_status = 'OK';
+    } else {
+      info.auditability_status = 'PARTIAL';
     }
-    // Clean up internal tracking arrays (not needed in output)
-    // Keep in output for transparency
+    if (info.successful_metrics.length === 0) {
+      info.auditability_status = 'UNAVAILABLE';
+    }
   }
 
   return bySource;
@@ -819,7 +844,7 @@ function buildStructuredJson(d, srcTs) {
   };
 
   const packet = {
-    PACKET_VERSION: "BTC_DATA_PACKET_V2",
+    PACKET_VERSION: "BTC_DATA_PACKET_V2.1",
     PACKET_TIMESTAMP_UTC: packetTs,
     PACKET_GENERATED_AT_UTC: packetTs,
 
@@ -1050,17 +1075,25 @@ function buildStructuredJson(d, srcTs) {
   const dq = computeDataQuality(packet);
   const sh = computeSourceHealth(packet);
 
-  // Update source counts from source health
-  let partialCount = 0, unavailableCount = 0, errorCount = 0;
+  // Update transport and auditability counts
+  let transportOk = 0, transportValReceived = 0, transportUnavail = 0, transportError = 0;
+  let audFull = 0, audPartial = 0, audUnavail = 0;
   for (const [src, info] of Object.entries(sh)) {
-    if (info.transport_status === 'OK' && info.non_auditable_metrics && info.non_auditable_metrics.length > 0) partialCount++;
-    if (info.transport_status === 'PARTIAL') partialCount++;
-    if (info.transport_status === 'UNAVAILABLE') unavailableCount++;
-    if (info.transport_status === 'ERROR') errorCount++;
+    if (info.transport_status === 'OK') transportOk++;
+    else if (info.transport_status === 'VALUE_RECEIVED') transportValReceived++;
+    else if (info.transport_status === 'UNAVAILABLE') transportUnavail++;
+    else if (info.transport_status === 'ERROR') transportError++;
+    if (info.auditability_status === 'OK') audFull++;
+    else if (info.auditability_status === 'PARTIAL') audPartial++;
+    else if (info.auditability_status === 'UNAVAILABLE') audUnavail++;
   }
-  dq.source_partial_count = partialCount;
-  dq.source_unavailable_count = unavailableCount;
-  dq.source_error_count = errorCount;
+  dq.transport_ok_count = transportOk;
+  dq.transport_value_received_count = transportValReceived;
+  dq.transport_unavailable_count = transportUnavail;
+  dq.transport_error_count = transportError;
+  dq.auditability_full_count = audFull;
+  dq.auditability_partial_count = audPartial;
+  dq.auditability_unavailable_count = audUnavail;
 
   // Inject post-hoc
   packet.data_quality = dq;
@@ -1116,12 +1149,9 @@ async function loadAll() {
     dq.fresh_metrics + ' fresh · ' +
     dq.stale_metrics + ' stale · ' +
     dq.unavailable_metrics + ' unavail · ' +
-    'ts valid ' + dq.timestamp_validity_percent + '% · ' +
-    'reproducible ' + dq.reproducible_derived_metrics_count + ' · ' +
-    'partial src ' + dq.source_partial_count + ' · ' +
-    'partial src ' + dq.source_partial_count + ' · ' +
-    'unavail src ' + dq.source_unavailable_count + ' · ' +
-    'error src ' + dq.source_error_count;
+    'ts cov src ' + dq.source_observation_timestamp_coverage_percent + '% agg ' + dq.aggregator_snapshot_coverage_percent + '% eff ' + dq.effective_usable_timestamp_coverage_percent + '% · ' +
+    'tpt OK ' + dq.transport_ok_count + ' recv ' + dq.transport_value_received_count + ' unav ' + dq.transport_unavailable_count + ' err ' + dq.transport_error_count + ' · ' +
+    'aud full ' + dq.auditability_full_count + ' part ' + dq.auditability_partial_count + ' unav ' + dq.auditability_unavailable_count;
 
   // Hero freshness
   const ts = data.header.generated_timestamp;
