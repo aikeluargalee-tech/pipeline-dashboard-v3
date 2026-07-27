@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BTC Analysis Verdict — Pipeline Dashboard</title>
+<meta name="description" content="Live Bitcoin market analysis verdict from data packet + ChatGPT. No execution, no orders — analysis only.">
+<link rel="stylesheet" href="../assets/styles.css">
+<style>
+  .verdict-page { max-width: 720px; margin: 0 auto; padding: 16px 8px; }
+  .section { margin-bottom: 28px; }
+  .section h2 { font-size: 1rem; font-weight: 700; color: var(--muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  
+  textarea, pre.json-block { width: 100%; background: var(--card-solid); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font: 12px 'JetBrains Mono', 'Fira Code', monospace; padding: 12px; resize: vertical; min-height: 120px; max-height: 300px; }
+  textarea:focus { outline: none; border-color: var(--blue); }
+  
+  .btn { padding: 10px 20px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.15s; }
+  .btn:hover { border-color: var(--border-hover); background: rgba(255,255,255,0.05); }
+  .btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .btn.primary:hover { filter: brightness(1.1); }
+  .btn.danger { background: var(--red); border-color: var(--red); color: #fff; }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+  
+  .badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+  .badge.bullish { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+  .badge.bearish { background: rgba(244,63,94,0.15); color: var(--red); border: 1px solid rgba(244,63,94,0.3); }
+  .badge.neutral { background: rgba(136,136,147,0.15); color: var(--muted); border: 1px solid rgba(136,136,147,0.3); }
+  .badge.mixed { background: rgba(249,115,22,0.15); color: var(--orange); border: 1px solid rgba(249,115,22,0.3); }
+  .badge.wait { background: rgba(245,158,11,0.15); color: var(--yellow); border: 1px solid rgba(245,158,11,0.3); }
+  
+  .verdict-hero { padding: 20px 24px; border-radius: 12px; border: 1px solid var(--border); background: var(--card); margin-bottom: 20px; }
+  .verdict-label { font-size: 2em; font-weight: 900; margin-bottom: 4px; }
+  .verdict-label.bullish { color: var(--green); }
+  .verdict-label.bearish { color: var(--red); }
+  .verdict-label.neutral { color: var(--muted); }
+  .verdict-label.mixed { color: var(--orange); }
+  .verdict-label.wait { color: var(--yellow); }
+  
+  .confidence-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; margin: 8px 0; overflow: hidden; }
+  .confidence-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+  .confidence-fill.high { background: var(--green); }
+  .confidence-fill.medium { background: var(--yellow); }
+  .confidence-fill.low { background: var(--red); }
+  
+  .horizon-card { padding: 14px 18px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); margin-bottom: 10px; }
+  .horizon-card h3 { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+  .horizon-card p { font-size: 14px; line-height: 1.5; }
+  
+  .list { list-style: none; padding: 0; }
+  .list li { padding: 6px 0; font-size: 13px; border-bottom: 1px solid var(--border); display: flex; gap: 8px; align-items: flex-start; }
+  .list li:last-child { border-bottom: none; }
+  .list .icon { font-size: 14px; flex-shrink: 0; }
+  
+  .qual-row { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; color: var(--muted); }
+  .qual-row span:last-child { font-weight: 600; color: var(--text); }
+  
+  .warn { background: rgba(245,158,11,0.1); border-left: 3px solid var(--yellow); padding: 8px 12px; border-radius: 4px; font-size: 13px; margin: 8px 0; }
+  .err { background: rgba(244,63,94,0.1); border-left: 3px solid var(--red); padding: 8px 12px; border-radius: 4px; font-size: 13px; margin: 8px 0; }
+  .ok { background: rgba(16,185,129,0.1); border-left: 3px solid var(--green); padding: 8px 12px; border-radius: 4px; font-size: 13px; margin: 8px 0; }
+  
+  .tab-btn { padding: 8px 16px; border: none; background: none; color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; }
+  .tab-btn.active { color: var(--text); border-bottom-color: var(--blue); }
+  .tab-btn:hover { color: var(--text); }
+  
+  .hidden { display: none !important; }
+  
+  @media (max-width: 480px) {
+    .verdict-hero { padding: 14px 16px; }
+    .verdict-label { font-size: 1.6em; }
+  }
+</style>
+</head>
+<body>
+
+<main class="verdict-page">
+  <h1 style="font-size:1.5em;font-weight:900;margin-bottom:4px">BTC Analysis Verdict</h1>
+  <p style="color:var(--muted);font-size:13px;margin-bottom:24px">
+    Live data packet → ChatGPT analysis → human decision. No orders, no execution.
+  </p>
+
+  <!-- Step 1: Load Packet -->
+  <section class="section">
+    <h2>1. Analysis Packet</h2>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:8px">
+      Paste the output of <code style="background:var(--card);padding:2px 6px;border-radius:3px">btc-pulse analyze</code> below.
+    </p>
+    <textarea id="packet-input" placeholder='Paste analysis packet JSON here...' oninput="onPacketInput()"></textarea>
+    <div class="btn-row">
+      <button class="btn" onclick="loadPacketFromURL()">Load from URL</button>
+    </div>
+    <div id="packet-status"></div>
+  </section>
+
+  <!-- Step 2: Data Quality (shown after packet loaded) -->
+  <section class="section hidden" id="quality-section">
+    <h2>2. Data Quality</h2>
+    <div id="quality-display"></div>
+  </section>
+
+  <!-- Step 3: Copy for ChatGPT (shown after packet loaded) -->
+  <section class="section hidden" id="copy-section">
+    <h2>3. Copy Packet for ChatGPT</h2>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:8px">
+      Paste the entire content below into ChatGPT. The prompt is fixed — Milo never edits it.
+    </p>
+    <textarea id="chatgpt-payload" readonly style="min-height:300px"></textarea>
+    <div class="btn-row">
+      <button class="btn primary" onclick="copyForChatGPT()">📋 Copy Packet for ChatGPT</button>
+    </div>
+    <div id="copy-feedback" style="margin-top:8px;font-size:12px;color:var(--green)"></div>
+  </section>
+
+  <!-- Step 4: Paste Verdict -->
+  <section class="section hidden" id="verdict-section">
+    <h2>4. ChatGPT Verdict</h2>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:8px">
+      Paste ChatGPT's JSON response here. The dashboard validates it against the packet.
+    </p>
+    <textarea id="verdict-input" placeholder='Paste ChatGPT verdict JSON here...' oninput="onVerdictInput()"></textarea>
+    <div id="verdict-validation"></div>
+  </section>
+
+  <!-- Step 5: Verdict Display (shown after verdict validated) -->
+  <section class="section hidden" id="verdict-display-section">
+    <h2>5. Verdict</h2>
+    <div id="verdict-display"></div>
+  </section>
+</main>
+
+<script>
+// ── State ──
+let currentPacket = null;
+let currentVerdict = null;
+
+// ── Analysis Prompt (fixed, versioned) ──
+const ANALYSIS_PROMPT = `You are a Bitcoin market analyst. Analyze the following evidence packet and return a structured verdict.
+
+INSTRUCTIONS:
+1. Prioritize: market structure and trend → important price levels → spot, volume, CVD, OI, funding and derivatives → macro, news and external risks → candlestick confirmation.
+2. Consider three horizons: immediate (1–4h), short term (24h), swing context (3–7d).
+3. Confidence is ANALYTICAL confidence — not a guaranteed probability of price movement.
+4. Return valid JSON matching the AnalysisVerdict v1.0 schema. Do not include markdown fences.
+5. Never create, suggest, or simulate an order. This is analysis only.
+
+Required JSON schema:
+{
+  "analysis_version": "1.0",
+  "analysis_status": "COMPLETED",
+  "analysis_agent": "ChatGPT",
+  "model_id": "<model name if known, else null>",
+  "analyzed_at_utc": "<ISO timestamp>",
+  "overall_verdict": "BULLISH|BEARISH|NEUTRAL|MIXED|WAIT_FOR_CONFIRMATION",
+  "confidence_percent": <0-100>,
+  "confidence_basis": "<1 sentence explaining confidence>",
+  "immediate_outlook": {"horizon": "1-4h", "outlook": "BULLISH|BEARISH|NEUTRAL", "summary": "<1-2 sentences>"},
+  "short_term_outlook": {"horizon": "24h", "outlook": "BULLISH|BEARISH|NEUTRAL", "summary": "<1-2 sentences>"},
+  "swing_context": {"horizon": "3-7d", "outlook": "BULLISH|BEARISH|NEUTRAL", "summary": "<1-2 sentences>"},
+  "supporting_evidence": ["<string>"],
+  "conflicting_evidence": ["<string>"],
+  "key_support_levels": [{"price": <number>, "strength": "MAJOR|MINOR", "source": "<string>"}],
+  "key_resistance_levels": [{"price": <number>, "strength": "MAJOR|MINOR", "source": "<string>"}],
+  "bullish_confirmation": ["<conditions that would confirm bullish thesis>"],
+  "bearish_confirmation": ["<conditions that would confirm bearish thesis>"],
+  "invalidation_conditions": ["<conditions that invalidate the primary outlook>"],
+  "external_risks": ["<macro, news, geopolitical risks>"],
+  "data_limitations": ["<known gaps or caveats in the evidence>"],
+  "what_to_watch_next": ["<specific events or levels to monitor>"],
+  "plain_english_summary": "<2-4 sentence summary for a human reader>"
+}
+
+EVIDENCE PACKET:
+`;
+
+// ── Packet Input ──
+function onPacketInput() {
+  const raw = document.getElementById('packet-input').value.trim();
+  if (!raw) { resetSections(); return; }
+  try {
+    currentPacket = JSON.parse(raw);
+    if (!currentPacket.packet_hash || !currentPacket.evidence) {
+      showPacketStatus('err', 'Invalid packet: missing packet_hash or evidence');
+      resetSections();
+      return;
+    }
+    showPacketStatus('ok', `Packet loaded: ${Object.keys(currentPacket.evidence).length} metrics, hash ${currentPacket.packet_hash.slice(0,12)}…`);
+    renderDataQuality();
+    buildChatGPTPayload();
+    showSections();
+  } catch(e) {
+    showPacketStatus('err', `Invalid JSON: ${e.message}`);
+    resetSections();
+  }
+}
+
+function showPacketStatus(type, msg) {
+  document.getElementById('packet-status').innerHTML = `<div class="${type}">${msg}</div>`;
+}
+
+function resetSections() {
+  currentPacket = null;
+  document.getElementById('quality-section').classList.add('hidden');
+  document.getElementById('copy-section').classList.add('hidden');
+  document.getElementById('verdict-section').classList.add('hidden');
+  document.getElementById('verdict-display-section').classList.add('hidden');
+}
+
+function showSections() {
+  document.getElementById('quality-section').classList.remove('hidden');
+  document.getElementById('copy-section').classList.remove('hidden');
+  document.getElementById('verdict-section').classList.remove('hidden');
+}
+
+// ── Data Quality ──
+function renderDataQuality() {
+  const q = currentPacket.data_quality || {};
+  const he = currentPacket.horizon_eligibility || {};
+  let html = `<div class="qual-row"><span>Total metrics</span><span>${q.total_metrics || 0}</span></div>`;
+  html += `<div class="qual-row"><span>Eligible</span><span style="color:var(--green)">${q.eligible_count || 0}</span></div>`;
+  html += `<div class="qual-row"><span>Excluded</span><span style="color:var(--red)">${q.excluded_count || 0}</span></div>`;
+  html += `<div class="qual-row"><span>Overall</span><span>${q.overall || 'N/A'}</span></div>`;
+  html += `<div style="margin-top:8px;font-weight:600;font-size:12px">Per-horizon eligibility:</div>`;
+  for (const [h, s] of Object.entries(he)) {
+    const cls = s === 'ELIGIBLE' ? 'var(--green)' : s === 'DEGRADED' ? 'var(--yellow)' : 'var(--red)';
+    html += `<div class="qual-row"><span>${h}</span><span style="color:${cls}">${s}</span></div>`;
+  }
+  if (q.warnings && q.warnings.length) {
+    html += `<div class="warn">Warnings: ${q.warnings.join('; ')}</div>`;
+  }
+  if (currentPacket.excluded && Object.keys(currentPacket.excluded).length) {
+    html += `<div style="margin-top:8px;font-weight:600;font-size:12px;color:var(--orange)">Excluded metrics:</div>`;
+    for (const [k, v] of Object.entries(currentPacket.excluded)) {
+      html += `<div class="qual-row"><span>${k}</span><span style="color:var(--red)">${v.reason || 'unknown'}</span></div>`;
+    }
+  }
+  document.getElementById('quality-display').innerHTML = html;
+}
+
+// ── ChatGPT Payload ──
+function buildChatGPTPayload() {
+  const hr = currentPacket.horizon_eligibility || {};
+  const instructions = ANALYSIS_PROMPT;
+  
+  // Build a compact evidence summary for ChatGPT
+  const evidenceSummary = {};
+  if (currentPacket.evidence) {
+    for (const [k, v] of Object.entries(currentPacket.evidence)) {
+      evidenceSummary[k] = {
+        value: v.value,
+        unit: v.unit || '',
+        source: v.source || '',
+        freshness: v.freshness || '',
+        data_type: v.data_type || '',
+        age_seconds: v.age_seconds || 0,
+      };
+    }
+  }
+  
+  const payload = {
+    instructions: instructions,
+    request: {
+      request_id: crypto.randomUUID ? crypto.randomUUID() : 'generated-client-side',
+      packet_version: currentPacket.packet_version || '1.0',
+      packet_id: currentPacket.packet_id || '',
+      packet_hash: currentPacket.packet_hash || '',
+      packet_timestamp_utc: currentPacket.generated_at_utc || '',
+      requested_at_utc: new Date().toISOString(),
+      instrument: 'BTCUSDT',
+      horizons: ['1-4h', '24h', '3-7d'],
+      analysis_agent: 'ChatGPT',
+      analysis_status: 'NOT_PERFORMED',
+      delivery_mode: 'manual',
+      prompt_version: '1.0',
+      horizon_eligibility: hr,
+    },
+    excluded: currentPacket.excluded || {},
+    evidence: evidenceSummary,
+  };
+  
+  const fullText = `${ANALYSIS_PROMPT}\n\`\`\`json\n${JSON.stringify(payload, null, 2)}\n\`\`\``;
+  document.getElementById('chatgpt-payload').value = fullText;
+}
+
+function copyForChatGPT() {
+  const ta = document.getElementById('chatgpt-payload');
+  ta.select();
+  document.execCommand('copy');
+  document.getElementById('copy-feedback').textContent = '✓ Copied! Paste this into ChatGPT.';
+  setTimeout(() => { document.getElementById('copy-feedback').textContent = ''; }, 3000);
+}
+
+// ── Verdict Input ──
+function onVerdictInput() {
+  const raw = document.getElementById('verdict-input').value.trim();
+  document.getElementById('verdict-display-section').classList.add('hidden');
+  if (!raw) { document.getElementById('verdict-validation').innerHTML = ''; return; }
+  
+  try {
+    currentVerdict = JSON.parse(raw);
+  } catch(e) {
+    document.getElementById('verdict-validation').innerHTML = `<div class="err">Invalid JSON: ${e.message}</div>`;
+    return;
+  }
+  
+  const issues = validateVerdict(currentVerdict, currentPacket);
+  if (issues.length) {
+    document.getElementById('verdict-validation').innerHTML = 
+      `<div class="err">Validation issues:<br>${issues.map(i => `• ${i}`).join('<br>')}</div>`;
+  } else {
+    document.getElementById('verdict-validation').innerHTML = 
+      '<div class="ok">✓ Verdict validated — packet hash matches, version supported, no order fields</div>';
+    renderVerdict();
+    document.getElementById('verdict-display-section').classList.remove('hidden');
+  }
+}
+
+// ── Verdict Validation ──
+function validateVerdict(v, pkt) {
+  const issues = [];
+  if (!v.overall_verdict) { issues.push('MISSING_OVERALL_VERDICT'); }
+  else {
+    const valid = ['BULLISH','BEARISH','NEUTRAL','MIXED','WAIT_FOR_CONFIRMATION'];
+    if (!valid.includes(v.overall_verdict)) issues.push(`INVALID_VERDICT: ${v.overall_verdict}`);
+  }
+  if (v.packet_hash && pkt && v.packet_hash !== pkt.packet_hash) issues.push('PACKET_HASH_MISMATCH');
+  if (v.packet_id && pkt && v.packet_id !== pkt.packet_id) issues.push('PACKET_ID_MISMATCH');
+  if (v.analysis_version && v.analysis_version !== '1.0') issues.push(`UNSUPPORTED_VERSION: ${v.analysis_version}`);
+  if (!v.plain_english_summary) issues.push('MISSING_PLAIN_ENGLISH_SUMMARY');
+  // Reject order fields
+  const forbidden = ['order','position','trade','entry','exit','stop','target','execution'];
+  for (const key of Object.keys(v)) {
+    if (forbidden.some(f => key.toLowerCase().includes(f))) issues.push(`ORDER_FIELD_DETECTED: ${key}`);
+  }
+  return issues;
+}
+
+// ── Render Verdict ──
+function renderVerdict() {
+  const v = currentVerdict;
+  const verdictCls = v.overall_verdict.toLowerCase().replace(/_/g, '');
+  const verdictMap = {bullish:'BULLISH',bearish:'BEARISH',neutral:'NEUTRAL',mixed:'MIXED',waitforconfirmation:'WAIT FOR CONFIRMATION'};
+  const confCls = v.confidence_percent >= 70 ? 'high' : v.confidence_percent >= 40 ? 'medium' : 'low';
+  
+  let html = '';
+  
+  // Hero
+  html += `<div class="verdict-hero">`;
+  html += `<div class="verdict-label ${verdictCls}">${verdictMap[verdictCls] || v.overall_verdict}</div>`;
+  html += `<div style="font-size:13px;color:var(--muted)">Confidence: ${v.confidence_percent}% &mdash; ${v.confidence_basis || ''}</div>`;
+  html += `<div class="confidence-bar"><div class="confidence-fill ${confCls}" style="width:${v.confidence_percent}%"></div></div>`;
+  html += `<div style="font-size:11px;color:var(--muted);margin-top:4px">Analyzed ${v.analyzed_at_utc || '?'} &bull; Packet ${v.packet_timestamp_utc || '?'} &bull; ${v.analysis_agent || 'ChatGPT'}</div>`;
+  html += `</div>`;
+  
+  // Horizons
+  const horizons = [
+    {key: 'immediate_outlook', title: 'Immediate (1–4h)'},
+    {key: 'short_term_outlook', title: 'Short Term (24h)'},
+    {key: 'swing_context', title: 'Swing (3–7d)'},
+  ];
+  html += `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:20px">`;
+  for (const h of horizons) {
+    const d = v[h.key] || {};
+    const oCls = (d.outlook || '').toLowerCase();
+    html += `<div class="horizon-card">`;
+    html += `<h3>${h.title}</h3>`;
+    html += `<span class="badge ${oCls}">${d.outlook || '—'}</span>`;
+    if (d.summary) html += `<p style="margin-top:6px">${d.summary}</p>`;
+    html += `</div>`;
+  }
+  html += `</div>`;
+  
+  // Key Levels
+  if ((v.key_support_levels && v.key_support_levels.length) || (v.key_resistance_levels && v.key_resistance_levels.length)) {
+    html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">`;
+    html += `<div><h3 style="font-size:13px;color:var(--green);margin-bottom:6px">Support</h3>`;
+    for (const l of (v.key_support_levels || [])) {
+      html += `<div class="qual-row"><span>${l.price?.toLocaleString() || l.price}</span><span style="font-size:11px;color:var(--muted)">${l.strength || ''} · ${l.source || ''}</span></div>`;
+    }
+    html += `</div>`;
+    html += `<div><h3 style="font-size:13px;color:var(--red);margin-bottom:6px">Resistance</h3>`;
+    for (const l of (v.key_resistance_levels || [])) {
+      html += `<div class="qual-row"><span>${l.price?.toLocaleString() || l.price}</span><span style="font-size:11px;color:var(--muted)">${l.strength || ''} · ${l.source || ''}</span></div>`;
+    }
+    html += `</div></div>`;
+  }
+  
+  // Evidence
+  if (v.supporting_evidence && v.supporting_evidence.length) {
+    html += `<h3 style="font-size:13px;color:var(--green);margin-bottom:6px">✓ Supporting</h3><ul class="list">`;
+    for (const e of v.supporting_evidence) html += `<li><span class="icon">✓</span>${e}</li>`;
+    html += `</ul>`;
+  }
+  if (v.conflicting_evidence && v.conflicting_evidence.length) {
+    html += `<h3 style="font-size:13px;color:var(--red);margin-bottom:6px;margin-top:10px">✗ Conflicting</h3><ul class="list">`;
+    for (const e of v.conflicting_evidence) html += `<li><span class="icon">✗</span>${e}</li>`;
+    html += `</ul>`;
+  }
+  
+  // Confirmations & Invalidation
+  if (v.bullish_confirmation && v.bullish_confirmation.length) {
+    html += `<h3 style="font-size:13px;color:var(--green);margin:12px 0 6px">Bullish Confirmation</h3><ul class="list">`;
+    for (const c of v.bullish_confirmation) html += `<li><span class="icon">▲</span>${c}</li>`;
+    html += `</ul>`;
+  }
+  if (v.bearish_confirmation && v.bearish_confirmation.length) {
+    html += `<h3 style="font-size:13px;color:var(--red);margin:12px 0 6px">Bearish Confirmation</h3><ul class="list">`;
+    for (const c of v.bearish_confirmation) html += `<li><span class="icon">▼</span>${c}</li>`;
+    html += `</ul>`;
+  }
+  if (v.invalidation_conditions && v.invalidation_conditions.length) {
+    html += `<div class="warn"><strong>Invalidation conditions:</strong><br>${v.invalidation_conditions.map(c => `• ${c}`).join('<br>')}</div>`;
+  }
+  
+  // Risks & Limitations
+  if (v.external_risks && v.external_risks.length) {
+    html += `<h3 style="font-size:13px;color:var(--orange);margin:12px 0 6px">External Risks</h3><ul class="list">`;
+    for (const r of v.external_risks) html += `<li><span class="icon">⚠</span>${r}</li>`;
+    html += `</ul>`;
+  }
+  if (v.data_limitations && v.data_limitations.length) {
+    html += `<h3 style="font-size:13px;color:var(--muted);margin:12px 0 6px">Data Limitations</h3><ul class="list">`;
+    for (const l of v.data_limitations) html += `<li><span class="icon">ⓘ</span>${l}</li>`;
+    html += `</ul>`;
+  }
+  if (v.what_to_watch_next && v.what_to_watch_next.length) {
+    html += `<h3 style="font-size:13px;color:var(--blue);margin:12px 0 6px">What to Watch Next</h3><ul class="list">`;
+    for (const w of v.what_to_watch_next) html += `<li><span class="icon">→</span>${w}</li>`;
+    html += `</ul>`;
+  }
+  
+  // Plain English
+  if (v.plain_english_summary) {
+    html += `<div style="margin-top:20px;padding:16px;background:var(--card);border-radius:8px;border:1px solid var(--border);font-size:14px;line-height:1.6">${v.plain_english_summary}</div>`;
+  }
+  
+  document.getElementById('verdict-display').innerHTML = html;
+}
+
+// ── Load from URL ──
+function loadPacketFromURL() {
+  const url = prompt('Packet URL (default: pipeline dashboard):', '../packet/data.json');
+  if (!url) return;
+  fetch(url, {cache: 'no-store'})
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById('packet-input').value = JSON.stringify(data, null, 2);
+      onPacketInput();
+    })
+    .catch(e => showPacketStatus('err', `Failed to load: ${e.message}`));
+}
+</script>
+
+</body>
+</html>
