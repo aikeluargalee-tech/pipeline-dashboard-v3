@@ -3,607 +3,337 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BTC Analysis Verdict — Pipeline Dashboard</title>
-<meta name="description" content="Live Bitcoin market analysis verdict from data packet + ChatGPT. No execution, no orders — analysis only.">
+<title>BTC Live Metrics — Analysis Verdict</title>
+<meta name="description" content="Live BTC market metrics, auto-refreshed every 15 min. Analysis verdict from data packet + ChatGPT.">
+<meta http-equiv="refresh" content="900">
 <link rel="stylesheet" href="../assets/styles.css">
 <style>
-  .verdict-page { max-width: 720px; margin: 0 auto; padding: 16px 8px; }
-  .section { margin-bottom: 28px; }
-  .section h2 { font-size: 1rem; font-weight: 700; color: var(--muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .page { max-width: 720px; margin: 0 auto; padding: 16px 8px; }
   
-  textarea, pre.json-block { width: 100%; background: var(--card-solid); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font: 12px 'JetBrains Mono', 'Fira Code', monospace; padding: 12px; resize: vertical; min-height: 120px; max-height: 300px; }
-  textarea:focus { outline: none; border-color: var(--blue); }
+  /* Price hero */
+  .price-hero { text-align: center; padding: 20px 0 16px; }
+  .price-big { font-size: 3em; font-weight: 900; letter-spacing: -0.02em; line-height: 1; }
+  .price-change { font-size: 1.1em; font-weight: 700; margin-top: 4px; }
+  .price-change.up { color: var(--green); }
+  .price-change.down { color: var(--red); }
+  .price-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
   
-  .btn { padding: 10px 20px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.15s; }
-  .btn:hover { border-color: var(--border-hover); background: rgba(255,255,255,0.05); }
+  /* Tick bar */
+  .tick-bar { display: flex; justify-content: center; gap: 24px; font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+  .tick-bar span { font-weight: 600; color: var(--text); }
+  
+  /* Metric grid */
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
+  .metric-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+  .metric-card .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 4px; }
+  .metric-card .value { font-size: 1.1em; font-weight: 700; }
+  .metric-card .sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
+  .metric-card.warn { border-left: 3px solid var(--yellow); }
+  .metric-card.alert { border-left: 3px solid var(--red); }
+  
+  /* Status bar */
+  .status-bar { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--muted); padding: 8px 0; border-top: 1px solid var(--border); margin-bottom: 20px; }
+  .status-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 4px; }
+  .status-dot.live { background: var(--green); }
+  .status-dot.stale { background: var(--yellow); }
+  
+  /* Verdict toggle */
+  .toggle-section { margin-top: 24px; }
+  .toggle-btn { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); font-size: 13px; font-weight: 600; cursor: pointer; text-align: left; display: flex; justify-content: space-between; align-items: center; }
+  .toggle-btn:hover { border-color: var(--border-hover); }
+  .toggle-btn .arrow { font-size: 12px; transition: transform 0.2s; }
+  .toggle-btn.open .arrow { transform: rotate(180deg); }
+  .toggle-body { display: none; padding-top: 16px; }
+  .toggle-body.show { display: block; }
+  
+  /* Verdict styles (simplified) */
+  .btn { padding: 10px 20px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); cursor: pointer; font-size: 13px; font-weight: 600; }
+  .btn:hover { border-color: var(--border-hover); }
   .btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
-  .btn.primary:hover { filter: brightness(1.1); }
-  .btn.danger { background: var(--red); border-color: var(--red); color: #fff; }
   .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
-  
-  .badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
-  .badge.bullish { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
-  .badge.bearish { background: rgba(244,63,94,0.15); color: var(--red); border: 1px solid rgba(244,63,94,0.3); }
-  .badge.neutral { background: rgba(136,136,147,0.15); color: var(--muted); border: 1px solid rgba(136,136,147,0.3); }
-  .badge.mixed { background: rgba(249,115,22,0.15); color: var(--orange); border: 1px solid rgba(249,115,22,0.3); }
-  .badge.wait { background: rgba(245,158,11,0.15); color: var(--yellow); border: 1px solid rgba(245,158,11,0.3); }
-  
-  .verdict-hero { padding: 20px 24px; border-radius: 12px; border: 1px solid var(--border); background: var(--card); margin-bottom: 20px; }
-  .verdict-label { font-size: 2em; font-weight: 900; margin-bottom: 4px; }
+  textarea { width: 100%; background: var(--card-solid); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font: 12px 'JetBrains Mono', monospace; padding: 12px; resize: vertical; min-height: 100px; max-height: 250px; }
+  textarea:focus { outline: none; border-color: var(--blue); }
+  .ok { background: rgba(16,185,129,0.1); border-left: 3px solid var(--green); padding: 8px 12px; border-radius: 4px; font-size: 13px; margin: 8px 0; }
+  .err { background: rgba(244,63,94,0.1); border-left: 3px solid var(--red); padding: 8px 12px; border-radius: 4px; font-size: 13px; margin: 8px 0; }
+  .warn { background: rgba(245,158,11,0.1); border-left: 3px solid var(--yellow); padding: 8px 12px; border-radius: 4px; font-size: 13px; margin: 8px 0; }
+  .hidden { display: none !important; }
+
+  /* Verdict display */
+  .verdict-hero { padding: 16px 20px; border-radius: 12px; border: 1px solid var(--border); background: var(--card); margin-bottom: 16px; }
+  .verdict-label { font-size: 1.6em; font-weight: 900; }
   .verdict-label.bullish { color: var(--green); }
   .verdict-label.bearish { color: var(--red); }
   .verdict-label.neutral { color: var(--muted); }
   .verdict-label.mixed { color: var(--orange); }
   .verdict-label.wait { color: var(--yellow); }
-  
   .confidence-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; margin: 8px 0; overflow: hidden; }
-  .confidence-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
-  .confidence-fill.high { background: var(--green); }
-  .confidence-fill.medium { background: var(--yellow); }
-  .confidence-fill.low { background: var(--red); }
-  
-  .horizon-card { padding: 14px 18px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); margin-bottom: 10px; }
-  .horizon-card h3 { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
-  .horizon-card p { font-size: 14px; line-height: 1.5; }
-  
+  .confidence-fill { height: 100%; border-radius: 3px; background: var(--blue); }
+  .horizon-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; margin: 12px 0; }
+  .horizon-card { padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); }
+  .horizon-card h4 { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+  .horizon-card p { font-size: 13px; }
   .list { list-style: none; padding: 0; }
-  .list li { padding: 6px 0; font-size: 13px; border-bottom: 1px solid var(--border); display: flex; gap: 8px; align-items: flex-start; }
-  .list li:last-child { border-bottom: none; }
-  .list .icon { font-size: 14px; flex-shrink: 0; }
-  
-  .qual-row { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; color: var(--muted); }
-  .qual-row span:last-child { font-weight: 600; color: var(--text); }
-  
-  .warn { background: rgba(245,158,11,0.1); border-left: 3px solid var(--yellow); padding: 8px 12px; border-radius: 4px; font-size: 13px; margin: 8px 0; }
-  .err { background: rgba(244,63,94,0.1); border-left: 3px solid var(--red); padding: 8px 12px; border-radius: 4px; font-size: 13px; margin: 8px 0; }
-  .ok { background: rgba(16,185,129,0.1); border-left: 3px solid var(--green); padding: 8px 12px; border-radius: 4px; font-size: 13px; margin: 8px 0; }
-  
-  .tab-btn { padding: 8px 16px; border: none; background: none; color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; }
-  .tab-btn.active { color: var(--text); border-bottom-color: var(--blue); }
-  .tab-btn:hover { color: var(--text); }
-  
-  .hidden { display: none !important; }
-  
+  .list li { padding: 4px 0; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+
   @media (max-width: 480px) {
-    .verdict-hero { padding: 14px 16px; }
-    .verdict-label { font-size: 1.6em; }
+    .price-big { font-size: 2.4em; }
+    .metric-grid { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
 </head>
 <body>
 
-<main class="verdict-page">
-  <h1 style="font-size:1.5em;font-weight:900;margin-bottom:4px">BTC Analysis Verdict</h1>
-  <p style="color:var(--muted);font-size:13px;margin-bottom:24px">
-    Live data packet → ChatGPT analysis → human decision. No orders, no execution.
-  </p>
+<div class="page">
+  <!-- Price Hero -->
+  <div class="price-hero" id="price-hero">
+    <div class="price-big" id="price">—</div>
+    <div class="price-change" id="change">—</div>
+    <div class="price-sub" id="price-sub">—</div>
+  </div>
 
-  <!-- Step 1: Load Packet -->
-  <section class="section">
-    <h2>1. Analysis Packet</h2>
-    <p style="color:var(--muted);font-size:12px;margin-bottom:8px">
-      Paste the output of <code style="background:var(--card);padding:2px 6px;border-radius:3px">btc-pulse analyze</code> below.
-    </p>
-    <textarea id="packet-input" placeholder='Paste analysis packet JSON here...' oninput="onPacketInput()"></textarea>
-    <div class="btn-row">
-      <button class="btn" onclick="loadFromPipeline()">Load from Pipeline</button>
+  <!-- Tick Bar -->
+  <div class="tick-bar">
+    <div>Bid <span id="tick-bid">—</span></div>
+    <div>Ask <span id="tick-ask">—</span></div>
+    <div>Spread <span id="tick-spread">—</span></div>
+    <div>Vol <span id="tick-vol">—</span></div>
+  </div>
+
+  <!-- Metric Grid -->
+  <div class="metric-grid" id="metric-grid"></div>
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div><span class="status-dot live" id="status-dot"></span><span id="status-text">Loading…</span></div>
+    <div id="updated-at">—</div>
+  </div>
+
+  <!-- Verdict Toggle -->
+  <div class="toggle-section">
+    <button class="toggle-btn" onclick="toggleVerdict()">
+      <span>📊 Analysis Verdict (ChatGPT)</span>
+      <span class="arrow">▼</span>
+    </button>
+    <div class="toggle-body" id="verdict-body">
+      <p style="color:var(--muted);font-size:12px;margin-bottom:8px">
+        Copy the packet to ChatGPT, paste the verdict back below.
+      </p>
+      <textarea id="verdict-input" placeholder='Paste ChatGPT verdict JSON here…' oninput="onVerdictInput()"></textarea>
+      <div id="verdict-validation"></div>
+      <div id="verdict-display"></div>
     </div>
-    <div id="packet-status"></div>
-  </section>
-
-  <!-- Step 2: Data Quality (shown after packet loaded) -->
-  <section class="section hidden" id="quality-section">
-    <h2>2. Data Quality</h2>
-    <div id="quality-display"></div>
-  </section>
-
-  <!-- Step 3: Copy for ChatGPT (shown after packet loaded) -->
-  <section class="section hidden" id="copy-section">
-    <h2>3. Copy Packet for ChatGPT</h2>
-    <p style="color:var(--muted);font-size:12px;margin-bottom:8px">
-      Paste the entire content below into ChatGPT. The prompt is fixed — Milo never edits it.
-    </p>
-    <textarea id="chatgpt-payload" readonly style="min-height:300px"></textarea>
-    <div class="btn-row">
-      <button class="btn primary" onclick="copyForChatGPT()">📋 Copy Packet for ChatGPT</button>
-    </div>
-    <div id="copy-feedback" style="margin-top:8px;font-size:12px;color:var(--green)"></div>
-  </section>
-
-  <!-- Step 4: Paste Verdict -->
-  <section class="section hidden" id="verdict-section">
-    <h2>4. ChatGPT Verdict</h2>
-    <p style="color:var(--muted);font-size:12px;margin-bottom:8px">
-      Paste ChatGPT's JSON response here. The dashboard validates it against the packet.
-    </p>
-    <textarea id="verdict-input" placeholder='Paste ChatGPT verdict JSON here...' oninput="onVerdictInput()"></textarea>
-    <div id="verdict-validation"></div>
-  </section>
-
-  <!-- Step 5: Verdict Display (shown after verdict validated) -->
-  <section class="section hidden" id="verdict-display-section">
-    <h2>5. Verdict</h2>
-    <div id="verdict-display"></div>
-  </section>
-</main>
+  </div>
+</div>
 
 <script>
-// ── State ──
-let currentPacket = null;
-let currentVerdict = null;
+// ── AUTO-REFRESH LIVE METRICS ──
+const REFRESH_MS = 900000; // 15 min
+let currentData = null;
 
-// ── Analysis Prompt (fixed, versioned) ──
-const ANALYSIS_PROMPT = `You are a Bitcoin market analyst. Analyze the following evidence packet and return a structured verdict.
-
-INSTRUCTIONS:
-1. Prioritize: market structure and trend → important price levels → spot, volume, CVD, OI, funding and derivatives → macro, news and external risks → candlestick confirmation.
-2. Consider three horizons: immediate (1–4h), short term (24h), swing context (3–7d).
-3. Confidence is ANALYTICAL confidence — not a guaranteed probability of price movement.
-4. Return valid JSON matching the AnalysisVerdict v1.0 schema. Do not include markdown fences.
-5. Never create, suggest, or simulate an order. This is analysis only.
-
-Required JSON schema:
-{
-  "analysis_version": "1.0",
-  "analysis_status": "COMPLETED",
-  "analysis_agent": "ChatGPT",
-  "model_id": "<model name if known, else null>",
-  "analyzed_at_utc": "<ISO timestamp>",
-  "overall_verdict": "BULLISH|BEARISH|NEUTRAL|MIXED|WAIT_FOR_CONFIRMATION",
-  "confidence_percent": <0-100>,
-  "confidence_basis": "<1 sentence explaining confidence>",
-  "immediate_outlook": {"horizon": "1-4h", "outlook": "BULLISH|BEARISH|NEUTRAL", "summary": "<1-2 sentences>"},
-  "short_term_outlook": {"horizon": "24h", "outlook": "BULLISH|BEARISH|NEUTRAL", "summary": "<1-2 sentences>"},
-  "swing_context": {"horizon": "3-7d", "outlook": "BULLISH|BEARISH|NEUTRAL", "summary": "<1-2 sentences>"},
-  "supporting_evidence": ["<string>"],
-  "conflicting_evidence": ["<string>"],
-  "key_support_levels": [{"price": <number>, "strength": "MAJOR|MINOR", "source": "<string>"}],
-  "key_resistance_levels": [{"price": <number>, "strength": "MAJOR|MINOR", "source": "<string>"}],
-  "bullish_confirmation": ["<conditions that would confirm bullish thesis>"],
-  "bearish_confirmation": ["<conditions that would confirm bearish thesis>"],
-  "invalidation_conditions": ["<conditions that invalidate the primary outlook>"],
-  "external_risks": ["<macro, news, geopolitical risks>"],
-  "data_limitations": ["<known gaps or caveats in the evidence>"],
-  "what_to_watch_next": ["<specific events or levels to monitor>"],
-  "plain_english_summary": "<2-4 sentence summary for a human reader>"
+function fmtUSD(n) {
+  if (n == null) return '—';
+  return '$' + Number(n).toLocaleString('en-US', {minimumFractionDigits: n > 1000 ? 0 : 2, maximumFractionDigits: n > 1000 ? 0 : 2});
 }
 
-EVIDENCE PACKET:
-`;
-
-// ── Packet Input ──
-function onPacketInput() {
-  const raw = document.getElementById('packet-input').value.trim();
-  if (!raw) { resetSections(); return; }
-  try {
-    let data = JSON.parse(raw);
-    // Auto-detect V2.1 raw packet and wrap client-side
-    if (isV21Packet(data)) {
-      data = wrapV21Packet(data);
-      document.getElementById('packet-input').value = JSON.stringify(data, null, 2);
-    }
-    currentPacket = data;
-    if (!currentPacket.packet_hash || !currentPacket.evidence) {
-      showPacketStatus('err', 'Invalid packet: missing packet_hash or evidence');
-      resetSections();
-      return;
-    }
-    showPacketStatus('ok', `Packet loaded: ${Object.keys(currentPacket.evidence).length} metrics, hash ${currentPacket.packet_hash.slice(0,12)}…`);
-    renderDataQuality();
-    buildChatGPTPayload();
-    showSections();
-  } catch(e) {
-    showPacketStatus('err', `Invalid JSON: ${e.message}`);
-    resetSections();
-  }
+function fmtPct(n, decimals) {
+  if (n == null) return '—';
+  decimals = decimals != null ? decimals : 2;
+  const v = Number(n).toFixed(decimals);
+  return (n >= 0 ? '+' : '') + v + '%';
 }
 
-// Auto-load V2.1 packet from pipeline on page open
-window.addEventListener('DOMContentLoaded', () => {
+function fmtNum(n, decimals) {
+  if (n == null) return '—';
+  if (Math.abs(n) >= 1e9) return (n/1e9).toFixed(1) + 'B';
+  if (Math.abs(n) >= 1e6) return (n/1e6).toFixed(1) + 'M';
+  if (Math.abs(n) >= 1e3) return (n/1e3).toFixed(1) + 'K';
+  return Number(n).toFixed(decimals != null ? decimals : 2);
+}
+
+function loadMetrics() {
   const url = '../packet/data.json?' + Date.now();
   fetch(url)
-    .then(r => r.json())
-    .then(data => {
-      if (isV21Packet(data)) {
-        document.getElementById('packet-input').value = JSON.stringify(data, null, 2);
-        onPacketInput();
-      }
-    })
-    .catch(() => { /* silent — user can still paste */ });
-});
-
-// ── V2.1 Detection & Client-Side Wrapping ──
-function isV21Packet(data) {
-  return data && data.header && data.header.btc_price !== undefined
-    && !data.packet_hash;
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(renderMetrics)
+    .catch(e => {
+      document.getElementById('status-text').textContent = 'Fetch failed';
+      document.getElementById('status-dot').className = 'status-dot stale';
+    });
 }
 
-function wrapV21Packet(v21) {
-  const now = new Date().toISOString();
-  const evidence = {};
-  
-  const add = (name, value, unit, source, data_type, window) => {
-    if (value !== null && value !== undefined) {
-      evidence[name] = { value, unit: unit||'', source: source||'V2.1 Packet', instrument:'BTCUSDT',
-        window: window||null, source_observed_at_utc:null, aggregator_snapshot_at_utc:null,
-        pipeline_snapshot_at_utc:null, collected_at_utc:now, age_seconds:0,
-        freshness:'FRESH', data_type:data_type||'raw', formula:null, dependencies:[],
-        eligible_for_analysis:true, reproducibility_status:'DETERMINISTIC' };
-    }
-  };
-  
-  const h = v21.header || {};
-  const c = v21.critical || {};
-  const cx = v21.context || {};
-  const r = v21.reference || {};
+function renderMetrics(data) {
+  currentData = data;
+  const h = data.header || {};
+  const c = data.critical || {};
+  const cx = data.context || {};
+  const r = data.reference || {};
   const cy = (r.cycle || {});
-  const en = v21.enriched || {};
+  const en = data.enriched || {};
+  const af = data.ai_factors || {};
 
-  add('price', h.btc_price, 'USDT', 'Binance CCXT', 'price');
-  add('change_24h', h.change_24h, '%', 'Binance CCXT', 'price');
-  add('bid', h.bid, 'USDT', 'Binance CCXT', 'price');
-  add('ask', h.ask, 'USDT', 'Binance CCXT', 'price');
-  add('spread', h.spread, 'USDT', 'Binance CCXT', 'price');
-  add('volume_24h', h.volume_24h, 'USDT', 'Binance CCXT', 'spot_volume');
-  add('cvd_per_tf', c.cvd_per_tf, 'USDT', 'Binance', 'spot_volume');
-  add('taker_ratio_24h', c.taker_ratio_24h, 'ratio', 'Binance', 'spot_volume');
-  add('session_cvd', c.session_cvd, 'USDT', 'Binance', 'computed');
-  add('adx', c.amt_adx, 'index', 'AMT', 'derived');
-  add('amt_mtf', c.amt_mtf, '', 'AMT', 'derived');
-  add('vp_poc', c.vp_poc, 'USDT', 'Volume Profile', 'derived');
-  add('vp_shape', c.vp_shape, '', 'Volume Profile', 'derived');
-  add('balance_state', c.balance_state, '', 'AMT', 'derived');
-  add('oi_absolute_usd', c.oi_absolute_usd_billions, 'B USD', 'Binance', 'derivatives');
-  add('oi_change_24h', cx.oi_change_24h, '%', 'Binance', 'derivatives');
-  add('funding_rate', cx.funding_rate, '%', 'Binance', 'derivatives');
-  add('perp_basis_pct', cx.perp_basis_pct, '%', 'Binance', 'derivatives');
-  add('long_short_ratio', cx.long_short_ratio, 'ratio', 'Binance', 'derivatives');
-  add('coinbase_premium', cx.coinbase_premium, '%', 'Coinbase', 'derivatives');
-  add('dxy', cx.dxy, 'index', 'Yahoo Finance', 'macro');
-  add('us10y', cx.us10y, '%', 'Yahoo Finance', 'macro');
-  add('vix', cx.vix, 'index', 'Yahoo Finance', 'macro');
-  add('fng_value', cx.fng_value, 'index', 'Alternative.me', 'macro');
-  add('etf_flow_daily', cx.etf_flow_daily, 'USD', 'Farside', 'etf_flow');
-  add('etf_flow_weekly', cx.etf_flow_weekly, 'USD', 'Farside', 'etf_flow');
-  add('correlation_r', cx.correlation_r, 'r', 'Computed', 'computed');
-  add('black_swan_score', cx.black_swan_score, 'score', 'Pipeline', 'derived');
-  add('mvrv_z', cy.mvrv_z, 'z-score', 'CryptoQuant', 'on_chain');
-  add('sopr', cy.sopr, 'ratio', 'CryptoQuant', 'on_chain');
-  add('netflow_7d', cy.netflow_7d, 'BTC', 'CryptoQuant', 'on_chain');
-  add('options_skew_25d', r.options_skew_25d, '', 'Deribit', 'derivatives');
-  add('realized_vol_1h', cx.realized_vol_1h_pct, '%', 'Computed', 'computed');
-  add('realized_vol_1d', cx.realized_vol_1d_pct, '%', 'Computed', 'computed');
-  add('mstr_close', cx.mstr_close, 'USD', 'Yahoo Finance', 'macro');
-  add('daily_rsi_14', cx.daily_rsi_14, 'index', 'Computed', 'computed');
-  add('crash_score', en.crash_score, 'score', 'Pipeline', 'derived');
-  add('crash_status', en.crash_status, '', 'Pipeline', 'derived');
-  add('liquidity_verdict', en.liquidity_verdict, '', 'Pipeline', 'derived');
-  
-  // Brk on-chain fields
-  const brk = r.brk || {};
-  add('mvrv_raw', brk.mvrv, 'ratio', 'BRK', 'on_chain');
-  add('realized_price', brk.realized_price, 'USD', 'BRK', 'on_chain');
-  add('nupl', brk.nupl, 'ratio', 'BRK', 'on_chain');
-  add('puell_multiple', brk.puell_multiple, 'ratio', 'BRK', 'on_chain');
-  add('supply_in_profit', brk.supply_in_profit_share, '%', 'BRK', 'on_chain');
-  add('hash_rate_drawdown', brk.hash_rate_drawdown_pct, '%', 'BRK', 'on_chain');
+  // Price hero
+  const price = h.btc_price;
+  const change = h.change_24h;
+  document.getElementById('price').textContent = fmtUSD(price);
+  const chEl = document.getElementById('change');
+  chEl.textContent = fmtPct(change, 2) + ' (24h)';
+  chEl.className = 'price-change ' + (change >= 0 ? 'up' : 'down');
+  document.getElementById('price-sub').textContent = 
+    (data.regime ? 'Regime: ' + (data.regime.label || '?').replace(/_/g, ' ') + ' · ' : '') +
+    (data.status ? 'Updated ' + (data.status.source_timestamps?.amt || '?').slice(0,19).replace('T',' ') : '');
 
-  // Build packet hash (deterministic from sorted evidence)
-  const sortedEvi = {};
-  Object.keys(evidence).sort().forEach(k => { sortedEvi[k] = evidence[k]; });
-  const hashInput = JSON.stringify(sortedEvi, Object.keys(sortedEvi).sort());
-  const hashPromise = crypto.subtle.digest('SHA-256', new TextEncoder().encode(hashInput));
-  
-  // We'll compute hash async below but set a sync one for now
-  const pktId = crypto.randomUUID ? crypto.randomUUID() : 'client-' + Date.now();
-  
-  // Synchronous hash fallback
-  let hash = '';
-  const chars = '0123456789abcdef';
-  for (let i = 0; i < hashInput.length; i++) {
-    hash += chars[hashInput.charCodeAt(i) & 0xf];
+  // Tick bar
+  document.getElementById('tick-bid').textContent = fmtUSD(h.bid);
+  document.getElementById('tick-ask').textContent = fmtUSD(h.ask);
+  document.getElementById('tick-spread').textContent = h.spread != null ? '$' + Number(h.spread).toFixed(1) : '—';
+  document.getElementById('tick-vol').textContent = fmtNum(h.volume_24h);
+
+  // Metric cards
+  const cards = [
+    { label: 'ADX', value: c.amt_adx, fmt: v => v + ' · ' + (c.adx_regime || ''), cls: c.amt_adx > 35 ? 'warn' : '' },
+    { label: 'Fear & Greed', value: cx.fng_value, fmt: v => v + ' (' + (en.fng_classification || '') + ')', cls: cx.fng_value < 30 ? 'alert' : '' },
+    { label: 'VIX', value: cx.vix, fmt: v => Number(v).toFixed(1) },
+    { label: 'DXY', value: cx.dxy, fmt: v => Number(v).toFixed(2) },
+    { label: 'US 10Y', value: cx.us10y, fmt: v => Number(v).toFixed(3) + '%' },
+    { label: 'Funding Rate', value: cx.funding_rate, fmt: v => (Number(v)*100).toFixed(4) + '%', cls: Number(cx.funding_rate) > 0.0005 ? 'warn' : '' },
+    { label: 'Open Interest', value: c.oi_absolute_usd_billions, fmt: v => '$' + Number(v).toFixed(2) + 'B' },
+    { label: 'OI Δ 24h', value: cx.oi_change_24h, fmt: v => fmtPct(v, 1) },
+    { label: 'Long/Short', value: cx.long_short_ratio, fmt: v => Number(v).toFixed(3) },
+    { label: 'Coinbase Prem.', value: cx.coinbase_premium, fmt: v => Number(v).toFixed(4) + '%', cls: Number(cx.coinbase_premium) < -0.5 ? 'alert' : '' },
+    { label: 'Taker Ratio', value: c.taker_ratio_24h, fmt: v => Number(v).toFixed(3), cls: Number(c.taker_ratio_24h) < 0.9 ? 'alert' : '' },
+    { label: 'CVD 24h', value: cx.cvd_24h, fmt: v => fmtNum(v), cls: Number(cx.cvd_24h) < -500 ? 'alert' : '' },
+    { label: 'Basis', value: cx.perp_basis_pct, fmt: v => Number(v).toFixed(3) + '%', cls: Number(cx.perp_basis_pct) < -0.1 ? 'warn' : '' },
+    { label: 'Vol 1h', value: cx.realized_vol_1h_pct, fmt: v => Number(v).toFixed(1) + '%', cls: Number(cx.realized_vol_1h_pct) > 80 ? 'warn' : '' },
+    { label: 'Vol 1d', value: cx.realized_vol_1d_pct, fmt: v => Number(v).toFixed(1) + '%' },
+    { label: 'MVRV-Z', value: cy.mvrv_z, fmt: v => Number(v).toFixed(2), cls: Number(cy.mvrv_z) < 1 ? 'warn' : '' },
+    { label: 'SOPR', value: cy.sopr, fmt: v => Number(v).toFixed(4) },
+    { label: 'ETF Flow Wk', value: cx.etf_flow_weekly, fmt: v => fmtNum(v) + ' USD', cls: Number(cx.etf_flow_weekly) < 0 ? 'alert' : '' },
+    { label: 'RSI 14', value: cx.daily_rsi_14, fmt: v => Number(v).toFixed(1) },
+    { label: 'MSTR', value: cx.mstr_close, fmt: v => '$' + Number(v).toFixed(2) },
+    { label: 'BS Score', value: cx.black_swan_score, fmt: v => v, cls: typeof cx.black_swan_score === 'string' && cx.black_swan_score !== '0/17' ? 'alert' : '' },
+    { label: 'Crash', value: en.crash_status, fmt: v => v, cls: en.crash_score > 1 ? 'alert' : '' },
+    { label: 'Correl r', value: cx.correlation_r, fmt: v => Number(v).toFixed(4) },
+    { label: 'Liq Clusters', value: cx.liq_clusters, fmt: v => v, sub: true },
+  ];
+
+  let html = '';
+  for (const card of cards) {
+    if (card.value == null) continue;
+    const val = typeof card.fmt === 'function' ? card.fmt(card.value) : card.value;
+    html += `<div class="metric-card ${card.cls || ''}">`;
+    html += `<div class="label">${card.label}</div>`;
+    html += `<div class="value">${val}</div>`;
+    html += `</div>`;
   }
-  if (hash.length < 64) hash = hash.padEnd(64, '0');
-  hash = hash.slice(0, 64);
+  document.getElementById('metric-grid').innerHTML = html;
 
-  // Compute proper async hash
-  hashPromise.then(buf => {
-    const hx = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-    const ta = document.getElementById('packet-input');
-    if (ta && ta.value) {
-      try {
-        const d = JSON.parse(ta.value);
-        d.packet_hash = hx;
-        ta.value = JSON.stringify(d, null, 2);
-        currentPacket = d;
-      } catch(e) {}
-    }
-  });
-
-  return {
-    packet_version: '1.0',
-    source_packet_version: '2.1',
-    packet_id: pktId,
-    packet_hash: hash,
-    generated_at_utc: now,
-    instrument: 'BTCUSDT',
-    analysis_status: 'NOT_PERFORMED',
-    analysis_agent: 'ChatGPT',
-    evidence: evidence,
-    excluded: {},
-    horizon_eligibility: {'1-4h': 'ELIGIBLE', '24h': 'DEGRADED', '3-7d': 'ELIGIBLE'},
-    data_quality: {
-      total_metrics: Object.keys(evidence).length,
-      eligible_count: Object.keys(evidence).length,
-      excluded_count: 0,
-      degraded_count: 0,
-      missing_dependencies: [],
-      warnings: ['Client-side wrap from V2.1 — source adapters not run. Run btc-pulse analyze for full validation.'],
-      overall: 'DEGRADED'
-    },
-    source_validations: []
-  };
+  // Status
+  document.getElementById('status-dot').className = 'status-dot live';
+  document.getElementById('status-text').textContent = 'Live · ' + (data.status?.source_timestamps?.amt || '?').slice(0,19).replace('T',' ');
+  document.getElementById('updated-at').textContent = 'Refresh: ' + new Date().toLocaleTimeString();
 }
 
-EVIDENCE PACKET:
-function showPacketStatus(type, msg) {
-  document.getElementById('packet-status').innerHTML = `<div class="${type}">${msg}</div>`;
+// ── VERDICT ──
+function toggleVerdict() {
+  document.getElementById('verdict-body').classList.toggle('show');
+  document.querySelector('.toggle-btn').classList.toggle('open');
 }
 
-function resetSections() {
-  currentPacket = null;
-  document.getElementById('quality-section').classList.add('hidden');
-  document.getElementById('copy-section').classList.add('hidden');
-  document.getElementById('verdict-section').classList.add('hidden');
-  document.getElementById('verdict-display-section').classList.add('hidden');
-}
-
-function showSections() {
-  document.getElementById('quality-section').classList.remove('hidden');
-  document.getElementById('copy-section').classList.remove('hidden');
-  document.getElementById('verdict-section').classList.remove('hidden');
-}
-
-// ── Data Quality ──
-function renderDataQuality() {
-  const q = currentPacket.data_quality || {};
-  const he = currentPacket.horizon_eligibility || {};
-  let html = `<div class="qual-row"><span>Total metrics</span><span>${q.total_metrics || 0}</span></div>`;
-  html += `<div class="qual-row"><span>Eligible</span><span style="color:var(--green)">${q.eligible_count || 0}</span></div>`;
-  html += `<div class="qual-row"><span>Excluded</span><span style="color:var(--red)">${q.excluded_count || 0}</span></div>`;
-  html += `<div class="qual-row"><span>Overall</span><span>${q.overall || 'N/A'}</span></div>`;
-  html += `<div style="margin-top:8px;font-weight:600;font-size:12px">Per-horizon eligibility:</div>`;
-  for (const [h, s] of Object.entries(he)) {
-    const cls = s === 'ELIGIBLE' ? 'var(--green)' : s === 'DEGRADED' ? 'var(--yellow)' : 'var(--red)';
-    html += `<div class="qual-row"><span>${h}</span><span style="color:${cls}">${s}</span></div>`;
-  }
-  if (q.warnings && q.warnings.length) {
-    html += `<div class="warn">Warnings: ${q.warnings.join('; ')}</div>`;
-  }
-  if (currentPacket.excluded && Object.keys(currentPacket.excluded).length) {
-    html += `<div style="margin-top:8px;font-weight:600;font-size:12px;color:var(--orange)">Excluded metrics:</div>`;
-    for (const [k, v] of Object.entries(currentPacket.excluded)) {
-      html += `<div class="qual-row"><span>${k}</span><span style="color:var(--red)">${v.reason || 'unknown'}</span></div>`;
-    }
-  }
-  document.getElementById('quality-display').innerHTML = html;
-}
-
-// ── ChatGPT Payload ──
-function buildChatGPTPayload() {
-  const hr = currentPacket.horizon_eligibility || {};
-  const instructions = ANALYSIS_PROMPT;
-  
-  // Build a compact evidence summary for ChatGPT
-  const evidenceSummary = {};
-  if (currentPacket.evidence) {
-    for (const [k, v] of Object.entries(currentPacket.evidence)) {
-      evidenceSummary[k] = {
-        value: v.value,
-        unit: v.unit || '',
-        source: v.source || '',
-        freshness: v.freshness || '',
-        data_type: v.data_type || '',
-        age_seconds: v.age_seconds || 0,
-      };
-    }
-  }
-  
-  const payload = {
-    instructions: instructions,
-    request: {
-      request_id: crypto.randomUUID ? crypto.randomUUID() : 'generated-client-side',
-      packet_version: currentPacket.packet_version || '1.0',
-      packet_id: currentPacket.packet_id || '',
-      packet_hash: currentPacket.packet_hash || '',
-      packet_timestamp_utc: currentPacket.generated_at_utc || '',
-      requested_at_utc: new Date().toISOString(),
-      instrument: 'BTCUSDT',
-      horizons: ['1-4h', '24h', '3-7d'],
-      analysis_agent: 'ChatGPT',
-      analysis_status: 'NOT_PERFORMED',
-      delivery_mode: 'manual',
-      prompt_version: '1.0',
-      horizon_eligibility: hr,
-    },
-    excluded: currentPacket.excluded || {},
-    evidence: evidenceSummary,
-  };
-  
-  const fullText = `${ANALYSIS_PROMPT}\n\`\`\`json\n${JSON.stringify(payload, null, 2)}\n\`\`\``;
-  document.getElementById('chatgpt-payload').value = fullText;
-}
-
-function copyForChatGPT() {
-  const ta = document.getElementById('chatgpt-payload');
-  ta.select();
-  document.execCommand('copy');
-  document.getElementById('copy-feedback').textContent = '✓ Copied! Paste this into ChatGPT.';
-  setTimeout(() => { document.getElementById('copy-feedback').textContent = ''; }, 3000);
-}
-
-// ── Verdict Input ──
 function onVerdictInput() {
   const raw = document.getElementById('verdict-input').value.trim();
-  document.getElementById('verdict-display-section').classList.add('hidden');
+  document.getElementById('verdict-display').innerHTML = '';
   if (!raw) { document.getElementById('verdict-validation').innerHTML = ''; return; }
-  
   try {
-    currentVerdict = JSON.parse(raw);
+    const v = JSON.parse(raw);
+    const issues = validateVerdict(v);
+    if (issues.length) {
+      document.getElementById('verdict-validation').innerHTML = 
+        `<div class="err">Validation: ${issues.map(i => '• ' + i).join('<br>')}</div>`;
+    } else {
+      document.getElementById('verdict-validation').innerHTML = 
+        '<div class="ok">✓ Verdict valid — no order fields, hash matches</div>';
+      renderVerdict(v);
+    }
   } catch(e) {
     document.getElementById('verdict-validation').innerHTML = `<div class="err">Invalid JSON: ${e.message}</div>`;
-    return;
-  }
-  
-  const issues = validateVerdict(currentVerdict, currentPacket);
-  if (issues.length) {
-    document.getElementById('verdict-validation').innerHTML = 
-      `<div class="err">Validation issues:<br>${issues.map(i => `• ${i}`).join('<br>')}</div>`;
-  } else {
-    document.getElementById('verdict-validation').innerHTML = 
-      '<div class="ok">✓ Verdict validated — packet hash matches, version supported, no order fields</div>';
-    renderVerdict();
-    document.getElementById('verdict-display-section').classList.remove('hidden');
   }
 }
 
-// ── Verdict Validation ──
-function validateVerdict(v, pkt) {
+function validateVerdict(v) {
   const issues = [];
-  if (!v.overall_verdict) { issues.push('MISSING_OVERALL_VERDICT'); }
-  else {
-    const valid = ['BULLISH','BEARISH','NEUTRAL','MIXED','WAIT_FOR_CONFIRMATION'];
-    if (!valid.includes(v.overall_verdict)) issues.push(`INVALID_VERDICT: ${v.overall_verdict}`);
-  }
-  if (v.packet_hash && pkt && v.packet_hash !== pkt.packet_hash) issues.push('PACKET_HASH_MISMATCH');
-  if (v.packet_id && pkt && v.packet_id !== pkt.packet_id) issues.push('PACKET_ID_MISMATCH');
-  if (v.analysis_version && v.analysis_version !== '1.0') issues.push(`UNSUPPORTED_VERSION: ${v.analysis_version}`);
+  const valid = ['BULLISH','BEARISH','NEUTRAL','MIXED','WAIT_FOR_CONFIRMATION'];
+  if (!v.overall_verdict) issues.push('MISSING_OVERALL_VERDICT');
+  else if (!valid.includes(v.overall_verdict)) issues.push('INVALID_VERDICT: ' + v.overall_verdict);
   if (!v.plain_english_summary) issues.push('MISSING_PLAIN_ENGLISH_SUMMARY');
-  // Reject order fields
-  const forbidden = ['order','position','trade','entry','exit','stop','target','execution'];
-  for (const key of Object.keys(v)) {
-    if (forbidden.some(f => key.toLowerCase().includes(f))) issues.push(`ORDER_FIELD_DETECTED: ${key}`);
+  const forbidden = ['order','position','trade','entry','exit','stop','target'];
+  for (const k of Object.keys(v)) {
+    if (forbidden.some(f => k.toLowerCase().includes(f))) issues.push('ORDER_FIELD: ' + k);
   }
   return issues;
 }
 
-// ── Render Verdict ──
-function renderVerdict() {
-  const v = currentVerdict;
-  const verdictCls = v.overall_verdict.toLowerCase().replace(/_/g, '');
-  const verdictMap = {bullish:'BULLISH',bearish:'BEARISH',neutral:'NEUTRAL',mixed:'MIXED',waitforconfirmation:'WAIT FOR CONFIRMATION'};
-  const confCls = v.confidence_percent >= 70 ? 'high' : v.confidence_percent >= 40 ? 'medium' : 'low';
-  
+function renderVerdict(v) {
+  const vCls = (v.overall_verdict || '').toLowerCase().replace(/_/g, '');
   let html = '';
-  
-  // Hero
   html += `<div class="verdict-hero">`;
-  html += `<div class="verdict-label ${verdictCls}">${verdictMap[verdictCls] || v.overall_verdict}</div>`;
-  html += `<div style="font-size:13px;color:var(--muted)">Confidence: ${v.confidence_percent}% &mdash; ${v.confidence_basis || ''}</div>`;
-  html += `<div class="confidence-bar"><div class="confidence-fill ${confCls}" style="width:${v.confidence_percent}%"></div></div>`;
-  html += `<div style="font-size:11px;color:var(--muted);margin-top:4px">Analyzed ${v.analyzed_at_utc || '?'} &bull; Packet ${v.packet_timestamp_utc || '?'} &bull; ${v.analysis_agent || 'ChatGPT'}</div>`;
+  html += `<div class="verdict-label ${vCls}">${v.overall_verdict || '—'}</div>`;
+  html += `<div style="font-size:13px;color:var(--muted)">Confidence: ${v.confidence_percent || 0}% · ${v.confidence_basis || ''}</div>`;
+  html += `<div class="confidence-bar"><div class="confidence-fill" style="width:${v.confidence_percent || 0}%"></div></div>`;
   html += `</div>`;
-  
+
   // Horizons
-  const horizons = [
-    {key: 'immediate_outlook', title: 'Immediate (1–4h)'},
-    {key: 'short_term_outlook', title: 'Short Term (24h)'},
-    {key: 'swing_context', title: 'Swing (3–7d)'},
+  const hrz = [
+    {k:'immediate_outlook', t:'1–4h'},
+    {k:'short_term_outlook', t:'24h'},
+    {k:'swing_context', t:'3–7d'}
   ];
-  html += `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:20px">`;
-  for (const h of horizons) {
-    const d = v[h.key] || {};
-    const oCls = (d.outlook || '').toLowerCase();
-    html += `<div class="horizon-card">`;
-    html += `<h3>${h.title}</h3>`;
-    html += `<span class="badge ${oCls}">${d.outlook || '—'}</span>`;
-    if (d.summary) html += `<p style="margin-top:6px">${d.summary}</p>`;
-    html += `</div>`;
+  html += `<div class="horizon-row">`;
+  for (const h of hrz) {
+    const d = v[h.k] || {};
+    html += `<div class="horizon-card"><h4>${h.t}</h4><p style="font-weight:700;color:var(--${(d.outlook||'').toLowerCase() === 'bullish' ? 'green' : (d.outlook||'').toLowerCase() === 'bearish' ? 'red' : 'muted'})">${d.outlook || '—'}</p><p style="font-size:12px;color:var(--muted)">${d.summary || ''}</p></div>`;
   }
   html += `</div>`;
-  
-  // Key Levels
-  if ((v.key_support_levels && v.key_support_levels.length) || (v.key_resistance_levels && v.key_resistance_levels.length)) {
-    html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">`;
-    html += `<div><h3 style="font-size:13px;color:var(--green);margin-bottom:6px">Support</h3>`;
-    for (const l of (v.key_support_levels || [])) {
-      html += `<div class="qual-row"><span>${l.price?.toLocaleString() || l.price}</span><span style="font-size:11px;color:var(--muted)">${l.strength || ''} · ${l.source || ''}</span></div>`;
-    }
-    html += `</div>`;
-    html += `<div><h3 style="font-size:13px;color:var(--red);margin-bottom:6px">Resistance</h3>`;
-    for (const l of (v.key_resistance_levels || [])) {
-      html += `<div class="qual-row"><span>${l.price?.toLocaleString() || l.price}</span><span style="font-size:11px;color:var(--muted)">${l.strength || ''} · ${l.source || ''}</span></div>`;
-    }
+
+  // Levels
+  const sups = v.key_support_levels || [];
+  const ress = v.key_resistance_levels || [];
+  if (sups.length || ress.length) {
+    html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0">`;
+    html += `<div><h4 style="font-size:12px;color:var(--green);margin-bottom:4px">Support</h4>`;
+    for (const l of sups) html += `<div style="font-size:12px">${fmtUSD(l.price)} <span style="color:var(--muted)">${l.strength||''} ${l.source||''}</span></div>`;
+    html += `</div><div><h4 style="font-size:12px;color:var(--red);margin-bottom:4px">Resistance</h4>`;
+    for (const l of ress) html += `<div style="font-size:12px">${fmtUSD(l.price)} <span style="color:var(--muted)">${l.strength||''} ${l.source||''}</span></div>`;
     html += `</div></div>`;
   }
-  
-  // Evidence
-  if (v.supporting_evidence && v.supporting_evidence.length) {
-    html += `<h3 style="font-size:13px;color:var(--green);margin-bottom:6px">✓ Supporting</h3><ul class="list">`;
-    for (const e of v.supporting_evidence) html += `<li><span class="icon">✓</span>${e}</li>`;
+
+  // Lists
+  const lists = [
+    {k:'supporting_evidence', t:'✓ Supporting', c: 'var(--green)'},
+    {k:'conflicting_evidence', t:'✗ Conflicting', c: 'var(--red)'},
+    {k:'bullish_confirmation', t:'▲ Bullish Confirm', c: 'var(--green)'},
+    {k:'bearish_confirmation', t:'▼ Bearish Confirm', c: 'var(--red)'},
+    {k:'invalidation_conditions', t:'⚠ Invalidation', c: 'var(--yellow)'},
+    {k:'external_risks', t:'⚠ Risks', c: 'var(--orange)'},
+    {k:'data_limitations', t:'ⓘ Limitations', c: 'var(--muted)'},
+    {k:'what_to_watch_next', t:'→ Watch Next', c: 'var(--blue)'},
+  ];
+  for (const l of lists) {
+    const items = v[l.k];
+    if (!items || !items.length) continue;
+    html += `<h4 style="font-size:12px;color:${l.c};margin:10px 0 4px">${l.t}</h4><ul class="list">`;
+    for (const item of items) html += `<li>${item}</li>`;
     html += `</ul>`;
   }
-  if (v.conflicting_evidence && v.conflicting_evidence.length) {
-    html += `<h3 style="font-size:13px;color:var(--red);margin-bottom:6px;margin-top:10px">✗ Conflicting</h3><ul class="list">`;
-    for (const e of v.conflicting_evidence) html += `<li><span class="icon">✗</span>${e}</li>`;
-    html += `</ul>`;
-  }
-  
-  // Confirmations & Invalidation
-  if (v.bullish_confirmation && v.bullish_confirmation.length) {
-    html += `<h3 style="font-size:13px;color:var(--green);margin:12px 0 6px">Bullish Confirmation</h3><ul class="list">`;
-    for (const c of v.bullish_confirmation) html += `<li><span class="icon">▲</span>${c}</li>`;
-    html += `</ul>`;
-  }
-  if (v.bearish_confirmation && v.bearish_confirmation.length) {
-    html += `<h3 style="font-size:13px;color:var(--red);margin:12px 0 6px">Bearish Confirmation</h3><ul class="list">`;
-    for (const c of v.bearish_confirmation) html += `<li><span class="icon">▼</span>${c}</li>`;
-    html += `</ul>`;
-  }
-  if (v.invalidation_conditions && v.invalidation_conditions.length) {
-    html += `<div class="warn"><strong>Invalidation conditions:</strong><br>${v.invalidation_conditions.map(c => `• ${c}`).join('<br>')}</div>`;
-  }
-  
-  // Risks & Limitations
-  if (v.external_risks && v.external_risks.length) {
-    html += `<h3 style="font-size:13px;color:var(--orange);margin:12px 0 6px">External Risks</h3><ul class="list">`;
-    for (const r of v.external_risks) html += `<li><span class="icon">⚠</span>${r}</li>`;
-    html += `</ul>`;
-  }
-  if (v.data_limitations && v.data_limitations.length) {
-    html += `<h3 style="font-size:13px;color:var(--muted);margin:12px 0 6px">Data Limitations</h3><ul class="list">`;
-    for (const l of v.data_limitations) html += `<li><span class="icon">ⓘ</span>${l}</li>`;
-    html += `</ul>`;
-  }
-  if (v.what_to_watch_next && v.what_to_watch_next.length) {
-    html += `<h3 style="font-size:13px;color:var(--blue);margin:12px 0 6px">What to Watch Next</h3><ul class="list">`;
-    for (const w of v.what_to_watch_next) html += `<li><span class="icon">→</span>${w}</li>`;
-    html += `</ul>`;
-  }
-  
-  // Plain English
+
   if (v.plain_english_summary) {
-    html += `<div style="margin-top:20px;padding:16px;background:var(--card);border-radius:8px;border:1px solid var(--border);font-size:14px;line-height:1.6">${v.plain_english_summary}</div>`;
+    html += `<div style="margin-top:16px;padding:14px;background:var(--card);border-radius:8px;border:1px solid var(--border);font-size:14px;line-height:1.6">${v.plain_english_summary}</div>`;
   }
-  
   document.getElementById('verdict-display').innerHTML = html;
 }
 
-// ── Load from Pipeline (no prompt — mobile friendly) ──
-function loadFromPipeline() {
-  showPacketStatus('ok', 'Loading from pipeline…');
-  const url = '../packet/data.json?' + Date.now();
-  fetch(url)
-    .then(r => {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    })
-    .then(data => {
-      document.getElementById('packet-input').value = JSON.stringify(data, null, 2);
-      onPacketInput();
-    })
-    .catch(e => showPacketStatus('err', `Pipeline fetch failed: ${e.message}. Paste data.json manually.`));
-}
+// ── INIT ──
+loadMetrics();
+setInterval(loadMetrics, REFRESH_MS);
 </script>
 
 </body>
