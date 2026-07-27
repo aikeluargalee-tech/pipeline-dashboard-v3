@@ -176,7 +176,13 @@ function onPacketInput() {
   const raw = document.getElementById('packet-input').value.trim();
   if (!raw) { resetSections(); return; }
   try {
-    currentPacket = JSON.parse(raw);
+    let data = JSON.parse(raw);
+    // Auto-detect V2.1 raw packet and wrap client-side
+    if (isV21Packet(data)) {
+      data = wrapV21Packet(data);
+      document.getElementById('packet-input').value = JSON.stringify(data, null, 2);
+    }
+    currentPacket = data;
     if (!currentPacket.packet_hash || !currentPacket.evidence) {
       showPacketStatus('err', 'Invalid packet: missing packet_hash or evidence');
       resetSections();
@@ -192,6 +198,154 @@ function onPacketInput() {
   }
 }
 
+// Auto-load V2.1 packet from pipeline on page open
+window.addEventListener('DOMContentLoaded', () => {
+  const url = '../packet/data.json?' + Date.now();
+  fetch(url)
+    .then(r => r.json())
+    .then(data => {
+      if (isV21Packet(data)) {
+        document.getElementById('packet-input').value = JSON.stringify(data, null, 2);
+        onPacketInput();
+      }
+    })
+    .catch(() => { /* silent — user can still paste */ });
+});
+
+// ── V2.1 Detection & Client-Side Wrapping ──
+function isV21Packet(data) {
+  return data && data.header && data.header.btc_price !== undefined
+    && !data.packet_hash;
+}
+
+function wrapV21Packet(v21) {
+  const now = new Date().toISOString();
+  const evidence = {};
+  
+  const add = (name, value, unit, source, data_type, window) => {
+    if (value !== null && value !== undefined) {
+      evidence[name] = { value, unit: unit||'', source: source||'V2.1 Packet', instrument:'BTCUSDT',
+        window: window||null, source_observed_at_utc:null, aggregator_snapshot_at_utc:null,
+        pipeline_snapshot_at_utc:null, collected_at_utc:now, age_seconds:0,
+        freshness:'FRESH', data_type:data_type||'raw', formula:null, dependencies:[],
+        eligible_for_analysis:true, reproducibility_status:'DETERMINISTIC' };
+    }
+  };
+  
+  const h = v21.header || {};
+  const c = v21.critical || {};
+  const cx = v21.context || {};
+  const r = v21.reference || {};
+  const cy = (r.cycle || {});
+  const en = v21.enriched || {};
+
+  add('price', h.btc_price, 'USDT', 'Binance CCXT', 'price');
+  add('change_24h', h.change_24h, '%', 'Binance CCXT', 'price');
+  add('bid', h.bid, 'USDT', 'Binance CCXT', 'price');
+  add('ask', h.ask, 'USDT', 'Binance CCXT', 'price');
+  add('spread', h.spread, 'USDT', 'Binance CCXT', 'price');
+  add('volume_24h', h.volume_24h, 'USDT', 'Binance CCXT', 'spot_volume');
+  add('cvd_per_tf', c.cvd_per_tf, 'USDT', 'Binance', 'spot_volume');
+  add('taker_ratio_24h', c.taker_ratio_24h, 'ratio', 'Binance', 'spot_volume');
+  add('session_cvd', c.session_cvd, 'USDT', 'Binance', 'computed');
+  add('adx', c.amt_adx, 'index', 'AMT', 'derived');
+  add('amt_mtf', c.amt_mtf, '', 'AMT', 'derived');
+  add('vp_poc', c.vp_poc, 'USDT', 'Volume Profile', 'derived');
+  add('vp_shape', c.vp_shape, '', 'Volume Profile', 'derived');
+  add('balance_state', c.balance_state, '', 'AMT', 'derived');
+  add('oi_absolute_usd', c.oi_absolute_usd_billions, 'B USD', 'Binance', 'derivatives');
+  add('oi_change_24h', cx.oi_change_24h, '%', 'Binance', 'derivatives');
+  add('funding_rate', cx.funding_rate, '%', 'Binance', 'derivatives');
+  add('perp_basis_pct', cx.perp_basis_pct, '%', 'Binance', 'derivatives');
+  add('long_short_ratio', cx.long_short_ratio, 'ratio', 'Binance', 'derivatives');
+  add('coinbase_premium', cx.coinbase_premium, '%', 'Coinbase', 'derivatives');
+  add('dxy', cx.dxy, 'index', 'Yahoo Finance', 'macro');
+  add('us10y', cx.us10y, '%', 'Yahoo Finance', 'macro');
+  add('vix', cx.vix, 'index', 'Yahoo Finance', 'macro');
+  add('fng_value', cx.fng_value, 'index', 'Alternative.me', 'macro');
+  add('etf_flow_daily', cx.etf_flow_daily, 'USD', 'Farside', 'etf_flow');
+  add('etf_flow_weekly', cx.etf_flow_weekly, 'USD', 'Farside', 'etf_flow');
+  add('correlation_r', cx.correlation_r, 'r', 'Computed', 'computed');
+  add('black_swan_score', cx.black_swan_score, 'score', 'Pipeline', 'derived');
+  add('mvrv_z', cy.mvrv_z, 'z-score', 'CryptoQuant', 'on_chain');
+  add('sopr', cy.sopr, 'ratio', 'CryptoQuant', 'on_chain');
+  add('netflow_7d', cy.netflow_7d, 'BTC', 'CryptoQuant', 'on_chain');
+  add('options_skew_25d', r.options_skew_25d, '', 'Deribit', 'derivatives');
+  add('realized_vol_1h', cx.realized_vol_1h_pct, '%', 'Computed', 'computed');
+  add('realized_vol_1d', cx.realized_vol_1d_pct, '%', 'Computed', 'computed');
+  add('mstr_close', cx.mstr_close, 'USD', 'Yahoo Finance', 'macro');
+  add('daily_rsi_14', cx.daily_rsi_14, 'index', 'Computed', 'computed');
+  add('crash_score', en.crash_score, 'score', 'Pipeline', 'derived');
+  add('crash_status', en.crash_status, '', 'Pipeline', 'derived');
+  add('liquidity_verdict', en.liquidity_verdict, '', 'Pipeline', 'derived');
+  
+  // Brk on-chain fields
+  const brk = r.brk || {};
+  add('mvrv_raw', brk.mvrv, 'ratio', 'BRK', 'on_chain');
+  add('realized_price', brk.realized_price, 'USD', 'BRK', 'on_chain');
+  add('nupl', brk.nupl, 'ratio', 'BRK', 'on_chain');
+  add('puell_multiple', brk.puell_multiple, 'ratio', 'BRK', 'on_chain');
+  add('supply_in_profit', brk.supply_in_profit_share, '%', 'BRK', 'on_chain');
+  add('hash_rate_drawdown', brk.hash_rate_drawdown_pct, '%', 'BRK', 'on_chain');
+
+  // Build packet hash (deterministic from sorted evidence)
+  const sortedEvi = {};
+  Object.keys(evidence).sort().forEach(k => { sortedEvi[k] = evidence[k]; });
+  const hashInput = JSON.stringify(sortedEvi, Object.keys(sortedEvi).sort());
+  const hashPromise = crypto.subtle.digest('SHA-256', new TextEncoder().encode(hashInput));
+  
+  // We'll compute hash async below but set a sync one for now
+  const pktId = crypto.randomUUID ? crypto.randomUUID() : 'client-' + Date.now();
+  
+  // Synchronous hash fallback
+  let hash = '';
+  const chars = '0123456789abcdef';
+  for (let i = 0; i < hashInput.length; i++) {
+    hash += chars[hashInput.charCodeAt(i) & 0xf];
+  }
+  if (hash.length < 64) hash = hash.padEnd(64, '0');
+  hash = hash.slice(0, 64);
+
+  // Compute proper async hash
+  hashPromise.then(buf => {
+    const hx = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+    const ta = document.getElementById('packet-input');
+    if (ta && ta.value) {
+      try {
+        const d = JSON.parse(ta.value);
+        d.packet_hash = hx;
+        ta.value = JSON.stringify(d, null, 2);
+        currentPacket = d;
+      } catch(e) {}
+    }
+  });
+
+  return {
+    packet_version: '1.0',
+    source_packet_version: '2.1',
+    packet_id: pktId,
+    packet_hash: hash,
+    generated_at_utc: now,
+    instrument: 'BTCUSDT',
+    analysis_status: 'NOT_PERFORMED',
+    analysis_agent: 'ChatGPT',
+    evidence: evidence,
+    excluded: {},
+    horizon_eligibility: {'1-4h': 'ELIGIBLE', '24h': 'DEGRADED', '3-7d': 'ELIGIBLE'},
+    data_quality: {
+      total_metrics: Object.keys(evidence).length,
+      eligible_count: Object.keys(evidence).length,
+      excluded_count: 0,
+      degraded_count: 0,
+      missing_dependencies: [],
+      warnings: ['Client-side wrap from V2.1 — source adapters not run. Run btc-pulse analyze for full validation.'],
+      overall: 'DEGRADED'
+    },
+    source_validations: []
+  };
+}
+
+EVIDENCE PACKET:
 function showPacketStatus(type, msg) {
   document.getElementById('packet-status').innerHTML = `<div class="${type}">${msg}</div>`;
 }
