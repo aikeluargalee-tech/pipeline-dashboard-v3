@@ -102,6 +102,16 @@
   <!-- Metric Grid -->
   <div class="metric-grid" id="metric-grid"></div>
 
+  <!-- Text Packet for ChatGPT -->
+  <div style="margin-bottom:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <h2 style="font-size:1rem;font-weight:700;color:var(--muted);margin:0;text-transform:uppercase;letter-spacing:.05em">Text Packet (Copy to ChatGPT)</h2>
+      <button class="btn primary" onclick="copyTextPacket()" style="font-size:12px;padding:6px 14px">📋 Copy</button>
+    </div>
+    <pre id="text-packet" style="background:var(--card-solid);border:1px solid var(--border);border-radius:8px;color:var(--text);font:12px 'JetBrains Mono',monospace;padding:14px;white-space:pre-wrap;word-break:break-word;max-height:400px;overflow-y:auto;line-height:1.5">Loading…</pre>
+    <div id="copy-msg" style="margin-top:6px;font-size:12px;color:var(--green)"></div>
+  </div>
+
   <!-- Status Bar -->
   <div class="status-bar">
     <div><span class="status-dot live" id="status-dot"></span><span id="status-text">Loading…</span></div>
@@ -231,6 +241,7 @@ function renderMetrics(data) {
   document.getElementById('status-dot').className = 'status-dot live';
   document.getElementById('status-text').textContent = 'Live · ' + (data.status?.source_timestamps?.amt || '?').slice(0,19).replace('T',' ');
   document.getElementById('updated-at').textContent = 'Refresh: ' + new Date().toLocaleTimeString();
+  document.getElementById('text-packet').textContent = buildTextPacket();
 }
 
 // ── VERDICT ──
@@ -329,6 +340,139 @@ function renderVerdict(v) {
     html += `<div style="margin-top:16px;padding:14px;background:var(--card);border-radius:8px;border:1px solid var(--border);font-size:14px;line-height:1.6">${v.plain_english_summary}</div>`;
   }
   document.getElementById('verdict-display').innerHTML = html;
+}
+
+// ── TEXT PACKET FOR CHATGPT ──
+function buildTextPacket() {
+  if (!currentData) return 'No data loaded.';
+
+  const d = currentData;
+  const h = d.header || {};
+  const c = d.critical || {};
+  const cx = d.context || {};
+  const r = d.reference || {};
+  const cy = (r.cycle || {});
+  const en = d.enriched || {};
+  const rg = d.regime || {};
+  const af = d.ai_factors || {};
+
+  const lines = [];
+
+  lines.push('BTC ANALYSIS PACKET — ' + (d.header?.generated_timestamp || new Date().toISOString()));
+  lines.push('═══════════════════════════════════════');
+  lines.push('');
+
+  // Price
+  lines.push('[PRICE]');
+  lines.push('BTC/USDT: ' + fmtUSD(h.btc_price) + ' | 24h: ' + fmtPct(h.change_24h, 2));
+  lines.push('Bid: ' + fmtUSD(h.bid) + ' | Ask: ' + fmtUSD(h.ask) + ' | Spread: $' + Number(h.spread||0).toFixed(1));
+  lines.push('Volume 24h: ' + fmtNum(h.volume_24h));
+  lines.push('');
+
+  // Market Structure
+  lines.push('[MARKET STRUCTURE]');
+  lines.push('ADX: ' + (c.amt_adx||'?') + ' | Regime: ' + (c.adx_regime||'?'));
+  lines.push('MTF: ' + (c.amt_mtf||'?'));
+  lines.push('VP POC: ' + fmtUSD(c.vp_poc) + ' | Shape: ' + (c.vp_shape||'?') + ' | State: ' + (c.vp_state||'?'));
+  lines.push('Balance: ' + (c.balance_state||'?') + ' (' + (c.balance_width_pct||'?') + '%)');
+  lines.push('Regime: ' + (rg.label||'?').replace(/_/g,' ') + ' | Confidence: ' + (rg.confidence||'?'));
+  lines.push('');
+
+  // Spot
+  lines.push('[SPOT]');
+  lines.push('CVD 1D: ' + fmtNum(c.cvd_per_tf?.['1D']||0) + ' | 4H: ' + fmtNum(c.cvd_per_tf?.['4H']||0) + ' | 1H: ' + fmtNum(c.cvd_per_tf?.['1H']||0));
+  lines.push('Session CVD: ' + fmtNum(c.session_cvd||0));
+  lines.push('Taker Ratio 24h: ' + (c.taker_ratio_24h||'?'));
+  lines.push('Delta Sum (6C): ' + fmtNum(c.delta_sum_6||0) + ' | Trend: ' + (c.delta_trend||'?'));
+  lines.push('Order Book Top5 Bids: ' + (h.bid||'') + ' | Asks: ' + (h.ask||''));
+  lines.push('');
+
+  // Derivatives
+  lines.push('[DERIVATIVES]');
+  lines.push('OI: $' + (c.oi_absolute_usd_billions||'?') + 'B | Δ24h: ' + (cx.oi_change_24h||'?') + '%');
+  lines.push('OI TF: 1D ' + (c.oi_per_tf?.['1D']||'?') + ' | 4H ' + (c.oi_per_tf?.['4H']||'?') + ' | 1H ' + (c.oi_per_tf?.['1H']||'?'));
+  lines.push('Funding: ' + ((cx.funding_rate||0)*100).toFixed(5) + '% | Basis: ' + (cx.perp_basis_pct||'?') + '%');
+  lines.push('Long/Short: ' + (cx.long_short_ratio||'?'));
+  lines.push('Coinbase Premium: ' + (cx.coinbase_premium||'?') + '%');
+  lines.push('Options Skew 25Δ: ' + (r.options_skew_25d||'?'));
+  lines.push('');
+
+  // Macro
+  lines.push('[MACRO]');
+  lines.push('DXY: ' + (cx.dxy||'?') + ' | US10Y: ' + (cx.us10y||'?') + '% | VIX: ' + (cx.vix||'?'));
+  lines.push('F&G: ' + (cx.fng_value||'?') + ' (' + (en.fng_classification||'?') + ')');
+  lines.push('SPY/QQQ: ' + (cx.equities||'?'));
+  lines.push('ETF Flow Daily: ' + fmtNum(cx.etf_flow_daily) + ' | Weekly: ' + fmtNum(cx.etf_flow_weekly));
+  lines.push('BTC-SPY Correl: ' + (cx.correlation_r||'?'));
+  lines.push('MSTR: $' + (cx.mstr_close||'?') + ' | USDJPY: ' + (cx.usdjpy||'?'));
+  lines.push('Black Swan: ' + (cx.black_swan_score||'?') + ' | Crash: ' + (en.crash_score||'?') + ' (' + (en.crash_status||'?') + ')');
+  lines.push('Realized Vol: 1h ' + (cx.realized_vol_1h_pct||'?') + '% | 1d ' + (cx.realized_vol_1d_pct||'?') + '%');
+  lines.push('');
+
+  // On-Chain
+  const brk = r.brk || {};
+  lines.push('[ON-CHAIN]');
+  lines.push('MVRV: ' + (brk.mvrv||'?') + ' | MVRV-Z: ' + (cy.mvrv_z||'?') + ' | SOPR: ' + (cy.sopr||'?'));
+  lines.push('Realized Price: ' + fmtUSD(brk.realized_price));
+  lines.push('NUPL: ' + (brk.nupl||'?') + ' | Puell: ' + (brk.puell_multiple||'?'));
+  lines.push('LTH-SOPR: ' + (brk.lth_sopr_24h||'?') + ' | STH-SOPR: ' + (brk.sth_sopr_24h||'?'));
+  lines.push('Supply in Profit: ' + (brk.supply_in_profit_share||'?') + '%');
+  lines.push('Hashrate Drawdown: ' + (brk.hash_rate_drawdown_pct||'?') + '%');
+  lines.push('Netflow 7d: ' + fmtNum(cy.netflow_7d) + ' BTC');
+  lines.push('RSI 14: ' + (cx.daily_rsi_14||'?'));
+  lines.push('');
+
+  // Liquidation
+  lines.push('[LIQUIDATION]');
+  lines.push((cx.liq_clusters||'none'));
+  lines.push('');
+
+  // AI Factors
+  lines.push('[AI FACTORS]');
+  lines.push('S9 VIX: ' + (af.s9_vix_roc?.label||'?') + ' | S10 US10Y: ' + (af.s10_us10y_roc?.label||'?') + ' | S11 Vol: ' + (af.s11_volume_anomaly?.label||'?'));
+  const l05 = af.layer0_5 || {};
+  lines.push('Forced Sell Risk: ' + (l05.forced_sell_risk||'?') + ' | Hashprice: ' + (l05.hashprice?.direction||'?') + ' $' + (l05.hashprice?.usd_per_ph||'?') + '/PH');
+  const tw = af.tripwire_summary || {};
+  lines.push('Tripwires: ' + (tw.active_count||'?') + '/' + (tw.total||'?') + ' active');
+  lines.push('');
+
+  // S/R Levels
+  lines.push('[SUPPORT / RESISTANCE]');
+  lines.push('1H S/R: ' + (r.sr_1h||'?'));
+  lines.push('1D S/R: ' + (r.sr_1d||'?'));
+  lines.push('Enriched 1H S: ' + fmtUSD(en.sr_1h_support) + ' | R: ' + fmtUSD(en.sr_1h_resistance));
+  lines.push('Enriched 1D S: ' + fmtUSD(en.sr_1d_support) + ' | R: ' + fmtUSD(en.sr_1d_resistance));
+  lines.push('ATR 1h: ' + (en.atr_1h_pct||'?') + '% | 1d: ' + (en.atr_1d_pct||'?') + '%');
+  lines.push('');
+
+  // Status
+  lines.push('[STATUS]');
+  const st = d.status || {};
+  lines.push('Source: AMT ' + (st.source_timestamps?.amt||'?') + ' | VP ' + (st.source_timestamps?.vp||'?'));
+  lines.push('Liquidity: ' + (en.liquidity_verdict||'?') + ' | Taker Buy: ' + (en.taker_buy_ratio||'?'));
+  lines.push('OI Delta: ' + (en.oi_delta||'?') + ' | Funding Signal: ' + (en.funding_signal||'?'));
+  if (st.staleness_warnings && st.staleness_warnings.length) {
+    lines.push('Staleness: ' + st.staleness_warnings.join(', '));
+  }
+
+  return lines.join('\n');
+}
+
+function copyTextPacket() {
+  const text = buildTextPacket();
+  navigator.clipboard.writeText(text).then(() => {
+    document.getElementById('copy-msg').textContent = '✓ Copied! Paste directly into ChatGPT.';
+    setTimeout(() => { document.getElementById('copy-msg').textContent = ''; }, 3000);
+  }).catch(() => {
+    // Fallback: select the text
+    const pre = document.getElementById('text-packet');
+    const range = document.createRange();
+    range.selectNodeContents(pre);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    document.getElementById('copy-msg').textContent = 'Select the text above and copy manually (Ctrl+C).';
+  });
 }
 
 // ── INIT ──
