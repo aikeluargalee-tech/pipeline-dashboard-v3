@@ -86,7 +86,7 @@
     </p>
     <textarea id="packet-input" placeholder='Paste analysis packet JSON here...' oninput="onPacketInput()"></textarea>
     <div class="btn-row">
-      <button class="btn" onclick="loadPacketFromURL()">Load from URL</button>
+      <button class="btn" onclick="loadFromPipeline()">Load from Pipeline</button>
     </div>
     <div id="packet-status"></div>
   </section>
@@ -589,17 +589,20 @@ function renderVerdict() {
   document.getElementById('verdict-display').innerHTML = html;
 }
 
-// ── Load from URL ──
-function loadPacketFromURL() {
-  const url = prompt('Packet URL (default: pipeline dashboard):', '../packet/data.json');
-  if (!url) return;
-  fetch(url, {cache: 'no-store'})
-    .then(r => r.json())
+// ── Load from Pipeline (no prompt — mobile friendly) ──
+function loadFromPipeline() {
+  showPacketStatus('ok', 'Loading from pipeline…');
+  const url = '../packet/data.json?' + Date.now();
+  fetch(url)
+    .then(r => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
     .then(data => {
       document.getElementById('packet-input').value = JSON.stringify(data, null, 2);
       onPacketInput();
     })
-    .catch(e => showPacketStatus('err', `Failed to load: ${e.message}`));
+    .catch(e => showPacketStatus('err', `Pipeline fetch failed: ${e.message}. Paste data.json manually.`));
 }
 </script>
 
