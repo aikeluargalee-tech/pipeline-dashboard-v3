@@ -375,7 +375,13 @@ function buildTextPacket() {
 
   const lines = [];
 
-  lines.push('BTC ANALYSIS PACKET — ' + (d.header?.generated_timestamp || new Date().toISOString()));
+  const now = new Date().toISOString();
+  const pktTs = d.header?.generated_timestamp || '?';
+  const pktAge = pktTs !== '?' ? Math.round((Date.now() - new Date(pktTs).getTime()) / 60000) : null;
+
+  lines.push('BTC ANALYSIS PACKET — Generated: ' + now.slice(0,19).replace('T',' ') + ' UTC');
+  lines.push('Pipeline data: ' + pktTs.slice(0,19).replace('T',' ') + ' UTC' +
+    (pktAge ? ' (' + pktAge + ' min ago)' : ''));
   lines.push('═══════════════════════════════════════');
   lines.push('');
 
