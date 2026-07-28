@@ -80,6 +80,7 @@
         <li role="none"><a role="menuitem" href="${BASE}/dashboard/">Dashboard</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/packet/">Data Packet</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/packet/v2/" style="color:var(--cyan)">Packet V2 (LLM)</a></li>
+        <li role="none"><a role="menuitem" href="${BASE}/analysis/">Analysis</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/aegis/" style="color:var(--aegis-cyan)">BTC AEGIS</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/ai-factors/">AI Factors</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/market-regime/">Market Regime</a></li>
