@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BTC Live Metrics — Analysis Verdict</title>
-<meta name="description" content="Live BTC market metrics, auto-refreshed every 15 min. Analysis verdict from data packet + ChatGPT.">
-<meta http-equiv="refresh" content="900">
 <link rel="stylesheet" href="../assets/styles.css">
 <style>
   .page { max-width: 720px; margin: 0 auto; padding: 16px 8px; }
@@ -81,7 +79,8 @@
   }
 </style>
 </head>
-<body>
+
+<div id="nav-placeholder"></div>
 
 <div class="page">
   <!-- Price Hero -->
@@ -513,5 +512,8 @@ setInterval(fetchLivePrice, LIVE_MS);       // price every 60s
 setInterval(loadMetrics, REFRESH_MS);       // pipeline every 15min
 </script>
 
-</body>
+<div id="footer-placeholder"></div>
+<script src="../assets/nav.js?v=12"></script>
+
+</html>
 </html>
