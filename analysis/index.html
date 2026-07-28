@@ -161,13 +161,30 @@ function fmtNum(n, decimals) {
 }
 
 function loadMetrics() {
+  // Fetch live price from Binance (always current)
+  fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT')
+    .then(r => r.json())
+    .then(ticker => {
+      document.getElementById('price').textContent = fmtUSD(parseFloat(ticker.lastPrice));
+      const chPct = parseFloat(ticker.priceChangePercent);
+      const chEl = document.getElementById('change');
+      chEl.textContent = fmtPct(chPct, 2) + ' (24h)';
+      chEl.className = 'price-change ' + (chPct >= 0 ? 'up' : 'down');
+      document.getElementById('tick-bid').textContent = fmtUSD(parseFloat(ticker.bidPrice));
+      document.getElementById('tick-ask').textContent = fmtUSD(parseFloat(ticker.askPrice));
+      document.getElementById('tick-spread').textContent = '$' + (parseFloat(ticker.askPrice) - parseFloat(ticker.bidPrice)).toFixed(1);
+      document.getElementById('tick-vol').textContent = fmtNum(parseFloat(ticker.quoteVolume));
+      document.getElementById('status-dot').className = 'status-dot live';
+    })
+    .catch(() => {});
+
+  // Fetch pipeline data for rich metrics
   const url = '../packet/data.json?' + Date.now();
   fetch(url)
     .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(renderMetrics)
     .catch(e => {
-      document.getElementById('status-text').textContent = 'Fetch failed';
-      document.getElementById('status-dot').className = 'status-dot stale';
+      document.getElementById('status-text').textContent = 'Pipeline data unavailable';
     });
 }
 
@@ -181,22 +198,8 @@ function renderMetrics(data) {
   const en = data.enriched || {};
   const af = data.ai_factors || {};
 
-  // Price hero
-  const price = h.btc_price;
-  const change = h.change_24h;
-  document.getElementById('price').textContent = fmtUSD(price);
-  const chEl = document.getElementById('change');
-  chEl.textContent = fmtPct(change, 2) + ' (24h)';
-  chEl.className = 'price-change ' + (change >= 0 ? 'up' : 'down');
-  document.getElementById('price-sub').textContent = 
-    (data.regime ? 'Regime: ' + (data.regime.label || '?').replace(/_/g, ' ') + ' · ' : '') +
-    (data.status ? 'Updated ' + (data.status.source_timestamps?.amt || '?').slice(0,19).replace('T',' ') : '');
-
-  // Tick bar
-  document.getElementById('tick-bid').textContent = fmtUSD(h.bid);
-  document.getElementById('tick-ask').textContent = fmtUSD(h.ask);
-  document.getElementById('tick-spread').textContent = h.spread != null ? '$' + Number(h.spread).toFixed(1) : '—';
-  document.getElementById('tick-vol').textContent = fmtNum(h.volume_24h);
+  // Price hero and tick bar set by live Binance fetch (runs in parallel)
+  // Don't override with potentially stale pipeline data
 
   // Metric cards
   const cards = [
@@ -238,9 +241,23 @@ function renderMetrics(data) {
   document.getElementById('metric-grid').innerHTML = html;
 
   // Status
-  document.getElementById('status-dot').className = 'status-dot live';
-  document.getElementById('status-text').textContent = 'Live · ' + (data.status?.source_timestamps?.amt || '?').slice(0,19).replace('T',' ');
+  const pktTime = data.status?.source_timestamps?.amt || data.header?.generated_timestamp || '';
+  const pktAge = pktTime ? Math.round((Date.now() - new Date(pktTime).getTime()) / 60000) : null;
+  const isStale = pktAge !== null && pktAge > 15;
+
+  document.getElementById('status-dot').className = 'status-dot ' + (isStale ? 'stale' : 'live');
+  document.getElementById('status-text').textContent =
+    (isStale ? 'Pipeline stale (' + pktAge + 'm old) · ' : 'Live · ') +
+    (pktTime ? pktTime.slice(0,19).replace('T',' ') : '?');
   document.getElementById('updated-at').textContent = 'Refresh: ' + new Date().toLocaleTimeString();
+  if (isStale) {
+    document.getElementById('price-sub').textContent =
+      '⚠ Pipeline data ' + pktAge + ' min stale — price from Binance live';
+  } else {
+    document.getElementById('price-sub').textContent =
+      'Regime: ' + (data.regime?.label || '?').replace(/_/g,' ') +
+      ' · ' + (pktTime ? pktTime.slice(0,19).replace('T',' ') : '');
+  }
   document.getElementById('text-packet').textContent = buildTextPacket();
 }
 
