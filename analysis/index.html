@@ -251,15 +251,15 @@ function renderMetrics(data) {
   document.getElementById('status-dot').className = 'status-dot ' + (isStale ? 'stale' : 'live');
   document.getElementById('status-text').textContent =
     (isStale ? 'Pipeline stale (' + pktAge + 'm old) · ' : 'Live · ') +
-    (pktTime ? pktTime.slice(0,19).replace('T',' ') : '?');
-  document.getElementById('updated-at').textContent = 'Refresh: ' + new Date().toLocaleTimeString();
+    (pktTime ? pktTime.slice(0,19).replace('T',' ') + ' UTC' : '?');
+  document.getElementById('updated-at').textContent = 'Refresh: ' + new Date().toISOString().slice(0,19).replace('T',' ') + ' UTC';
   if (isStale) {
     document.getElementById('price-sub').textContent =
       '⚠ Pipeline data ' + pktAge + ' min stale — price from Binance live';
   } else {
     document.getElementById('price-sub').textContent =
       'Regime: ' + (data.regime?.label || '?').replace(/_/g,' ') +
-      ' · ' + (pktTime ? pktTime.slice(0,19).replace('T',' ') : '');
+      ' · Pipeline: ' + (pktTime ? pktTime.slice(0,19).replace('T',' ') + ' UTC' : '?');
   }
   document.getElementById('text-packet').textContent = buildTextPacket();
 }
@@ -388,11 +388,17 @@ function buildTextPacket() {
   lines.push('═══════════════════════════════════════');
   lines.push('');
 
-  // Price
-  lines.push('[PRICE]');
-  lines.push('BTC/USDT: ' + fmtUSD(h.btc_price) + ' | 24h: ' + fmtPct(h.change_24h, 2));
-  lines.push('Bid: ' + fmtUSD(h.bid) + ' | Ask: ' + fmtUSD(h.ask) + ' | Spread: $' + Number(h.spread||0).toFixed(1));
-  lines.push('Volume 24h: ' + fmtNum(h.volume_24h));
+  // Price (live from Binance API)
+  lines.push('[PRICE — live from Binance]');
+  const pEl = document.getElementById('price');
+  const chEl2 = document.getElementById('change');
+  const bEl = document.getElementById('tick-bid');
+  const aEl = document.getElementById('tick-ask');
+  const sEl = document.getElementById('tick-spread');
+  const vEl = document.getElementById('tick-vol');
+  lines.push('BTC/USDT: ' + (pEl?.textContent || '—') + ' | 24h: ' + (chEl2?.textContent || '—'));
+  lines.push('Bid: ' + (bEl?.textContent || '—') + ' | Ask: ' + (aEl?.textContent || '—') + ' | Spread: ' + (sEl?.textContent || '—'));
+  lines.push('Volume 24h: ' + (vEl?.textContent || '—'));
   lines.push('');
 
   // Market Structure
