@@ -230,6 +230,38 @@
   </div>
 </div>
 
+<!-- World Clock -->
+<div id="world-clock" style="max-width:600px;margin:0 auto 16px auto;text-align:center;padding:0 20px">
+  <style>
+    #world-clock .wc-strip {display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap}
+    #world-clock .wc-city {background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:6px;padding:8px 10px;min-width:90px;flex:1}
+    #world-clock .wc-label {font-size:0.65em;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px}
+    #world-clock .wc-time {font-size:1em;font-weight:700;color:var(--cyan);font-variant-numeric:tabular-nums}
+    #world-clock .wc-utc {font-size:0.6em;color:var(--muted)}
+  </style>
+  <div class="wc-strip" id="wc-strip"></div>
+</div>
+<script>
+(function(){
+  const cities = [
+    {label:'NY', tz:'America/New_York'},
+    {label:'London', tz:'Europe/London'},
+    {label:'Dubai', tz:'Asia/Dubai'},
+    {label:'Singapore', tz:'Asia/Singapore'},
+    {label:'Tokyo', tz:'Asia/Tokyo'}
+  ];
+  function tick() {
+    const now = new Date();
+    document.getElementById('wc-strip').innerHTML = cities.map(c => {
+      const s = now.toLocaleString('en-US',{timeZone:c.tz,hour:'2-digit',minute:'2-digit',hour12:false});
+      const [h,m] = s.split(':');
+      return '<div class="wc-city"><div class="wc-label">'+c.label+'</div><div class="wc-time">'+s+'</div><div class="wc-utc">UTC'+((parseInt(h)-now.getUTCHours()+24)%24).toString().padStart(2,'0')+':'+m.padStart(2,'0')+'</div></div>';
+    }).join('');
+  }
+  tick(); setInterval(tick, 30000);
+})();
+</script>
+
 <!-- Halving Progress Bar -->
 <div style="max-width: 600px; margin: 20px auto 24px auto; text-align: center; padding: 0 20px;">
   <div style="display: flex; justify-content: space-between; font-size: 0.75em; color: var(--muted); margin-bottom: 6px; font-weight: 600;">
