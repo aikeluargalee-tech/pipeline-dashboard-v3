@@ -137,7 +137,8 @@
 
 <script>
 // ── AUTO-REFRESH LIVE METRICS ──
-const REFRESH_MS = 900000; // 15 min
+const REFRESH_MS = 900000; // 15 min — pipeline data
+const LIVE_MS = 60000;     // 60 sec — Binance price
 let currentData = null;
 
 function fmtUSD(n) {
@@ -160,8 +161,7 @@ function fmtNum(n, decimals) {
   return Number(n).toFixed(decimals != null ? decimals : 2);
 }
 
-function loadMetrics() {
-  // Fetch live price from Binance (always current)
+function fetchLivePrice() {
   fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT')
     .then(r => r.json())
     .then(ticker => {
@@ -177,7 +177,10 @@ function loadMetrics() {
       document.getElementById('status-dot').className = 'status-dot live';
     })
     .catch(() => {});
+}
 
+function loadMetrics() {
+  fetchLivePrice();  // price always updates immediately
   // Fetch pipeline data for rich metrics
   const url = '../packet/data.json?' + Date.now();
   fetch(url)
@@ -500,7 +503,8 @@ function copyTextPacket() {
 
 // ── INIT ──
 loadMetrics();
-setInterval(loadMetrics, REFRESH_MS);
+setInterval(fetchLivePrice, LIVE_MS);       // price every 60s
+setInterval(loadMetrics, REFRESH_MS);       // pipeline every 15min
 </script>
 
 </body>
