@@ -1,9 +1,9 @@
 {
   "signal": {
-    "id": "pfc3l-20260730-142838",
-    "ts": "2026-07-30T14:28:38.014843+00:00",
+    "id": "pfc3l-20260730-142906",
+    "ts": "2026-07-30T14:29:06.096276+00:00",
     "symbol": "BTC/USD",
-    "reference_price": 64834.0,
+    "reference_price": 64838.0,
     "state": "NO_TRADE",
     "confidence": 0,
     "lifecycle_state": "ACTIVE",
@@ -67,22 +67,14 @@
     "score": 80,
     "role": "ACCELERATOR",
     "active_level": {
-      "price": 64768,
+      "price": 64770,
       "role": "ACCELERATOR",
       "category": "STANDARD",
-      "source": "vp_poc",
+      "source": "vp_vah",
       "distance_pct": 0.1,
       "score": 80
     },
     "levels": [
-      {
-        "price": 64768,
-        "role": "ACCELERATOR",
-        "category": "STANDARD",
-        "source": "vp_poc",
-        "distance_pct": 0.1,
-        "score": 80
-      },
       {
         "price": 64770,
         "role": "ACCELERATOR",
@@ -92,16 +84,24 @@
         "score": 80
       },
       {
+        "price": 64768,
+        "role": "ACCELERATOR",
+        "category": "STANDARD",
+        "source": "vp_poc",
+        "distance_pct": 0.11,
+        "score": 80
+      },
+      {
         "price": 64736,
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_val",
-        "distance_pct": 0.15,
+        "distance_pct": 0.16,
         "score": 79
       }
     ],
     "reasons": [
-      "Active standard level at $64,768 (0.10% away, role: ACCELERATOR)"
+      "Active standard level at $64,770 (0.10% away, role: ACCELERATOR)"
     ],
     "vetoes": []
   },
