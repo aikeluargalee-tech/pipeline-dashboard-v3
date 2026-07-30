@@ -1,19 +1,18 @@
 {
   "signal": {
-    "id": "pfc3l-20260730-142213",
-    "ts": "2026-07-30T14:22:13.143755+00:00",
+    "id": "pfc3l-20260730-142713",
+    "ts": "2026-07-30T14:27:13.099940+00:00",
     "symbol": "BTC/USD",
     "reference_price": 64722.0,
     "state": "DATA_UNRELIABLE",
     "confidence": 0,
     "lifecycle_state": "ACTIVE",
     "reasons": [
-      "AMT feed stale (627s)",
-      "AI Factors stale (603s)"
+      "AMT feed stale (927s)",
+      "Volume Profile stale (2843m)",
+      "AI Factors stale (903s)"
     ],
     "vetoes": [
-      "Volume Profile >15min old (2838m)",
-      "Only 1 critical feeds healthy (need 2+)",
       "DATA QUALITY VETO \u2014 directional signals blocked"
     ],
     "invalidation_conditions": [],
@@ -23,7 +22,7 @@
       "flow": "NEUTRAL",
       "catalyst": "NONE",
       "level": "ACCELERATOR",
-      "data_quality": "FAILED (39/100)"
+      "data_quality": "FAILED (59/100)"
     }
   },
   "positioning": {
@@ -105,17 +104,15 @@
     "vetoes": []
   },
   "data_quality": {
-    "score": 39,
+    "score": 59,
     "directional_allowed": false,
-    "healthy_feeds": 1,
+    "healthy_feeds": 2,
     "total_critical_feeds": 3,
     "reasons": [
-      "AMT feed stale (627s)",
-      "AI Factors stale (603s)"
+      "AMT feed stale (927s)",
+      "Volume Profile stale (2843m)",
+      "AI Factors stale (903s)"
     ],
-    "vetoes": [
-      "Volume Profile >15min old (2838m)",
-      "Only 1 critical feeds healthy (need 2+)"
-    ]
+    "vetoes": []
   }
 }

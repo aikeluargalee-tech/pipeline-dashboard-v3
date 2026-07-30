@@ -51,8 +51,8 @@ THRESHOLDS = {
         "score_min": 90,
         "min_spot_venues": 2,
         "min_derivatives_venues": 1,
-        "max_critical_age_seconds": 300,
-        "max_warning_age_seconds": 900,
+        "max_critical_age_seconds": 600,   # 10 min — typical pipeline cycle
+        "max_warning_age_seconds": 1200,  # 20 min — allow one missed cycle
     },
     "signal": {
         "cooldown_minutes": 20,
@@ -82,10 +82,10 @@ def evaluate_data_quality(data: dict) -> dict[str, Any]:
     # Check each feed source
     feed_map = {
         "amt": {"ts_key": "amt", "label": "AMT feed"},
-        "volume_profile": {"ts_key": "vp", "label": "Volume Profile"},
-        "ai_factors": {"label": "AI Factors"},
-        "redline": {"label": "Redline (optional)"},
-        "trap_monitor": {"label": "Trap Monitor (optional)"},
+        "volume_profile": {"ts_key": "vp", "label": "Volume Profile", "critical": False},
+        "ai_factors": {"label": "AI Factors", "critical": True},
+        "redline": {"label": "Redline", "critical": False},
+        "trap_monitor": {"label": "Trap Monitor", "critical": False},
     }
 
     for feed_key, cfg in feed_map.items():
@@ -94,8 +94,9 @@ def evaluate_data_quality(data: dict) -> dict[str, Any]:
             continue
 
         # Skip if source has error
+        critical = cfg.get("critical", True)
         if isinstance(source, dict) and source.get("error"):
-            if feed_key not in ("redline", "trap_monitor"):  # optional
+            if critical:
                 reasons.append(f"{cfg['label']} unavailable")
                 score -= 15
             continue
@@ -113,23 +114,25 @@ def evaluate_data_quality(data: dict) -> dict[str, Any]:
                 ts = datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
                 age = (now - ts).total_seconds()
                 if age < T["max_critical_age_seconds"]:
-                    healthy_count += 1
+                    if critical:
+                        healthy_count += 1
                 elif age < T["max_warning_age_seconds"]:
                     reasons.append(f"{cfg['label']} stale ({int(age)}s)")
                     score -= 8
+                    if critical:
+                        healthy_count += 1  # stale but present
                 else:
-                    if feed_key not in ("redline", "trap_monitor"):
+                    if critical:
                         vetoes.append(f"{cfg['label']} >15min old ({int(age/60)}m)")
                         score -= 20
                     else:
                         reasons.append(f"{cfg['label']} stale ({int(age/60)}m)")
-                    healthy_count += 1  # still present
             except (ValueError, TypeError):
-                if feed_key not in ("redline", "trap_monitor"):
+                if critical:
                     vetoes.append(f"{cfg['label']} timestamp unparseable")
                     score -= 20
         else:
-            if feed_key not in ("redline", "trap_monitor"):
+            if critical:
                 reasons.append(f"{cfg['label']} no timestamp")
                 score -= 10
 
@@ -149,9 +152,13 @@ def evaluate_data_quality(data: dict) -> dict[str, Any]:
         except (ValueError, TypeError):
             pass
 
-    # Warnings deduct
+    # Warnings are informational — they track secondary data freshness.
+    # Critical feed checks above handle the data we actually use for signals.
+    # Still report them but don't penalize score (they're about sections like
+    # regime/macro/derivs that the signal engine doesn't directly consume).
     if isinstance(warnings, list):
-        score -= len(warnings) * 5
+        for w in warnings:
+            reasons.append(w)
 
     score = max(0, score)
     directional_allowed = score >= T["score_min"] and not vetoes
