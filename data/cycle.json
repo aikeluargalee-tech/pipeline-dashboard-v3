@@ -1,7 +1,79 @@
 {
-  "mvrv_z": null,
-  "sopr": null,
-  "nupl": null,
-  "lth_sopr_24h": null,
-  "supply_in_profit_share": null
+  "mvrv_z": 0.3818,
+  "sopr": 0.9993,
+  "puell_multiple": 0.7337,
+  "netflow_7d": 1676.84,
+  "sth_realized_price": null,
+  "sth_net_position_change": null,
+  "regime": "neutral",
+  "composite_score": 30.4,
+  "cycle_phase": "medium",
+  "distribution": {
+    "timestamp": "2026-07-30 15:46 UTC",
+    "source": "blockchair.com",
+    "total_addresses": 59648779,
+    "total_btc": 20063330.41655096,
+    "tiers": [
+      {
+        "range": "100+ BTC",
+        "addresses": "2,087,707",
+        "btc": "12,338,948",
+        "pct": "61.50%",
+        "pctNum": 61.5,
+        "color": "#f59e0b"
+      },
+      {
+        "range": "1 \u2013 100 BTC",
+        "addresses": "954,380",
+        "btc": "6,319,949",
+        "pct": "31.50%",
+        "pctNum": 31.5,
+        "color": "#3b82f6"
+      },
+      {
+        "range": "0.001 \u2013 1 BTC",
+        "addresses": "24,455,999",
+        "btc": "1,404,433",
+        "pct": "7.00%",
+        "pctNum": 7.0,
+        "color": "#6366f1"
+      },
+      {
+        "range": "<0.001 BTC",
+        "addresses": "32,150,691",
+        "btc": "6,018",
+        "pct": "0.03%",
+        "pctNum": 0.03,
+        "color": "#64748b"
+      }
+    ]
+  },
+  "options_skew": {
+    "timestamp": "2026-07-30 15:46 UTC",
+    "spot": 64814.1,
+    "skew_25d": -4.7,
+    "put_25d_iv": 36.0,
+    "call_25d_iv": 31.3,
+    "put_name": "BTC-14AUG26-62000-P",
+    "call_name": "BTC-14AUG26-68000-C",
+    "label": "Neutral",
+    "emoji": "\u2b1c",
+    "display": "\u2b1c Options skew (25\u0394): -4.7% \u2014 neutral"
+  },
+  "nupl": 0.18250000476837158,
+  "rhodl_ratio": 0.07989999651908875,
+  "lth_sopr_24h": 0.9081739602958661,
+  "sth_sopr_24h": 0.9995135432314022,
+  "supply_in_profit_share": 56.75,
+  "mvrv": 1.2232999801635742,
+  "realized_price": 52847.75,
+  "lth_net_realized_pnl": 261410.94,
+  "sth_net_realized_pnl": 4083750.12,
+  "utxos_1y_sopr": 1.0304018587851602,
+  "hash_rate_ehs": 9.224253314530392e+20,
+  "hash_rate_drawdown_pct": -32.46000289916992,
+  "fee_rate_sat_vb": 2.206,
+  "difficulty": 126231507121868.19,
+  "_brk_fetched_at": "2026-07-30T14:11:15.134073+00:00",
+  "_collected": "2026-07-30 15:46 UTC"
 }
