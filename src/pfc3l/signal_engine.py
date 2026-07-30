@@ -78,6 +78,7 @@ def evaluate_data_quality(data: dict) -> dict[str, Any]:
     now = datetime.now(timezone.utc)
     healthy_count = 0
     T = THRESHOLDS["data_quality"]
+    feed_status: dict[str, dict] = {}
 
     # Check each feed source
     feed_map = {
@@ -93,7 +94,8 @@ def evaluate_data_quality(data: dict) -> dict[str, Any]:
         if not source:
             continue
 
-        # Skip if source has error
+        # Track per-feed status
+        fs = {"label": cfg["label"], "healthy": False, "stale": False, "age": "N/A"}
         critical = cfg.get("critical", True)
         if isinstance(source, dict) and source.get("error"):
             if critical:
@@ -113,15 +115,19 @@ def evaluate_data_quality(data: dict) -> dict[str, Any]:
             try:
                 ts = datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
                 age = (now - ts).total_seconds()
+                fs["age"] = f"{int(age)}s"
                 if age < T["max_critical_age_seconds"]:
                     if critical:
                         healthy_count += 1
+                        fs["healthy"] = True
                 elif age < T["max_warning_age_seconds"]:
                     reasons.append(f"{cfg['label']} stale ({int(age)}s)")
                     score -= 8
+                    fs["stale"] = True
                     if critical:
                         healthy_count += 1  # stale but present
                 else:
+                    fs["stale"] = True
                     if critical:
                         vetoes.append(f"{cfg['label']} >15min old ({int(age/60)}m)")
                         score -= 20
@@ -135,6 +141,8 @@ def evaluate_data_quality(data: dict) -> dict[str, Any]:
             if critical:
                 reasons.append(f"{cfg['label']} no timestamp")
                 score -= 10
+
+        feed_status[feed_key] = fs
 
     # Check minimum critical feeds (AMT + VP + AI Factors)
     if healthy_count < 2:
@@ -170,6 +178,7 @@ def evaluate_data_quality(data: dict) -> dict[str, Any]:
         "total_critical_feeds": len([f for f in feed_map if f not in ("redline", "trap_monitor")]),
         "reasons": reasons,
         "vetoes": vetoes,
+        "feeds": feed_status,
     }
 
 

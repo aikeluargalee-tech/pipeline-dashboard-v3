@@ -7,9 +7,14 @@
 <link rel="stylesheet" href="../assets/styles.css">
 <style>
   .page { max-width: 800px; margin: 0 auto; padding: 16px 8px; }
+  .mono { font-variant-numeric: tabular-nums; font-family: 'JetBrains Mono', monospace; }
 
-  /* ── Signal Hero ── */
-  .signal-hero { text-align: center; padding: 28px 20px; margin-bottom: 24px; border-radius: 12px; backdrop-filter: blur(16px) saturate(150%); -webkit-backdrop-filter: blur(16px) saturate(150%); box-shadow: 0 16px 36px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.08); }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+
+  /* Signal Hero */
+  .signal-hero { text-align: center; padding: 28px 20px 20px; margin-bottom: 16px; border-radius: 12px; backdrop-filter: blur(16px) saturate(150%); -webkit-backdrop-filter: blur(16px) saturate(150%); box-shadow: 0 16px 36px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.08); }
   .signal-hero.LONG_CANDIDATE { background: linear-gradient(135deg, rgba(0,255,0,0.1), rgba(0,0,0,0)); border: 1px solid rgba(0,255,0,0.2); }
   .signal-hero.SHORT_CANDIDATE { background: linear-gradient(135deg, rgba(255,0,0,0.1), rgba(0,0,0,0)); border: 1px solid rgba(255,0,0,0.2); }
   .signal-hero.WATCH_LONG { background: linear-gradient(135deg, rgba(0,255,0,0.05), transparent); border: 1px solid rgba(0,255,0,0.1); }
@@ -25,74 +30,104 @@
   .sig-state.NO_TRADE { color: var(--muted); }
   .sig-state.DATA_UNRELIABLE { color: var(--orange); }
 
-  .sig-meta { margin-top: 10px; font-size: 13px; color: var(--muted); line-height: 1.8; }
+  .sig-meta { margin-top: 8px; font-size: 13px; color: var(--muted); line-height: 1.7; }
   .sig-meta b { color: var(--text); }
+  .sig-age { font-size: 11px; color: var(--muted); }
+  .sig-age.fresh { color: var(--green); }
 
-  /* ── Section Cards ── */
-  .sec { background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 18px; overflow: hidden; backdrop-filter: blur(16px) saturate(150%); -webkit-backdrop-filter: blur(16px) saturate(150%); box-shadow: 0 16px 36px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.08); }
-  .sec-header { padding: 14px 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.15s; user-select: none; }
+  /* Gate Summary Row */
+  .gate-summary { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 20px; }
+  .gate-summary-item { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; transition: border-color 0.15s; }
+  .gate-summary-item:hover { border-color: var(--cyan); }
+  .gate-summary-item.blocking { border-color: var(--red); background: rgba(255,0,0,0.05); }
+  .gate-summary-item.near { border-color: var(--orange); }
+  .gate-summary-item.passing { border-color: var(--green); }
+  .gate-summary-name { font-size: 10px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted); margin-bottom: 4px; }
+  .gate-summary-score { font-size: 1.4em; font-weight: 700; }
+  .gate-summary-score.blocking { color: var(--red); }
+  .gate-summary-score.near { color: var(--orange); }
+  .gate-summary-score.passing { color: var(--green); }
+  .gate-summary-thresh { font-size: 10px; color: var(--muted); }
+
+  /* Section Cards */
+  .sec { background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 16px; overflow: hidden; backdrop-filter: blur(16px) saturate(150%); -webkit-backdrop-filter: blur(16px) saturate(150%); box-shadow: 0 16px 36px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.08); }
+  .sec.failing { border-left: 3px solid var(--red); }
+  .sec.near-threshold { border-left: 3px solid var(--orange); }
+  .sec.passing { border-left: 3px solid var(--green); }
+
+  .sec-header { padding: 14px 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.15s; user-select: none; background: none; border: none; width: 100%; text-align: left; color: var(--text); font: inherit; }
+  .sec-header:focus-visible { outline: 1px solid var(--cyan); outline-offset: -2px; border-radius: 10px; }
   .sec-header:hover { background: rgba(255,255,255,0.03); }
   .sec-header.open { border-bottom: 1px solid var(--border); }
-  .sec-icon { font-size: 1.2em; margin-right: 10px; }
-  .sec-title { font-weight: 700; font-size: 1em; flex: 1; }
-  .sec-badge { font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 600; }
+  .sec-header-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+  .sec-icon { font-size: 1.2em; flex-shrink: 0; }
+  .sec-title { font-weight: 700; font-size: 0.95em; }
+  .sec-header-sub { font-size: 11px; color: var(--muted); margin-left: 4px; white-space: nowrap; }
+  .sec-badge { font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 600; flex-shrink: 0; }
+  .sec-header-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
   .sec-badge.pass { background: rgba(0,255,0,0.1); color: var(--green); }
   .sec-badge.fail { background: rgba(255,0,0,0.1); color: var(--red); }
   .sec-badge.warn { background: rgba(255,165,0,0.1); color: var(--orange); }
   .sec-badge.neutral { background: rgba(255,255,255,0.05); color: var(--muted); }
-  .sec-arrow { color: var(--muted); font-size: 12px; transition: transform 0.2s; }
+  .sec-arrow { color: var(--muted); font-size: 12px; transition: transform 0.2s; flex-shrink: 0; }
   .sec-arrow.up { transform: rotate(180deg); }
-
   .sec-body { display: none; padding: 18px; font-size: 13px; line-height: 1.7; }
 
-  /* ── Score bars ── */
-  .score-row { display: flex; align-items: center; gap: 12px; margin: 6px 0; padding: 4px 0; }
-  .score-label { width: 140px; font-size: 12px; color: var(--muted); flex-shrink: 0; }
-  .score-bar-wrap { flex: 1; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
-  .score-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
+  /* Score bars (with threshold lines) */
+  .score-row { display: flex; align-items: center; gap: 10px; margin: 6px 0; padding: 2px 0; }
+  .score-label { width: 130px; font-size: 12px; color: var(--muted); flex-shrink: 0; }
+  .score-bar-wrap { flex: 1; height: 8px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: visible; position: relative; }
+  .score-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s; }
   .score-bar-fill.green { background: var(--green); }
   .score-bar-fill.red { background: var(--red); }
   .score-bar-fill.cyan { background: var(--cyan); }
   .score-bar-fill.orange { background: var(--orange); }
+  .score-threshold-line { position: absolute; top: -2px; bottom: -2px; width: 2px; background: rgba(255,255,255,0.4); z-index: 2; }
   .score-val { width: 36px; text-align: right; font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
-
   .score-threshold { margin-left: 4px; font-size: 10px; color: var(--muted); }
 
-  /* ── Tables ── */
+  /* Tables */
   .mini-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 8px 0; }
   .mini-table td { padding: 6px 10px; border-bottom: 1px solid rgba(255,255,255,0.04); }
-  .mini-table td:first-child { color: var(--muted); width: 160px; }
+  .mini-table td:first-child { color: var(--muted); width: 170px; }
   .mini-table td:last-child { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .mini-table td.mono { font-family: 'JetBrains Mono', monospace; }
 
-  /* ── Lists ── */
+  /* Lists */
   .reason-list { margin: 0; padding: 0; list-style: none; }
-  .reason-list li { padding: 4px 0; font-size: 13px; }
+  .reason-list li { padding: 3px 0; font-size: 12px; }
   .reason-list li::before { content: '▸ '; color: var(--cyan); margin-right: 4px; }
   .reason-list li.veto { color: var(--red); }
   .reason-list li.veto::before { content: '✕ '; color: var(--red); }
   .reason-list li.zone { color: var(--orange); }
   .reason-list li.zone::before { content: '◎ '; color: var(--orange); }
+  .reason-list li.warn { color: var(--orange); }
+  .reason-list li.warn::before { content: '⚠ '; }
 
   .help-text { font-size: 11px; color: var(--muted); margin-top: 12px; padding: 10px 12px; background: rgba(255,255,255,0.02); border-radius: 6px; border-left: 2px solid var(--cyan); }
 
-  /* ── Signal lifecycle ── */
-  .lifecycle { display: flex; gap: 8px; align-items: center; margin: 12px 0; }
-  .lifecycle-step { padding: 4px 12px; border-radius: 4px; font-size: 11px; font-weight: 600; }
-  .lifecycle-step.active { background: var(--cyan); color: #05070d; box-shadow: 0 0 12px rgba(34,211,238,0.5); }
-  .lifecycle-step.inactive { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
-  .lifecycle-arrow { color: var(--muted); font-size: 10px; }
+  /* Lifecycle */
+  .lifecycle { display: flex; gap: 6px; align-items: center; justify-content: center; margin: 10px 0; flex-wrap: wrap; }
+  .lifecycle-step { padding: 3px 10px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+  .lifecycle-step.completed { background: rgba(0,255,0,0.08); color: var(--green); border: 1px solid rgba(0,255,0,0.15); }
+  .lifecycle-step.current { background: var(--cyan); color: #05070d; box-shadow: 0 0 10px rgba(34,211,238,0.3); }
+  .lifecycle-step.future { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.35); }
+  .lifecycle-step.invalidated { background: rgba(255,0,0,0.08); color: var(--red); border: 1px solid rgba(255,0,0,0.2); text-decoration: line-through; }
+  .lifecycle-arrow { color: var(--muted); font-size: 9px; }
 
-  .score-threshold-line { position: absolute; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.4); z-index: 2; }
-
-  .disclaimer { font-size: 10px; color: var(--muted); text-align: center; margin-top: 28px; padding: 16px; border-top: 1px solid var(--border); line-height: 1.8; }
+  .disclaimer { font-size: 10px; color: var(--muted); text-align: center; margin-top: 24px; padding: 14px; border-top: 1px solid var(--border); line-height: 1.7; }
   .disclaimer b { color: var(--text); }
 
   .loading { text-align: center; padding: 60px; color: var(--muted); font-size: 14px; }
-  .stale-warning { background: rgba(255,165,0,0.1); border: 1px solid rgba(255,165,0,0.3); border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; color: var(--orange); text-align: center; }
+  .stale-warning { background: rgba(255,165,0,0.1); border: 1px solid rgba(255,165,0,0.3); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-size: 13px; color: var(--orange); text-align: center; }
+  .error-msg { background: rgba(255,0,0,0.08); border: 1px solid rgba(255,0,0,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-size: 13px; text-align: center; display: none; }
+  .error-msg .retry-link { color: var(--cyan); cursor: pointer; text-decoration: underline; }
 
   @media (max-width: 600px) {
-    .score-label { width: 100px; font-size: 11px; }
+    .gate-summary { grid-template-columns: repeat(3, 1fr); }
+    .score-label { width: 90px; font-size: 10px; }
     .sig-state { font-size: 1.5em; }
+    .sec-header-sub { display: none; }
   }
 </style>
 </head>
@@ -105,173 +140,205 @@
 <div id="signal-hero" class="signal-hero NO_TRADE">
   <div class="sig-state NO_TRADE" id="sig-state">—</div>
   <div class="sig-meta">
-    BTC Reference Price: <b id="sig-price">—</b> &nbsp;·&nbsp;
-    Confidence: <b id="sig-conf">—</b>/100 &nbsp;·&nbsp;
-    Data Quality: <b id="sig-dq">—</b>/100<br>
-    Generated: <span id="sig-ts">—</span> UTC
+    BTC <b class="mono" id="sig-price">—</b> &nbsp;·&nbsp;
+    Confidence: <b class="mono" id="sig-conf">—</b>/100 &nbsp;·&nbsp;
+    DQ: <b class="mono" id="sig-dq">—</b>/100
   </div>
-  <div class="lifecycle" id="lifecycle-bar" style="justify-content:center;margin-top:12px">
-    <span class="lifecycle-step inactive">WATCH</span>
-    <span class="lifecycle-arrow">→</span>
-    <span class="lifecycle-step inactive">CANDIDATE</span>
-    <span class="lifecycle-arrow">→</span>
-    <span class="lifecycle-step active">ACTIVE</span>
-    <span class="lifecycle-arrow">→</span>
-    <span class="lifecycle-step inactive">INVALIDATED</span>
-    <span class="lifecycle-arrow">→</span>
-    <span class="lifecycle-step inactive">EXPIRED</span>
-  </div>
+  <div class="sig-age" id="sig-age">—</div>
+  <div class="lifecycle" id="lifecycle-bar"></div>
 </div>
 
 <div class="stale-warning" id="stale-warning" style="display:none"><span id="stale-text"></span></div>
+<div class="error-msg" id="error-msg"><span id="error-text"></span> · <span class="retry-link" onclick="loadSignal()">Retry</span></div>
+
+<!-- ====== GATE SUMMARY ROW ====== -->
+<div class="gate-summary" id="gate-summary"></div>
 
 <!-- ====== P — POSITIONING ====== -->
-<div class="sec">
-  <div class="sec-header" role="button" tabindex="0" aria-expanded="false" onclick="toggleSection('pos-body','pos-arrow',this)">
-    <span class="sec-icon">📊</span>
-    <span class="sec-title">P · Positioning — Who Is Vulnerable?</span>
-    <span class="sec-badge neutral" id="pos-badge">—</span>
-    <span class="sec-arrow" id="pos-arrow">▼</span>
-  </div>
+<div class="sec" id="sec-pos">
+  <button class="sec-header" aria-expanded="false" aria-controls="pos-body" onclick="toggleSection('pos-body','pos-arrow',this)">
+    <span class="sec-header-left">
+      <span class="sec-icon">📊</span>
+      <span class="sec-title">P · Positioning</span>
+      <span class="sec-header-sub" id="pos-header-sub"></span>
+    </span>
+    <span class="sec-header-right">
+      <span class="sec-badge neutral" id="pos-badge">—</span>
+      <span class="sec-arrow" id="pos-arrow">▼</span>
+    </span>
+  </button>
   <div class="sec-body" id="pos-body">
     <p style="color:var(--muted);font-size:12px;margin-bottom:12px">Is the leveraged side crowded and vulnerable to a forced unwind?</p>
 
-    <div class="score-row"><span class="score-label">Short Vulnerability</span>
-      <div class="score-bar-wrap"><div class="score-bar-fill red" id="bar-short-s" style="width:0%"></div></div>
-      <span class="score-val" id="val-short-s">0</span>
-      <span class="score-threshold">min 70</span></div>
-    <div class="score-row"><span class="score-label">Long Vulnerability</span>
-      <div class="score-bar-wrap"><div class="score-bar-fill green" id="bar-long-s" style="width:0%"></div></div>
-      <span class="score-val" id="val-long-s">0</span>
-      <span class="score-threshold">min 70</span></div>
-    <p style="margin-top:4px;font-size:12px"><b>State:</b> <span id="pos-state">—</span> &nbsp;·&nbsp; <b>Score:</b> <span id="pos-score">—</span></p>
+    <div class="score-row"><span class="score-label mono">Short Vuln</span>
+      <div class="score-bar-wrap"><div class="score-threshold-line" style="left:70%"></div><div class="score-bar-fill red" id="bar-short-s" style="width:0%"></div></div>
+      <span class="score-val mono" id="val-short-s">0</span>
+      <span class="score-threshold mono">/70</span></div>
+    <div class="score-row"><span class="score-label mono">Long Vuln</span>
+      <div class="score-bar-wrap"><div class="score-threshold-line" style="left:70%"></div><div class="score-bar-fill green" id="bar-long-s" style="width:0%"></div></div>
+      <span class="score-val mono" id="val-long-s">0</span>
+      <span class="score-threshold mono">/70</span></div>
+    <p style="margin-top:4px;font-size:12px"><b>State:</b> <span id="pos-state">—</span> &nbsp;·&nbsp; <b>Score:</b> <span class="mono" id="pos-score">—</span></p>
 
-    <table class="mini-table" style="margin-top:8px"><tbody id="pos-detail"></tbody></table>
+    <table class="mini-table"><tbody id="pos-detail"></tbody></table>
     <ul class="reason-list" id="pos-reasons"></ul>
   </div>
 </div>
 
 <!-- ====== F — FLOW ====== -->
-<div class="sec">
-  <div class="sec-header" role="button" tabindex="0" aria-expanded="false" onclick="toggleSection('flo-body','flo-arrow',this)">
-    <span class="sec-icon">💧</span>
-    <span class="sec-title">F · Flow — Where Is Money Moving?</span>
-    <span class="sec-badge neutral" id="flo-badge">—</span>
-    <span class="sec-arrow" id="flo-arrow">▼</span>
-  </div>
+<div class="sec" id="sec-flo">
+  <button class="sec-header" aria-expanded="false" aria-controls="flo-body" onclick="toggleSection('flo-body','flo-arrow',this)">
+    <span class="sec-header-left">
+      <span class="sec-icon">💧</span>
+      <span class="sec-title">F · Flow</span>
+      <span class="sec-header-sub" id="flo-header-sub"></span>
+    </span>
+    <span class="sec-header-right">
+      <span class="sec-badge neutral" id="flo-badge">—</span>
+      <span class="sec-arrow" id="flo-arrow">▼</span>
+    </span>
+  </button>
   <div class="sec-body" id="flo-body">
     <p style="color:var(--muted);font-size:12px;margin-bottom:12px">Is genuine spot money buying or selling, distinct from leveraged derivatives activity?</p>
 
-    <div class="score-row"><span class="score-label">Bullish Flow</span>
-      <div class="score-bar-wrap"><div class="score-bar-fill green" id="bar-bull" style="width:0%"></div></div>
-      <span class="score-val" id="val-bull">0</span>
-      <span class="score-threshold">min 70</span></div>
-    <div class="score-row"><span class="score-label">Bearish Flow</span>
-      <div class="score-bar-wrap"><div class="score-bar-fill red" id="bar-bear" style="width:0%"></div></div>
-      <span class="score-val" id="val-bear">0</span>
-      <span class="score-threshold">min 70</span></div>
-    <p style="margin-top:4px;font-size:12px"><b>State:</b> <span id="flo-state">—</span> &nbsp;·&nbsp; <b>Score:</b> <span id="flo-score">—</span></p>
+    <div class="score-row"><span class="score-label mono">Bullish</span>
+      <div class="score-bar-wrap"><div class="score-threshold-line" style="left:70%"></div><div class="score-bar-fill green" id="bar-bull" style="width:0%"></div></div>
+      <span class="score-val mono" id="val-bull">0</span>
+      <span class="score-threshold mono">/70</span></div>
+    <div class="score-row"><span class="score-label mono">Bearish</span>
+      <div class="score-bar-wrap"><div class="score-threshold-line" style="left:70%"></div><div class="score-bar-fill red" id="bar-bear" style="width:0%"></div></div>
+      <span class="score-val mono" id="val-bear">0</span>
+      <span class="score-threshold mono">/70</span></div>
+    <p style="margin-top:4px;font-size:12px"><b>State:</b> <span id="flo-state">—</span> &nbsp;·&nbsp; <b>Score:</b> <span class="mono" id="flo-score">—</span></p>
 
-    <table class="mini-table" style="margin-top:8px"><tbody id="flo-detail"></tbody></table>
+    <table class="mini-table"><tbody id="flo-detail"></tbody></table>
     <ul class="reason-list" id="flo-reasons"></ul>
   </div>
 </div>
 
 <!-- ====== C — CATALYST ====== -->
-<div class="sec">
-  <div class="sec-header" role="button" tabindex="0" aria-expanded="false" onclick="toggleSection('cat-body','cat-arrow',this)">
-    <span class="sec-icon">⚡</span>
-    <span class="sec-title">C · Catalyst — What Can Force Repositioning?</span>
-    <span class="sec-badge neutral" id="cat-badge">—</span>
-    <span class="sec-arrow" id="cat-arrow">▼</span>
-  </div>
+<div class="sec" id="sec-cat">
+  <button class="sec-header" aria-expanded="false" aria-controls="cat-body" onclick="toggleSection('cat-body','cat-arrow',this)">
+    <span class="sec-header-left">
+      <span class="sec-icon">⚡</span>
+      <span class="sec-title">C · Catalyst</span>
+      <span class="sec-header-sub" id="cat-header-sub"></span>
+    </span>
+    <span class="sec-header-right">
+      <span class="sec-badge neutral" id="cat-badge">—</span>
+      <span class="sec-arrow" id="cat-arrow">▼</span>
+    </span>
+  </button>
   <div class="sec-body" id="cat-body">
-    <p style="color:var(--muted);font-size:12px;margin-bottom:12px">What confirmed event can force traders to reposition? VIX, F&G extremes, crash precursors, ETF flows, AI tripwires.</p>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:12px">What confirmed event can force traders to reposition?</p>
 
-    <div class="score-row"><span class="score-label">Catalyst Confidence</span>
-      <div class="score-bar-wrap"><div class="score-bar-fill cyan" id="bar-cat" style="width:0%"></div></div>
-      <span class="score-val" id="val-cat">0</span>
-      <span class="score-threshold">min 70</span></div>
+    <div class="score-row"><span class="score-label mono">Confidence</span>
+      <div class="score-bar-wrap"><div class="score-threshold-line" style="left:70%"></div><div class="score-bar-fill cyan" id="bar-cat" style="width:0%"></div></div>
+      <span class="score-val mono" id="val-cat">0</span>
+      <span class="score-threshold mono">/70</span></div>
     <p style="margin-top:4px;font-size:12px"><b>State:</b> <span id="cat-state">—</span> &nbsp;·&nbsp; <b>Direction:</b> <span id="cat-dir">—</span></p>
 
-    <table class="mini-table" style="margin-top:8px"><tbody id="cat-detail"></tbody></table>
+    <table class="mini-table"><tbody id="cat-detail"></tbody></table>
     <ul class="reason-list" id="cat-reasons"></ul>
   </div>
 </div>
 
 <!-- ====== L — LEVEL ====== -->
-<div class="sec">
-  <div class="sec-header" role="button" tabindex="0" aria-expanded="false" onclick="toggleSection('lvl-body','lvl-arrow',this)">
-    <span class="sec-icon">📍</span>
-    <span class="sec-title">L · Level — Where Can Forced Action Accelerate?</span>
-    <span class="sec-badge neutral" id="lvl-badge">—</span>
-    <span class="sec-arrow" id="lvl-arrow">▼</span>
-  </div>
+<div class="sec" id="sec-lvl">
+  <button class="sec-header" aria-expanded="false" aria-controls="lvl-body" onclick="toggleSection('lvl-body','lvl-arrow',this)">
+    <span class="sec-header-left">
+      <span class="sec-icon">📍</span>
+      <span class="sec-title">L · Level</span>
+      <span class="sec-header-sub" id="lvl-header-sub"></span>
+    </span>
+    <span class="sec-header-right">
+      <span class="sec-badge neutral" id="lvl-badge">—</span>
+      <span class="sec-arrow" id="lvl-arrow">▼</span>
+    </span>
+  </button>
   <div class="sec-body" id="lvl-body">
-    <p style="color:var(--muted);font-size:12px;margin-bottom:12px">At which psychological price level can the forced move accelerate, absorb, or fail?</p>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:12px">At which psychological price level can forced action accelerate, absorb, or fail?</p>
 
-    <div class="score-row"><span class="score-label">Active Level Score</span>
-      <div class="score-bar-wrap"><div class="score-bar-fill orange" id="bar-lvl" style="width:0%"></div></div>
-      <span class="score-val" id="val-lvl">0</span>
-      <span class="score-threshold">min 60</span></div>
-    <p style="margin-top:4px;font-size:12px"><b>Role:</b> <span id="lvl-role">—</span> &nbsp;·&nbsp; <b>Active Level:</b> <span id="lvl-active">—</span></p>
+    <div class="score-row"><span class="score-label mono">Level Score</span>
+      <div class="score-bar-wrap"><div class="score-threshold-line" style="left:60%"></div><div class="score-bar-fill orange" id="bar-lvl" style="width:0%"></div></div>
+      <span class="score-val mono" id="val-lvl">0</span>
+      <span class="score-threshold mono">/60</span></div>
+    <p style="margin-top:4px;font-size:12px"><b>Role:</b> <span id="lvl-role">—</span> &nbsp;·&nbsp; <b>Active Level:</b> <span class="mono" id="lvl-active">—</span></p>
 
-    <table class="mini-table" style="margin-top:8px"><tbody id="lvl-detail"></tbody></table>
+    <table class="mini-table"><tbody id="lvl-detail"></tbody></table>
     <ul class="reason-list" id="lvl-reasons"></ul>
   </div>
 </div>
 
 <!-- ====== DATA QUALITY ====== -->
-<div class="sec">
-  <div class="sec-header" role="button" tabindex="0" aria-expanded="false" onclick="toggleSection('dq-body','dq-arrow',this)">
-    <span class="sec-icon">🛡️</span>
-    <span class="sec-title">Data Quality — Can We Trust the Data?</span>
-    <span class="sec-badge pass" id="dq-badge">—</span>
-    <span class="sec-arrow" id="dq-arrow">▼</span>
-  </div>
+<div class="sec" id="sec-dq">
+  <button class="sec-header" aria-expanded="false" aria-controls="dq-body" onclick="toggleSection('dq-body','dq-arrow',this)">
+    <span class="sec-header-left">
+      <span class="sec-icon">🛡️</span>
+      <span class="sec-title">Data Quality</span>
+      <span class="sec-header-sub" id="dq-header-sub"></span>
+    </span>
+    <span class="sec-header-right">
+      <span class="sec-badge pass" id="dq-badge">—</span>
+      <span class="sec-arrow" id="dq-arrow">▼</span>
+    </span>
+  </button>
   <div class="sec-body" id="dq-body">
     <p style="color:var(--muted);font-size:12px;margin-bottom:12px">Directional signals require DQ ≥ 90 and ≥2 critical feeds healthy.</p>
 
-    <div class="score-row"><span class="score-label">Data Quality</span>
-      <div class="score-bar-wrap"><div class="score-bar-fill cyan" id="bar-dq" style="width:0%"></div></div>
-      <span class="score-val" id="val-dq">0</span>
-      <span class="score-threshold">min 90</span></div>
-    <p style="margin-top:4px;font-size:12px"><b>Healthy Feeds:</b> <span id="dq-feeds">—</span> &nbsp;·&nbsp; <b>Directional Allowed:</b> <span id="dq-allowed">—</span></p>
+    <div class="score-row"><span class="score-label mono">Quality</span>
+      <div class="score-bar-wrap"><div class="score-threshold-line" style="left:90%"></div><div class="score-bar-fill cyan" id="bar-dq" style="width:0%"></div></div>
+      <span class="score-val mono" id="val-dq">0</span>
+      <span class="score-threshold mono">/90</span></div>
+    <p style="margin-top:4px;font-size:12px"><b>Healthy:</b> <span class="mono" id="dq-feeds">—</span> &nbsp;·&nbsp; <b>Allowed:</b> <span id="dq-allowed">—</span></p>
 
-    <table class="mini-table" style="margin-top:8px"><tbody id="dq-detail"></tbody></table>
+    <table class="mini-table"><tbody id="dq-feeds-table"></tbody></table>
     <ul class="reason-list" id="dq-reasons"></ul>
   </div>
 </div>
 
-<!-- ====== SIGNAL DETAIL ====== -->
+<!-- ====== INVALIDATION ====== -->
 <div class="sec" id="inv-sec" style="display:none">
-  <div class="sec-header" role="button" tabindex="0" aria-expanded="false" onclick="toggleSection('inv-body','inv-arrow',this)">
-    <span class="sec-icon">🚫</span>
-    <span class="sec-title">Invalidation Conditions</span>
-    <span class="sec-arrow" id="inv-arrow">▼</span>
-  </div>
+  <button class="sec-header" aria-expanded="false" aria-controls="inv-body" onclick="toggleSection('inv-body','inv-arrow',this)">
+    <span class="sec-header-left">
+      <span class="sec-icon">🚫</span>
+      <span class="sec-title">Invalidation Conditions</span>
+    </span>
+    <span class="sec-header-right">
+      <span class="sec-arrow" id="inv-arrow">▼</span>
+    </span>
+  </button>
   <div class="sec-body" id="inv-body"><ul class="reason-list" id="inv-list"></ul></div>
 </div>
 
+<!-- ====== ZONES ====== -->
 <div class="sec" id="zones-sec" style="display:none">
-  <div class="sec-header" role="button" tabindex="0" aria-expanded="false" onclick="toggleSection('zones-body','zones-arrow',this)">
-    <span class="sec-icon">🎯</span>
-    <span class="sec-title">Informational Zones</span>
-    <span class="sec-arrow" id="zones-arrow">▼</span>
-  </div>
+  <button class="sec-header" aria-expanded="false" aria-controls="zones-body" onclick="toggleSection('zones-body','zones-arrow',this)">
+    <span class="sec-header-left">
+      <span class="sec-icon">🎯</span>
+      <span class="sec-title">Informational Zones</span>
+    </span>
+    <span class="sec-header-right">
+      <span class="sec-arrow" id="zones-arrow">▼</span>
+    </span>
+  </button>
   <div class="sec-body" id="zones-body">
-    <p class="help-text">These are informational reference levels only — not trade instructions, take-profits, or stop-loss orders.</p>
+    <p class="help-text">Reference levels only — not trade instructions, take-profits, or stop-loss orders.</p>
     <ul class="reason-list" id="zones-list"></ul>
   </div>
 </div>
 
 <!-- ====== HOW IT WORKS ====== -->
 <div class="sec">
-  <div class="sec-header" role="button" tabindex="0" aria-expanded="false" onclick="toggleSection('how-body','how-arrow',this)">
-    <span class="sec-icon">ℹ️</span>
-    <span class="sec-title">How PFC-3L Works</span>
-    <span class="sec-arrow" id="how-arrow">▼</span>
-  </div>
+  <button class="sec-header" aria-expanded="false" aria-controls="how-body" onclick="toggleSection('how-body','how-arrow',this)">
+    <span class="sec-header-left">
+      <span class="sec-icon">ℹ️</span>
+      <span class="sec-title">How PFC-3L Works</span>
+    </span>
+    <span class="sec-header-right">
+      <span class="sec-arrow" id="how-arrow">▼</span>
+    </span>
+  </button>
   <div class="sec-body" id="how-body">
     <p><b>PFC-3L</b> = <b>P</b>ositioning · <b>F</b>low · <b>C</b>atalyst · <b>L</b>evel</p>
     <p style="color:var(--muted);font-size:12px;line-height:1.8">
@@ -286,16 +353,12 @@
       <b>NO_TRADE</b> is the default when no gates align.<br>
       <b>All rules are deterministic Python logic.</b> No LLM controls scores or thresholds.
     </p>
-    <p style="color:var(--muted);font-size:11px;margin-top:8px">
-      Data sources: AMT feed (Binance spot/perpetual), AI Factors (VIX/US10Y/volume), Volume Profile, Trap Monitor, Redline.
-    </p>
   </div>
 </div>
 
 <div class="disclaimer">
-  <b>PFC-3L is market-analysis and decision-support only.</b> It does not place, simulate, or transmit orders.
-  No exchange accounts, wallets, or private APIs are accessed.
-  Outputs may be delayed or wrong. Users remain fully responsible for their own decisions and risk management.
+  <b>PFC-3L is market-analysis and decision-support only.</b> It does not place, simulate, or transmit orders.<br>
+  No exchange accounts, wallets, or private APIs are accessed. Users remain solely responsible for their decisions.
 </div>
 
 </div>
@@ -304,47 +367,50 @@
 
 <script src="../assets/nav.js?v=13"></script>
 <script>
+var _lastErrorTime = null;
+var _lastDataTime = null;
+
 function toggleSection(bodyId, arrowId, headerEl) {
   var b = document.getElementById(bodyId);
   var a = document.getElementById(arrowId);
   var isOpen = b.style.display === 'block';
   b.style.display = isOpen ? 'none' : 'block';
-  if (a) { a.classList.toggle('up', !isOpen); }
+  if (a) a.classList.toggle('up', !isOpen);
   if (headerEl) {
     headerEl.classList.toggle('open', !isOpen);
     headerEl.setAttribute('aria-expanded', !isOpen);
   }
 }
 
-function setBar(id, val, max) {
-  var pct = Math.min(100, (val / max) * 100);
-  document.getElementById(id).style.width = pct + '%';
+function openSection(bodyId, arrowId, headerEl) {
+  var b = document.getElementById(bodyId);
+  var a = document.getElementById(arrowId);
+  b.style.display = 'block';
+  if (a) a.classList.add('up');
+  if (headerEl) { headerEl.classList.add('open'); headerEl.setAttribute('aria-expanded', 'true'); }
 }
 
-function badgeEl(id, state, score) {
-  var el = document.getElementById(id);
-  el.textContent = state;
-  el.className = 'sec-badge ';
-  if (state === 'PASS' || state.includes('CANDIDATE') || state.includes('STRONG_SPOT_BUYING')) el.className += 'pass';
-  else if (state === 'FAIL' || state === 'DATA_UNRELIABLE') el.className += 'fail';
-  else if (state.includes('WATCH')) el.className += 'warn';
-  else el.className += 'neutral';
+function setBar(id, val, max) {
+  document.getElementById(id).style.width = Math.min(100, (val/max)*100) + '%';
+}
+
+function ago(ts) {
+  if (!ts) return '';
+  try { var s = Math.floor((Date.now() - new Date(ts).getTime())/1000); }
+  catch(e) { return ''; }
+  if (s < 60) return s + 's ago';
+  if (s < 3600) return Math.floor(s/60) + 'm ago';
+  return Math.floor(s/3600) + 'h ago';
 }
 
 function detailTable(id, rows) {
-  var html = '';
-  rows.forEach(function(r) {
-    html += '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>';
-  });
-  document.getElementById(id).innerHTML = html;
+  var h = ''; rows.forEach(function(r){ h += '<tr><td>' + r[0] + '</td><td class="mono">' + r[1] + '</td></tr>'; });
+  document.getElementById(id).innerHTML = h;
 }
 
 function reasonList(id, items, cls) {
-  var html = '';
-  items.forEach(function(item) {
-    html += '<li class="' + (cls||'') + '">' + item + '</li>';
-  });
-  document.getElementById(id).innerHTML = html || '<li style="color:var(--muted)">None</li>';
+  var h = ''; items.forEach(function(i){ h += '<li class="'+(cls||'')+'">' + i + '</li>'; });
+  document.getElementById(id).innerHTML = h || '<li style="color:var(--muted)">None</li>';
 }
 
 function render(data) {
@@ -354,9 +420,23 @@ function render(data) {
   var flo = data.flow || {};
   var cat = data.catalyst || {};
   var lvl = data.levels || {};
+  var state = sig.state || 'NO_TRADE';
+
+  // Timestamp freshness
+  _lastDataTime = sig.ts;
+  var ageEl = document.getElementById('sig-age');
+  var age = ago(sig.ts);
+  var ageFull = sig.ts ? 'Generated: ' + sig.ts + ' UTC' : '';
+  ageEl.textContent = 'Updated ' + age;
+  ageEl.title = ageFull;
+  ageEl.className = 'sig-age';
+  var secAge = sig.ts ? (Date.now() - new Date(sig.ts).getTime())/1000 : 999;
+  if (secAge < 120) ageEl.classList.add('fresh');
+
+  // Error state cleared
+  document.getElementById('error-msg').style.display = 'none';
 
   // Signal hero
-  var state = sig.state || 'NO_TRADE';
   var hero = document.getElementById('signal-hero');
   hero.className = 'signal-hero ' + state;
   var stEl = document.getElementById('sig-state');
@@ -365,29 +445,81 @@ function render(data) {
   document.getElementById('sig-price').textContent = '$' + ((sig.reference_price||0)).toLocaleString('en-US');
   document.getElementById('sig-conf').textContent = sig.confidence || 0;
   document.getElementById('sig-dq').textContent = dq.score || 0;
-  document.getElementById('sig-ts').textContent = sig.ts || '—';
 
   // Stale warning
   var staleEl = document.getElementById('stale-warning');
   if (state === 'DATA_UNRELIABLE') {
     staleEl.style.display = 'block';
-    document.getElementById('stale-text').textContent = '⚠ Data quality failure — directional signals blocked. ' + ((sig.vetoes||[]).join('; '));
+    document.getElementById('stale-text').textContent = '⚠ Data quality failure. ' + ((sig.vetoes||[]).join('; '));
   } else { staleEl.style.display = 'none'; }
 
-  // Lifecycle
+  // Lifecycle with semantic states
   var lc = sig.lifecycle_state || 'ACTIVE';
   var steps = ['WATCH','CANDIDATE','ACTIVE','INVALIDATED','EXPIRED'];
   var lcIdx = steps.indexOf(lc);
   var lcHtml = '';
   steps.forEach(function(s, i) {
-    var cls = i === lcIdx ? 'active' : (i < lcIdx ? 'inactive' : 'inactive');
+    var cls = 'future';
+    if (i < lcIdx) cls = 'completed';
+    else if (i === lcIdx) cls = 'current';
+    if (lc === 'INVALIDATED' && s === 'INVALIDATED') cls = 'invalidated';
     lcHtml += '<span class="lifecycle-step ' + cls + '">' + s + '</span>';
     if (i < 4) lcHtml += '<span class="lifecycle-arrow">→</span>';
   });
-  document.getElementById('lifecycle-bar').innerHTML = lcHtml;
+  document.getElementById('lifecycle-bar').innerHTML = lcHtml + '<div style="font-size:9px;color:var(--muted);width:100%;text-align:center;margin-top:2px">Signal is decision support — not an active trade</div>';
+
+  // Gate summary row
+  var posPass = pos.state === 'SHORTS_VULNERABLE' && (pos.score||0) >= 70;
+  var floPass = (flo.state||'').includes('SPOT_BUYING') && (flo.score||0) >= 70;
+  var catPass = cat.state === 'POSITIVE' && (cat.confidence||0) >= 70;
+  var lvlPass = (lvl.role||'').match(/ACCELERATOR|ABSORBER/) && (lvl.score||0) >= 60;
+  var dqPass = dq.score >= 90 && dq.directional_allowed;
+  var gates = [
+    {id:'P', name:'Positioning', score:pos.score||0, thresh:70, pass:posPass, target:'sec-pos'},
+    {id:'F', name:'Flow', score:flo.score||0, thresh:70, pass:floPass, target:'sec-flo'},
+    {id:'C', name:'Catalyst', score:cat.confidence||0, thresh:70, pass:catPass, target:'sec-cat'},
+    {id:'L', name:'Level', score:lvl.score||0, thresh:60, pass:lvlPass, target:'sec-lvl'},
+    {id:'DQ', name:'Data Quality', score:dq.score||0, thresh:90, pass:dqPass, target:'sec-dq'}
+  ];
+  var minGate = gates.reduce(function(a,b){ return a.score < b.score ? a : b; });
+  var gsHtml = '';
+  gates.forEach(function(g) {
+    var isMin = g === minGate && state !== 'LONG_CANDIDATE' && state !== 'SHORT_CANDIDATE';
+    var cls = g.pass ? 'passing' : (isMin ? 'blocking' : 'near');
+    var dist = g.score - g.thresh;
+    var distStr = dist >= 0 ? '+' + dist : dist;
+    gsHtml += '<div class="gate-summary-item ' + cls + '" onclick="document.getElementById(\\'' + g.target + '\\').scrollIntoView({behavior:\\'smooth\\'}); var h=document.querySelector(\\'#' + g.target + ' .sec-header\\'); if(h) openSection(\\'' + g.target.replace('sec-','') + '-body\\',\\'' + g.target.replace('sec-','') + '-arrow\\',h);" title="' + g.name + ': ' + g.score + '/' + g.thresh + ' (' + distStr + ')">';
+    gsHtml += '<div class="gate-summary-name">' + g.id + '</div>';
+    gsHtml += '<div class="gate-summary-score ' + cls + '">' + g.score + '</div>';
+    gsHtml += '<div class="gate-summary-thresh mono">/ ' + g.thresh + ' <span style="font-size:9px">(' + distStr + ')</span></div>';
+    gsHtml += '</div>';
+  });
+  document.getElementById('gate-summary').innerHTML = gsHtml;
+
+  // Card urgency borders + header subs
+  function cardUrgency(secId, pass, headerSubId, info) {
+    var sec = document.getElementById(secId);
+    sec.className = 'sec ' + (pass ? 'passing' : (info.near ? 'near-threshold' : 'failing'));
+    if (headerSubId) document.getElementById(headerSubId).textContent = info.text;
+  }
+  cardUrgency('sec-pos', posPass, 'pos-header-sub', {near: (pos.score||0)>=45, text: (pos.score||0)+'/70 · '+(pos.state||'—')});
+  cardUrgency('sec-flo', floPass, 'flo-header-sub', {near: (flo.score||0)>=45, text: (flo.score||0)+'/70 · '+(flo.state||'—')});
+  cardUrgency('sec-cat', catPass, 'cat-header-sub', {near: (cat.confidence||0)>=40, text: (cat.confidence||0)+'/70 · '+(cat.state||'—')});
+  cardUrgency('sec-lvl', lvlPass, 'lvl-header-sub', {near: (lvl.score||0)>=30, text: (lvl.score||0)+'/60 · '+(lvl.role||'—')});
+  cardUrgency('sec-dq', dqPass, 'dq-header-sub', {near: dq.score>=60, text: (dq.score||0)+'/90 · '+(dq.directional_allowed?'OK':'FAIL')});
+
+  // Auto-open limiting gate for non-candidate states
+  if (state !== 'LONG_CANDIDATE' && state !== 'SHORT_CANDIDATE') {
+    setTimeout(function() {
+      var lim = minGate.target;
+      var h = document.querySelector('#' + lim + ' .sec-header');
+      if (h) openSection(lim.replace('sec-','') + '-body', lim.replace('sec-','') + '-arrow', h);
+    }, 100);
+  }
 
   // === POSITIONING ===
-  badgeEl('pos-badge', pos.state||'—', pos.score);
+  document.getElementById('pos-badge').textContent = pos.state||'—';
+  document.getElementById('pos-badge').className = 'sec-badge ' + (posPass ? 'pass' : (pos.state==='SHORTS_VULNERABLE'?'warn':'neutral'));
   document.getElementById('pos-state').textContent = pos.state||'—';
   document.getElementById('pos-score').textContent = pos.score||0;
   setBar('bar-short-s', pos.short_vulnerability_score||0, 100);
@@ -398,15 +530,13 @@ function render(data) {
     ['Long Vulnerability', (pos.long_vulnerability_score||0) + '/100'],
     ['Short Vulnerability', (pos.short_vulnerability_score||0) + '/100'],
     ['Opposite Score', (pos.opposite_score||0) + ''],
-    ['Threshold (CANDIDATE)', '≥70 + >10 lead'],
-    ['Interpretation', pos.state === 'SHORTS_VULNERABLE' ? 'Shorts are crowded — upward squeeze risk' :
-                       pos.state === 'LONGS_VULNERABLE' ? 'Longs are crowded — downward liquidation risk' :
-                       'No clear vulnerability — positions balanced'],
+    ['Threshold', '≥70 + >10 lead for CANDIDATE'],
   ]);
   reasonList('pos-reasons', pos.reasons||[]);
 
   // === FLOW ===
-  badgeEl('flo-badge', flo.state||'—', flo.score);
+  document.getElementById('flo-badge').textContent = flo.state||'—';
+  document.getElementById('flo-badge').className = 'sec-badge ' + (floPass ? 'pass' : (flo.state==='DERIVATIVES_ONLY'?'fail':'neutral'));
   document.getElementById('flo-state').textContent = flo.state||'—';
   document.getElementById('flo-score').textContent = flo.score||0;
   setBar('bar-bull', flo.bullish_score||0, 100);
@@ -414,60 +544,65 @@ function render(data) {
   document.getElementById('val-bull').textContent = flo.bullish_score||0;
   document.getElementById('val-bear').textContent = flo.bearish_score||0;
   detailTable('flo-detail', [
-    ['Taker Buy Ratio', ((flo.taker_buy_ratio||0)*100).toFixed(0) + '% (≥55% strong, <48% bearish)'],
-    ['Coinbase Premium', (flo.coinbase_premium||0).toFixed(2) + '% (>0 = US buying, <−0.2 = selling)'],
-    ['Healthy Spot Venues', (flo.healthy_spot_venues||0) + ''],
-    ['Derivatives-Only Veto', flo.state === 'DERIVATIVES_ONLY' ? '⚠ ACTIVE — no candidate allowed' : 'Not active'],
+    ['Taker Buy Ratio', ((flo.taker_buy_ratio||0)*100).toFixed(1) + '%'],
+    ['Coinbase Premium', (flo.coinbase_premium||0).toFixed(2) + '%'],
+    ['Spot Venues', (flo.healthy_spot_venues||0) + ' healthy'],
+    ['Derivatives Veto', flo.state === 'DERIVATIVES_ONLY' ? '⚠ ACTIVE' : 'Not active'],
   ]);
   reasonList('flo-reasons', flo.reasons||[]);
 
   // === CATALYST ===
-  badgeEl('cat-badge', cat.state||'—', cat.confidence);
+  document.getElementById('cat-badge').textContent = cat.state||'—';
+  document.getElementById('cat-badge').className = 'sec-badge ' + (catPass ? 'pass' : (cat.confidence>=40?'warn':'neutral'));
   document.getElementById('cat-state').textContent = cat.state||'—';
   document.getElementById('cat-dir').textContent = cat.direction||'—';
   setBar('bar-cat', cat.confidence||0, 100);
   document.getElementById('val-cat').textContent = cat.confidence||0;
   detailTable('cat-detail', [
     ['Direction', cat.direction||'NONE'],
-    ['Confidence', (cat.confidence||0) + '/100 (≥70 for candidate)'],
-    ['Source Quality', (cat.source_quality||0) + '/100'],
-    ['Active Signals', cat.state === 'NONE' ? 'No catalyst active' : cat.state],
+    ['Confidence', (cat.confidence||0) + '/100'],
+    ['VIX / F&G / Crash', 'See reasons below'],
   ]);
   reasonList('cat-reasons', cat.reasons||[]);
 
   // === LEVEL ===
-  badgeEl('lvl-badge', lvl.role||'—', lvl.score);
+  document.getElementById('lvl-badge').textContent = lvl.role||'—';
+  document.getElementById('lvl-badge').className = 'sec-badge ' + (lvlPass ? 'pass' : (lvl.score>=30?'warn':'neutral'));
   document.getElementById('lvl-role').textContent = lvl.role||'—';
   var al = lvl.active_level;
-  document.getElementById('lvl-active').textContent = al ? ('$' + al.price.toLocaleString('en-US') + ' (' + al.distance_pct + '% away, ' + al.category + ')') : 'None';
+  document.getElementById('lvl-active').textContent = al ? ('$' + al.price.toLocaleString('en-US') + ' (' + al.distance_pct + '% ' + al.category + ')') : 'None';
   setBar('bar-lvl', lvl.score||0, 100);
   document.getElementById('val-lvl').textContent = lvl.score||0;
-  var lvlRows = [['Active Level', al ? '$' + al.price.toLocaleString('en-US') : 'None']];
-  if (al) {
-    lvlRows.push(['Distance', al.distance_pct + '% from price']);
-    lvlRows.push(['Category', al.category]);
-    lvlRows.push(['Role', al.role]);
-  }
-  var lvls = lvl.levels||[];
-  lvls.slice(0, 5).forEach(function(l) {
-    lvlRows.push([l.source + ' ($' + l.price.toLocaleString('en-US') + ')', l.distance_pct + '% away · ' + l.role + ' · score ' + l.score]);
+  var lvlRows = al ? [
+    ['Active Level', '$' + al.price.toLocaleString('en-US')],
+    ['Distance', al.distance_pct + '%'],
+    ['Category / Role', al.category + ' · ' + al.role],
+  ] : [['Active Level', 'None']];
+  (lvl.levels||[]).slice(0,4).forEach(function(l) {
+    lvlRows.push([l.source, '$' + l.price.toLocaleString('en-US') + ' · ' + l.distance_pct + '% · ' + l.role]);
   });
   detailTable('lvl-detail', lvlRows);
   reasonList('lvl-reasons', lvl.reasons||[]);
 
-  // === DATA QUALITY ===
-  badgeEl('dq-badge', dq.directional_allowed ? 'PASS' : 'FAIL', dq.score);
+  // === DATA QUALITY with per-feed detail ===
+  document.getElementById('dq-badge').textContent = dqPass ? 'PASS' : 'FAIL';
+  document.getElementById('dq-badge').className = 'sec-badge ' + (dqPass ? 'pass' : 'fail');
   document.getElementById('dq-feeds').textContent = (dq.healthy_feeds||0) + '/' + (dq.total_critical_feeds||3);
-  document.getElementById('dq-allowed').textContent = dq.directional_allowed ? 'YES' : 'NO';
+  document.getElementById('dq-allowed').textContent = dq.directional_allowed ? '✅ YES' : '❌ NO';
   setBar('bar-dq', dq.score||0, 100);
   document.getElementById('val-dq').textContent = dq.score||0;
-  var dqRows = [
-    ['Directional Signals', dq.directional_allowed ? '✅ Allowed' : '❌ Blocked'],
-    ['Critical Feeds', (dq.healthy_feeds||0) + ' healthy / ' + (dq.total_critical_feeds||3) + ' total'],
-    ['Minimum Required', '≥2 critical feeds + score ≥90'],
-  ];
-  if (dq.vetoes) dq.vetoes.forEach(function(v) { dqRows.push(['⚠ Veto', v]); });
-  detailTable('dq-detail', dqRows);
+
+  // Per-feed status table
+  var feedsData = dq.feeds || {};
+  var feedRows = [];
+  ['amt','ai_factors','volume_profile','redline','trap_monitor'].forEach(function(k) {
+    var f = feedsData[k];
+    if (!f) return;
+    var status = f.healthy ? '✅ Healthy' : (f.stale ? '⚠ Stale' : '❌ Missing');
+    feedRows.push([f.label||k, status + ' · ' + (f.age||'—')]);
+  });
+  if (!feedRows.length) feedRows.push(['Feed data', 'Loading from signal engine...']);
+  detailTable('dq-feeds-table', feedRows);
   reasonList('dq-reasons', dq.reasons||[]);
 
   // === INVALIDATION ===
@@ -481,15 +616,20 @@ function render(data) {
   var zonesSec = document.getElementById('zones-sec');
   if (zones.length) {
     zonesSec.style.display = 'block';
-    reasonList('zones-list', zones.map(function(z) { return '$' + (typeof z==='number'?z.toLocaleString('en-US'):z); }), 'zone');
+    reasonList('zones-list', zones.map(function(z){ return '$' + (typeof z==='number'?z.toLocaleString('en-US'):z) + ' — INFORMATIONAL ZONE — NOT AN ORDER INSTRUCTION'; }), 'zone');
   } else { zonesSec.style.display = 'none'; }
 }
 
 function loadSignal() {
   fetch('../pfc3l/signal.json?' + Date.now())
-    .then(function(r) { return r.json(); })
+    .then(function(r) { if (!r.ok) throw Error(r.status); return r.json(); })
     .then(function(d) { render(d); })
-    .catch(function(e) { document.getElementById('sig-state').textContent = 'LOADING'; });
+    .catch(function(e) {
+      var em = document.getElementById('error-msg');
+      em.style.display = 'block';
+      var t = _lastDataTime ? 'Update failed — showing data from ' + ago(_lastDataTime) : 'Update failed — no cached data';
+      document.getElementById('error-text').textContent = t;
+    });
 }
 
 loadSignal();
