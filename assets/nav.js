@@ -81,6 +81,7 @@
         <li role="none"><a role="menuitem" href="${BASE}/packet/">Data Packet</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/packet/v2/" style="color:var(--cyan)">Packet V2 (LLM)</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/analysis/">Analysis</a></li>
+        <li role="none"><a role="menuitem" href="${BASE}/pfc3l/">PFC-3L</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/aegis/" style="color:var(--aegis-cyan)">BTC AEGIS</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/ai-factors/">AI Factors</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/market-regime/">Market Regime</a></li>
@@ -113,6 +114,7 @@
         <h4>⚡ Pipeline Dashboard</h4>
         <p style="font-size:0.82em;color:var(--muted);line-height:1.6;margin-top:8px">
           Free, open-source Bitcoin intelligence — macro-first multi-layer analysis
+        <li role="none"><a role="menuitem" href="${BASE}/pfc3l/">PFC-3L</a></li>
           with Gate0 risk gating. Not financial advice.
         </p>
       </div>
@@ -153,6 +155,7 @@
     </div>
     <div class="site-footer-bottom">
       BTC Pipeline Dashboard · Macro-first Bitcoin analysis engine ·
+        <li role="none"><a role="menuitem" href="${BASE}/pfc3l/">PFC-3L</a></li>
       Data sources: Binance + Yahoo Finance + FRED + on-chain providers ·
       Auto-refreshed every 15 minutes (<span id="footer-time"></span>) ·
       <a href="https://github.com/aikeluargalee-tech/pipeline-dashboard" style="color:var(--muted)">GitHub</a> ·

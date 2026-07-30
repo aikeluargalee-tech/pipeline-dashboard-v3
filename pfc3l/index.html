@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PFC-3L Signal Intelligence — Pipeline Dashboard</title>
+<link rel="stylesheet" href="../assets/styles.css">
+<style>
+  .page { max-width: 720px; margin: 0 auto; padding: 16px 8px; }
+
+  /* Signal hero */
+  .signal-hero { text-align: center; padding: 20px 0; margin-bottom: 20px; border-radius: 12px; }
+  .signal-hero.LONG_CANDIDATE { background: linear-gradient(135deg, rgba(0,255,0,0.08), rgba(0,255,0,0.02)); border: 1px solid rgba(0,255,0,0.15); }
+  .signal-hero.SHORT_CANDIDATE { background: linear-gradient(135deg, rgba(255,0,0,0.08), rgba(255,0,0,0.02)); border: 1px solid rgba(255,0,0,0.15); }
+  .signal-hero.WATCH_LONG { background: linear-gradient(135deg, rgba(0,255,0,0.04), transparent); border: 1px solid rgba(0,255,0,0.08); }
+  .signal-hero.WATCH_SHORT { background: linear-gradient(135deg, rgba(255,0,0,0.04), transparent); border: 1px solid rgba(255,0,0,0.08); }
+  .signal-hero.NO_TRADE { background: rgba(255,255,255,0.02); border: 1px solid var(--border); }
+  .signal-hero.DATA_UNRELIABLE { background: linear-gradient(135deg, rgba(255,165,0,0.08), rgba(255,165,0,0.02)); border: 1px solid rgba(255,165,0,0.15); }
+
+  .sig-state { font-size: 1.8em; font-weight: 900; letter-spacing: -0.01em; }
+  .sig-state.LONG_CANDIDATE { color: var(--green); }
+  .sig-state.SHORT_CANDIDATE { color: var(--red); }
+  .sig-state.WATCH_LONG { color: #66cc66; }
+  .sig-state.WATCH_SHORT { color: #cc6666; }
+  .sig-state.NO_TRADE { color: var(--muted); }
+  .sig-state.DATA_UNRELIABLE { color: var(--orange); }
+
+  .sig-price { font-size: 1.4em; font-weight: 700; margin: 8px 0; }
+  .sig-conf { font-size: 0.9em; color: var(--muted); }
+  .sig-ts { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* Gate cards */
+  .gates { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
+  .gate-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+  .gate-card.pass { border-color: rgba(0,255,0,0.2); }
+  .gate-card.fail { border-color: rgba(255,0,0,0.2); }
+  .gate-card.neutral { border-color: var(--border); }
+  .gate-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 4px; }
+  .gate-score { font-size: 1.3em; font-weight: 700; }
+  .gate-score.pass { color: var(--green); }
+  .gate-score.fail { color: var(--red); }
+  .gate-score.neutral { color: var(--text); }
+  .gate-state { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* Expandable sections */
+  .section { margin-bottom: 16px; }
+  .section-header { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+  .section-header:hover { border-color: var(--cyan); }
+  .section-title { font-weight: 600; font-size: 0.95em; }
+  .section-arrow { color: var(--muted); transition: transform 0.2s; }
+  .section-body { padding: 12px 14px; font-size: 13px; line-height: 1.7; display: none; }
+
+  .reason-list { margin: 0; padding: 0; list-style: none; }
+  .reason-list li { padding: 3px 0; }
+  .reason-list li::before { content: '▸ '; color: var(--cyan); }
+  .veto-list li::before { content: '✕ '; color: var(--red); }
+  .zone-list li::before { content: '◎ '; color: var(--orange); }
+
+  .stale-warning { background: rgba(255,165,0,0.1); border: 1px solid rgba(255,165,0,0.3); border-radius: 6px; padding: 8px 12px; margin-bottom: 16px; font-size: 12px; color: var(--orange); text-align: center; }
+  .loading { text-align: center; padding: 40px; color: var(--muted); }
+  .disclaimer { font-size: 10px; color: var(--muted); text-align: center; margin-top: 24px; padding: 12px; border-top: 1px solid var(--border); }
+</style>
+</head>
+
+<div id="nav-placeholder"></div>
+
+<div class="page">
+
+<!-- Signal Hero -->
+<div id="signal-hero" class="signal-hero NO_TRADE">
+  <div class="sig-state NO_TRADE" id="sig-state">NO_TRADE</div>
+  <div class="sig-price" id="sig-price">—</div>
+  <div class="sig-conf">Confidence: <b id="sig-conf">—</b></div>
+  <div class="sig-ts" id="sig-ts">—</div>
+</div>
+
+<!-- Stale warning -->
+<div class="stale-warning" id="stale-warning" style="display:none">
+  <span id="stale-text"></span>
+</div>
+
+<!-- 5 Gate Cards -->
+<div class="gates">
+  <div class="gate-card neutral" id="gate-positioning">
+    <div class="gate-label">P · Positioning</div>
+    <div class="gate-score neutral" id="pos-score">—</div>
+    <div class="gate-state" id="pos-state">—</div>
+  </div>
+  <div class="gate-card neutral" id="gate-flow">
+    <div class="gate-label">F · Flow</div>
+    <div class="gate-score neutral" id="flow-score">—</div>
+    <div class="gate-state" id="flow-state">—</div>
+  </div>
+  <div class="gate-card neutral" id="gate-catalyst">
+    <div class="gate-label">C · Catalyst</div>
+    <div class="gate-score neutral" id="cat-score">—</div>
+    <div class="gate-state" id="cat-state">—</div>
+  </div>
+  <div class="gate-card neutral" id="gate-level">
+    <div class="gate-label">L · Level</div>
+    <div class="gate-score neutral" id="lvl-score">—</div>
+    <div class="gate-state" id="lvl-state">—</div>
+  </div>
+  <div class="gate-card neutral" id="gate-dq">
+    <div class="gate-label">Data Quality</div>
+    <div class="gate-score neutral" id="dq-score">—</div>
+    <div class="gate-state" id="dq-state">—</div>
+  </div>
+</div>
+
+<!-- Reasons & Vetoes -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection('reasons-body','reasons-arrow')">
+    <span class="section-title">Reasons & Vetoes</span>
+    <span class="section-arrow" id="reasons-arrow">▼</span>
+  </div>
+  <div class="section-body" id="reasons-body">
+    <ul class="reason-list" id="reasons-list"></ul>
+  </div>
+</div>
+
+<!-- Invalidation -->
+<div class="section" id="invalidation-section" style="display:none">
+  <div class="section-header" onclick="toggleSection('inv-body','inv-arrow')">
+    <span class="section-title">Invalidation Conditions</span>
+    <span class="section-arrow" id="inv-arrow">▼</span>
+  </div>
+  <div class="section-body" id="inv-body">
+    <ul class="reason-list veto-list" id="inv-list"></ul>
+  </div>
+</div>
+
+<!-- Informational Zones -->
+<div class="section" id="zones-section" style="display:none">
+  <div class="section-header" onclick="toggleSection('zones-body','zones-arrow')">
+    <span class="section-title">Informational Zones</span>
+    <span class="section-arrow" id="zones-arrow">▼</span>
+  </div>
+  <div class="section-body" id="zones-body">
+    <ul class="reason-list zone-list" id="zones-list"></ul>
+  </div>
+</div>
+
+<div class="disclaimer">
+  PFC-3L is decision support only. No orders created or transmitted.<br>
+  Signal rules are deterministic Python logic — no LLM control over scores or thresholds.
+</div>
+
+</div>
+
+<div id="footer-placeholder"></div>
+
+<script src="../assets/nav.js?v=13"></script>
+<script>
+// Toggle sections
+function toggleSection(bodyId, arrowId) {
+  var b = document.getElementById(bodyId);
+  var a = document.getElementById(arrowId);
+  if (b.style.display === 'block') { b.style.display = 'none'; a.textContent = '▼'; }
+  else { b.style.display = 'block'; a.textContent = '▲'; }
+}
+
+// Render engine output
+function render(data) {
+  var sig = data.signal;
+  var dq = data.data_quality;
+  var pos = data.positioning;
+  var flo = data.flow;
+  var cat = data.catalyst;
+  var lvl = data.levels;
+
+  // Signal hero
+  var hero = document.getElementById('signal-hero');
+  var state = sig.state;
+  hero.className = 'signal-hero ' + state;
+  document.getElementById('sig-state').className = 'sig-state ' + state;
+  document.getElementById('sig-state').textContent = state.replace(/_/g,' ');
+  document.getElementById('sig-price').textContent = '$' + (sig.reference_price||0).toLocaleString('en-US');
+  document.getElementById('sig-conf').textContent = sig.confidence + '/100';
+  document.getElementById('sig-ts').textContent = 'Generated: ' + sig.ts + ' UTC';
+
+  // Stale warning
+  var stale = document.getElementById('stale-warning');
+  if (state === 'DATA_UNRELIABLE') {
+    stale.style.display = 'block';
+    document.getElementById('stale-text').textContent = '⚠ Data quality failure — directional signals blocked. ' + (sig.vetoes||[]).join('; ');
+  } else {
+    stale.style.display = 'none';
+  }
+
+  // Gate cards
+  function gateCard(id, label, score, stateStr, passing) {
+    var card = document.getElementById(id);
+    var cls = passing === true ? 'pass' : (passing === false ? 'fail' : 'neutral');
+    card.className = 'gate-card ' + cls;
+    card.querySelector('.gate-score').className = 'gate-score ' + cls;
+    card.querySelector('.gate-score').textContent = score;
+    card.querySelector('.gate-state').textContent = stateStr;
+  }
+
+  var gates = sig.gates || {};
+  gateCard('gate-positioning', 'P', pos.score||0, pos.state, sig.state.includes('LONG') || sig.state.includes('SHORT') ? gates.positioning : null);
+  gateCard('gate-flow', 'F', flo.score||0, flo.state, sig.state.includes('LONG') || sig.state.includes('SHORT') ? gates.flow : null);
+  gateCard('gate-catalyst', 'C', cat.confidence||0, cat.state, sig.state.includes('LONG') || sig.state.includes('SHORT') ? gates.catalyst : null);
+  gateCard('gate-level', 'L', lvl.score||0, lvl.role, sig.state.includes('LONG') || sig.state.includes('SHORT') ? gates.level : null);
+  gateCard('gate-dq', 'DQ', dq.score||0, dq.directional_allowed ? 'PASS' : 'FAIL', dq.directional_allowed);
+
+  // Reasons
+  var reasonsList = document.getElementById('reasons-list');
+  var items = [];
+  (sig.reasons||[]).forEach(function(r) { items.push('<li>' + r + '</li>'); });
+  (sig.vetoes||[]).forEach(function(v) { items.push('<li style="color:var(--red)">' + v + '</li>'); });
+  reasonsList.innerHTML = items.join('') || '<li>No reasons</li>';
+
+  // Invalidation
+  var inv = sig.invalidation_conditions || [];
+  var invSection = document.getElementById('invalidation-section');
+  if (inv.length) {
+    invSection.style.display = 'block';
+    document.getElementById('inv-list').innerHTML = inv.map(function(c) { return '<li>' + c + '</li>'; }).join('');
+  } else {
+    invSection.style.display = 'none';
+  }
+
+  // Informational zones
+  var zones = sig.informational_zones || [];
+  var zonesSection = document.getElementById('zones-section');
+  if (zones.length) {
+    zonesSection.style.display = 'block';
+    document.getElementById('zones-list').innerHTML = zones.map(function(z) {
+      return '<li>$' + (typeof z === 'number' ? z.toLocaleString('en-US') : z) + '</li>';
+    }).join('');
+  } else {
+    zonesSection.style.display = 'none';
+  }
+}
+
+// Load signal.json
+function loadSignal() {
+  fetch('../pfc3l/signal.json?' + Date.now())
+    .then(function(r) { return r.json(); })
+    .then(function(d) { render(d); })
+    .catch(function(e) {
+      document.getElementById('sig-state').textContent = 'LOADING';
+      console.error(e);
+    });
+}
+
+// First load
+loadSignal();
+// Refresh every 60s
+setInterval(loadSignal, 60000);
+</script>
+
+</html>
