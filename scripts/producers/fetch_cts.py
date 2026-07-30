@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 import yfinance as yf
 
 # ─── Configuration ───────────────────────────────────────────────
-SITE = "/home/maswilee/projects/pipeline-dashboard-v3"
+SITE = "/home/susiwilee/projects/pipeline-dashboard-v3"
 STATE_FILE = os.path.join(SITE, "data/corporate_treasury_stress.json")
 LOG_FILE = os.path.join(SITE, "data/corporate_treasury_stress.log")
 

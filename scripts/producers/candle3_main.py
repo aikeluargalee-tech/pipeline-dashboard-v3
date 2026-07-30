@@ -140,7 +140,7 @@ def main():
     
     # Log to reads.jsonl
     import os
-    log_dir = "/home/maswilee/pipeline-dashboard V2/data"
+    log_dir = "/home/susiwilee/pipeline-dashboard V2/data"
     os.makedirs(log_dir, exist_ok=True)
     with open(os.path.join(log_dir, "reads.jsonl"), "a") as f:
         f.write(json.dumps(result, default=str) + "\n")

@@ -9,7 +9,7 @@ import os
 import json
 from datetime import datetime, timezone
 
-SITE = "/home/maswilee/projects/pipeline-dashboard-v3"
+SITE = "/home/susiwilee/projects/pipeline-dashboard-v3"
 sys.path.insert(0, SITE)
 
 OUTPUT_PATH = os.path.join(SITE, "data/amt_status.json")

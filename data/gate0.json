@@ -1,40 +1,39 @@
 {
   "verdict": "TIGHTENED",
   "sources": [
-    "ai3_wave",
     "geopolitical"
   ],
   "rules": {
     "action": "Reduce position size. Tight stops. Wait for conditions to clear."
   },
   "modules": {
-    "trp_check": {
-      "state": "PROCEED",
-      "detail": "No signals pending"
-    },
     "black_swan": {
-      "state": "PROCEED",
-      "detail": "Black Swan score: 0/17"
+      "state": "Offline",
+      "detail": "Offline"
     },
     "vix_spx": {
-      "state": "PROCEED",
-      "detail": "No VIX/SPX data cached. Omega not yet run this session."
+      "state": "Offline",
+      "detail": "Offline"
+    },
+    "trp_check": {
+      "state": "Offline",
+      "detail": "Offline"
     },
     "mstr": {
-      "state": "PROCEED",
-      "detail": "No new MSTR filings"
+      "state": "Offline",
+      "detail": "Offline"
     },
     "elon": {
-      "state": "PROCEED",
-      "detail": "Firecrawl API key not found (skipping Elon check)"
+      "state": "Offline",
+      "detail": "Offline"
     },
     "ai_bubble": {
-      "state": "PROCEED",
-      "detail": "BTC 24h: -3.36%"
+      "state": "Offline",
+      "detail": "Offline"
     },
     "quantum": {
-      "state": "PROCEED",
-      "detail": "No new quantum+bitcoin news"
+      "state": "Offline",
+      "detail": "Offline"
     },
     "stablecoins": {
       "state": "PROCEED",
@@ -45,14 +44,14 @@
       "detail": "Active session: NEW YORK"
     },
     "ai3_wave": {
-      "state": "TIGHTENED",
-      "detail": "AI-3 Wave SpaceX active"
+      "state": "PROCEED",
+      "detail": "AI-3 Wave inactive"
     },
     "geopolitical": {
       "state": "TIGHTENED",
-      "detail": "Tier FADE geopolitical signal: neutral \u2014 7 signals today"
+      "detail": "Tier B geopolitical signal: long \u2014 10 signals today"
     }
   },
-  "timestamp": "2026-07-28 14:15 UTC",
-  "_collected": "2026-07-28 14:15 UTC"
+  "timestamp": "2026-07-30 14:20 UTC",
+  "_collected": "2026-07-30 14:20 UTC"
 }

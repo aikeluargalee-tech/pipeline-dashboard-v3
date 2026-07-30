@@ -12,7 +12,7 @@ import os
 import json
 from datetime import datetime, timezone
 
-SITE = "/home/maswilee/projects/pipeline-dashboard-v3"
+SITE = "/home/susiwilee/projects/pipeline-dashboard-v3"
 OUTPUT = os.path.join(SITE, "data/regime_switch.json")
 PREVIOUS = os.path.join(SITE, "data/regime_switch.json")
 

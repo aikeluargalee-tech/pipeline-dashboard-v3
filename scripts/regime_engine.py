@@ -6,7 +6,7 @@ Fetches BTC daily candles from Binance, runs the jump-penalized model, writes JS
 import json, math, os, time, urllib.request
 from datetime import datetime, timezone
 
-OUTPUT = "/home/maswilee/projects/pipeline-dashboard-v3/data/market_regime.json"
+OUTPUT = "/home/susiwilee/projects/pipeline-dashboard-v3/data/market_regime.json"
 LAMBDA = 4.0
 TRAINING_WINDOW = 365
 REFIT_EVERY = 7

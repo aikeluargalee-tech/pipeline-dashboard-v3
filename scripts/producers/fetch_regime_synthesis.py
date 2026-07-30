@@ -14,7 +14,7 @@ Decision rules per btc-signal-synthesis skill:
 import sys, os, json
 from datetime import datetime, timezone
 
-SITE = "/home/maswilee/projects/pipeline-dashboard-v3"
+SITE = "/home/susiwilee/projects/pipeline-dashboard-v3"
 DATA_DIR = os.path.join(SITE, "data")
 
 def load(path):

@@ -12,7 +12,7 @@ import math
 from datetime import datetime, timezone
 
 # Add site and trading-workflow paths
-SITE = "/home/maswilee/projects/pipeline-dashboard-v3"
+SITE = "/home/susiwilee/projects/pipeline-dashboard-v3"
 sys.path.insert(0, SITE)
 sys.path.insert(0, os.path.expanduser("~/trading-workflow"))
 

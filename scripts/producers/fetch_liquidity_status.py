@@ -17,7 +17,7 @@ import urllib.request
 import urllib.error
 from datetime import datetime, timezone
 
-SITE = "/home/maswilee/projects/pipeline-dashboard-v3"
+SITE = "/home/susiwilee/projects/pipeline-dashboard-v3"
 OUTPUT_PATH = os.path.join(SITE, "data/liquidity_status.json")
 AMT_FEED = "/tmp/amt_feed.json"
 
