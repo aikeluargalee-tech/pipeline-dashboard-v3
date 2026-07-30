@@ -6,18 +6,18 @@
 <title>PFC-3L Signal Intelligence — Pipeline Dashboard</title>
 <link rel="stylesheet" href="../assets/styles.css">
 <style>
-  .page { max-width: 720px; margin: 0 auto; padding: 16px 8px; }
+  .page { max-width: 800px; margin: 0 auto; padding: 16px 8px; }
 
-  /* Signal hero */
-  .signal-hero { text-align: center; padding: 20px 0; margin-bottom: 20px; border-radius: 12px; }
-  .signal-hero.LONG_CANDIDATE { background: linear-gradient(135deg, rgba(0,255,0,0.08), rgba(0,255,0,0.02)); border: 1px solid rgba(0,255,0,0.15); }
-  .signal-hero.SHORT_CANDIDATE { background: linear-gradient(135deg, rgba(255,0,0,0.08), rgba(255,0,0,0.02)); border: 1px solid rgba(255,0,0,0.15); }
-  .signal-hero.WATCH_LONG { background: linear-gradient(135deg, rgba(0,255,0,0.04), transparent); border: 1px solid rgba(0,255,0,0.08); }
-  .signal-hero.WATCH_SHORT { background: linear-gradient(135deg, rgba(255,0,0,0.04), transparent); border: 1px solid rgba(255,0,0,0.08); }
+  /* ── Signal Hero ── */
+  .signal-hero { text-align: center; padding: 28px 20px; margin-bottom: 24px; border-radius: 12px; }
+  .signal-hero.LONG_CANDIDATE { background: linear-gradient(135deg, rgba(0,255,0,0.1), rgba(0,0,0,0)); border: 1px solid rgba(0,255,0,0.2); }
+  .signal-hero.SHORT_CANDIDATE { background: linear-gradient(135deg, rgba(255,0,0,0.1), rgba(0,0,0,0)); border: 1px solid rgba(255,0,0,0.2); }
+  .signal-hero.WATCH_LONG { background: linear-gradient(135deg, rgba(0,255,0,0.05), transparent); border: 1px solid rgba(0,255,0,0.1); }
+  .signal-hero.WATCH_SHORT { background: linear-gradient(135deg, rgba(255,0,0,0.05), transparent); border: 1px solid rgba(255,0,0,0.1); }
   .signal-hero.NO_TRADE { background: rgba(255,255,255,0.02); border: 1px solid var(--border); }
-  .signal-hero.DATA_UNRELIABLE { background: linear-gradient(135deg, rgba(255,165,0,0.08), rgba(255,165,0,0.02)); border: 1px solid rgba(255,165,0,0.15); }
+  .signal-hero.DATA_UNRELIABLE { background: linear-gradient(135deg, rgba(255,165,0,0.1), rgba(0,0,0,0)); border: 1px solid rgba(255,165,0,0.2); }
 
-  .sig-state { font-size: 1.8em; font-weight: 900; letter-spacing: -0.01em; }
+  .sig-state { font-size: 2.2em; font-weight: 900; letter-spacing: -0.01em; }
   .sig-state.LONG_CANDIDATE { color: var(--green); }
   .sig-state.SHORT_CANDIDATE { color: var(--red); }
   .sig-state.WATCH_LONG { color: #66cc66; }
@@ -25,40 +25,73 @@
   .sig-state.NO_TRADE { color: var(--muted); }
   .sig-state.DATA_UNRELIABLE { color: var(--orange); }
 
-  .sig-price { font-size: 1.4em; font-weight: 700; margin: 8px 0; }
-  .sig-conf { font-size: 0.9em; color: var(--muted); }
-  .sig-ts { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .sig-meta { margin-top: 10px; font-size: 13px; color: var(--muted); line-height: 1.8; }
+  .sig-meta b { color: var(--text); }
 
-  /* Gate cards */
-  .gates { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
-  .gate-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
-  .gate-card.pass { border-color: rgba(0,255,0,0.2); }
-  .gate-card.fail { border-color: rgba(255,0,0,0.2); }
-  .gate-card.neutral { border-color: var(--border); }
-  .gate-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 4px; }
-  .gate-score { font-size: 1.3em; font-weight: 700; }
-  .gate-score.pass { color: var(--green); }
-  .gate-score.fail { color: var(--red); }
-  .gate-score.neutral { color: var(--text); }
-  .gate-state { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  /* ── Section Cards ── */
+  .sec { background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 18px; overflow: hidden; }
+  .sec-header { padding: 14px 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.15s; }
+  .sec-header:hover { background: rgba(255,255,255,0.03); }
+  .sec-header.open { border-bottom: 1px solid var(--border); }
+  .sec-icon { font-size: 1.2em; margin-right: 10px; }
+  .sec-title { font-weight: 700; font-size: 1em; flex: 1; }
+  .sec-badge { font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 600; }
+  .sec-badge.pass { background: rgba(0,255,0,0.1); color: var(--green); }
+  .sec-badge.fail { background: rgba(255,0,0,0.1); color: var(--red); }
+  .sec-badge.warn { background: rgba(255,165,0,0.1); color: var(--orange); }
+  .sec-badge.neutral { background: rgba(255,255,255,0.05); color: var(--muted); }
+  .sec-arrow { color: var(--muted); font-size: 12px; transition: transform 0.2s; }
+  .sec-arrow.up { transform: rotate(180deg); }
 
-  /* Expandable sections */
-  .section { margin-bottom: 16px; }
-  .section-header { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-  .section-header:hover { border-color: var(--cyan); }
-  .section-title { font-weight: 600; font-size: 0.95em; }
-  .section-arrow { color: var(--muted); transition: transform 0.2s; }
-  .section-body { padding: 12px 14px; font-size: 13px; line-height: 1.7; display: none; }
+  .sec-body { display: none; padding: 18px; font-size: 13px; line-height: 1.7; }
 
+  /* ── Score bars ── */
+  .score-row { display: flex; align-items: center; gap: 12px; margin: 6px 0; padding: 4px 0; }
+  .score-label { width: 140px; font-size: 12px; color: var(--muted); flex-shrink: 0; }
+  .score-bar-wrap { flex: 1; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+  .score-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
+  .score-bar-fill.green { background: var(--green); }
+  .score-bar-fill.red { background: var(--red); }
+  .score-bar-fill.cyan { background: var(--cyan); }
+  .score-bar-fill.orange { background: var(--orange); }
+  .score-val { width: 36px; text-align: right; font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  .score-threshold { margin-left: 4px; font-size: 10px; color: var(--muted); }
+
+  /* ── Tables ── */
+  .mini-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 8px 0; }
+  .mini-table td { padding: 6px 10px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .mini-table td:first-child { color: var(--muted); width: 160px; }
+  .mini-table td:last-child { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  /* ── Lists ── */
   .reason-list { margin: 0; padding: 0; list-style: none; }
-  .reason-list li { padding: 3px 0; }
-  .reason-list li::before { content: '▸ '; color: var(--cyan); }
-  .veto-list li::before { content: '✕ '; color: var(--red); }
-  .zone-list li::before { content: '◎ '; color: var(--orange); }
+  .reason-list li { padding: 4px 0; font-size: 13px; }
+  .reason-list li::before { content: '▸ '; color: var(--cyan); margin-right: 4px; }
+  .reason-list li.veto { color: var(--red); }
+  .reason-list li.veto::before { content: '✕ '; color: var(--red); }
+  .reason-list li.zone { color: var(--orange); }
+  .reason-list li.zone::before { content: '◎ '; color: var(--orange); }
 
-  .stale-warning { background: rgba(255,165,0,0.1); border: 1px solid rgba(255,165,0,0.3); border-radius: 6px; padding: 8px 12px; margin-bottom: 16px; font-size: 12px; color: var(--orange); text-align: center; }
-  .loading { text-align: center; padding: 40px; color: var(--muted); }
-  .disclaimer { font-size: 10px; color: var(--muted); text-align: center; margin-top: 24px; padding: 12px; border-top: 1px solid var(--border); }
+  .help-text { font-size: 11px; color: var(--muted); margin-top: 12px; padding: 10px 12px; background: rgba(255,255,255,0.02); border-radius: 6px; border-left: 2px solid var(--cyan); }
+
+  /* ── Signal lifecycle ── */
+  .lifecycle { display: flex; gap: 8px; align-items: center; margin: 12px 0; }
+  .lifecycle-step { padding: 4px 12px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .lifecycle-step.active { background: var(--cyan); color: #000; }
+  .lifecycle-step.inactive { background: rgba(255,255,255,0.04); color: var(--muted); }
+  .lifecycle-arrow { color: var(--muted); font-size: 10px; }
+
+  .disclaimer { font-size: 10px; color: var(--muted); text-align: center; margin-top: 28px; padding: 16px; border-top: 1px solid var(--border); line-height: 1.8; }
+  .disclaimer b { color: var(--text); }
+
+  .loading { text-align: center; padding: 60px; color: var(--muted); font-size: 14px; }
+  .stale-warning { background: rgba(255,165,0,0.1); border: 1px solid rgba(255,165,0,0.3); border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; color: var(--orange); text-align: center; }
+
+  @media (max-width: 600px) {
+    .score-label { width: 100px; font-size: 11px; }
+    .sig-state { font-size: 1.5em; }
+  }
 </style>
 </head>
 
@@ -66,84 +99,201 @@
 
 <div class="page">
 
-<!-- Signal Hero -->
+<!-- ====== SIGNAL HERO ====== -->
 <div id="signal-hero" class="signal-hero NO_TRADE">
-  <div class="sig-state NO_TRADE" id="sig-state">NO_TRADE</div>
-  <div class="sig-price" id="sig-price">—</div>
-  <div class="sig-conf">Confidence: <b id="sig-conf">—</b></div>
-  <div class="sig-ts" id="sig-ts">—</div>
-</div>
-
-<!-- Stale warning -->
-<div class="stale-warning" id="stale-warning" style="display:none">
-  <span id="stale-text"></span>
-</div>
-
-<!-- 5 Gate Cards -->
-<div class="gates">
-  <div class="gate-card neutral" id="gate-positioning">
-    <div class="gate-label">P · Positioning</div>
-    <div class="gate-score neutral" id="pos-score">—</div>
-    <div class="gate-state" id="pos-state">—</div>
+  <div class="sig-state NO_TRADE" id="sig-state">—</div>
+  <div class="sig-meta">
+    BTC Reference Price: <b id="sig-price">—</b> &nbsp;·&nbsp;
+    Confidence: <b id="sig-conf">—</b>/100 &nbsp;·&nbsp;
+    Data Quality: <b id="sig-dq">—</b>/100<br>
+    Generated: <span id="sig-ts">—</span> UTC
   </div>
-  <div class="gate-card neutral" id="gate-flow">
-    <div class="gate-label">F · Flow</div>
-    <div class="gate-score neutral" id="flow-score">—</div>
-    <div class="gate-state" id="flow-state">—</div>
-  </div>
-  <div class="gate-card neutral" id="gate-catalyst">
-    <div class="gate-label">C · Catalyst</div>
-    <div class="gate-score neutral" id="cat-score">—</div>
-    <div class="gate-state" id="cat-state">—</div>
-  </div>
-  <div class="gate-card neutral" id="gate-level">
-    <div class="gate-label">L · Level</div>
-    <div class="gate-score neutral" id="lvl-score">—</div>
-    <div class="gate-state" id="lvl-state">—</div>
-  </div>
-  <div class="gate-card neutral" id="gate-dq">
-    <div class="gate-label">Data Quality</div>
-    <div class="gate-score neutral" id="dq-score">—</div>
-    <div class="gate-state" id="dq-state">—</div>
+  <div class="lifecycle" id="lifecycle-bar" style="justify-content:center;margin-top:12px">
+    <span class="lifecycle-step inactive">WATCH</span>
+    <span class="lifecycle-arrow">→</span>
+    <span class="lifecycle-step inactive">CANDIDATE</span>
+    <span class="lifecycle-arrow">→</span>
+    <span class="lifecycle-step active">ACTIVE</span>
+    <span class="lifecycle-arrow">→</span>
+    <span class="lifecycle-step inactive">INVALIDATED</span>
+    <span class="lifecycle-arrow">→</span>
+    <span class="lifecycle-step inactive">EXPIRED</span>
   </div>
 </div>
 
-<!-- Reasons & Vetoes -->
-<div class="section">
-  <div class="section-header" onclick="toggleSection('reasons-body','reasons-arrow')">
-    <span class="section-title">Reasons & Vetoes</span>
-    <span class="section-arrow" id="reasons-arrow">▼</span>
+<div class="stale-warning" id="stale-warning" style="display:none"><span id="stale-text"></span></div>
+
+<!-- ====== P — POSITIONING ====== -->
+<div class="sec">
+  <div class="sec-header" onclick="toggleSection('pos-body','pos-arrow')">
+    <span class="sec-icon">📊</span>
+    <span class="sec-title">P · Positioning — Who Is Vulnerable?</span>
+    <span class="sec-badge neutral" id="pos-badge">—</span>
+    <span class="sec-arrow" id="pos-arrow">▼</span>
   </div>
-  <div class="section-body" id="reasons-body">
-    <ul class="reason-list" id="reasons-list"></ul>
+  <div class="sec-body" id="pos-body">
+    <p style="color:var(--muted);font-size:12px;margin-bottom:12px">Is the leveraged side crowded and vulnerable to a forced unwind?</p>
+
+    <div class="score-row"><span class="score-label">Short Vulnerability</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill red" id="bar-short-s" style="width:0%"></div></div>
+      <span class="score-val" id="val-short-s">0</span>
+      <span class="score-threshold">min 70</span></div>
+    <div class="score-row"><span class="score-label">Long Vulnerability</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill green" id="bar-long-s" style="width:0%"></div></div>
+      <span class="score-val" id="val-long-s">0</span>
+      <span class="score-threshold">min 70</span></div>
+    <p style="margin-top:4px;font-size:12px"><b>State:</b> <span id="pos-state">—</span> &nbsp;·&nbsp; <b>Score:</b> <span id="pos-score">—</span></p>
+
+    <table class="mini-table" style="margin-top:8px"><tbody id="pos-detail"></tbody></table>
+    <ul class="reason-list" id="pos-reasons"></ul>
   </div>
 </div>
 
-<!-- Invalidation -->
-<div class="section" id="invalidation-section" style="display:none">
-  <div class="section-header" onclick="toggleSection('inv-body','inv-arrow')">
-    <span class="section-title">Invalidation Conditions</span>
-    <span class="section-arrow" id="inv-arrow">▼</span>
+<!-- ====== F — FLOW ====== -->
+<div class="sec">
+  <div class="sec-header" onclick="toggleSection('flo-body','flo-arrow')">
+    <span class="sec-icon">💧</span>
+    <span class="sec-title">F · Flow — Where Is Money Moving?</span>
+    <span class="sec-badge neutral" id="flo-badge">—</span>
+    <span class="sec-arrow" id="flo-arrow">▼</span>
   </div>
-  <div class="section-body" id="inv-body">
-    <ul class="reason-list veto-list" id="inv-list"></ul>
+  <div class="sec-body" id="flo-body">
+    <p style="color:var(--muted);font-size:12px;margin-bottom:12px">Is genuine spot money buying or selling, distinct from leveraged derivatives activity?</p>
+
+    <div class="score-row"><span class="score-label">Bullish Flow</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill green" id="bar-bull" style="width:0%"></div></div>
+      <span class="score-val" id="val-bull">0</span>
+      <span class="score-threshold">min 70</span></div>
+    <div class="score-row"><span class="score-label">Bearish Flow</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill red" id="bar-bear" style="width:0%"></div></div>
+      <span class="score-val" id="val-bear">0</span>
+      <span class="score-threshold">min 70</span></div>
+    <p style="margin-top:4px;font-size:12px"><b>State:</b> <span id="flo-state">—</span> &nbsp;·&nbsp; <b>Score:</b> <span id="flo-score">—</span></p>
+
+    <table class="mini-table" style="margin-top:8px"><tbody id="flo-detail"></tbody></table>
+    <ul class="reason-list" id="flo-reasons"></ul>
   </div>
 </div>
 
-<!-- Informational Zones -->
-<div class="section" id="zones-section" style="display:none">
-  <div class="section-header" onclick="toggleSection('zones-body','zones-arrow')">
-    <span class="section-title">Informational Zones</span>
-    <span class="section-arrow" id="zones-arrow">▼</span>
+<!-- ====== C — CATALYST ====== -->
+<div class="sec">
+  <div class="sec-header" onclick="toggleSection('cat-body','cat-arrow')">
+    <span class="sec-icon">⚡</span>
+    <span class="sec-title">C · Catalyst — What Can Force Repositioning?</span>
+    <span class="sec-badge neutral" id="cat-badge">—</span>
+    <span class="sec-arrow" id="cat-arrow">▼</span>
   </div>
-  <div class="section-body" id="zones-body">
-    <ul class="reason-list zone-list" id="zones-list"></ul>
+  <div class="sec-body" id="cat-body">
+    <p style="color:var(--muted);font-size:12px;margin-bottom:12px">What confirmed event can force traders to reposition? VIX, F&G extremes, crash precursors, ETF flows, AI tripwires.</p>
+
+    <div class="score-row"><span class="score-label">Catalyst Confidence</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill cyan" id="bar-cat" style="width:0%"></div></div>
+      <span class="score-val" id="val-cat">0</span>
+      <span class="score-threshold">min 70</span></div>
+    <p style="margin-top:4px;font-size:12px"><b>State:</b> <span id="cat-state">—</span> &nbsp;·&nbsp; <b>Direction:</b> <span id="cat-dir">—</span></p>
+
+    <table class="mini-table" style="margin-top:8px"><tbody id="cat-detail"></tbody></table>
+    <ul class="reason-list" id="cat-reasons"></ul>
+  </div>
+</div>
+
+<!-- ====== L — LEVEL ====== -->
+<div class="sec">
+  <div class="sec-header" onclick="toggleSection('lvl-body','lvl-arrow')">
+    <span class="sec-icon">📍</span>
+    <span class="sec-title">L · Level — Where Can Forced Action Accelerate?</span>
+    <span class="sec-badge neutral" id="lvl-badge">—</span>
+    <span class="sec-arrow" id="lvl-arrow">▼</span>
+  </div>
+  <div class="sec-body" id="lvl-body">
+    <p style="color:var(--muted);font-size:12px;margin-bottom:12px">At which psychological price level can the forced move accelerate, absorb, or fail?</p>
+
+    <div class="score-row"><span class="score-label">Active Level Score</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill orange" id="bar-lvl" style="width:0%"></div></div>
+      <span class="score-val" id="val-lvl">0</span>
+      <span class="score-threshold">min 60</span></div>
+    <p style="margin-top:4px;font-size:12px"><b>Role:</b> <span id="lvl-role">—</span> &nbsp;·&nbsp; <b>Active Level:</b> <span id="lvl-active">—</span></p>
+
+    <table class="mini-table" style="margin-top:8px"><tbody id="lvl-detail"></tbody></table>
+    <ul class="reason-list" id="lvl-reasons"></ul>
+  </div>
+</div>
+
+<!-- ====== DATA QUALITY ====== -->
+<div class="sec">
+  <div class="sec-header" onclick="toggleSection('dq-body','dq-arrow')">
+    <span class="sec-icon">🛡️</span>
+    <span class="sec-title">Data Quality — Can We Trust the Data?</span>
+    <span class="sec-badge pass" id="dq-badge">—</span>
+    <span class="sec-arrow" id="dq-arrow">▼</span>
+  </div>
+  <div class="sec-body" id="dq-body">
+    <p style="color:var(--muted);font-size:12px;margin-bottom:12px">Directional signals require DQ ≥ 90 and ≥2 critical feeds healthy.</p>
+
+    <div class="score-row"><span class="score-label">Data Quality</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill cyan" id="bar-dq" style="width:0%"></div></div>
+      <span class="score-val" id="val-dq">0</span>
+      <span class="score-threshold">min 90</span></div>
+    <p style="margin-top:4px;font-size:12px"><b>Healthy Feeds:</b> <span id="dq-feeds">—</span> &nbsp;·&nbsp; <b>Directional Allowed:</b> <span id="dq-allowed">—</span></p>
+
+    <table class="mini-table" style="margin-top:8px"><tbody id="dq-detail"></tbody></table>
+    <ul class="reason-list" id="dq-reasons"></ul>
+  </div>
+</div>
+
+<!-- ====== SIGNAL DETAIL ====== -->
+<div class="sec" id="inv-sec" style="display:none">
+  <div class="sec-header" onclick="toggleSection('inv-body','inv-arrow')">
+    <span class="sec-icon">🚫</span>
+    <span class="sec-title">Invalidation Conditions</span>
+    <span class="sec-arrow" id="inv-arrow">▼</span>
+  </div>
+  <div class="sec-body" id="inv-body"><ul class="reason-list" id="inv-list"></ul></div>
+</div>
+
+<div class="sec" id="zones-sec" style="display:none">
+  <div class="sec-header" onclick="toggleSection('zones-body','zones-arrow')">
+    <span class="sec-icon">🎯</span>
+    <span class="sec-title">Informational Zones</span>
+    <span class="sec-arrow" id="zones-arrow">▼</span>
+  </div>
+  <div class="sec-body" id="zones-body">
+    <p class="help-text">These are informational reference levels only — not trade instructions, take-profits, or stop-loss orders.</p>
+    <ul class="reason-list" id="zones-list"></ul>
+  </div>
+</div>
+
+<!-- ====== HOW IT WORKS ====== -->
+<div class="sec">
+  <div class="sec-header" onclick="toggleSection('how-body','how-arrow')">
+    <span class="sec-icon">ℹ️</span>
+    <span class="sec-title">How PFC-3L Works</span>
+    <span class="sec-arrow" id="how-arrow">▼</span>
+  </div>
+  <div class="sec-body" id="how-body">
+    <p><b>PFC-3L</b> = <b>P</b>ositioning · <b>F</b>low · <b>C</b>atalyst · <b>L</b>evel</p>
+    <p style="color:var(--muted);font-size:12px;line-height:1.8">
+      Four strategic components analyze BTC market state. Each produces a score and reasons.
+      The signal engine takes the <b>minimum</b> gate score — a weak gate is never averaged away.
+      Data quality overrides everything: if feeds are stale or broken, the signal is <b>DATA UNRELIABLE</b>.
+    </p>
+    <p style="color:var(--muted);font-size:12px;line-height:1.8">
+      <b>LONG_CANDIDATE</b> requires all 4 gates ≥ threshold + DQ ≥ 90.<br>
+      <b>SHORT_CANDIDATE</b> is the mirror.<br>
+      <b>WATCH</b> states mean 3 of 4 gates pass — signal is developing but not confirmed.<br>
+      <b>NO_TRADE</b> is the default when no gates align.<br>
+      <b>All rules are deterministic Python logic.</b> No LLM controls scores or thresholds.
+    </p>
+    <p style="color:var(--muted);font-size:11px;margin-top:8px">
+      Data sources: AMT feed (Binance spot/perpetual), AI Factors (VIX/US10Y/volume), Volume Profile, Trap Monitor, Redline.
+    </p>
   </div>
 </div>
 
 <div class="disclaimer">
-  PFC-3L is decision support only. No orders created or transmitted.<br>
-  Signal rules are deterministic Python logic — no LLM control over scores or thresholds.
+  <b>PFC-3L is market-analysis and decision-support only.</b> It does not place, simulate, or transmit orders.
+  No exchange accounts, wallets, or private APIs are accessed.
+  Outputs may be delayed or wrong. Users remain fully responsible for their own decisions and risk management.
 </div>
 
 </div>
@@ -152,104 +302,190 @@
 
 <script src="../assets/nav.js?v=13"></script>
 <script>
-// Toggle sections
 function toggleSection(bodyId, arrowId) {
   var b = document.getElementById(bodyId);
   var a = document.getElementById(arrowId);
-  if (b.style.display === 'block') { b.style.display = 'none'; a.textContent = '▼'; }
-  else { b.style.display = 'block'; a.textContent = '▲'; }
+  if (b.style.display === 'block') { b.style.display = 'none'; a.classList.remove('up'); }
+  else { b.style.display = 'block'; a.classList.add('up'); }
 }
 
-// Render engine output
+function setBar(id, val, max) {
+  var pct = Math.min(100, (val / max) * 100);
+  document.getElementById(id).style.width = pct + '%';
+}
+
+function badgeEl(id, state, score) {
+  var el = document.getElementById(id);
+  el.textContent = state;
+  el.className = 'sec-badge ';
+  if (state === 'PASS' || state.includes('CANDIDATE') || state.includes('STRONG_SPOT_BUYING')) el.className += 'pass';
+  else if (state === 'FAIL' || state === 'DATA_UNRELIABLE') el.className += 'fail';
+  else if (state.includes('WATCH')) el.className += 'warn';
+  else el.className += 'neutral';
+}
+
+function detailTable(id, rows) {
+  var html = '';
+  rows.forEach(function(r) {
+    html += '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>';
+  });
+  document.getElementById(id).innerHTML = html;
+}
+
+function reasonList(id, items, cls) {
+  var html = '';
+  items.forEach(function(item) {
+    html += '<li class="' + (cls||'') + '">' + item + '</li>';
+  });
+  document.getElementById(id).innerHTML = html || '<li style="color:var(--muted)">None</li>';
+}
+
 function render(data) {
-  var sig = data.signal;
-  var dq = data.data_quality;
-  var pos = data.positioning;
-  var flo = data.flow;
-  var cat = data.catalyst;
-  var lvl = data.levels;
+  var sig = data.signal || {};
+  var dq = data.data_quality || {};
+  var pos = data.positioning || {};
+  var flo = data.flow || {};
+  var cat = data.catalyst || {};
+  var lvl = data.levels || {};
 
   // Signal hero
+  var state = sig.state || 'NO_TRADE';
   var hero = document.getElementById('signal-hero');
-  var state = sig.state;
   hero.className = 'signal-hero ' + state;
-  document.getElementById('sig-state').className = 'sig-state ' + state;
-  document.getElementById('sig-state').textContent = state.replace(/_/g,' ');
-  document.getElementById('sig-price').textContent = '$' + (sig.reference_price||0).toLocaleString('en-US');
-  document.getElementById('sig-conf').textContent = sig.confidence + '/100';
-  document.getElementById('sig-ts').textContent = 'Generated: ' + sig.ts + ' UTC';
+  var stEl = document.getElementById('sig-state');
+  stEl.className = 'sig-state ' + state;
+  stEl.textContent = state.replace(/_/g, ' ');
+  document.getElementById('sig-price').textContent = '$' + ((sig.reference_price||0)).toLocaleString('en-US');
+  document.getElementById('sig-conf').textContent = sig.confidence || 0;
+  document.getElementById('sig-dq').textContent = dq.score || 0;
+  document.getElementById('sig-ts').textContent = sig.ts || '—';
 
   // Stale warning
-  var stale = document.getElementById('stale-warning');
+  var staleEl = document.getElementById('stale-warning');
   if (state === 'DATA_UNRELIABLE') {
-    stale.style.display = 'block';
-    document.getElementById('stale-text').textContent = '⚠ Data quality failure — directional signals blocked. ' + (sig.vetoes||[]).join('; ');
-  } else {
-    stale.style.display = 'none';
+    staleEl.style.display = 'block';
+    document.getElementById('stale-text').textContent = '⚠ Data quality failure — directional signals blocked. ' + ((sig.vetoes||[]).join('; '));
+  } else { staleEl.style.display = 'none'; }
+
+  // Lifecycle
+  var lc = sig.lifecycle_state || 'ACTIVE';
+  var steps = ['WATCH','CANDIDATE','ACTIVE','INVALIDATED','EXPIRED'];
+  var lcIdx = steps.indexOf(lc);
+  var lcHtml = '';
+  steps.forEach(function(s, i) {
+    var cls = i === lcIdx ? 'active' : (i < lcIdx ? 'inactive' : 'inactive');
+    lcHtml += '<span class="lifecycle-step ' + cls + '">' + s + '</span>';
+    if (i < 4) lcHtml += '<span class="lifecycle-arrow">→</span>';
+  });
+  document.getElementById('lifecycle-bar').innerHTML = lcHtml;
+
+  // === POSITIONING ===
+  badgeEl('pos-badge', pos.state||'—', pos.score);
+  document.getElementById('pos-state').textContent = pos.state||'—';
+  document.getElementById('pos-score').textContent = pos.score||0;
+  setBar('bar-short-s', pos.short_vulnerability_score||0, 100);
+  setBar('bar-long-s', pos.long_vulnerability_score||0, 100);
+  document.getElementById('val-short-s').textContent = pos.short_vulnerability_score||0;
+  document.getElementById('val-long-s').textContent = pos.long_vulnerability_score||0;
+  detailTable('pos-detail', [
+    ['Long Vulnerability', (pos.long_vulnerability_score||0) + '/100'],
+    ['Short Vulnerability', (pos.short_vulnerability_score||0) + '/100'],
+    ['Opposite Score', (pos.opposite_score||0) + ''],
+    ['Threshold (CANDIDATE)', '≥70 + >10 lead'],
+    ['Interpretation', pos.state === 'SHORTS_VULNERABLE' ? 'Shorts are crowded — upward squeeze risk' :
+                       pos.state === 'LONGS_VULNERABLE' ? 'Longs are crowded — downward liquidation risk' :
+                       'No clear vulnerability — positions balanced'],
+  ]);
+  reasonList('pos-reasons', pos.reasons||[]);
+
+  // === FLOW ===
+  badgeEl('flo-badge', flo.state||'—', flo.score);
+  document.getElementById('flo-state').textContent = flo.state||'—';
+  document.getElementById('flo-score').textContent = flo.score||0;
+  setBar('bar-bull', flo.bullish_score||0, 100);
+  setBar('bar-bear', flo.bearish_score||0, 100);
+  document.getElementById('val-bull').textContent = flo.bullish_score||0;
+  document.getElementById('val-bear').textContent = flo.bearish_score||0;
+  detailTable('flo-detail', [
+    ['Taker Buy Ratio', ((flo.taker_buy_ratio||0)*100).toFixed(0) + '% (≥55% strong, <48% bearish)'],
+    ['Coinbase Premium', (flo.coinbase_premium||0).toFixed(2) + '% (>0 = US buying, <−0.2 = selling)'],
+    ['Healthy Spot Venues', (flo.healthy_spot_venues||0) + ''],
+    ['Derivatives-Only Veto', flo.state === 'DERIVATIVES_ONLY' ? '⚠ ACTIVE — no candidate allowed' : 'Not active'],
+  ]);
+  reasonList('flo-reasons', flo.reasons||[]);
+
+  // === CATALYST ===
+  badgeEl('cat-badge', cat.state||'—', cat.confidence);
+  document.getElementById('cat-state').textContent = cat.state||'—';
+  document.getElementById('cat-dir').textContent = cat.direction||'—';
+  setBar('bar-cat', cat.confidence||0, 100);
+  document.getElementById('val-cat').textContent = cat.confidence||0;
+  detailTable('cat-detail', [
+    ['Direction', cat.direction||'NONE'],
+    ['Confidence', (cat.confidence||0) + '/100 (≥70 for candidate)'],
+    ['Source Quality', (cat.source_quality||0) + '/100'],
+    ['Active Signals', cat.state === 'NONE' ? 'No catalyst active' : cat.state],
+  ]);
+  reasonList('cat-reasons', cat.reasons||[]);
+
+  // === LEVEL ===
+  badgeEl('lvl-badge', lvl.role||'—', lvl.score);
+  document.getElementById('lvl-role').textContent = lvl.role||'—';
+  var al = lvl.active_level;
+  document.getElementById('lvl-active').textContent = al ? ('$' + al.price.toLocaleString('en-US') + ' (' + al.distance_pct + '% away, ' + al.category + ')') : 'None';
+  setBar('bar-lvl', lvl.score||0, 100);
+  document.getElementById('val-lvl').textContent = lvl.score||0;
+  var lvlRows = [['Active Level', al ? '$' + al.price.toLocaleString('en-US') : 'None']];
+  if (al) {
+    lvlRows.push(['Distance', al.distance_pct + '% from price']);
+    lvlRows.push(['Category', al.category]);
+    lvlRows.push(['Role', al.role]);
   }
+  var lvls = lvl.levels||[];
+  lvls.slice(0, 5).forEach(function(l) {
+    lvlRows.push([l.source + ' ($' + l.price.toLocaleString('en-US') + ')', l.distance_pct + '% away · ' + l.role + ' · score ' + l.score]);
+  });
+  detailTable('lvl-detail', lvlRows);
+  reasonList('lvl-reasons', lvl.reasons||[]);
 
-  // Gate cards
-  function gateCard(id, label, score, stateStr, passing) {
-    var card = document.getElementById(id);
-    var cls = passing === true ? 'pass' : (passing === false ? 'fail' : 'neutral');
-    card.className = 'gate-card ' + cls;
-    card.querySelector('.gate-score').className = 'gate-score ' + cls;
-    card.querySelector('.gate-score').textContent = score;
-    card.querySelector('.gate-state').textContent = stateStr;
-  }
+  // === DATA QUALITY ===
+  badgeEl('dq-badge', dq.directional_allowed ? 'PASS' : 'FAIL', dq.score);
+  document.getElementById('dq-feeds').textContent = (dq.healthy_feeds||0) + '/' + (dq.total_critical_feeds||3);
+  document.getElementById('dq-allowed').textContent = dq.directional_allowed ? 'YES' : 'NO';
+  setBar('bar-dq', dq.score||0, 100);
+  document.getElementById('val-dq').textContent = dq.score||0;
+  var dqRows = [
+    ['Directional Signals', dq.directional_allowed ? '✅ Allowed' : '❌ Blocked'],
+    ['Critical Feeds', (dq.healthy_feeds||0) + ' healthy / ' + (dq.total_critical_feeds||3) + ' total'],
+    ['Minimum Required', '≥2 critical feeds + score ≥90'],
+  ];
+  if (dq.vetoes) dq.vetoes.forEach(function(v) { dqRows.push(['⚠ Veto', v]); });
+  detailTable('dq-detail', dqRows);
+  reasonList('dq-reasons', dq.reasons||[]);
 
-  var gates = sig.gates || {};
-  gateCard('gate-positioning', 'P', pos.score||0, pos.state, sig.state.includes('LONG') || sig.state.includes('SHORT') ? gates.positioning : null);
-  gateCard('gate-flow', 'F', flo.score||0, flo.state, sig.state.includes('LONG') || sig.state.includes('SHORT') ? gates.flow : null);
-  gateCard('gate-catalyst', 'C', cat.confidence||0, cat.state, sig.state.includes('LONG') || sig.state.includes('SHORT') ? gates.catalyst : null);
-  gateCard('gate-level', 'L', lvl.score||0, lvl.role, sig.state.includes('LONG') || sig.state.includes('SHORT') ? gates.level : null);
-  gateCard('gate-dq', 'DQ', dq.score||0, dq.directional_allowed ? 'PASS' : 'FAIL', dq.directional_allowed);
+  // === INVALIDATION ===
+  var inv = sig.invalidation_conditions||[];
+  var invSec = document.getElementById('inv-sec');
+  if (inv.length) { invSec.style.display = 'block'; reasonList('inv-list', inv, 'veto'); }
+  else { invSec.style.display = 'none'; }
 
-  // Reasons
-  var reasonsList = document.getElementById('reasons-list');
-  var items = [];
-  (sig.reasons||[]).forEach(function(r) { items.push('<li>' + r + '</li>'); });
-  (sig.vetoes||[]).forEach(function(v) { items.push('<li style="color:var(--red)">' + v + '</li>'); });
-  reasonsList.innerHTML = items.join('') || '<li>No reasons</li>';
-
-  // Invalidation
-  var inv = sig.invalidation_conditions || [];
-  var invSection = document.getElementById('invalidation-section');
-  if (inv.length) {
-    invSection.style.display = 'block';
-    document.getElementById('inv-list').innerHTML = inv.map(function(c) { return '<li>' + c + '</li>'; }).join('');
-  } else {
-    invSection.style.display = 'none';
-  }
-
-  // Informational zones
-  var zones = sig.informational_zones || [];
-  var zonesSection = document.getElementById('zones-section');
+  // === ZONES ===
+  var zones = sig.informational_zones||[];
+  var zonesSec = document.getElementById('zones-sec');
   if (zones.length) {
-    zonesSection.style.display = 'block';
-    document.getElementById('zones-list').innerHTML = zones.map(function(z) {
-      return '<li>$' + (typeof z === 'number' ? z.toLocaleString('en-US') : z) + '</li>';
-    }).join('');
-  } else {
-    zonesSection.style.display = 'none';
-  }
+    zonesSec.style.display = 'block';
+    reasonList('zones-list', zones.map(function(z) { return '$' + (typeof z==='number'?z.toLocaleString('en-US'):z); }), 'zone');
+  } else { zonesSec.style.display = 'none'; }
 }
 
-// Load signal.json
 function loadSignal() {
   fetch('../pfc3l/signal.json?' + Date.now())
     .then(function(r) { return r.json(); })
     .then(function(d) { render(d); })
-    .catch(function(e) {
-      document.getElementById('sig-state').textContent = 'LOADING';
-      console.error(e);
-    });
+    .catch(function(e) { document.getElementById('sig-state').textContent = 'LOADING'; });
 }
 
-// First load
 loadSignal();
-// Refresh every 60s
 setInterval(loadSignal, 60000);
 </script>
-
 </html>
