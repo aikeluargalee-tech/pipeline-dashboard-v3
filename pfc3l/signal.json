@@ -1,7 +1,7 @@
 {
   "signal": {
-    "id": "pfc3l-20260730-150048",
-    "ts": "2026-07-30T15:00:48.637702+00:00",
+    "id": "pfc3l-20260730-150058",
+    "ts": "2026-07-30T15:00:58.975436+00:00",
     "symbol": "BTC/USD",
     "reference_price": 64678.0,
     "state": "NO_TRADE",
@@ -111,7 +111,7 @@
     "healthy_feeds": 2,
     "total_critical_feeds": 3,
     "reasons": [
-      "Volume Profile stale (861s)",
+      "Volume Profile stale (872s)",
       "STALE brk: 48m behind AMT"
     ],
     "vetoes": [],
@@ -120,19 +120,19 @@
         "label": "AMT feed",
         "healthy": true,
         "stale": false,
-        "age": "34s"
+        "age": "44s"
       },
       "volume_profile": {
         "label": "Volume Profile",
         "healthy": false,
         "stale": true,
-        "age": "861s"
+        "age": "872s"
       },
       "ai_factors": {
         "label": "AI Factors",
         "healthy": true,
         "stale": false,
-        "age": "20s"
+        "age": "30s"
       },
       "trap_monitor": {
         "label": "Trap Monitor",
