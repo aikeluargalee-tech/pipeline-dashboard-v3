@@ -452,7 +452,6 @@ function render(data) {
   document.getElementById('sig-dq').textContent = dq.score || 0;
 
   // Stale warning
-  document.getElementById('sig-stale').style.display = 'none';
 
   // Gate status for dots and explanation
   var posPass = pos.state === 'SHORTS_VULNERABLE' && (pos.score||0) >= 70;
