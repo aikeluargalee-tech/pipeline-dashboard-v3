@@ -9,7 +9,7 @@
   .page { max-width: 800px; margin: 0 auto; padding: 16px 8px; }
 
   /* ── Signal Hero ── */
-  .signal-hero { text-align: center; padding: 28px 20px; margin-bottom: 24px; border-radius: 12px; }
+  .signal-hero { text-align: center; padding: 28px 20px; margin-bottom: 24px; border-radius: 12px; backdrop-filter: blur(16px) saturate(150%); -webkit-backdrop-filter: blur(16px) saturate(150%); box-shadow: 0 16px 36px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.08); }
   .signal-hero.LONG_CANDIDATE { background: linear-gradient(135deg, rgba(0,255,0,0.1), rgba(0,0,0,0)); border: 1px solid rgba(0,255,0,0.2); }
   .signal-hero.SHORT_CANDIDATE { background: linear-gradient(135deg, rgba(255,0,0,0.1), rgba(0,0,0,0)); border: 1px solid rgba(255,0,0,0.2); }
   .signal-hero.WATCH_LONG { background: linear-gradient(135deg, rgba(0,255,0,0.05), transparent); border: 1px solid rgba(0,255,0,0.1); }
@@ -29,8 +29,8 @@
   .sig-meta b { color: var(--text); }
 
   /* ── Section Cards ── */
-  .sec { background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 18px; overflow: hidden; }
-  .sec-header { padding: 14px 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.15s; }
+  .sec { background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 18px; overflow: hidden; backdrop-filter: blur(16px) saturate(150%); -webkit-backdrop-filter: blur(16px) saturate(150%); box-shadow: 0 16px 36px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.08); }
+  .sec-header { padding: 14px 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.15s; user-select: none; }
   .sec-header:hover { background: rgba(255,255,255,0.03); }
   .sec-header.open { border-bottom: 1px solid var(--border); }
   .sec-icon { font-size: 1.2em; margin-right: 10px; }
@@ -78,9 +78,11 @@
   /* ── Signal lifecycle ── */
   .lifecycle { display: flex; gap: 8px; align-items: center; margin: 12px 0; }
   .lifecycle-step { padding: 4px 12px; border-radius: 4px; font-size: 11px; font-weight: 600; }
-  .lifecycle-step.active { background: var(--cyan); color: #000; }
-  .lifecycle-step.inactive { background: rgba(255,255,255,0.04); color: var(--muted); }
+  .lifecycle-step.active { background: var(--cyan); color: #05070d; box-shadow: 0 0 12px rgba(34,211,238,0.5); }
+  .lifecycle-step.inactive { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
   .lifecycle-arrow { color: var(--muted); font-size: 10px; }
+
+  .score-threshold-line { position: absolute; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.4); z-index: 2; }
 
   .disclaimer { font-size: 10px; color: var(--muted); text-align: center; margin-top: 28px; padding: 16px; border-top: 1px solid var(--border); line-height: 1.8; }
   .disclaimer b { color: var(--text); }
@@ -125,7 +127,7 @@
 
 <!-- ====== P — POSITIONING ====== -->
 <div class="sec">
-  <div class="sec-header" onclick="toggleSection('pos-body','pos-arrow')">
+  <div class="sec-header" role="button" tabindex="0" aria-expanded="false" onclick="toggleSection('pos-body','pos-arrow',this)">
     <span class="sec-icon">📊</span>
     <span class="sec-title">P · Positioning — Who Is Vulnerable?</span>
     <span class="sec-badge neutral" id="pos-badge">—</span>
@@ -151,7 +153,7 @@
 
 <!-- ====== F — FLOW ====== -->
 <div class="sec">
-  <div class="sec-header" onclick="toggleSection('flo-body','flo-arrow')">
+  <div class="sec-header" role="button" tabindex="0" aria-expanded="false" onclick="toggleSection('flo-body','flo-arrow',this)">
     <span class="sec-icon">💧</span>
     <span class="sec-title">F · Flow — Where Is Money Moving?</span>
     <span class="sec-badge neutral" id="flo-badge">—</span>
@@ -177,7 +179,7 @@
 
 <!-- ====== C — CATALYST ====== -->
 <div class="sec">
-  <div class="sec-header" onclick="toggleSection('cat-body','cat-arrow')">
+  <div class="sec-header" role="button" tabindex="0" aria-expanded="false" onclick="toggleSection('cat-body','cat-arrow',this)">
     <span class="sec-icon">⚡</span>
     <span class="sec-title">C · Catalyst — What Can Force Repositioning?</span>
     <span class="sec-badge neutral" id="cat-badge">—</span>
@@ -199,7 +201,7 @@
 
 <!-- ====== L — LEVEL ====== -->
 <div class="sec">
-  <div class="sec-header" onclick="toggleSection('lvl-body','lvl-arrow')">
+  <div class="sec-header" role="button" tabindex="0" aria-expanded="false" onclick="toggleSection('lvl-body','lvl-arrow',this)">
     <span class="sec-icon">📍</span>
     <span class="sec-title">L · Level — Where Can Forced Action Accelerate?</span>
     <span class="sec-badge neutral" id="lvl-badge">—</span>
@@ -221,7 +223,7 @@
 
 <!-- ====== DATA QUALITY ====== -->
 <div class="sec">
-  <div class="sec-header" onclick="toggleSection('dq-body','dq-arrow')">
+  <div class="sec-header" role="button" tabindex="0" aria-expanded="false" onclick="toggleSection('dq-body','dq-arrow',this)">
     <span class="sec-icon">🛡️</span>
     <span class="sec-title">Data Quality — Can We Trust the Data?</span>
     <span class="sec-badge pass" id="dq-badge">—</span>
@@ -243,7 +245,7 @@
 
 <!-- ====== SIGNAL DETAIL ====== -->
 <div class="sec" id="inv-sec" style="display:none">
-  <div class="sec-header" onclick="toggleSection('inv-body','inv-arrow')">
+  <div class="sec-header" role="button" tabindex="0" aria-expanded="false" onclick="toggleSection('inv-body','inv-arrow',this)">
     <span class="sec-icon">🚫</span>
     <span class="sec-title">Invalidation Conditions</span>
     <span class="sec-arrow" id="inv-arrow">▼</span>
@@ -252,7 +254,7 @@
 </div>
 
 <div class="sec" id="zones-sec" style="display:none">
-  <div class="sec-header" onclick="toggleSection('zones-body','zones-arrow')">
+  <div class="sec-header" role="button" tabindex="0" aria-expanded="false" onclick="toggleSection('zones-body','zones-arrow',this)">
     <span class="sec-icon">🎯</span>
     <span class="sec-title">Informational Zones</span>
     <span class="sec-arrow" id="zones-arrow">▼</span>
@@ -265,7 +267,7 @@
 
 <!-- ====== HOW IT WORKS ====== -->
 <div class="sec">
-  <div class="sec-header" onclick="toggleSection('how-body','how-arrow')">
+  <div class="sec-header" role="button" tabindex="0" aria-expanded="false" onclick="toggleSection('how-body','how-arrow',this)">
     <span class="sec-icon">ℹ️</span>
     <span class="sec-title">How PFC-3L Works</span>
     <span class="sec-arrow" id="how-arrow">▼</span>
@@ -302,11 +304,16 @@
 
 <script src="../assets/nav.js?v=13"></script>
 <script>
-function toggleSection(bodyId, arrowId) {
+function toggleSection(bodyId, arrowId, headerEl) {
   var b = document.getElementById(bodyId);
   var a = document.getElementById(arrowId);
-  if (b.style.display === 'block') { b.style.display = 'none'; a.classList.remove('up'); }
-  else { b.style.display = 'block'; a.classList.add('up'); }
+  var isOpen = b.style.display === 'block';
+  b.style.display = isOpen ? 'none' : 'block';
+  if (a) { a.classList.toggle('up', !isOpen); }
+  if (headerEl) {
+    headerEl.classList.toggle('open', !isOpen);
+    headerEl.setAttribute('aria-expanded', !isOpen);
+  }
 }
 
 function setBar(id, val, max) {
