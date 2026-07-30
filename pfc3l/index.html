@@ -14,7 +14,7 @@
   }
 
   /* Signal Hero */
-  .signal-hero { text-align: center; padding: 28px 20px 20px; margin-bottom: 16px; border-radius: 12px; backdrop-filter: blur(16px) saturate(150%); -webkit-backdrop-filter: blur(16px) saturate(150%); box-shadow: 0 16px 36px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.08); }
+  .signal-hero { text-align: center; padding: 22px 20px 18px; margin-bottom: 18px; border-radius: 12px; backdrop-filter: blur(16px) saturate(150%); -webkit-backdrop-filter: blur(16px) saturate(150%); box-shadow: 0 16px 36px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.08); }
   .signal-hero.LONG_CANDIDATE { background: linear-gradient(135deg, rgba(0,255,0,0.1), rgba(0,0,0,0)); border: 1px solid rgba(0,255,0,0.2); }
   .signal-hero.SHORT_CANDIDATE { background: linear-gradient(135deg, rgba(255,0,0,0.1), rgba(0,0,0,0)); border: 1px solid rgba(255,0,0,0.2); }
   .signal-hero.WATCH_LONG { background: linear-gradient(135deg, rgba(0,255,0,0.05), transparent); border: 1px solid rgba(0,255,0,0.1); }
@@ -22,7 +22,7 @@
   .signal-hero.NO_TRADE { background: rgba(255,255,255,0.02); border: 1px solid var(--border); }
   .signal-hero.DATA_UNRELIABLE { background: linear-gradient(135deg, rgba(255,165,0,0.1), rgba(0,0,0,0)); border: 1px solid rgba(255,165,0,0.2); }
 
-  .sig-state { font-size: 2.2em; font-weight: 900; letter-spacing: -0.01em; }
+  .sig-state { font-size: 2.2em; font-weight: 900; letter-spacing: -0.01em; margin-bottom: 2px; }
   .sig-state.LONG_CANDIDATE { color: var(--green); }
   .sig-state.SHORT_CANDIDATE { color: var(--red); }
   .sig-state.WATCH_LONG { color: #66cc66; }
@@ -30,10 +30,21 @@
   .sig-state.NO_TRADE { color: var(--muted); }
   .sig-state.DATA_UNRELIABLE { color: var(--orange); }
 
-  .sig-meta { margin-top: 8px; font-size: 13px; color: var(--muted); line-height: 1.7; }
+  .sig-explain { font-size: 13px; margin: 6px 0 10px; line-height: 1.6; }
+  .sig-explain b { font-weight: 700; }
+  .sig-explain .missing { color: var(--orange); text-decoration: underline; text-decoration-style: dotted; }
+  .sig-explain .passing { color: var(--green); }
+
+  .sig-meta { margin-top: 6px; font-size: 13px; color: var(--muted); line-height: 1.7; }
   .sig-meta b { color: var(--text); }
   .sig-age { font-size: 11px; color: var(--muted); }
   .sig-age.fresh { color: var(--green); }
+
+  .sig-gate-line { display: flex; gap: 6px; justify-content: center; align-items: center; margin-top: 10px; font-size: 12px; flex-wrap: wrap; }
+  .sig-gate-dot { padding: 2px 8px; border-radius: 3px; font-weight: 600; font-size: 11px; }
+  .sig-gate-dot.pass { background: rgba(0,255,0,0.1); color: var(--green); }
+  .sig-gate-dot.fail { background: rgba(255,0,0,0.1); color: var(--red); }
+  .sig-gate-dot.near { background: rgba(255,165,0,0.1); color: var(--orange); }
 
   /* Gate Summary Row */
   .gate-summary { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 20px; }
@@ -106,14 +117,7 @@
 
   .help-text { font-size: 11px; color: var(--muted); margin-top: 12px; padding: 10px 12px; background: rgba(255,255,255,0.02); border-radius: 6px; border-left: 2px solid var(--cyan); }
 
-  /* Lifecycle */
-  .lifecycle { display: flex; gap: 6px; align-items: center; justify-content: center; margin: 10px 0; flex-wrap: wrap; }
-  .lifecycle-step { padding: 3px 10px; border-radius: 4px; font-size: 10px; font-weight: 600; }
-  .lifecycle-step.completed { background: rgba(0,255,0,0.08); color: var(--green); border: 1px solid rgba(0,255,0,0.15); }
-  .lifecycle-step.current { background: var(--cyan); color: #05070d; box-shadow: 0 0 10px rgba(34,211,238,0.3); }
-  .lifecycle-step.future { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.35); }
-  .lifecycle-step.invalidated { background: rgba(255,0,0,0.08); color: var(--red); border: 1px solid rgba(255,0,0,0.2); text-decoration: line-through; }
-  .lifecycle-arrow { color: var(--muted); font-size: 9px; }
+  /* Lifecycle — removed, replaced by hero gate dots + explain text */
 
   .disclaimer { font-size: 10px; color: var(--muted); text-align: center; margin-top: 24px; padding: 14px; border-top: 1px solid var(--border); line-height: 1.7; }
   .disclaimer b { color: var(--text); }
@@ -139,13 +143,14 @@
 <!-- ====== SIGNAL HERO ====== -->
 <div id="signal-hero" class="signal-hero NO_TRADE">
   <div class="sig-state NO_TRADE" id="sig-state">—</div>
+  <div class="sig-explain" id="sig-explain">—</div>
+  <div class="sig-gate-line" id="sig-gate-dots"></div>
   <div class="sig-meta">
     BTC <b class="mono" id="sig-price">—</b> &nbsp;·&nbsp;
     Confidence: <b class="mono" id="sig-conf">—</b>/100 &nbsp;·&nbsp;
     DQ: <b class="mono" id="sig-dq">—</b>/100
   </div>
   <div class="sig-age" id="sig-age">—</div>
-  <div class="lifecycle" id="lifecycle-bar"></div>
 </div>
 
 <div class="stale-warning" id="stale-warning" style="display:none"><span id="stale-text"></span></div>
@@ -447,33 +452,59 @@ function render(data) {
   document.getElementById('sig-dq').textContent = dq.score || 0;
 
   // Stale warning
+  document.getElementById('sig-stale').style.display = 'none';
+
+  // Gate status for dots and explanation
+  var posPass = pos.state === 'SHORTS_VULNERABLE' && (pos.score||0) >= 70;
+  var floPass = (flo.state||'').includes('SPOT_BUYING') && (flo.score||0) >= 70;
+  var catPass = cat.state === 'POSITIVE' && (cat.confidence||0) >= 70;
+  var lvlPass = (lvl.role||'').match(/ACCELERATOR|ABSORBER/) && (lvl.score||0) >= 60;
+  var dqPass = dq.score >= 90 && dq.directional_allowed;
+  var gatePass = [posPass, floPass, catPass, lvlPass, dqPass];
+  var gateScore = [pos.score||0, flo.score||0, cat.confidence||0, lvl.score||0, dq.score||0];
+  var gateName = ['P','F','C','L','DQ'];
+  var gateThresh = [70,70,70,60,90];
+  var passedGates = gatePass.filter(function(x){return x;}).length;
+
+  // EXISTING STALE BLOCK
   var staleEl = document.getElementById('stale-warning');
   if (state === 'DATA_UNRELIABLE') {
     staleEl.style.display = 'block';
     document.getElementById('stale-text').textContent = '⚠ Data quality failure. ' + ((sig.vetoes||[]).join('; '));
   } else { staleEl.style.display = 'none'; }
 
-  // Lifecycle with semantic states
-  var lc = sig.lifecycle_state || 'ACTIVE';
-  var steps = ['WATCH','CANDIDATE','ACTIVE','INVALIDATED','EXPIRED'];
-  var lcIdx = steps.indexOf(lc);
-  var lcHtml = '';
-  steps.forEach(function(s, i) {
-    var cls = 'future';
-    if (i < lcIdx) cls = 'completed';
-    else if (i === lcIdx) cls = 'current';
-    if (lc === 'INVALIDATED' && s === 'INVALIDATED') cls = 'invalidated';
-    lcHtml += '<span class="lifecycle-step ' + cls + '">' + s + '</span>';
-    if (i < 4) lcHtml += '<span class="lifecycle-arrow">→</span>';
+  // EXPLAIN TEXT
+  var explainEl = document.getElementById('sig-explain');
+  var missingGates = [];
+  gatePass.forEach(function(ok, i) { if (!ok) missingGates.push(gateName[i]); });
+  var missingStr = missingGates.join(', ');
+  var explain = '';
+  if (state === 'DATA_UNRELIABLE') {
+    explain = '<b>Data feed problem</b> — directional signals blocked until feeds recover';
+  } else if (state === 'NO_TRADE') {
+    explain = '<b>No trade signal</b> — ' + passedGates + ' of 4 gates passing (need 4). <span class="missing">' + missingStr + '</span> not aligned';
+  } else if (state === 'LONG_CANDIDATE') {
+    explain = '<b>Long signal ready</b> — all 4 gates confirmed. <span class="passing">Review invalidation conditions below</span>';
+  } else if (state === 'SHORT_CANDIDATE') {
+    explain = '<b>Short signal ready</b> — all 4 gates confirmed. <span class="passing">Review invalidation conditions below</span>';
+  } else if (state === 'WATCH_LONG') {
+    explain = '<b>Developing</b> — 3 of 4 gates passed. Missing: <span class="missing">' + missingStr + '</span>. Monitoring for completion';
+  } else if (state === 'WATCH_SHORT') {
+    explain = '<b>Developing</b> — 3 of 4 gates passed. Missing: <span class="missing">' + missingStr + '</span>. Monitoring for completion';
+  }
+  explainEl.innerHTML = explain;
+
+  // GATE DOT LINE
+  var dotsHtml = '';
+  gatePass.forEach(function(ok, i) {
+    var cls = ok ? 'pass' : (gateScore[i] >= gateThresh[i]*0.7 ? 'near' : 'fail');
+    dotsHtml += '<span class="sig-gate-dot ' + cls + '">' + gateName[i] + ' ' + gateScore[i] + '/' + gateThresh[i] + '</span>';
   });
-  document.getElementById('lifecycle-bar').innerHTML = lcHtml + '<div style="font-size:9px;color:var(--muted);width:100%;text-align:center;margin-top:2px">Signal is decision support — not an active trade</div>';
+  document.getElementById('sig-gate-dots').innerHTML = dotsHtml;
 
   // Gate summary row
-  var posPass = pos.state === 'SHORTS_VULNERABLE' && (pos.score||0) >= 70;
-  var floPass = (flo.state||'').includes('SPOT_BUYING') && (flo.score||0) >= 70;
-  var catPass = cat.state === 'POSITIVE' && (cat.confidence||0) >= 70;
-  var lvlPass = (lvl.role||'').match(/ACCELERATOR|ABSORBER/) && (lvl.score||0) >= 60;
-  var dqPass = dq.score >= 90 && dq.directional_allowed;
+  var minGate = gates.reduce(function(a,b){ return a.score < b.score ? a : b; });
+  var gsHtml = '';
   var gates = [
     {id:'P', name:'Positioning', score:pos.score||0, thresh:70, pass:posPass, target:'sec-pos'},
     {id:'F', name:'Flow', score:flo.score||0, thresh:70, pass:floPass, target:'sec-flo'},
