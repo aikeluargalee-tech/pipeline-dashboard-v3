@@ -5,7 +5,7 @@ Import by all playbooks: playbooks/mean_reversion/, playbooks/liquidation_moment
 """
 import os, json
 
-SITE = "/home/maswilee/projects/pipeline-dashboard-v3"
+SITE = "/home/susiwilee/projects/pipeline-dashboard-v3"
 DATA_DIR = os.path.join(SITE, "data")
 REGIME_FILE = os.path.join(DATA_DIR, "regime_switch.json")
 LIQUIDITY_FILE = os.path.join(DATA_DIR, "liquidity_status.json")

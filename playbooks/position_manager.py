@@ -13,7 +13,7 @@ v2.0 adds fcntl.flock atomic locking (OpenCode audit + GetClaw approved).
 """
 import os, json, fcntl, time
 
-SITE = "/home/maswilee/projects/pipeline-dashboard-v3"
+SITE = "/home/susiwilee/projects/pipeline-dashboard-v3"
 DATA_DIR = os.path.join(SITE, "data")
 LOCK_FILE = os.path.join(DATA_DIR, ".positions.lock")
 

@@ -5,8 +5,8 @@ set -euo pipefail
 
 # Cron-safe environment
 export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin"
-SITE="/home/maswilee/projects/pipeline-dashboard-v3"
-PYTHON="/usr/bin/python3.12"
+SITE="/home/susiwilee/projects/pipeline-dashboard-v3"
+PYTHON="/home/susiwilee/projects/pipeline-dashboard-v3/.venv/bin/python3"
 ERROR_LOG="/tmp/pipeline_deploy_v3_errors.log"
 PASSED=0
 FAILED=0

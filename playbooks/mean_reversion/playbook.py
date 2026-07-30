@@ -17,7 +17,7 @@ import urllib.request
 
 # ── Project paths ──
 PLAYBOOK_DIR = Path(__file__).parent
-SITE = Path("/home/maswilee/projects/pipeline-dashboard-v3")
+SITE = Path("/home/susiwilee/projects/pipeline-dashboard-v3")
 DATA_DIR = SITE / "data"
 sys.path.insert(0, str(SITE / "playbooks"))
 

@@ -611,7 +611,7 @@ def main():
         }
     }
 
-    out_path = "/home/maswilee/projects/volume-profile-v3/data/vp_card.json"
+    out_path = "/home/susiwilee/projects/volume-profile-v3/data/vp_card.json"
     with open(out_path, "w") as f:
         json.dump(output, f, indent=2)
 
