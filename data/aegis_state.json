@@ -1,0 +1,153 @@
+{
+  "generated": "2026-07-30T15:34:55.188799+00:00",
+  "generated_human": "2026-07-30 15:34:55 UTC",
+  "reference_price": 0,
+  "snapshot": {
+    "data_health": "DATA_DEGRADED",
+    "health_reasons": [
+      "STALE regime: 46m behind AMT",
+      "STALE macro: 46m behind AMT",
+      "STALE derivs: 46m behind AMT"
+    ],
+    "price": 0,
+    "observed_at": "2026-07-30T15:32:46Z"
+  },
+  "latest_verdict": {
+    "verdict": "NO_ACTIVE_VERDICT",
+    "trap_probability": 0.0,
+    "confidence": 100,
+    "risk_action": "MONITOR",
+    "evidence": []
+  },
+  "active_event": {
+    "state": "IDLE",
+    "direction": "NONE"
+  },
+  "nearest_level": null,
+  "breakout": {
+    "level_interaction": {
+      "state": "IDLE",
+      "nearest_level": "\u2014",
+      "distance": "\u2014",
+      "direction": "\u2014",
+      "bars_observed": 15,
+      "close_beyond_level": "Yes",
+      "retest_result": "N/A (not yet crossed)"
+    },
+    "market_evidence": {
+      "relative_volume": "1.0x",
+      "taker_buy_sell": "52.7% buy",
+      "funding_rate": "0.0001%",
+      "oi_delta_5m": "0.0%",
+      "atr_14": "0.00%"
+    },
+    "why_verdict": {
+      "acceptance": "CLOSE_TO_LEVEL",
+      "participation": "NORMAL",
+      "aggression": "BALANCED",
+      "leverage": "NORMAL",
+      "catalyst": "NONE_DETECTED",
+      "environment": "Clear"
+    }
+  },
+  "trap_environment": {
+    "composite": 0,
+    "actual_max": 8,
+    "status": "CLEAR",
+    "_collected": "2026-07-30T15:32:46Z",
+    "signals": {
+      "leverage": [
+        {
+          "id": "S1",
+          "label": "Funding Rate Extremity",
+          "active": false,
+          "value": "0.0001%",
+          "score": 0
+        },
+        {
+          "id": "S2",
+          "label": "OI Spike >5%/1h",
+          "active": false,
+          "value": "0.0%",
+          "score": 0
+        },
+        {
+          "id": "S3",
+          "label": "OI\u2013Price Divergence",
+          "active": false,
+          "value": "\u2014",
+          "score": 0
+        }
+      ],
+      "orderflow": [
+        {
+          "id": "S4",
+          "label": "Coinbase Premium Deviation",
+          "active": false,
+          "value": "\u2014",
+          "score": 0
+        },
+        {
+          "id": "S5",
+          "label": "CVD Divergence",
+          "active": false,
+          "value": "CVD 0",
+          "score": 0
+        }
+      ],
+      "onchain": [
+        {
+          "id": "S6",
+          "label": "Exchange Netflow Spike",
+          "active": false,
+          "value": "\u2014",
+          "score": 0
+        },
+        {
+          "id": "S7",
+          "label": "UTXO Age Band Shift",
+          "active": false,
+          "value": "\u2014",
+          "score": 0
+        }
+      ],
+      "options": [
+        {
+          "id": "S8",
+          "label": "Options 25\u0394 Skew",
+          "active": false,
+          "value": "\u2014",
+          "score": 0
+        }
+      ]
+    },
+    "structural_backdrop": "Accumulation Zone"
+  },
+  "crash_precursor": {
+    "composite": 0,
+    "status": "NORMAL",
+    "signals": {
+      "taker": 0,
+      "bid_wall": 0,
+      "funding": 0,
+      "oi_implosion": 0,
+      "divergence": 0
+    },
+    "timestamp": "2026-07-30T15:34:55.188799+00:00",
+    "_collected": "2026-07-30T15:32:46Z",
+    "network_health": {
+      "hash_rate_ehs": 0,
+      "hash_rate_drawdown_pct": 0,
+      "fee_rate_sat_vb": 0,
+      "difficulty": 0
+    }
+  },
+  "cycle": {
+    "mvrv_z": null,
+    "sopr": null,
+    "nupl": null,
+    "lth_sopr_24h": null,
+    "supply_in_profit_share": null
+  },
+  "approved_levels": []
+}

@@ -440,371 +440,290 @@
 <div id="footer-placeholder"></div>
 <script src="../assets/nav.js"></script>
 <script>
-// ═══════════════════════════════════════════
-// BTC AEGIS — Consolidated Control Centre
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════════
+// BTC AEGIS — Static State Engine (v2)
+// Reads aegis_state.json from pipeline
+// ═══════════════════════════════════════
 (function(){
-var API_BASE=(function(){var p=new URLSearchParams(window.location.search);if(p.get('api'))return p.get('api');return'http://localhost:8000'})();
-var WS_URL=API_BASE.replace(/^http/,'ws')+'/ws/live';
-var TM_URL='../data/trap_monitor.json';
-var CRASH_URL='../data/crash_precursor.json';
-var CYCLE_URL='../data/cycle.json';
-var AEGIS_ONLINE=false;
+var STATE_URL = '../data/aegis_state.json';
 
-// ─── Formatting ───
 function money(v){if(v==null)return'—';return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v)}
-function pct(v,s){if(s===undefined)s=100;if(v==null)return'—';return(v*s).toFixed(4)+'%'}
+function pctStr(v){if(v==null)return'—';return (v*100).toFixed(4)+'%'}
 function ago(ts){if(!ts)return'—';var s=(Date.now()-new Date(ts).getTime())/1000;if(s<60)return Math.round(s)+'s ago';if(s<3600)return Math.round(s/60)+'m ago';return Math.round(s/3600)+'h ago'}
 function tc(v){if(!v)return'';if(v==='LIVE')return'good';if(v.indexOf('INVALID')!==-1||v.indexOf('STALE')!==-1||v.indexOf('MISSING')!==-1||v.indexOf('TRAP')!==-1||v==='REJECTED')return'danger';if(v.indexOf('HEALTHY')!==-1||v==='ACCEPTED'||v.indexOf('ACCEPTED_BREAK')!==-1)return'good';return'warn'}
 
-// ─── SECTION 1+2: AEGIS Live API ───
-function renderAegis(status){
-  AEGIS_ONLINE=true;
-  document.getElementById('ag-conn').textContent='LIVE';
-  document.getElementById('ag-conn').className='ag-conn live';
-  var s=status.snapshot||{},v=status.latest_verdict||{},e=status.active_event||{},nl=status.nearest_level;
+// ─── SECTION 1: Overview ───
+function renderOverview(s) {
+  var sn = s.snapshot || {}, v = s.latest_verdict || {}, e = s.active_event || {}, nl = s.nearest_level;
+  var dh = (sn.data_health||'NO DATA').replace(/_/g,' ');
+  document.getElementById('ov-health').textContent = dh;
+  document.getElementById('ov-health-sub').textContent = (sn.health_reasons||[]).join(' · ') || 'All feeds passed.';
+  document.getElementById('card-health').className = 'ag-card ' + tc(sn.data_health);
+  document.getElementById('ov-price').textContent = money(sn.price);
+  document.getElementById('ov-price-sub').textContent = sn.observed_at ? ago(sn.observed_at) : '—';
+  document.getElementById('ov-level').textContent = nl ? money(nl.price) : 'No level';
+  document.getElementById('ov-level-sub').textContent = nl ? nl.label + ' (' + nl.kind + ')' : '—';
+  document.getElementById('ov-event-state').textContent = e.state || 'IDLE';
+  document.getElementById('ov-event-sub').textContent = e.direction || 'No active event';
+  document.getElementById('card-event').className = 'ag-card ' + tc(e.state);
 
-  // Overview cards
-  var dh=(s.data_health||'NO DATA').replace(/_/g,' ');
-  document.getElementById('ov-health').textContent=dh;
-  document.getElementById('ov-health-sub').textContent=(s.health_reasons||[]).join(' · ')||'All feeds passed.';
-  document.getElementById('card-health').className='ag-card '+tc(s.data_health);
+  var verdict = v.verdict || 'NO ACTIVE VERDICT';
+  window._lastVerdict = v; window._lastSnapshot = sn; window._lastEvent = e;
+  var vel = document.getElementById('ov-verdict');
+  vel.textContent = verdict.replace(/_/g,' ');
+  vel.className = 'ag-verdict-highlight ' + (verdict.indexOf('TRAP')!==-1?'trap':verdict.indexOf('ACCEPTED')!==-1?'accept':verdict.indexOf('REVIEW')!==-1||verdict==='UNCONFIRMED_BREAK'?'review':'neutral');
+  document.getElementById('ov-trap').textContent = v.trap_probability!=null ? Math.round(v.trap_probability*100)+'%' : '—';
+  document.getElementById('ov-confidence').textContent = v.confidence||'—';
+  var riskEl = document.getElementById('ov-risk');
+  riskEl.textContent = v.risk_action||'No active event';
+  riskEl.style.background = verdict.indexOf('TRAP')!==-1?'rgba(244,63,94,.08)':verdict.indexOf('ACCEPTED')!==-1?'rgba(16,185,129,.08)':'rgba(255,255,255,.02)';
+  document.getElementById('ov-update').textContent = 'Snapshot: ' + (sn.observed_at?new Date(sn.observed_at).toLocaleString():'—');
 
-  document.getElementById('ov-price').textContent=money(s.price);
-  document.getElementById('ov-price-sub').textContent=s.observed_at?ago(s.observed_at):'—';
+  // Verdict evidence
+  var ev = v.evidence || [];
+  var evHtml = '';
+  ev.forEach(function(e){evHtml += '<div class="ag-ev"><div class="ag-ev-label">'+e.label+'</div><div class="ag-ev-val" style="color:'+(e.effect>0?'var(--ag-green)':'var(--ag-red)')+'">'+e.value+' ('+(e.effect>0?'+':'')+e.effect.toFixed(3)+')</div></div>';});
+  document.getElementById('ev-list').innerHTML = evHtml || '<p class="ag-empty">No active event. Evidence appears when a level is crossed.</p>';
 
-  document.getElementById('ov-level').textContent=nl?money(nl.price):'No level';
-  document.getElementById('ov-level-sub').textContent=nl?nl.label+' ('+nl.kind+')':'—';
-
-  document.getElementById('ov-event-state').textContent=e.state||'IDLE';
-  document.getElementById('ov-event-sub').textContent=e.direction?e.direction.toUpperCase():'No active event';
-  document.getElementById('card-event').className='ag-card '+tc(e.state);
-
-  // Verdict
-  var verdict=v.verdict||'NO ACTIVE VERDICT';
-  window._lastVerdict=v;
-  window._lastSnapshot=s;
-  window._lastEvent=e;
-  var vel=document.getElementById('ov-verdict');
-  vel.textContent=verdict.replace(/_/g,' ');
-  vel.className='ag-verdict-highlight '+(verdict.indexOf('TRAP')!==-1?'trap':verdict.indexOf('ACCEPTED')!==-1?'accept':verdict.indexOf('REVIEW')!==-1||verdict==='UNCONFIRMED_BREAK'?'review':'neutral');
-
-  document.getElementById('ov-trap').textContent=v.trap_probability!=null?Math.round(v.trap_probability*100)+'%':'—';
-  document.getElementById('ov-confidence').textContent=v.confidence||'—';
-
-  var riskEl=document.getElementById('ov-risk');
-  riskEl.textContent=v.risk_action||'No active event';
-  riskEl.style.background=verdict.indexOf('TRAP')!==-1?'rgba(244,63,94,.08)':verdict.indexOf('ACCEPTED')!==-1?'rgba(16,185,129,.08)':'rgba(255,255,255,.02)';
-
-  document.getElementById('ov-update').textContent='Snapshot: '+(s.observed_at?new Date(s.observed_at).toLocaleString():'—');
-
-  // Breakout Validator
-  document.getElementById('bv-nearest').textContent=nl?money(nl.price)+' · '+nl.label:'No level';
-  document.getElementById('bv-distance').textContent=nl?nl.distance_bps.toFixed(1)+' bps':'—';
-  document.getElementById('bv-direction').textContent=e.direction?e.direction.toUpperCase():'—';
-  document.getElementById('bv-bars').textContent=e.bars_observed!=null?e.bars_observed:'—';
-  document.getElementById('bv-state').textContent=e.state||'IDLE';
-  document.getElementById('bv-state').className='ag-state '+(e.state||'IDLE');
-
-  // Close beyond / retest
-  var ctx=e.context||{};
-  document.getElementById('bv-close-beyond').textContent=ctx.acceptance_count!=null?ctx.acceptance_count+' closes':'—';
-  document.getElementById('bv-retest').textContent=ctx.last_bar_at?'Bar at '+new Date(ctx.last_bar_at).toLocaleTimeString():'—';
-
-  // Market evidence
-  document.getElementById('bv-volume').textContent=s.volume_ratio!=null?s.volume_ratio.toFixed(2)+'×':'—';
-  document.getElementById('bv-taker').textContent=s.taker_ratio!=null?s.taker_ratio.toFixed(3):'—';
-  document.getElementById('bv-funding').textContent=pct(s.funding_rate);
-  document.getElementById('bv-oi').textContent=s.oi_delta_pct!=null?s.oi_delta_pct.toFixed(3)+'%':'—';
-  document.getElementById('bv-atr').textContent=s.atr!=null?'$'+s.atr.toFixed(1):'—';
-
-  // Why section
-  var ev=v.evidence||[];
-  function why(group,elId){var item=null;for(var i=0;i<ev.length;i++){if(ev[i].group===group){item=ev[i];break}}
-    var el=document.getElementById(elId);if(!item){el.textContent='Neutral';el.className='wv mid';return}
-    el.textContent=item.reason.replace(/_/g,' ');el.className='wv '+(item.effect>0.3?'risk':item.effect<-0.3?'ok':'mid')}
-  why('acceptance','why-acceptance');why('participation','why-participation');why('aggression','why-aggression');
-  why('leverage','why-leverage');why('catalyst','why-catalyst');
-
-  // Environment risk from trap-monitor data (filled by renderTrapEnv)
-  document.getElementById('why-env').textContent=window._envRisk||'—';
-  document.getElementById('why-env').className='wv '+(window._envRisk==='TRAP_ACTIVE'?'risk':window._envRisk==='CAUTION'?'mid':'ok');
-
-  // Evidence ledger
-  var evList=document.getElementById('ev-list');
-  if(ev.length===0){evList.innerHTML='<p class="ag-empty">Evidence appears when a configured level is crossed.</p>'}
-  else{evList.innerHTML=ev.sort(function(a,b){return Math.abs(b.effect)-Math.abs(a.effect)}).map(function(i){var c=i.effect>0?'pos':'neg';return'<div class="ag-ev-row"><span class="eg">'+i.group+'</span><span>'+i.reason.replace(/_/g,' ')+'</span><span class="ef '+c+'">'+(i.effect>0?'+':'')+i.effect.toFixed(2)+'</span></div>'}).join('')}
+  document.getElementById('ag-conn').textContent = 'STATIC';
+  document.getElementById('ag-conn').className = 'ag-conn live';
 }
 
-function updateLevels(levels){
-  var en=levels.filter(function(l){return l.enabled}),list=document.getElementById('lv-list');
-  if(en.length===0){list.innerHTML='<p class="ag-empty">No levels configured.</p>';return}
-  list.innerHTML=en.map(function(l){return'<div class="ag-lvl-row"><span class="lp">'+money(l.price)+'</span><span>'+l.label+'</span><span class="lk">'+l.kind+'</span></div>'}).join('')
+// ─── SECTION 2: Breakout Validator ───
+function renderBreakout(bo) {
+  if (!bo) return;
+  var li = bo.level_interaction || {};
+  document.getElementById('bv-interaction-state').textContent = li.state || 'IDLE';
+  document.getElementById('bv-interaction-state').className = 'ag-state ' + (li.state||'IDLE');
+  document.getElementById('bv-nearest').textContent = li.nearest_level || '—';
+  document.getElementById('bv-distance').textContent = li.distance || '—';
+  document.getElementById('bv-direction').textContent = li.direction || '—';
+  document.getElementById('bv-bars').textContent = li.bars_observed || '—';
+  document.getElementById('bv-close').textContent = li.close_beyond_level || '—';
+  document.getElementById('bv-retest').textContent = li.retest_result || '—';
+
+  var me = bo.market_evidence || {};
+  document.getElementById('bv-vol').textContent = me.relative_volume || '—';
+  document.getElementById('bv-taker').textContent = me.taker_buy_sell || '—';
+  document.getElementById('bv-funding').textContent = me.funding_rate || '—';
+  document.getElementById('bv-oi').textContent = me.oi_delta_5m || '—';
+  document.getElementById('bv-atr').textContent = me.atr_14 || '—';
+
+  var wv = bo.why_verdict || {};
+  document.getElementById('bv-accept').textContent = wv.acceptance || '—';
+  document.getElementById('bv-participate').textContent = wv.participation || '—';
+  document.getElementById('bv-aggress').textContent = wv.aggression || '—';
+  document.getElementById('bv-leverage').textContent = wv.leverage || '—';
+  document.getElementById('bv-catalyst').textContent = wv.catalyst || '—';
+  document.getElementById('bv-env').textContent = wv.environment || '—';
 }
 
-function fetchAegis(){
-  fetch(API_BASE+'/api/v1/status').then(function(r){return r.json()}).then(function(d){
-    renderAegis(d);
-  }).catch(function(){
-    document.getElementById('ag-conn').textContent='API OFFLINE';
-    document.getElementById('ag-conn').className='ag-conn offline';
-    AEGIS_ONLINE=false;
-  });
-  fetch(API_BASE+'/api/v1/levels').then(function(r){return r.json()}).then(updateLevels).catch(function(){});
-}
+// ─── SECTION 3: Trap Environment ───
+function renderTrapEnv(data) {
+  if (!data || data.composite===undefined) return;
+  window._lastTrap = data;
+  var score = data.composite || 0, max = data.actual_max || 8, status = data.status || 'CLEAR';
+  document.getElementById('env-score').textContent = score + '/' + max;
+  document.getElementById('env-status').textContent = status.replace(/_/g,' ');
+  document.getElementById('env-direction').textContent = data.structural_backdrop || '';
+  var banner = document.getElementById('env-banner');
+  banner.className = 'ag-env-banner ' + status;
 
-// ─── WebSocket ───
-function connectWS(){
-  var ws=new WebSocket(WS_URL);
-  ws.onopen=function(){document.getElementById('ag-conn').textContent='LIVE';document.getElementById('ag-conn').className='ag-conn live'};
-  ws.onmessage=function(ev){renderAegis(JSON.parse(ev.data));if(window._lastTrap||window._lastCrash)renderBottomLine()};
-  ws.onerror=function(){document.getElementById('ag-conn').textContent='DEGRADED';document.getElementById('ag-conn').className='ag-conn connecting'};
-  ws.onclose=function(){document.getElementById('ag-conn').textContent='RECONNECTING';document.getElementById('ag-conn').className='ag-conn connecting';setTimeout(connectWS,3000)}
-}
-
-// ─── SECTION 3: Trap Environment (from static JSON) ───
-var TE_SIGNALS={
-  s1_liq_asymmetry:{id:'S1',name:'Liquidation Asymmetry',group:'leverage'},
-  s2_oi_divergence:{id:'S2',name:'OI–Price Divergence',group:'leverage'},
-  s3_funding:{id:'S3',name:'Funding Level',group:'leverage'},
-  s4_bid_ask_absorption:{id:'S4',name:'Bid/Ask Absorption',group:'orderflow'},
-  s5_taker_cvd:{id:'S5',name:'Taker–CVD Split',group:'orderflow'},
-  s6_exchange_netflow:{id:'S6',name:'Exchange Netflow',group:'onchain'},
-  s7_utxo_bands:{id:'S7',name:'UTXO Age Bands',group:'onchain'},
-  s8_options_skew:{id:'S8',name:'Options 25Δ Skew',group:'options'}
-};
-
-function renderTrapEnv(data){
-  if(!data){return}
-  var composite=data.composite||0,actualMax=data.actual_max||8,status=data.status||'CLEAR',direction=data.direction||'NEUTRAL';
-  var signals=data.signals||{};
-  window._envRisk=status;
-
-  // Banner
-  var banner=document.getElementById('env-banner');
-  banner.className='ag-env-banner '+status;
-  document.getElementById('env-score').textContent=composite+'/'+actualMax;
-  document.getElementById('env-status').textContent=status.replace(/_/g,' ');
-  var dirText=direction==='LONG_TRAP'?'Bullish trap signals dominant — downside risk':direction==='SHORT_TRAP'?'Bearish trap signals dominant — upside risk':'';
-  document.getElementById('env-direction').textContent=dirText;
-
-  // Grouped signals
-  var groups={leverage:[],orderflow:[],onchain:[],options:[]};
-  Object.entries(TE_SIGNALS).forEach(function(e){var k=e[0],s=e[1],sig=signals[k];if(sig)groups[s.group].push({id:s.id,name:s.name,sig:sig})});
-
-  function renderGroup(groupId,items){
-    var el=document.getElementById('te-'+groupId);
-    el.innerHTML=items.map(function(i){var v=i.sig.verdict||'NEUTRAL';return'<div class="ag-te-signal"><span>'+i.name+' <small style="color:var(--muted)">'+i.id+'</small></span><span><span class="ag-te-val">'+i.sig.value+'</span> <span class="ag-te-verdict '+v+'">'+v+'</span></span></div>'}).join('')
+  var groups = data.signals || {leverage:[],orderflow:[],onchain:[],options:[]};
+  function renderGroup(id, sigs) {
+    var h = '';
+    (sigs||[]).forEach(function(s) {
+      h += '<div class="ag-te-signal"><span>' + s.label + '</span><span class="ag-te-val">' + (s.value||'—') + '</span><span class="ag-te-verdict ' + (s.active?'ag-te-active':'ag-te-clear') + '">' + (s.active?'● ACTIVE':'○ clear') + '</span></div>';
+    });
+    document.getElementById('te-'+id).innerHTML = h || '<div class="ag-te-signal"><span>No data</span></div>';
   }
-  renderGroup('leverage',groups.leverage);
-  renderGroup('orderflow',groups.orderflow);
-  renderGroup('onchain',groups.onchain);
-  renderGroup('options',groups.options);
+  renderGroup('leverage', groups.leverage);
+  renderGroup('orderflow', groups.orderflow);
+  renderGroup('onchain', groups.onchain);
+  renderGroup('options', groups.options);
+  document.getElementById('te-update').textContent = 'Environment data: ' + (data._collected||'—');
 
-  document.getElementById('te-update').textContent='Environment data: '+(data._collected||'—');
-  // Downstream action
-  var ac=document.getElementById('action-card');
-  var actions={TRAP_ACTIVE:{icon:'🛑',title:'DEFENSIVE POSTURE',desc:'Legacy environment risk >= 6/8 — aggressive selling likely.',context:'Reduce long exposure. Consider hedging with protective puts or moving to stablecoins. Wait for composite to drop below 3/8 before re-adding risk.'},CAUTION:{icon:'⚠️',title:'REDUCE SIZE — BE SELECTIVE',desc:'Elevated risk (3-5/8). Not a trap call yet — but environment is deteriorating.',context:'Tighten stops to break-even on existing positions. Use smaller position sizes for new entries. Prefer high-timeframe confirmation.'},CLEAR:{icon:'✅',title:'PROCEED NORMALLY',desc:'Risk composite < 3/8. No systemic trap signals detected.',context:'Standard trading rules apply. Long/short decisions should be driven by Level 2 (AEGIS Verdict) and Level 3 (Breakout/Trap detection), not environmental fear.'}};
-  var a=actions[status];
-  if(a&&ac){ac.style.display='';ac.style.background=status==='TRAP_ACTIVE'?'rgba(244,63,94,.06)':status==='CAUTION'?'rgba(245,158,11,.04)':'rgba(16,185,129,.04)';ac.style.border='1px solid '+(status==='TRAP_ACTIVE'?'rgba(244,63,94,.25)':status==='CAUTION'?'rgba(245,158,11,.2)':'rgba(16,185,129,.2)');document.getElementById('action-icon').textContent=a.icon;document.getElementById('action-title').textContent=a.title;document.getElementById('action-desc').textContent=a.desc;document.getElementById('action-context').textContent=a.context}
-  else if(ac){ac.style.display='none'}
+  var ac = document.getElementById('action-card');
+  var actions = {
+    TRAP_ACTIVE: {icon:'🛑',title:'DEFENSIVE POSTURE',desc:'Legacy environment risk >= 6/8 — aggressive selling likely.',context:'Reduce long exposure. Consider hedging with protective puts or moving to stablecoins. Wait for composite to drop below 3/8 before re-adding risk.'},
+    CAUTION: {icon:'⚠️',title:'REDUCE SIZE — BE SELECTIVE',desc:'Elevated risk (3-5/8). Not a trap call yet — but environment is deteriorating.',context:'Tighten stops to break-even on existing positions. Use smaller position sizes for new entries. Prefer high-timeframe confirmation.'},
+    CLEAR: {icon:'✅',title:'PROCEED NORMALLY',desc:'Risk composite < 3/8. No systemic trap signals detected.',context:'Standard trading rules apply. Long/short decisions should be driven by Level 2 (AEGIS Verdict) and Level 3 (Breakout/Trap detection), not environmental fear.'}
+  };
+  var a = actions[status];
+  if (a && ac) {
+    ac.style.display = '';
+    ac.style.background = status==='TRAP_ACTIVE'?'rgba(244,63,94,.06)':status==='CAUTION'?'rgba(245,158,11,.04)':'rgba(16,185,129,.04)';
+    ac.style.border = '1px solid '+(status==='TRAP_ACTIVE'?'rgba(244,63,94,.25)':status==='CAUTION'?'rgba(245,158,11,.2)':'rgba(16,185,129,.2)');
+    document.getElementById('action-icon').textContent = a.icon;
+    document.getElementById('action-title').textContent = a.title;
+    document.getElementById('action-desc').textContent = a.desc;
+    document.getElementById('action-context').textContent = a.context;
+  } else if (ac) { ac.style.display = 'none'; }
 }
 
 // ─── SECTION 4: Crash Precursor ───
-var CP_LABELS={taker:'Aggressive Sell Orders',bid_wall:'Support Wall Retreat',funding:'Futures Holding Fees',oi_implosion:'Leverage Flushes',divergence:'Momentum Divergence'};
-function renderCrashPrecursor(d){
-  if(!d||d.composite===undefined){document.getElementById('cp-panel').style.display='none';return}
-  document.getElementById('cp-panel').style.display='';
-  var comp=d.composite||0,status=d.status||'NORMAL',signals=d.signals||{};
-  document.getElementById('cp-composite').textContent=comp+'/5';
-  var cs=document.getElementById('cp-status');
-  cs.textContent=status;cs.className='ag-cp-status '+status;
-
-  var list=document.getElementById('cp-signals');
-  list.innerHTML=Object.entries(CP_LABELS).map(function(e){var v=signals[e[0]]||0,fired=v>0;return'<div class="ag-cp-row '+(fired?'fired':'clear')+'"><span>'+e[1]+'</span><span>'+(fired?'● ACTIVE':'○ clear')+'</span></div>'}).join('');
-  document.getElementById('cp-update').textContent='Crash precursor: '+(d._collected||d.timestamp||'—');
-  // Network Health (BRK Tier 3)
-  var nh=d.network_health,nhPanel=document.getElementById('cp-network');
-  if(nh&&nhPanel){nhPanel.hidden=false;
-    var hr=nh.hash_rate_ehs;document.getElementById('nh-hashrate').textContent=hr!=null?(hr/1e18).toFixed(2)+' EH/s':'—';
-    var dd=nh.hash_rate_drawdown_pct,ddEl=document.getElementById('nh-drawdown');
-    ddEl.textContent=dd!=null?dd.toFixed(1)+'%':'—';
-    ddEl.style.color=dd!=null&&dd<-20?'var(--ag-red)':dd!=null&&dd<-10?'var(--ag-yellow)':'var(--ag-green)';
-    document.getElementById('nh-feerate').textContent=nh.fee_rate_sat_vb!=null?nh.fee_rate_sat_vb.toFixed(3)+' sat/vB':'—';
-    var diff=nh.difficulty;document.getElementById('nh-difficulty').textContent=diff!=null?(diff/1e12).toFixed(1)+' T':'—';
-  }else if(nhPanel){nhPanel.hidden=true}
+var CP_LABELS = {taker:'Aggressive Sell Orders',bid_wall:'Support Wall Retreat',funding:'Futures Holding Fees',oi_implosion:'Leverage Flushes',divergence:'Momentum Divergence'};
+function renderCrashPrecursor(d) {
+  if (!d || d.composite===undefined) { document.getElementById('cp-panel').style.display='none'; return; }
+  document.getElementById('cp-panel').style.display = '';
+  var comp = d.composite||0, status = d.status||'NORMAL', signals = d.signals||{};
+  document.getElementById('cp-composite').textContent = comp + '/5';
+  var cs = document.getElementById('cp-status');
+  cs.textContent = status; cs.className = 'ag-cp-status '+status;
+  var list = document.getElementById('cp-signals');
+  list.innerHTML = Object.entries(CP_LABELS).map(function(e){var v=signals[e[0]]||0,fired=v>0;return '<div class="ag-cp-row '+(fired?'fired':'clear')+'"><span>'+e[1]+'</span><span>'+(fired?'● ACTIVE':'○ clear')+'</span></div>'}).join('');
+  document.getElementById('cp-update').textContent = 'Crash precursor: '+(d._collected||d.timestamp||'—');
+  var nh = d.network_health, nhPanel = document.getElementById('cp-network');
+  if (nh && nhPanel) {
+    nhPanel.hidden = false;
+    document.getElementById('nh-hashrate').textContent = nh.hash_rate_ehs!=null?(nh.hash_rate_ehs/1e18).toFixed(2)+' EH/s':'—';
+    var dd = nh.hash_rate_drawdown_pct, ddEl = document.getElementById('nh-drawdown');
+    ddEl.textContent = dd!=null?dd.toFixed(1)+'%':'—';
+    ddEl.style.color = dd!=null&&dd<-20?'var(--ag-red)':dd!=null&&dd<-10?'var(--ag-yellow)':'var(--ag-green)';
+    document.getElementById('nh-feerate').textContent = nh.fee_rate_sat_vb!=null?nh.fee_rate_sat_vb.toFixed(3)+' sat/vB':'—';
+    document.getElementById('nh-difficulty').textContent = nh.difficulty!=null?(nh.difficulty/1e12).toFixed(1)+' T':'—';
+  } else if (nhPanel) { nhPanel.hidden = true; }
 }
 
-// ─── Structural Backdrop — Accumulation Zone ───
-function renderAccumulation(cycle){
-  if(!cycle)return;
-  window._lastCycle=cycle;
-  var mvrv=cycle.mvrv_z,sopr=cycle.sopr,nupl=cycle.nupl,lth=cycle.lth_sopr_24h,sp=cycle.supply_in_profit_share;
-  function set(id,val,color,label){
-    var el=document.getElementById(id);if(el&&val!=null){el.textContent=typeof val==='number'?val.toFixed(4):val;el.style.color=color}
-    var lb=document.getElementById(id+'-label');if(lb&&label)lb.textContent=label
+// ─── Accumulation Zone ───
+function renderAccumulation(cycle) {
+  if (!cycle) return;
+  window._lastCycle = cycle;
+  var mvrv=cycle.mvrv_z, sopr=cycle.sopr, nupl=cycle.nupl, lth=cycle.lth_sopr_24h;
+  function set(id,val,color,label) {
+    var el=document.getElementById(id); if(el&&val!=null){el.textContent=typeof val==='number'?val.toFixed(4):val;el.style.color=color}
+    var lb=document.getElementById(id+'-label'); if(lb&&label)lb.textContent=label
   }
-  if(mvrv!=null){
-    if(mvrv<0)set('accum-mvrv',mvrv,'var(--ag-green)','below zero — historic accumulation');
-    else if(mvrv<1)set('accum-mvrv',mvrv,'var(--ag-green)','below 1.0 — undervalued zone');
-    else if(mvrv>3)set('accum-mvrv',mvrv,'var(--ag-red)','above 3.0 — cycle top zone');
-    else set('accum-mvrv',mvrv,'var(--ag-yellow)','mid-cycle — fair value')
-  }
-  if(sopr!=null){
-    if(sopr<0.995)set('accum-sopr',sopr,'var(--ag-green)','capitulation territory');
-    else if(sopr<1.0)set('accum-sopr',sopr,'var(--ag-yellow)','break-even — nearing capitulation');
-    else if(sopr<1.01)set('accum-sopr',sopr,'var(--ag-yellow)','slight profit');
-    else set('accum-sopr',sopr,'var(--ag-green)','healthy profit-taking')
-  }
-  if(nupl!=null){
-    if(nupl<0)set('accum-nupl',nupl,'var(--ag-green)','capitulation (red)');
-    else if(nupl<0.25)set('accum-nupl',nupl,'var(--ag-yellow)','hope/fear — early cycle');
-    else if(nupl<0.5)set('accum-nupl',nupl,'var(--ag-cyan)','optimism — mid cycle');
-    else if(nupl<0.75)set('accum-nupl',nupl,'var(--ag-orange)','belief — late cycle');
-    else set('accum-nupl',nupl,'var(--ag-red)','euphoria — cycle top')
-  }
-  if(lth!=null){
-    if(lth<0.9)set('accum-lth-sopr',lth,'var(--ag-green)','LTH selling at loss — accumulation signal');
-    else if(lth<1.0)set('accum-lth-sopr',lth,'var(--ag-yellow)','LTH near break-even');
-    else set('accum-lth-sopr',lth,'var(--ag-green)','LTH in profit — distribution phase')
-  }
-  // Summary note
+  if (mvrv!=null) { if(mvrv<0)set('accum-mvrv',mvrv,'var(--ag-green)','below zero — historic accumulation');else if(mvrv<1)set('accum-mvrv',mvrv,'var(--ag-green)','below 1.0 — undervalued zone');else if(mvrv>3)set('accum-mvrv',mvrv,'var(--ag-red)','above 3.0 — cycle top zone');else set('accum-mvrv',mvrv,'var(--ag-yellow)','mid-cycle — fair value');}
+  if (sopr!=null) { if(sopr<0.995)set('accum-sopr',sopr,'var(--ag-green)','capitulation territory');else if(sopr<1.0)set('accum-sopr',sopr,'var(--ag-yellow)','break-even');else if(sopr<1.01)set('accum-sopr',sopr,'var(--ag-yellow)','slight profit');else set('accum-sopr',sopr,'var(--ag-green)','healthy profit-taking');}
+  if (nupl!=null) { if(nupl<0)set('accum-nupl',nupl,'var(--ag-green)','capitulation');else if(nupl<0.25)set('accum-nupl',nupl,'var(--ag-yellow)','hope/fear');else if(nupl<0.5)set('accum-nupl',nupl,'var(--ag-cyan)','optimism');else if(nupl<0.75)set('accum-nupl',nupl,'var(--ag-orange)','belief');else set('accum-nupl',nupl,'var(--ag-red)','euphoria');}
+  if (lth!=null) { if(lth<0.9)set('accum-lth-sopr',lth,'var(--ag-green)','LTH selling at loss — accumulation signal');else if(lth<1.0)set('accum-lth-sopr',lth,'var(--ag-yellow)','LTH near break-even');else set('accum-lth-sopr',lth,'var(--ag-green)','LTH in profit — distribution phase');}
   var note='';
-  if(mvrv!=null&&mvrv<1&&lth!=null&&lth<0.9)note='🟢 Accumulation zone confirmed. MVRV-Z near cycle floor + LTH selling at loss. This is not a short signal — structural backdrop favors treating dips as high-conviction add zones, not breakdowns. Red spikes mark capitulation; they do not mark the exact tick bottom.';
-  else if(mvrv!=null&&mvrv<1)note='🟢 MVRV-Z below 1.0 — undervalued territory. Structural backdrop neutral-to-bullish for accumulation.';
-  else if(nupl!=null&&nupl>0.7)note='🔴 NUPL in belief/euphoria zone — distribution phase. Caution on new longs.';
+  if (mvrv!=null&&mvrv<1&&lth!=null&&lth<0.9) note='🟢 Accumulation zone confirmed. MVRV-Z near cycle floor + LTH selling at loss. Dips are high-conviction add zones, not breakdowns.';
+  else if (mvrv!=null&&mvrv<1) note='🟢 MVRV-Z below 1.0 — undervalued territory. Structural backdrop neutral-to-bullish for accumulation.';
+  else if (nupl!=null&&nupl>0.7) note='🔴 NUPL in belief/euphoria zone — distribution phase. Caution on new longs.';
   else note='🟡 Mixed signals — no strong accumulation or distribution signal.';
-  var noteEl=document.getElementById('accum-note');if(noteEl)noteEl.textContent=note
+  var noteEl=document.getElementById('accum-note'); if(noteEl)noteEl.textContent=note;
 }
 
-// ─── Bottom Line — synthesis from all data layers ───
-function renderBottomLine(){
-  var trap=_lastTrap,crash=_lastCrash,cycle=window._lastCycle;
+// ─── Bottom Line ───
+function renderBottomLine() {
+  var trap=window._lastTrap,crash=window._lastCrash,cycle=window._lastCycle;
   var v=window._lastVerdict||{},e=window._lastEvent||{};
-  // Gather inputs
-  var trapStatus=trap?trap.status:'UNKNOWN';
-  var trapScore=trap?trap.composite:0;
-  var trapMax=trap?trap.actual_max||8:8;
-  var crashComp=crash?crash.composite:0;
-  var crashStatus=crash?crash.status:'UNKNOWN';
-  var mvrvZ=cycle?cycle.mvrv_z:null;
-  var lthSopr=cycle?cycle.lth_sopr_24h:null;
-  var nupl=cycle?cycle.nupl:null;
+  var trapStatus=trap?trap.status:'UNKNOWN',trapScore=trap?trap.composite:0,trapMax=trap?trap.actual_max||8:8;
+  var crashComp=crash?crash.composite:0,crashStatus=crash?crash.status:'UNKNOWN';
+  var mvrvZ=cycle?cycle.mvrv_z:null,lthSopr=cycle?cycle.lth_sopr_24h:null,nupl=cycle?cycle.nupl:null;
   var hashrateDD=(crash&&crash.network_health)?crash.network_health.hash_rate_drawdown_pct:null;
   var eventActive=e.state&&e.state!=='IDLE';
-  var aegisVerdict=v.verdict||'';
-
-  // Synthesis logic
   var posture='NEUTRAL',klass='neutral',synthesis='',action='',drivers=[];
-
-  if(trapStatus==='TRAP_ACTIVE'&&crashComp>=3&&(crashStatus==='ELEVATED'||crashStatus==='DANGER')){
+  if (trapStatus==='TRAP_ACTIVE'&&crashComp>=3&&(crashStatus==='ELEVATED'||crashStatus==='DANGER')) {
     posture='DEFENSIVE';klass='defensive';
-    synthesis='Both trap environment AND systemic crash risk are elevated simultaneously. This is the highest-risk combination — multiple independent systems agree on danger.';
-    action='⛔ DO NOT LONG. Consider full exit or hedging with protective puts. Wait for at least one system to clear before re-entering.';
-    drivers.push({label:'Trap '+trapScore+'/'+trapMax,color:'red'});
-    drivers.push({label:'Crash '+crashComp+'/5 '+crashStatus,color:'red'});
-  }else if(trapStatus==='TRAP_ACTIVE'){
+    synthesis='Both trap environment AND systemic crash risk are elevated simultaneously. Highest-risk combination.';
+    action='⛔ DO NOT LONG. Consider full exit or hedging with protective puts.';
+    drivers.push({label:'Trap '+trapScore+'/'+trapMax,color:'red'});drivers.push({label:'Crash '+crashComp+'/5 '+crashStatus,color:'red'});
+  } else if (trapStatus==='TRAP_ACTIVE') {
     posture='DEFENSIVE';klass='defensive';
-    synthesis='Trap environment is elevated ('+trapScore+'/'+trapMax+'). Multiple trap signals are firing — the market is positioning aggressively against the current move.';
-    action='⛔ Reduce position sizes. Tighten stops. Do not add to longs until composite drops below 3/'+trapMax+'. Consider hedging with protective puts.';
+    synthesis='Trap environment elevated ('+trapScore+'/'+trapMax+'). Multiple trap signals firing.';
+    action='⛔ Reduce position sizes. Tighten stops. Do not add to longs.';
     drivers.push({label:'Trap '+trapScore+'/'+trapMax,color:'red'});
-  }else if(crashComp>=3&&(crashStatus==='ELEVATED'||crashStatus==='DANGER')){
+  } else if (crashComp>=3&&(crashStatus==='ELEVATED'||crashStatus==='DANGER')) {
     posture='CAUTION';klass='caution';
-    synthesis='Crash precursor elevated ('+crashComp+'/5 '+crashStatus+'). Systemic breakdown risk is real — not just a local trap, but broad market fragility that can precede significant drawdowns.';
-    action='⚠️ Reduce exposure across the board. These signals precede significant drawdowns — do not fade them. Tighten stops aggressively.';
+    synthesis='Crash precursor elevated ('+crashComp+'/5 '+crashStatus+'). Systemic breakdown risk is real.';
+    action='⚠️ Reduce exposure across the board. Tighten stops aggressively.';
     drivers.push({label:'Crash '+crashComp+'/5 '+crashStatus,color:'orange'});
-  }else if(trapStatus==='CAUTION'){
+  } else if (trapStatus==='CAUTION') {
     posture='GUARDED';klass='guarded';
-    synthesis='Trap environment shows elevated risk ('+trapScore+'/'+trapMax+') but not yet at critical. Some trap signals are deteriorating — worth attention.';
-    action='⚡ Proceed with smaller size. Be ready to cut if signals escalate to TRAP ACTIVE. Prefer higher-timeframe confirmation for new entries.';
+    synthesis='Trap environment shows elevated risk ('+trapScore+'/'+trapMax+') but not critical.';
+    action='⚡ Proceed with smaller size. Be ready to cut if signals escalate.';
     drivers.push({label:'Trap '+trapScore+'/'+trapMax,color:'yellow'});
-  }else if(mvrvZ!=null&&mvrvZ<0&&lthSopr!=null&&lthSopr<0.9){
+  } else if (mvrvZ!=null&&mvrvZ<0&&lthSopr!=null&&lthSopr<0.9) {
     posture='BULLISH';klass='bullish';
-    synthesis='Deep accumulation confirmed: MVRV-Z '+mvrvZ.toFixed(2)+' (near cycle floor) + LTH selling at loss. Historically a high-conviction buy zone.';
-    action='✅ Dips are accumulation opportunities. Structural backdrop favors treating pullbacks as add zones, not breakdowns. Red spikes mark zones, not exact tick bottoms.';
-    drivers.push({label:'MVRV-Z '+mvrvZ.toFixed(2),color:'green'});
-    drivers.push({label:'LTH at loss',color:'green'});
-    if(nupl!=null){drivers.push({label:'NUPL '+nupl.toFixed(3),color:'green'})}
-  }else if(mvrvZ!=null&&mvrvZ<1){
+    synthesis='Deep accumulation confirmed: MVRV-Z '+mvrvZ.toFixed(2)+' + LTH selling at loss. High-conviction buy zone.';
+    action='✅ Dips are accumulation opportunities. Structural backdrop favors treating pullbacks as add zones.';
+    drivers.push({label:'MVRV-Z '+mvrvZ.toFixed(2),color:'green'});drivers.push({label:'LTH at loss',color:'green'});
+  } else if (mvrvZ!=null&&mvrvZ<1) {
     posture='BULLISH';klass='bullish';
-    synthesis='MVRV-Z '+mvrvZ.toFixed(2)+' — undervalued territory. Not as extreme as cycle floor, but structurally favorable for accumulation.';
-    action='✅ Favorable accumulation backdrop. Dips have higher probability of being buyable than breakdowns. Standard position sizing.';
+    synthesis='MVRV-Z '+mvrvZ.toFixed(2)+' — undervalued territory. Structurally favorable for accumulation.';
+    action='✅ Favorable accumulation backdrop. Standard position sizing.';
     drivers.push({label:'MVRV-Z '+mvrvZ.toFixed(2),color:'green'});
-  }else if(nupl!=null&&nupl>0.7){
+  } else if (nupl!=null&&nupl>0.7) {
     posture='BEARISH';klass='caution';
-    synthesis='NUPL '+nupl.toFixed(3)+' in euphoria/distribution zone. Cycle tops are historically heavy — favor caution on new longs.';
-    action='⚠️ Reduce long exposure. Take partial profits. Do not add new longs at these structural levels. Wait for reset before re-entering.';
+    synthesis='NUPL '+nupl.toFixed(3)+' in euphoria/distribution zone. Favor caution on new longs.';
+    action='⚠️ Reduce long exposure. Take partial profits.';
     drivers.push({label:'NUPL '+nupl.toFixed(3),color:'orange'});
-  }else if(hashrateDD!=null&&hashrateDD<-30){
-    posture='GUARDED';klass='guarded';
-    synthesis='Network health degraded: hashrate drawdown '+hashrateDD.toFixed(1)+'% from ATH. Significant miner stress can precede volatility.';
-    action='⚡ Proceed with awareness. Hashrate drawdown adds fragility to the backdrop. Monitor for further degradation.';
-    drivers.push({label:'Hashrate DD '+hashrateDD.toFixed(1)+'%',color:'yellow'});
-  }else if(eventActive){
+  } else if (eventActive) {
     posture='ACTIVE';klass='neutral';
-    synthesis='A breakout event is in progress — follow the AEGIS verdict above. The system is actively validating this move with real-time evidence.';
-    action='Follow the AEGIS verdict. This is an active monitoring state — the system will update as evidence accumulates.';
+    synthesis='Breakout event in progress — follow the AEGIS verdict above.';
+    action='Follow the AEGIS verdict. Active monitoring state.';
     drivers.push({label:'Event active',color:'gray'});
-  }else{
+  } else {
     posture='NEUTRAL';klass='neutral';
-    synthesis='No dominant signal across any data layer. Trap environment clear, crash precursor normal, structural backdrop mid-cycle. Market in wait mode.';
-    action='No high-conviction setup. Wait for a breakout event or a structural signal to develop before committing capital. Patience is the play.';
+    synthesis='No critical risk signals detected. Standard trading environment.';
+    action='Proceed normally. Monitor for changes.';
   }
-
-  // Add green confirmations for silent systems
-  if(trapStatus==='CLEAR'&&drivers.filter(function(d){return d.color==='yellow'||d.color==='orange'||d.color==='red'}).length===0){
-    drivers.push({label:'Trap clear',color:'green'})
-  }
-  if(crashComp===0&&drivers.filter(function(d){return d.label.indexOf('Crash')===0}).length===0){
-    drivers.push({label:'Crash normal',color:'green'})
-  }
-
-  // Render
-  var card=document.getElementById('bl-card');
-  if(!card)return;
-  card.className='ag-bottom-line '+klass;
+  var blCard=document.getElementById('bl-card');
+  blCard.className='ag-bottom-line '+klass;
   document.getElementById('bl-posture').textContent=posture;
-  document.getElementById('bl-posture').style.color=
-    klass==='defensive'?'var(--ag-red)':
-    klass==='caution'?'var(--ag-orange)':
-    klass==='guarded'?'var(--ag-yellow)':
-    klass==='bullish'?'var(--ag-green)':'var(--text)';
+  document.getElementById('bl-verdict-badge').textContent=posture;
+  document.getElementById('bl-verdict-badge').className='ag-bl-badge '+klass;
+  document.getElementById('bl-card').style.borderColor=
+    klass==='defensive'?'var(--ag-red)':klass==='caution'?'var(--ag-orange)':
+    klass==='guarded'?'var(--ag-yellow)':klass==='bullish'?'var(--ag-green)':'var(--border)';
   document.getElementById('bl-synthesis').textContent=synthesis;
   document.getElementById('bl-action').textContent=action;
   document.getElementById('bl-drivers').innerHTML=drivers.map(function(d){return'<span class="'+d.color+'">'+d.label+'</span>'}).join('');
   document.getElementById('bl-update').textContent='Synthesized: '+new Date().toLocaleString();
 }
 
-// ─── Fetch all ───
-var _lastTrap=null,_lastCrash=null;
-function renderCombinedAlert(){
-  var t=_lastTrap,c=_lastCrash,el=document.getElementById('combined-alert');
-  if(!t||!c||el===undefined){return}
-  var trapFiring=t.score!==undefined&&t.risk==='TRAP_ACTIVE';
-  var crashFiring=c.composite!==undefined&&c.composite>=3&&(c.status==='ELEVATED'||c.status==='DANGER');
-  if(trapFiring&&crashFiring){
+// ─── Combined Alert ───
+function renderCombinedAlert() {
+  var t=window._lastTrap,c=window._lastCrash,el=document.getElementById('combined-alert');
+  if (!t||!c||!el) return;
+  var trapFiring=t.status==='TRAP_ACTIVE';
+  var crashFiring=c.composite>=3&&(c.status==='ELEVATED'||c.status==='DANGER');
+  if (trapFiring&&crashFiring) {
     el.hidden=false;
     document.getElementById('combined-title').textContent='⚡ AGGRESSIVE SELLING + SYSTEMIC CRASH RISK ⚡';
-    document.getElementById('combined-detail').textContent='Trap: '+t.score+'/'+(t.max_score||8)+' — Crash: '+c.composite+'/5 ('+c.status+') — BOTH SYSTEMS FLASHING RED';
-    document.getElementById('combined-action').textContent='⛔ DO NOT LONG. Consider shorts or full exit. Both trap conditions AND systemic breakdown risk are elevated simultaneously.';
-  }else{el.hidden=true}
-}
-function fetchStatic(){
-  Promise.all([
-    fetch(TM_URL).then(function(r){return r.json()}).catch(function(){return null}),
-    fetch(CRASH_URL).then(function(r){return r.json()}).catch(function(){return null}),
-    fetch(CYCLE_URL).then(function(r){return r.json()}).catch(function(){return null})
-  ]).then(function(r){
-    _lastTrap=r[0];_lastCrash=r[1];
-    renderTrapEnv(r[0]);renderCrashPrecursor(r[1]);renderAccumulation(r[2]);
-    renderCombinedAlert();renderBottomLine()
-  })
+    document.getElementById('combined-detail').textContent='Trap: '+t.composite+'/'+(t.actual_max||8)+' — Crash: '+c.composite+'/5 ('+c.status+') — BOTH SYSTEMS FLASHING RED';
+    document.getElementById('combined-action').textContent='⛔ DO NOT LONG. Consider shorts or full exit.';
+  } else { el.hidden=true; }
 }
 
-// ─── Start ───
-fetchAegis();fetchStatic();connectWS();
-setInterval(function(){fetch(API_BASE+'/api/v1/levels').then(function(r){return r.json()}).then(updateLevels).catch(function(){})},30000);
-setInterval(fetchStatic,60000);
+// ─── Approved Levels ───
+function renderLevels(levels) {
+  var el = document.getElementById('lv-list');
+  if (!levels||!levels.length) { el.innerHTML='<p class="ag-empty">No levels configured. Generated from S/R bands every 15 minutes.</p>'; return; }
+  var h='';
+  levels.forEach(function(l) {
+    h+='<div class="ag-te-signal"><span>'+l.label+' ('+l.kind+')</span><span class="ag-te-val">'+money(l.price)+'</span><span style="font-size:.68em;color:var(--muted)">'+l.source+'</span></div>';
+  });
+  el.innerHTML = h;
+}
+
+// ─── Main Fetch ───
+function loadState() {
+  fetch(STATE_URL+'?'+Date.now())
+    .then(function(r){if(!r.ok)throw Error(r.status);return r.json()})
+    .then(function(d){
+      renderOverview(d);
+      renderBreakout(d.breakout);
+      renderTrapEnv(d.trap_environment);
+      renderCrashPrecursor(d.crash_precursor);
+      renderAccumulation(d.cycle);
+      renderLevels(d.approved_levels);
+      window.setTimeout(function(){
+        renderCombinedAlert();
+        renderBottomLine();
+      }, 100);
+    })
+    .catch(function(e){
+      document.getElementById('ag-conn').textContent='OFFLINE';
+      document.getElementById('ag-conn').className='ag-conn error';
+    });
+}
+
+loadState();
+setInterval(loadState, 60000);
 })();
 </script>
 </body>
