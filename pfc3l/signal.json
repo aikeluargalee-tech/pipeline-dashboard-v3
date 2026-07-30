@@ -1,9 +1,9 @@
 {
   "signal": {
-    "id": "pfc3l-20260730-142906",
-    "ts": "2026-07-30T14:29:06.096276+00:00",
+    "id": "pfc3l-20260730-144435",
+    "ts": "2026-07-30T14:44:35.592174+00:00",
     "symbol": "BTC/USD",
-    "reference_price": 64838.0,
+    "reference_price": 64825.0,
     "state": "NO_TRADE",
     "confidence": 0,
     "lifecycle_state": "ACTIVE",
@@ -71,7 +71,7 @@
       "role": "ACCELERATOR",
       "category": "STANDARD",
       "source": "vp_vah",
-      "distance_pct": 0.1,
+      "distance_pct": 0.08,
       "score": 80
     },
     "levels": [
@@ -80,7 +80,7 @@
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_vah",
-        "distance_pct": 0.1,
+        "distance_pct": 0.08,
         "score": 80
       },
       {
@@ -88,7 +88,7 @@
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_poc",
-        "distance_pct": 0.11,
+        "distance_pct": 0.09,
         "score": 80
       },
       {
@@ -96,12 +96,12 @@
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_val",
-        "distance_pct": 0.16,
+        "distance_pct": 0.14,
         "score": 79
       }
     ],
     "reasons": [
-      "Active standard level at $64,770 (0.10% away, role: ACCELERATOR)"
+      "Active standard level at $64,770 (0.08% away, role: ACCELERATOR)"
     ],
     "vetoes": []
   },
@@ -110,7 +110,10 @@
     "directional_allowed": true,
     "healthy_feeds": 2,
     "total_critical_feeds": 3,
-    "reasons": [],
+    "reasons": [
+      "Volume Profile stale (23m)",
+      "STALE brk: 33m behind AMT"
+    ],
     "vetoes": []
   }
 }
