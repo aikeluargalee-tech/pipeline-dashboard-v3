@@ -518,7 +518,7 @@ function render(data) {
     var cls = g.pass ? 'passing' : (isMin ? 'blocking' : 'near');
     var dist = g.score - g.thresh;
     var distStr = dist >= 0 ? '+' + dist : dist;
-    gsHtml += '<div class="gate-summary-item ' + cls + '" onclick="document.getElementById(\\'' + g.target + '\\').scrollIntoView({behavior:\\'smooth\\'}); var h=document.querySelector(\\'#' + g.target + ' .sec-header\\'); if(h) openSection(\\'' + g.target.replace('sec-','') + '-body\\',\\'' + g.target.replace('sec-','') + '-arrow\\',h);" title="' + g.name + ': ' + g.score + '/' + g.thresh + ' (' + distStr + ')">';
+    gsHtml += '<div class="gate-summary-item ' + cls + '" data-target="' + g.target + '" title="' + g.name + ': ' + g.score + '/' + g.thresh + ' (' + distStr + ')">';
     gsHtml += '<div class="gate-summary-name">' + g.id + '</div>';
     gsHtml += '<div class="gate-summary-score ' + cls + '">' + g.score + '</div>';
     gsHtml += '<div class="gate-summary-thresh mono">/ ' + g.thresh + ' <span style="font-size:9px">(' + distStr + ')</span></div>';
@@ -664,5 +664,19 @@ function loadSignal() {
 
 loadSignal();
 setInterval(loadSignal, 60000);
+
+// Click delegation for gate summary items
+document.getElementById('gate-summary').addEventListener('click', function(e) {
+  var item = e.target.closest('.gate-summary-item');
+  if (!item) return;
+  var targetId = item.getAttribute('data-target');
+  if (!targetId) return;
+  var sec = document.getElementById(targetId);
+  if (sec) sec.scrollIntoView({behavior: 'smooth'});
+  var bodyId = targetId.replace('sec-','') + '-body';
+  var arrowId = targetId.replace('sec-','') + '-arrow';
+  var h = sec.querySelector('.sec-header');
+  if (h) openSection(bodyId, arrowId, h);
+});
 </script>
 </html>
