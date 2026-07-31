@@ -108,6 +108,51 @@
   }
   </script>
 
+  <!-- FAQPage Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What does the Analysis page show?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Analysis page provides a live multi-layer verdict on Bitcoin market conditions, combining technical indicators (RSI, MACD, moving averages), on-chain metrics (MVRV-Z, SOPR, NUPL), derivatives data (funding, OI, liquidation levels), and macro correlations into a single actionable summary."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How often is the analysis updated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Every 15 minutes, synchronized with the full BTC data pipeline. All data sources (Binance, Yahoo Finance, FRED, on-chain providers) are refreshed before each analysis run."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the Gate0 risk framework?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Gate0 is a pre-flight risk gating system that evaluates market conditions before any trade setup is considered. It uses six layers (macro regime, positioning, flow, derivatives, on-chain, and technical structure) to produce a go/no-go decision with explicit risk parameters."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Organization Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Pipeline Dashboard",
+    "description": "Open-source Bitcoin market intelligence platform — multi-layer analysis with Gate0 risk gating.",
+    "url": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/"
+  }
+  </script>
+
 </head>
 
 <div id="nav-placeholder"></div>
@@ -544,6 +589,15 @@ setInterval(loadMetrics, REFRESH_MS);       // pipeline every 15min
 
 <div id="footer-placeholder"></div>
 <script src="../assets/nav.js?v=13"></script>
+
+<section id="data-provenance" class="provenance-card" style="border:1px solid rgba(128,128,128,.15);border-radius:10px;padding:14px 18px;margin:22px 0;background:rgba(128,128,128,.03);font-size:12px;color:var(--muted);line-height:1.8" aria-labelledby="prov-heading">
+  <h2 id="prov-heading" style="font-size:14px;margin:0 0 8px;font-weight:600">📊 Data Sources</h2>
+  <div><b>Real-time:</b> Binance API (spot + derivatives) · Coinbase (premium index) · Coinglass (liquidations, OI)</div>
+  <div><b>Macro:</b> Yahoo Finance (VIX, US10Y, SPY, QQQ, DXY, Gold) · FRED (M2, rates)</div>
+  <div><b>On-chain:</b> Glassnode (MVRV-Z, SOPR, NUPL, LTH-SOPR, hashrate) · CoinMetrics</div>
+  <div><b>Pipeline refresh:</b> Every 15 minutes · <b>Last generated:</b> <span id="prov-last-update">updating...</span></div>
+  <div style="margin-top:8px;opacity:0.7"><b>⚠️ Disclaimer:</b> Educational decision-support only. Not financial advice. No exchange accounts, wallets, or private APIs are accessed. All signals are deterministic Python logic — LLMs may summarize but <b>never</b> override scores or thresholds. Users remain solely responsible for their trading decisions.</div>
+</section>
 
 </html>
 </html>

@@ -1,9 +1,9 @@
 {
   "signal": {
-    "id": "pfc3l-20260731-024410",
-    "ts": "2026-07-31T02:44:10.839608+00:00",
+    "id": "pfc3l-20260731-030014",
+    "ts": "2026-07-31T03:00:14.864774+00:00",
     "symbol": "BTC/USD",
-    "reference_price": 64237.0,
+    "reference_price": 64294.0,
     "state": "NO_TRADE",
     "confidence": 0,
     "lifecycle_state": "ACTIVE",
@@ -50,8 +50,8 @@
     "score": 10,
     "bullish_score": 10,
     "bearish_score": 10,
-    "taker_buy_ratio": 0.517,
-    "coinbase_premium": -0.1135,
+    "taker_buy_ratio": 0.512,
+    "coinbase_premium": -0.1028,
     "healthy_spot_venues": 2,
     "reasons": [
       "Flow is balanced \u2014 no dominant direction"
@@ -70,60 +70,55 @@
   },
   "levels": {
     "state": "ACTIVE",
-    "score": 75,
+    "score": 80,
     "role": "ACCELERATOR",
     "active_level": {
-      "price": 64666,
+      "price": 64243,
       "role": "ACCELERATOR",
       "category": "STANDARD",
-      "source": "vp_val",
-      "distance_pct": 0.67,
-      "score": 75
+      "source": "vp_vah",
+      "distance_pct": 0.08,
+      "score": 80
     },
     "levels": [
       {
-        "price": 64666,
-        "role": "ACCELERATOR",
-        "category": "STANDARD",
-        "source": "vp_val",
-        "distance_pct": 0.67,
-        "score": 75
-      },
-      {
-        "price": 64683,
-        "role": "ACCELERATOR",
-        "category": "STANDARD",
-        "source": "vp_poc",
-        "distance_pct": 0.69,
-        "score": 75
-      },
-      {
-        "price": 64686,
+        "price": 64243,
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_vah",
-        "distance_pct": 0.7,
-        "score": 75
+        "distance_pct": 0.08,
+        "score": 80
+      },
+      {
+        "price": 64230,
+        "role": "ACCELERATOR",
+        "category": "STANDARD",
+        "source": "vp_poc",
+        "distance_pct": 0.1,
+        "score": 80
+      },
+      {
+        "price": 64216,
+        "role": "ACCELERATOR",
+        "category": "STANDARD",
+        "source": "vp_val",
+        "distance_pct": 0.12,
+        "score": 80
       }
     ],
     "reasons": [
-      "Active standard level at $64,666 (0.67% away, role: ACCELERATOR)"
+      "Active standard level at $64,243 (0.08% away, role: ACCELERATOR)"
     ],
     "vetoes": []
   },
   "data_quality": {
-    "score": 100,
+    "score": 92,
     "directional_allowed": true,
     "healthy_feeds": 2,
     "total_critical_feeds": 3,
     "reasons": [
-      "Volume Profile stale (657m)",
-      "STALE regime: 46m behind AMT",
-      "STALE macro: 46m behind AMT",
-      "STALE derivs: 46m behind AMT",
-      "STALE cycle: missing",
-      "STALE vp: 657m behind AMT",
-      "STALE brk: 36m behind AMT"
+      "Volume Profile stale (809s)",
+      "STALE brk: 52m behind AMT"
     ],
     "vetoes": [],
     "feeds": {
@@ -137,13 +132,13 @@
         "label": "Volume Profile",
         "healthy": false,
         "stale": true,
-        "age": "39470s"
+        "age": "809s"
       },
       "ai_factors": {
         "label": "AI Factors",
         "healthy": true,
         "stale": false,
-        "age": "18s"
+        "age": "19s"
       },
       "trap_monitor": {
         "label": "Trap Monitor",
@@ -153,5 +148,5 @@
       }
     }
   },
-  "enriched_at": "2026-07-31T02:44:10.892505+00:00"
+  "enriched_at": "2026-07-31T03:00:14.892202+00:00"
 }

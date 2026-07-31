@@ -169,6 +169,8 @@
 .ag-nav a:hover,.ag-nav a:target{color:var(--ag-cyan);border-color:rgba(34,211,238,.3);background:rgba(34,211,238,.06)}
 
 @media(max-width:768px){.ag-hero h1{font-size:1.9em}.ag-te-grid{grid-template-columns:1fr}.ag-grid2,.ag-grid4{grid-template-columns:1fr}.ag-dl{grid-template-columns:1fr 1fr}}
+.breadcrumb a:hover { text-decoration: underline; opacity: 0.8; }
+.breadcrumb { user-select: none; -webkit-user-select: none; }
 </style>
   <!-- Schema.org -->
   <script type="application/ld+json">
@@ -198,9 +200,66 @@
   }
   </script>
 
+  <!-- FAQPage Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is BTC AEGIS?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "BTC AEGIS is a trap avoidance control centre that monitors eight systemic risk signals (S1-S8), a crash precursor indicator, and a breakout validator. It is designed to help traders avoid market traps — situations where price action attracts traders into positions before reversing against them."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are the S1-S8 trap signals?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "S1-S3 are leverage signals (funding rate extremity, OI spikes, OI-price divergence). S4-S5 are orderflow signals (Coinbase premium deviation, CVD divergence). S6-S7 are on-chain signals (exchange netflow spike, UTXO age band shift). S8 is an options signal (25 delta skew). Each contributes to a composite trap risk score from 0-8."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the Crash Precursor?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Crash Precursor monitors five systemic breakdown indicators: aggressive sell orders, support wall retreat, futures holding fees, leverage flushes, and momentum divergence. A composite score of 3+/5 in ELEVATED or DANGER status signals elevated systemic risk."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How should I use the Breakout Validator?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Breakout Validator assesses whether a price move through a configured level is genuine or likely to be a trap. It evaluates market evidence (volume, taker ratio, funding, OI delta, ATR) and produces a verdict on whether the breakout is accepted, unconfirmed, or a likely trap."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Organization Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Pipeline Dashboard",
+    "description": "Open-source Bitcoin market intelligence platform — multi-layer analysis with Gate0 risk gating.",
+    "url": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/"
+  }
+  </script>
+
 </head>
 <body>
 <div id="nav-placeholder"></div>
+
+<nav class="breadcrumb" aria-label="Breadcrumb" style="font-size:13px;color:var(--muted);margin-bottom:8px;padding:4px 0">
+  <a href="../" style="color:var(--accent);text-decoration:none">Home</a> › <span style="color:var(--text)">BTC AEGIS</span>
+</nav>
 
 <main id="main">
   <!-- Hero -->
@@ -460,6 +519,43 @@
   <footer class="ag-disc">
     Read-only decision support. Not financial advice. BTC AEGIS can reduce uncertainty; it cannot guarantee that a trap will be avoided.
   </footer>
+
+<hr style="opacity:0.1;margin:28px 0 20px">
+<section id="faq" aria-labelledby="faq-heading">
+  <h2 id="faq-heading" style="font-size:1.2rem;margin-bottom:14px">Frequently Asked Questions</h2>
+  <div class="faq-list">
+    <details class="faq-item" id="faq-1" style="border:1px solid rgba(128,128,128,.15);border-radius:10px;padding:12px 16px;margin-bottom:8px;background:rgba(128,128,128,.03);cursor:pointer">
+      <summary style="font-weight:600;font-size:14px;outline:none;user-select:none">What is BTC AEGIS?</summary>
+      <div style="margin-top:10px;color:var(--muted);font-size:13px;line-height:1.8">BTC AEGIS is a trap avoidance control centre that monitors eight systemic risk signals (S1-S8), a crash precursor indicator, and a breakout validator. It is designed to help traders avoid market traps — situations where price action attracts traders into positions before reversing against them.</div>
+    </details>
+
+    <details class="faq-item" id="faq-2" style="border:1px solid rgba(128,128,128,.15);border-radius:10px;padding:12px 16px;margin-bottom:8px;background:rgba(128,128,128,.03);cursor:pointer">
+      <summary style="font-weight:600;font-size:14px;outline:none;user-select:none">What are the S1-S8 trap signals?</summary>
+      <div style="margin-top:10px;color:var(--muted);font-size:13px;line-height:1.8">S1-S3 are leverage signals (funding rate extremity, OI spikes, OI-price divergence). S4-S5 are orderflow signals (Coinbase premium deviation, CVD divergence). S6-S7 are on-chain signals (exchange netflow spike, UTXO age band shift). S8 is an options signal (25 delta skew). Each contributes to a composite trap risk score from 0-8.</div>
+    </details>
+
+    <details class="faq-item" id="faq-3" style="border:1px solid rgba(128,128,128,.15);border-radius:10px;padding:12px 16px;margin-bottom:8px;background:rgba(128,128,128,.03);cursor:pointer">
+      <summary style="font-weight:600;font-size:14px;outline:none;user-select:none">What is the Crash Precursor?</summary>
+      <div style="margin-top:10px;color:var(--muted);font-size:13px;line-height:1.8">The Crash Precursor monitors five systemic breakdown indicators: aggressive sell orders, support wall retreat, futures holding fees, leverage flushes, and momentum divergence. A composite score of 3+/5 in ELEVATED or DANGER status signals elevated systemic risk.</div>
+    </details>
+
+    <details class="faq-item" id="faq-4" style="border:1px solid rgba(128,128,128,.15);border-radius:10px;padding:12px 16px;margin-bottom:8px;background:rgba(128,128,128,.03);cursor:pointer">
+      <summary style="font-weight:600;font-size:14px;outline:none;user-select:none">How should I use the Breakout Validator?</summary>
+      <div style="margin-top:10px;color:var(--muted);font-size:13px;line-height:1.8">The Breakout Validator assesses whether a price move through a configured level is genuine or likely to be a trap. It evaluates market evidence (volume, taker ratio, funding, OI delta, ATR) and produces a verdict on whether the breakout is accepted, unconfirmed, or a likely trap.</div>
+    </details>
+
+  </div>
+</section>
+
+<section id="data-provenance" class="provenance-card" style="border:1px solid rgba(128,128,128,.15);border-radius:10px;padding:14px 18px;margin:22px 0;background:rgba(128,128,128,.03);font-size:12px;color:var(--muted);line-height:1.8" aria-labelledby="prov-heading">
+  <h2 id="prov-heading" style="font-size:14px;margin:0 0 8px;font-weight:600">📊 Data Sources</h2>
+  <div><b>Real-time:</b> Binance API (spot + derivatives) · Coinbase (premium index) · Coinglass (liquidations, OI)</div>
+  <div><b>Macro:</b> Yahoo Finance (VIX, US10Y, SPY, QQQ, DXY, Gold) · FRED (M2, rates)</div>
+  <div><b>On-chain:</b> Glassnode (MVRV-Z, SOPR, NUPL, LTH-SOPR, hashrate) · CoinMetrics</div>
+  <div><b>Pipeline refresh:</b> Every 15 minutes · <b>Last generated:</b> <span id="prov-last-update">updating...</span></div>
+  <div style="margin-top:8px;opacity:0.7"><b>⚠️ Disclaimer:</b> Educational decision-support only. Not financial advice. No exchange accounts, wallets, or private APIs are accessed. All signals are deterministic Python logic — LLMs may summarize but <b>never</b> override scores or thresholds. Users remain solely responsible for their trading decisions.</div>
+</section>
+
 </main>
 
 <div id="footer-placeholder"></div>

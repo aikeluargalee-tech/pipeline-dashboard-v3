@@ -420,6 +420,17 @@
   }
   </script>
 
+  <!-- Organization Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Pipeline Dashboard",
+    "description": "Open-source Bitcoin market intelligence platform — multi-layer analysis with Gate0 risk gating.",
+    "url": "https://aikeluargalee-tech.github.io/pipeline-dashboard-v3/"
+  }
+  </script>
+
 </head>
 <body>
 <div id="nav-placeholder"></div>
@@ -516,6 +527,15 @@
     <a href="../psychological-levels/" class="cta-button secondary" style="margin-left:8px">Psychological Levels →</a>
     <a href="../market-regime/" class="cta-button secondary" style="margin-left:8px">Market Regime →</a>
   </div>
+<section id="data-provenance" class="provenance-card" style="border:1px solid rgba(128,128,128,.15);border-radius:10px;padding:14px 18px;margin:22px 0;background:rgba(128,128,128,.03);font-size:12px;color:var(--muted);line-height:1.8" aria-labelledby="prov-heading">
+  <h2 id="prov-heading" style="font-size:14px;margin:0 0 8px;font-weight:600">📊 Data Sources</h2>
+  <div><b>Real-time:</b> Binance API (spot + derivatives) · Coinbase (premium index) · Coinglass (liquidations, OI)</div>
+  <div><b>Macro:</b> Yahoo Finance (VIX, US10Y, SPY, QQQ, DXY, Gold) · FRED (M2, rates)</div>
+  <div><b>On-chain:</b> Glassnode (MVRV-Z, SOPR, NUPL, LTH-SOPR, hashrate) · CoinMetrics</div>
+  <div><b>Pipeline refresh:</b> Every 15 minutes · <b>Last generated:</b> <span id="prov-last-update">updating...</span></div>
+  <div style="margin-top:8px;opacity:0.7"><b>⚠️ Disclaimer:</b> Educational decision-support only. Not financial advice. No exchange accounts, wallets, or private APIs are accessed. All signals are deterministic Python logic — LLMs may summarize but <b>never</b> override scores or thresholds. Users remain solely responsible for their trading decisions.</div>
+</section>
+
 </main>
 <div id="footer-placeholder"></div>
 <script src="../assets/nav.js?v=13"></script>
