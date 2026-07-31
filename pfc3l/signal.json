@@ -1,9 +1,9 @@
 {
   "signal": {
-    "id": "pfc3l-20260731-144341",
-    "ts": "2026-07-31T14:43:41.131511+00:00",
+    "id": "pfc3l-20260731-150018",
+    "ts": "2026-07-31T15:00:18.005559+00:00",
     "symbol": "BTC/USD",
-    "reference_price": 62653.0,
+    "reference_price": 62682.0,
     "state": "NO_TRADE",
     "confidence": 0,
     "lifecycle_state": "ACTIVE",
@@ -38,23 +38,23 @@
     "state": "BALANCED",
     "score": 20,
     "long_vulnerability_score": 20,
-    "short_vulnerability_score": 5,
-    "opposite_score": 5,
+    "short_vulnerability_score": 0,
+    "opposite_score": 0,
     "reasons": [
-      "Long/short ratio high (1.60) \u2014 longs crowded"
+      "Long/short ratio high (1.80) \u2014 longs crowded"
     ],
     "vetoes": []
   },
   "flow": {
     "state": "NEUTRAL",
-    "score": 10,
+    "score": 25,
     "bullish_score": 10,
-    "bearish_score": 10,
-    "taker_buy_ratio": 0.483,
-    "coinbase_premium": -0.1125,
+    "bearish_score": 25,
+    "taker_buy_ratio": 0.467,
+    "coinbase_premium": -0.1403,
     "healthy_spot_venues": 2,
     "reasons": [
-      "Flow is balanced \u2014 no dominant direction"
+      "Taker sell ratio moderate (0.533)"
     ],
     "vetoes": []
   },
@@ -70,59 +70,54 @@
   },
   "levels": {
     "state": "ACTIVE",
-    "score": 67,
-    "role": "ABSORBER",
+    "score": 80,
+    "role": "ACCELERATOR",
     "active_level": {
-      "price": 63692,
-      "role": "ABSORBER",
+      "price": 62672,
+      "role": "ACCELERATOR",
       "category": "STANDARD",
-      "source": "vp_val",
-      "distance_pct": 1.66,
-      "score": 67
+      "source": "vp_vah",
+      "distance_pct": 0.02,
+      "score": 80
     },
     "levels": [
       {
-        "price": 63692,
-        "role": "ABSORBER",
-        "category": "STANDARD",
-        "source": "vp_val",
-        "distance_pct": 1.66,
-        "score": 67
-      },
-      {
-        "price": 63705,
-        "role": "ABSORBER",
-        "category": "STANDARD",
-        "source": "vp_poc",
-        "distance_pct": 1.68,
-        "score": 67
-      },
-      {
-        "price": 63705,
-        "role": "ABSORBER",
+        "price": 62672,
+        "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_vah",
-        "distance_pct": 1.68,
-        "score": 67
+        "distance_pct": 0.02,
+        "score": 80
+      },
+      {
+        "price": 62653,
+        "role": "ACCELERATOR",
+        "category": "STANDARD",
+        "source": "vp_poc",
+        "distance_pct": 0.05,
+        "score": 80
+      },
+      {
+        "price": 62648,
+        "role": "ACCELERATOR",
+        "category": "STANDARD",
+        "source": "vp_val",
+        "distance_pct": 0.05,
+        "score": 80
       }
     ],
     "reasons": [
-      "Active standard level at $63,692 (1.66% away, role: ABSORBER)"
+      "Active standard level at $62,672 (0.02% away, role: ACCELERATOR)"
     ],
     "vetoes": []
   },
   "data_quality": {
-    "score": 100,
+    "score": 92,
     "directional_allowed": true,
     "healthy_feeds": 2,
     "total_critical_feeds": 3,
     "reasons": [
-      "Volume Profile stale (296m)",
-      "STALE regime: 296m behind AMT",
-      "STALE macro: 296m behind AMT",
-      "STALE derivs: 296m behind AMT",
-      "STALE cycle: missing",
-      "STALE vp: 296m behind AMT"
+      "Volume Profile stale (928s)"
     ],
     "vetoes": [],
     "feeds": {
@@ -130,19 +125,19 @@
         "label": "AMT feed",
         "healthy": true,
         "stale": false,
-        "age": "35s"
+        "age": "19s"
       },
       "volume_profile": {
         "label": "Volume Profile",
         "healthy": false,
         "stale": true,
-        "age": "17813s"
+        "age": "928s"
       },
       "ai_factors": {
         "label": "AI Factors",
         "healthy": true,
         "stale": false,
-        "age": "33s"
+        "age": "18s"
       },
       "trap_monitor": {
         "label": "Trap Monitor",
@@ -152,5 +147,5 @@
       }
     }
   },
-  "enriched_at": "2026-07-31T14:43:41.171438+00:00"
+  "enriched_at": "2026-07-31T15:00:18.032573+00:00"
 }

@@ -1,77 +1,40 @@
 {
-  "composite": 4,
-  "actual_max": 7,
-  "status": "CAUTION",
-  "direction": "LONG_TRAP",
-  "long_trap_signals": 3,
-  "short_trap_signals": 0,
-  "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
+  "ts": "2026-07-31T15:00:18Z",
+  "environment_risk_index": 0,
+  "category": "NONE",
   "signals": {
-    "s1_liq_asymmetry": {
-      "score": 1,
-      "verdict": "TRAP",
-      "max": 1,
-      "value": "0L/4S",
-      "threshold": "\u22652\u00d7 asymmetry",
-      "note": "Short=4 below, Long=0 \u2014 asymmetry favors longs"
-    },
-    "s2_oi_divergence": {
-      "score": 1,
-      "verdict": "TRAP",
-      "max": 1,
-      "value": "-0.53%",
-      "threshold": "OI < -0.5% unwinding",
-      "note": "OI -0.5% \u2014 unwinding while price $62680 \u2014 divergence"
-    },
-    "s3_funding": {
+    "S1_PERP_FUNDING": {
       "score": 0,
-      "verdict": "CLEAR",
-      "max": 1,
-      "value": "0.0042%",
-      "threshold": "|Funding| > 0.01%",
-      "note": "Funding 0.0042% \u2014 neutral"
+      "description": "Extreme funding rate"
     },
-    "s4_bid_ask_absorption": {
-      "score": 1,
-      "verdict": "TRAP",
-      "max": 1,
-      "value": "Bid:0 Ask:1",
-      "threshold": "Ask/Bid ratio > 2.0",
-      "note": "Ask walls (1) > Bid walls (0) \u2014 supply pressure"
-    },
-    "s5_taker_cvd": {
+    "S2_OI_SPIKE": {
       "score": 0,
-      "verdict": "CLEAR",
-      "max": 1,
-      "value": "Taker:0.816 CVD:1015.64",
-      "threshold": "Taker > 1.0 + CVD < 0",
-      "note": "Taker 0.82, CVD 1016 \u2014 mixed"
+      "description": "OI spike (>5% in 1h)"
     },
-    "s6_exchange_netflow": {
+    "S3_OI_DIVERGENCE": {
       "score": 0,
-      "verdict": "CLEAR",
-      "max": 1,
-      "value": "954 BTC",
-      "threshold": "|Netflow| > 2,000 BTC",
-      "note": "Netflow 954 BTC \u2014 neutral"
+      "description": "Price up, OI down"
     },
-    "s7_utxo_bands": {
+    "S4_PREMIUM_DEV": {
       "score": 0,
-      "verdict": "CLEAR",
-      "max": 1,
-      "value": "LTH:1.02|1Y+:1.25|SiP:50%",
-      "threshold": "\u22652 of: LTH-SOPR>1.02, 1Y+UTXO-SOPR>1.5, SiP>80%",
-      "note": "0/3 sub-signals \u2014 LTH-SOPR 1.0168 \u2014 below threshold (selling at loss) | 1Y+ UTXO SOPR 1.255 \u2014 below threshold | Supply in Profit 49.9% \u2014 not in distribution zone [BRK \u2014 bitview.space | fetched 2026-07-31T14:42]"
+      "description": "Coinbase premium anomaly"
     },
-    "s8_options_skew": {
-      "score": 1,
-      "verdict": "TRAP",
-      "max": 1,
-      "value": "-5.1%",
-      "threshold": "|Skew| > 5%",
-      "note": "Skew -5.1% \u2014 puts richly bid (institutions hedging)"
+    "S5_CVD_DIVERGENCE": {
+      "score": 0,
+      "description": "CVD vs price divergence"
+    },
+    "S6_EXCHANGE_INFLOW": {
+      "score": 0,
+      "description": "Large exchange inflow"
+    },
+    "S7_MINER_SELL": {
+      "score": 0,
+      "description": "Miner sell pressure"
+    },
+    "S8_OPTIONS_PUT": {
+      "score": 0,
+      "description": "Put/call ratio extreme"
     }
   },
-  "btc_price": 62680.76,
-  "_collected": "2026-07-31 14:45 UTC"
+  "structural_backdrop": "NONE"
 }
