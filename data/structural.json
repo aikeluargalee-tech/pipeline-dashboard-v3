@@ -19,7 +19,7 @@
   "volume_profile": {
     "poc": 64000,
     "vah": 65050,
-    "val": 63700,
+    "val": 63750,
     "hvns": [
       {
         "price": 64100,
@@ -31,7 +31,7 @@
       },
       {
         "price": 64150,
-        "volume": 3550
+        "volume": 3567
       },
       {
         "price": 63950,
@@ -175,27 +175,27 @@
       },
       {
         "price": 64150,
-        "volume": 3550
+        "volume": 3567
       },
       {
         "price": 64200,
-        "volume": 2615
+        "volume": 2710
       },
       {
         "price": 64250,
-        "volume": 2567
+        "volume": 2795
       },
       {
         "price": 64300,
-        "volume": 2315
+        "volume": 2617
       },
       {
         "price": 64350,
-        "volume": 2574
+        "volume": 2876
       },
       {
         "price": 64400,
-        "volume": 2802
+        "volume": 3030
       },
       {
         "price": 64450,
@@ -259,31 +259,31 @@
       },
       {
         "price": 65200,
-        "volume": 1696
+        "volume": 1603
       },
       {
         "price": 65250,
-        "volume": 1996
+        "volume": 1690
       },
       {
         "price": 65300,
-        "volume": 1809
+        "volume": 1503
       },
       {
         "price": 65350,
-        "volume": 1405
+        "volume": 1100
       },
       {
         "price": 65400,
-        "volume": 1332
+        "volume": 1120
       },
       {
         "price": 65450,
-        "volume": 861
+        "volume": 649
       },
       {
         "price": 65500,
-        "volume": 744
+        "volume": 592
       },
       {
         "price": 65550,
@@ -311,27 +311,31 @@
       }
     ],
     "candles_used": 168,
-    "total_volume": 97565,
+    "total_volume": 97151,
     "bin_step": 50
   },
   "val_absorption": {
-    "timestamp": "2026-07-31 03:46 UTC",
-    "btc_price": 64384.78,
-    "val": 63700.0,
+    "timestamp": "2026-07-31 06:28 UTC",
+    "btc_price": 64397.99,
+    "val": 63750.0,
     "vah": 65050.0,
-    "distance_pct": 1.08,
+    "distance_pct": 1.02,
     "position": "approaching_val",
-    "volume_declining": false,
-    "volume_expanding": true,
+    "volume_declining": true,
+    "volume_expanding": false,
     "cvd_holding": true,
-    "cvd_value": 5380.44,
-    "cvd_trend": "strengthening",
+    "cvd_value": 6744.42,
+    "cvd_trend": "flat",
     "target": 65050.0,
-    "early_vol_4h": 1532.4,
-    "late_vol_4h": 3179.2,
-    "signal": "VAL_APPROACH",
-    "action": "Price nearing VAL \u2014 monitoring volume and CVD",
-    "confidence": "LOW"
+    "early_vol_4h": 3224.9,
+    "late_vol_4h": 1618.8,
+    "signal": "VAL_ABSORPTION",
+    "action": "Watch for reclaim inside VA \u2192 Long entry",
+    "stop": "Below swing low",
+    "stop_loss": 63112.5,
+    "confidence": "MEDIUM",
+    "gate0_status": "PROCEED",
+    "regime_label": "MIXED"
   },
-  "_collected": "2026-07-31 03:46 UTC"
+  "_collected": "2026-07-31 06:28 UTC"
 }

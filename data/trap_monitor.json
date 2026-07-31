@@ -1,40 +1,77 @@
 {
-  "ts": "2026-07-31T06:27:34Z",
-  "environment_risk_index": 0,
-  "category": "NONE",
+  "composite": 0,
+  "actual_max": 7,
+  "status": "CLEAR",
+  "direction": "NEUTRAL",
+  "long_trap_signals": 1,
+  "short_trap_signals": 0,
+  "downstream_action": "Standard L4 rules apply. No trap override.",
   "signals": {
-    "S1_PERP_FUNDING": {
+    "s1_liq_asymmetry": {
       "score": 0,
-      "description": "Extreme funding rate"
+      "verdict": "CLEAR",
+      "max": 1,
+      "value": "2L/3S",
+      "threshold": "\u22652\u00d7 asymmetry",
+      "note": "Long=2, Short=3 \u2014 balanced"
     },
-    "S2_OI_SPIKE": {
+    "s2_oi_divergence": {
       "score": 0,
-      "description": "OI spike (>5% in 1h)"
+      "verdict": "CLEAR",
+      "max": 1,
+      "value": "0.58%",
+      "threshold": "OI < -0.5% unwinding",
+      "note": "OI 0.6% \u2014 neutral/no divergence"
     },
-    "S3_OI_DIVERGENCE": {
+    "s3_funding": {
       "score": 0,
-      "description": "Price up, OI down"
+      "verdict": "CLEAR",
+      "max": 1,
+      "value": "0.0100%",
+      "threshold": "|Funding| > 0.01%",
+      "note": "Funding 0.0100% \u2014 neutral"
     },
-    "S4_PREMIUM_DEV": {
+    "s4_bid_ask_absorption": {
       "score": 0,
-      "description": "Coinbase premium anomaly"
+      "verdict": "CLEAR",
+      "max": 1,
+      "value": "Bid:4 Ask:6",
+      "threshold": "Ask/Bid ratio > 2.0",
+      "note": "Bid=4, Ask=6 \u2014 balanced"
     },
-    "S5_CVD_DIVERGENCE": {
+    "s5_taker_cvd": {
       "score": 0,
-      "description": "CVD vs price divergence"
+      "verdict": "CLEAR",
+      "max": 1,
+      "value": "Taker:1.2815 CVD:6744.42",
+      "threshold": "Taker > 1.0 + CVD < 0",
+      "note": "Taker 1.28 + CVD +6744 \u2014 genuine buying"
     },
-    "S6_EXCHANGE_INFLOW": {
+    "s6_exchange_netflow": {
       "score": 0,
-      "description": "Large exchange inflow"
+      "verdict": "CLEAR",
+      "max": 1,
+      "value": "954 BTC",
+      "threshold": "|Netflow| > 2,000 BTC",
+      "note": "Netflow 954 BTC \u2014 neutral"
     },
-    "S7_MINER_SELL": {
+    "s7_utxo_bands": {
       "score": 0,
-      "description": "Miner sell pressure"
+      "verdict": "CLEAR",
+      "max": 1,
+      "value": "LTH:0.97|1Y+:1.34|SiP:54%",
+      "threshold": "\u22652 of: LTH-SOPR>1.02, 1Y+UTXO-SOPR>1.5, SiP>80%",
+      "note": "0/3 sub-signals \u2014 LTH-SOPR 0.9747 \u2014 below threshold (selling at loss) | 1Y+ UTXO SOPR 1.345 \u2014 below threshold | Supply in Profit 54.4% \u2014 not in distribution zone [BRK \u2014 bitview.space | fetched 2026-07-31T06:27]"
     },
-    "S8_OPTIONS_PUT": {
+    "s8_options_skew": {
       "score": 0,
-      "description": "Put/call ratio extreme"
+      "verdict": "CLEAR",
+      "max": 1,
+      "value": "-4.0%",
+      "threshold": "|Skew| > 5%",
+      "note": "Skew -4.0% \u2014 neutral"
     }
   },
-  "structural_backdrop": "NONE"
+  "btc_price": 64394.91,
+  "_collected": "2026-07-31 06:29 UTC"
 }
