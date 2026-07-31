@@ -13,7 +13,13 @@
     "vetoes": [
       "Positioning is balanced \u2014 no vulnerable side"
     ],
-    "invalidation_conditions": [],
+    "invalidation_conditions": [
+      "3+ gates (P, F, C, L) simultaneously align",
+      "Data quality score \u2265 60",
+      "Clear directional catalyst with no vetoes active",
+      "OI 5m delta spike beyond \u00b15% (currently 0.0%)",
+      "Catalyst expires or is corrected at source"
+    ],
     "informational_zones": [],
     "gates": {
       "positioning": false,
@@ -142,5 +148,6 @@
         "age": "N/A"
       }
     }
-  }
+  },
+  "enriched_at": "2026-07-31T02:22:56.463227+00:00"
 }

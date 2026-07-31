@@ -366,6 +366,25 @@
   No exchange accounts, wallets, or private APIs are accessed. Users remain solely responsible for their decisions.
 </div>
 
+<!-- Invalidation & Zones -->
+<div class="section inval-section">
+  <button class="sec-header" onclick="toggleSection('inval-body','inval-arrow',this)" role="button" tabindex="0" aria-expanded="false">
+    <span class="sec-header-left">
+      <span class="sec-icon">🛑</span>
+      <span class="sec-title">Invalidation Conditions &amp; Informational Zones</span>
+    </span>
+    <span class="sec-header-right">
+      <span class="sec-arrow" id="inval-arrow">▼</span>
+    </span>
+  </button>
+  <div class="sec-body" id="inval-body">
+    <div id="inval-list" style="color:var(--muted);font-size:13px;line-height:2.0"></div>
+    <hr style="opacity:0.1;margin:16px 0">
+    <div style="font-weight:600;margin-bottom:10px">📍 Nearest Price Zones</div>
+    <div id="zones-grid" style="display:flex;flex-wrap:wrap;gap:10px"></div>
+  </div>
+</div>
+
 </div>
 
 <div id="footer-placeholder"></div>
@@ -637,17 +656,29 @@ function render(data) {
 
   // === INVALIDATION ===
   var inv = sig.invalidation_conditions||[];
-  var invSec = document.getElementById('inv-sec');
-  if (inv.length) { invSec.style.display = 'block'; reasonList('inv-list', inv, 'veto'); }
-  else { invSec.style.display = 'none'; }
+  var invList = document.getElementById('inval-list');
+  if (invList) {
+    var h = '';
+    inv.forEach(function(c) { h += '<div>⛔ ' + c + '</div>'; });
+    invList.innerHTML = h || '<div style="color:var(--muted)">No invalidation conditions — signal state does not produce exit criteria.</div>';
+  }
 
   // === ZONES ===
   var zones = sig.informational_zones||[];
-  var zonesSec = document.getElementById('zones-sec');
-  if (zones.length) {
-    zonesSec.style.display = 'block';
-    reasonList('zones-list', zones.map(function(z){ return '$' + (typeof z==='number'?z.toLocaleString('en-US'):z) + ' — INFORMATIONAL ZONE — NOT AN ORDER INSTRUCTION'; }), 'zone');
-  } else { zonesSec.style.display = 'none'; }
+  var zonesGrid = document.getElementById('zones-grid');
+  if (zonesGrid) {
+    var zh = '';
+    zones.forEach(function(z) {
+      var color = z.side === 'above' ? 'var(--ag-red)' : 'var(--ag-green)';
+      var arrow = z.side === 'above' ? '↑' : '↓';
+      zh += '<div style="border:1px solid rgba(128,128,128,.2);border-radius:10px;padding:10px 14px;font-size:12px;line-height:1.5">' +
+        '<div style="font-weight:600">$' + z.price.toLocaleString('en-US') + '</div>' +
+        '<div style="color:' + color + '">' + arrow + ' ' + Math.abs(z.dist_pct) + '% ' + z.side + '</div>' +
+        '<div style="color:var(--muted);font-size:11px">' + z.label + '</div>' +
+        '</div>';
+    });
+    zonesGrid.innerHTML = zh || '<div style="color:var(--muted);font-size:12px">No price zones configured.</div>';
+  }
 }
 
 function loadSignal() {
