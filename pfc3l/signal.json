@@ -1,9 +1,9 @@
 {
   "signal": {
-    "id": "pfc3l-20260731-031609",
-    "ts": "2026-07-31T03:16:09.563592+00:00",
+    "id": "pfc3l-20260731-033224",
+    "ts": "2026-07-31T03:32:24.902214+00:00",
     "symbol": "BTC/USD",
-    "reference_price": 64238.0,
+    "reference_price": 64407.0,
     "state": "NO_TRADE",
     "confidence": 0,
     "lifecycle_state": "ACTIVE",
@@ -70,44 +70,44 @@
   },
   "levels": {
     "state": "ACTIVE",
-    "score": 80,
+    "score": 78,
     "role": "ACCELERATOR",
     "active_level": {
-      "price": 64230,
+      "price": 64243,
       "role": "ACCELERATOR",
       "category": "STANDARD",
-      "source": "vp_poc",
-      "distance_pct": 0.01,
-      "score": 80
+      "source": "vp_vah",
+      "distance_pct": 0.25,
+      "score": 78
     },
     "levels": [
-      {
-        "price": 64230,
-        "role": "ACCELERATOR",
-        "category": "STANDARD",
-        "source": "vp_poc",
-        "distance_pct": 0.01,
-        "score": 80
-      },
       {
         "price": 64243,
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_vah",
-        "distance_pct": 0.01,
-        "score": 80
+        "distance_pct": 0.25,
+        "score": 78
+      },
+      {
+        "price": 64230,
+        "role": "ACCELERATOR",
+        "category": "STANDARD",
+        "source": "vp_poc",
+        "distance_pct": 0.27,
+        "score": 78
       },
       {
         "price": 64216,
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_val",
-        "distance_pct": 0.03,
-        "score": 80
+        "distance_pct": 0.3,
+        "score": 78
       }
     ],
     "reasons": [
-      "Active standard level at $64,230 (0.01% away, role: ACCELERATOR)"
+      "Active standard level at $64,243 (0.25% away, role: ACCELERATOR)"
     ],
     "vetoes": []
   },
@@ -117,9 +117,13 @@
     "healthy_feeds": 2,
     "total_critical_feeds": 3,
     "reasons": [
-      "Volume Profile stale (29m)",
+      "Volume Profile stale (45m)",
+      "STALE regime: 45m behind AMT",
+      "STALE macro: 45m behind AMT",
+      "STALE derivs: 45m behind AMT",
       "STALE cycle: missing",
-      "STALE brk: 68m behind AMT"
+      "STALE vp: 45m behind AMT",
+      "STALE brk: 84m behind AMT"
     ],
     "vetoes": [],
     "feeds": {
@@ -127,19 +131,19 @@
         "label": "AMT feed",
         "healthy": true,
         "stale": false,
-        "age": "18s"
+        "age": "33s"
       },
       "volume_profile": {
         "label": "Volume Profile",
         "healthy": false,
         "stale": true,
-        "age": "1764s"
+        "age": "2739s"
       },
       "ai_factors": {
         "label": "AI Factors",
         "healthy": true,
         "stale": false,
-        "age": "17s"
+        "age": "16s"
       },
       "trap_monitor": {
         "label": "Trap Monitor",
@@ -149,5 +153,5 @@
       }
     }
   },
-  "enriched_at": "2026-07-31T03:16:09.583544+00:00"
+  "enriched_at": "2026-07-31T03:32:24.922882+00:00"
 }
