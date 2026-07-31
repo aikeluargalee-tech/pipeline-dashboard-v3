@@ -1,9 +1,9 @@
 {
   "signal": {
-    "id": "pfc3l-20260731-062733",
-    "ts": "2026-07-31T06:27:33.952679+00:00",
+    "id": "pfc3l-20260731-092955",
+    "ts": "2026-07-31T09:29:55.856763+00:00",
     "symbol": "BTC/USD",
-    "reference_price": 64372.0,
+    "reference_price": 63695.0,
     "state": "NO_TRADE",
     "confidence": 0,
     "lifecycle_state": "ACTIVE",
@@ -50,8 +50,8 @@
     "score": 10,
     "bullish_score": 10,
     "bearish_score": 10,
-    "taker_buy_ratio": 0.514,
-    "coinbase_premium": -0.1092,
+    "taker_buy_ratio": 0.516,
+    "coinbase_premium": -0.1029,
     "healthy_spot_venues": 2,
     "reasons": [
       "Flow is balanced \u2014 no dominant direction"
@@ -70,44 +70,44 @@
   },
   "levels": {
     "state": "ACTIVE",
-    "score": 80,
+    "score": 72,
     "role": "ACCELERATOR",
     "active_level": {
-      "price": 64402,
+      "price": 64378,
       "role": "ACCELERATOR",
       "category": "STANDARD",
       "source": "vp_val",
-      "distance_pct": 0.05,
-      "score": 80
+      "distance_pct": 1.07,
+      "score": 72
     },
     "levels": [
       {
-        "price": 64402,
+        "price": 64378,
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_val",
-        "distance_pct": 0.05,
-        "score": 80
+        "distance_pct": 1.07,
+        "score": 72
       },
       {
-        "price": 64416,
+        "price": 64388,
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_poc",
-        "distance_pct": 0.07,
-        "score": 80
+        "distance_pct": 1.09,
+        "score": 72
       },
       {
-        "price": 64416,
+        "price": 64390,
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_vah",
-        "distance_pct": 0.07,
-        "score": 80
+        "distance_pct": 1.09,
+        "score": 72
       }
     ],
     "reasons": [
-      "Active standard level at $64,402 (0.05% away, role: ACCELERATOR)"
+      "Active standard level at $64,378 (1.07% away, role: ACCELERATOR)"
     ],
     "vetoes": []
   },
@@ -117,12 +117,12 @@
     "healthy_feeds": 2,
     "total_critical_feeds": 3,
     "reasons": [
-      "Volume Profile stale (160m)",
-      "STALE regime: 161m behind AMT",
-      "STALE macro: 161m behind AMT",
-      "STALE derivs: 161m behind AMT",
-      "STALE cycle: missing",
-      "STALE vp: 160m behind AMT"
+      "Volume Profile stale (181m)",
+      "STALE regime: 181m behind AMT",
+      "STALE macro: 181m behind AMT",
+      "STALE derivs: 181m behind AMT",
+      "STALE cycle: 181m behind AMT",
+      "STALE vp: 180m behind AMT"
     ],
     "vetoes": [],
     "feeds": {
@@ -136,7 +136,7 @@
         "label": "Volume Profile",
         "healthy": false,
         "stale": true,
-        "age": "9645s"
+        "age": "10870s"
       },
       "ai_factors": {
         "label": "AI Factors",
@@ -152,5 +152,5 @@
       }
     }
   },
-  "enriched_at": "2026-07-31T06:27:33.988203+00:00"
+  "enriched_at": "2026-07-31T09:29:55.880473+00:00"
 }
