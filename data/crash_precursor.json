@@ -1,7 +1,40 @@
 {
-  "composite": 0,
-  "alert_fired": false,
-  "signals": {},
+  "ts": "2026-07-31T03:48:14Z",
+  "composite": 0.0,
   "status": "NORMAL",
-  "_collected": "2026-07-31 03:47 UTC"
+  "signals": [
+    {
+      "name": "VIX_ROC",
+      "active": false,
+      "value": 17.09,
+      "threshold": 25
+    },
+    {
+      "name": "US10Y_ROC",
+      "active": false,
+      "value": 0,
+      "threshold": 0.15
+    },
+    {
+      "name": "DXY_SPIKE",
+      "active": false,
+      "value": 100.21
+    },
+    {
+      "name": "CRYPTO_CORR",
+      "active": false,
+      "value": 0
+    },
+    {
+      "name": "HLOC_BREAKDOWN",
+      "active": false,
+      "value": 0,
+      "threshold": 5
+    }
+  ],
+  "nh": {
+    "hashrate": 0,
+    "hashrate_ath": 0,
+    "drawdown_pct": 0
+  }
 }
