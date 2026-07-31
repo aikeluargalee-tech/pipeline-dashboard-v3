@@ -1,16 +1,15 @@
 {
-  "generated": "2026-07-30T15:34:55.188799+00:00",
-  "generated_human": "2026-07-30 15:34:55 UTC",
+  "generated": "2026-07-31T02:26:58.104366+00:00",
+  "generated_human": "2026-07-31 02:26:58 UTC",
   "reference_price": 0,
   "snapshot": {
     "data_health": "DATA_DEGRADED",
     "health_reasons": [
-      "STALE regime: 46m behind AMT",
-      "STALE macro: 46m behind AMT",
-      "STALE derivs: 46m behind AMT"
+      "STALE cycle: missing",
+      "STALE vp: 625m behind AMT"
     ],
     "price": 0,
-    "observed_at": "2026-07-30T15:32:46Z"
+    "observed_at": "2026-07-31T02:11:59Z"
   },
   "latest_verdict": {
     "verdict": "NO_ACTIVE_VERDICT",
@@ -36,7 +35,7 @@
     },
     "market_evidence": {
       "relative_volume": "1.0x",
-      "taker_buy_sell": "52.7% buy",
+      "taker_buy_sell": "51.7% buy",
       "funding_rate": "0.0001%",
       "oi_delta_5m": "0.0%",
       "atr_14": "0.00%"
@@ -54,7 +53,7 @@
     "composite": 0,
     "actual_max": 8,
     "status": "CLEAR",
-    "_collected": "2026-07-30T15:32:46Z",
+    "_collected": "2026-07-31T02:11:59Z",
     "signals": {
       "leverage": [
         {
@@ -133,8 +132,8 @@
       "oi_implosion": 0,
       "divergence": 0
     },
-    "timestamp": "2026-07-30T15:34:55.188799+00:00",
-    "_collected": "2026-07-30T15:32:46Z",
+    "timestamp": "2026-07-31T02:26:58.104366+00:00",
+    "_collected": "2026-07-31T02:11:59Z",
     "network_health": {
       "hash_rate_ehs": 0,
       "hash_rate_drawdown_pct": 0,
