@@ -629,6 +629,60 @@
 .breadcrumb a:hover { text-decoration:underline }
 .breadcrumb span { opacity:0.6 }
 @media (max-width:480px) { .breadcrumb { font-size:11px;padding:4px 10px } }
+
+/* ── In-page tab switcher (Visual Brief | LLM Telemetry) ── */
+.packet-tab-btn {
+  padding: 6px 16px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  border-radius: 17px;
+  font-weight: 600;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.packet-tab-btn:hover:not(.active) {
+  color: var(--text);
+}
+.packet-tab-btn.active {
+  background: var(--accent);
+  color: #000;
+}
+
+/* ── LLM Telemetry view (merged from packet/v2) ── */
+.llm-telemetry-panel { padding-top: 4px; }
+.v2-hero { background: rgba(18,20,31,0.55); border: 1px solid var(--border); border-radius: 16px; padding: 20px 24px; margin-bottom: 24px; backdrop-filter: blur(16px); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+.v2-hero-left h1 { font-size: 1.35em; font-weight: 800; margin: 0 0 4px 0; color: var(--cyan); }
+.v2-hero-left .subtitle { font-size: 0.82em; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+.v2-meta { display: flex; gap: 16px; flex-wrap: wrap; font-family: 'JetBrains Mono', monospace; font-size: 0.78em; color: var(--muted); }
+.v2-meta span { display: flex; align-items: center; gap: 5px; }
+.freshness-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.freshness-dot.fresh { background: var(--fresh); box-shadow: 0 0 6px var(--fresh); }
+.freshness-dot.delayed { background: var(--delayed); box-shadow: 0 0 6px var(--delayed); }
+.freshness-dot.stale { background: var(--stale); box-shadow: 0 0 6px var(--stale); }
+.freshness-dot.unavailable { background: var(--unavailable); }
+.v2-section { background: rgba(18,20,31,0.45); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; margin-bottom: 16px; backdrop-filter: blur(12px); }
+.v2-section h2 { font-size: 1.05em; font-weight: 700; margin: 0 0 16px 0; color: var(--text); }
+.metric-row { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.89em; gap: 12px; }
+.metric-row:last-child { border-bottom: none; }
+.metric-label { color: var(--muted); flex-shrink: 0; max-width: 55%; }
+.metric-value { font-family: 'JetBrains Mono', monospace; font-weight: 600; text-align: right; }
+.tag { display: inline-block; font-size: 0.68em; padding: 1px 6px; border-radius: 3px; margin-left: 5px; font-weight: 500; vertical-align: middle; }
+.tag-raw { background: rgba(34,211,238,0.12); color: var(--cyan); }
+.tag-derived { background: rgba(168,85,247,0.12); color: #a855f7; }
+.tag-inferred { background: rgba(245,158,11,0.12); color: var(--yellow); }
+.tag-stale { background: rgba(249,115,22,0.15); color: var(--stale); }
+.tag-unavailable { background: rgba(107,114,128,0.15); color: var(--unavailable); }
+.positive { color: var(--green); } .negative { color: var(--red); } .warning { color: var(--yellow); } .neutral { color: var(--muted); }
+.json-panel { position: relative; }
+.json-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.copy-btn { padding: 8px 20px; font-size: 0.82em; font-weight: 600; font-family: 'Inter', sans-serif; background: rgba(34,211,238,0.08); border: 1px solid var(--cyan); color: var(--cyan); border-radius: 8px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+.copy-btn:hover { background: rgba(34,211,238,0.18); }
+.copy-btn.copied { background: rgba(16,185,129,0.12); border-color: var(--green); color: var(--green); }
+.json-block { background: rgba(5,7,13,0.7); border: 1px solid var(--border); border-radius: 10px; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.78em; line-height: 1.55; color: #cbd5e1; overflow-x: auto; max-height: 70vh; overflow-y: auto; white-space: pre-wrap; word-break: break-word; }
+.llm-refresh-indicator { font-size: 0.75em; color: var(--muted); font-family: 'JetBrains Mono', monospace; text-align: center; margin-top: 24px; }
 </style>
   <!-- Schema.org -->
   <script type="application/ld+json">
@@ -736,13 +790,16 @@
   </div>
 
   <h1 style="font-size: 2em; font-weight: 900; margin-bottom: 8px; letter-spacing: -0.5px;">BTC Data Packet</h1>
-  <div style="display:inline-flex;gap:6px;margin-bottom:16px;font-size:13px;border:1px solid rgba(128,128,128,.15);border-radius:20px;padding:3px;background:rgba(128,128,128,.04)">
-    <span style="padding:6px 16px;background:var(--accent);color:#000;border-radius:17px;font-weight:600">📊 Visual Brief</span>
-    <a href="v2/" style="padding:6px 16px;color:var(--muted);text-decoration:none;border-radius:17px">🤖 LLM Telemetry</a>
+  <div style="display:inline-flex;gap:6px;margin-bottom:16px;font-size:13px;border:1px solid rgba(128,128,128,.15);border-radius:20px;padding:3px;background:rgba(128,128,128,.04)" role="tablist" aria-label="Packet view switcher">
+    <button id="tab-btn-visual" class="packet-tab-btn active" role="tab" aria-selected="true" aria-controls="tab-visual">📊 Visual Brief</button>
+    <button id="tab-btn-telemetry" class="packet-tab-btn" role="tab" aria-selected="false" aria-controls="tab-telemetry">🤖 LLM Telemetry</button>
   </div>
   <p style="color: var(--muted); margin-bottom: 32px; font-size: 0.95em; line-height: 1.5;">
     Aggregated trading brief detailing pre-trade risk gating, structural orderflow, heatmap density supports, and on-chain cycles. Refreshed automatically.
   </p>
+
+  <!-- Visual Brief tab -->
+  <div class="view-panel active" id="tab-visual" role="tabpanel" aria-label="Visual Brief">
 
   <!-- Market snapshot hero header -->
   <div class="packet-hero" id="market-hero">
@@ -851,6 +908,46 @@
       <button class="action-btn" id="copy-text-btn" aria-label="Copy terminal text to clipboard">Copy Packet</button>
     </div>
   </div>
+  </div><!-- /#tab-visual -->
+
+  <!-- LLM Telemetry tab (merged from packet/v2 — same data.json, no drift) -->
+  <div class="view-panel llm-telemetry-panel" id="tab-telemetry" role="tabpanel" aria-label="LLM Telemetry">
+
+    <div class="v2-hero" id="hero">
+      <div class="v2-hero-left">
+        <h1>📡 LLM Telemetry</h1>
+        <div class="subtitle">LLM-ready structured telemetry — Copy → Paste into any AI</div>
+      </div>
+      <div class="v2-meta">
+        <span><span class="freshness-dot" id="freshness-dot"></span> <span id="freshness-label">loading…</span></span>
+        <span>🕐 <span id="packet-age">—</span></span>
+      </div>
+    </div>
+
+    <div class="v2-section" id="data-quality-banner" style="background: rgba(18,20,31,0.45); text-align: center; padding: 12px 20px;">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:0.82em;color:var(--muted)">
+        DATA_QUALITY · <span id="dq-stats">—</span>
+      </span>
+    </div>
+
+    <div class="v2-section" id="core-price"></div>
+    <div class="v2-section" id="derivatives"></div>
+    <div class="v2-section" id="spot-vs-futures"></div>
+    <div class="v2-section" id="liquidations"></div>
+    <div class="v2-section" id="market-structure"></div>
+    <div class="v2-section" id="macro-flows"></div>
+    <div class="v2-section" id="onchain"></div>
+
+    <div class="v2-section json-panel">
+      <div class="json-header">
+        <h2 style="margin:0">📋 Structured JSON — BTC_DATA_PACKET_V2.1</h2>
+        <button class="copy-btn" id="copy-json-btn">📋 Copy JSON</button>
+      </div>
+      <div class="json-block" id="json-block">Loading…</div>
+    </div>
+
+    <div class="llm-refresh-indicator">Auto-refresh: <span id="llm-countdown">60</span>s · <a href="javascript:void(0)" onclick="fetchPacketData()" style="color:var(--cyan)">Refresh now</a></div>
+  </div><!-- /#tab-telemetry -->
 
 <section id="related-pages" aria-labelledby="related-heading" style="margin-top:28px;padding-top:16px;border-top:1px solid rgba(128,128,128,.15)">
   <h2 id="related-heading" style="font-size:14px;margin-bottom:10px;font-weight:600">📎 Related Pages</h2>
@@ -875,7 +972,7 @@
 
 <div id="footer-placeholder"></div>
 
-<script src="../assets/nav.js?v=14"></script>
+<script src="../assets/nav.js?v=15"></script>
 <script>
 // --- Configuration & Constants ---
 const POLLING_INTERVAL_SEC = 60;
@@ -883,6 +980,7 @@ let pollingTimeLeft = POLLING_INTERVAL_SEC;
 let pollingTimer = null;
 let currentPacketData = null;
 let currentCompassData = null;
+let currentMstData = null;
 
 // Paths to attempt loading data.json from
 const DATA_PATHS = [
@@ -1493,6 +1591,7 @@ async function fetchPacketData() {
   if (loadedData) {
     currentPacketData = loadedData;
     renderPage(loadedData);
+    renderTelemetry(loadedData);  // LLM telemetry tab renders from the SAME fetch (no drift)
     fetchMacroTriggerData();  // also fetch macro short trigger report
     fetchRegimeCompassData();  // fetch regime compass data for composite scores
     resetTimer();
@@ -1662,7 +1761,9 @@ async function fetchMacroTriggerData() {
     const res = await fetch('macro_short_trigger.json?t=' + Date.now());
     if (res.ok) {
       const mst = await res.json();
+      currentMstData = mst;
       renderMacroShortTrigger(mst);
+      if (currentPacketData) renderTelemetry(currentPacketData);  // refresh superset JSON with MST block
     }
   } catch (e) {
     console.error('Macro trigger fetch failed:', e.message);
@@ -1675,6 +1776,7 @@ async function fetchRegimeCompassData() {
     const res = await fetch(COMPASS_PATH + '?t=' + Date.now());
     if (res.ok) {
       currentCompassData = await res.json();
+      if (currentPacketData) renderTelemetry(currentPacketData);  // refresh composite scores + macro correlations
     }
   } catch (e) {
     console.error('Regime compass fetch failed:', e.message);
@@ -1932,6 +2034,9 @@ function updateTimerUI() {
   
   counterEl.textContent = pollingTimeLeft + 's';
   counterEl.style.color = 'var(--muted)';
+
+  const llmCountdown = document.getElementById('llm-countdown');
+  if (llmCountdown) llmCountdown.textContent = pollingTimeLeft;
   
   const pct = (pollingTimeLeft / POLLING_INTERVAL_SEC) * 100;
   progressEl.style.width = pct + '%';
@@ -2212,9 +2317,1249 @@ function setupClipboardCopy() {
   if (bottomBtn) bottomBtn.addEventListener('click', () => copyToClipboard(bottomBtn));
 }
 
+// ═══════════════════════════════════════════════════════════════
+// BTC_DATA_PACKET_V2.1 — LLM Telemetry (merged from packet/v2)
+// Renders from the SAME currentPacketData fetch as the Visual Brief
+// (single data.json load — no drift between views).
+// ═══════════════════════════════════════════════════════════════
+
+// ─── UTC helpers ───
+function nowUtc() { return new Date().toISOString(); }
+function ageSec(ts) { if (!ts) return null; return Math.round((Date.now() - new Date(ts).getTime()) / 1000); }
+function isoOk(ts) { return ts && !ts.includes('|') && !ts.includes('=') && ts.match(/^\d{4}-\d{2}-\d{2}T/); }
+
+// ─── Source timestamp extraction ───
+function extractSourceTimestamps(d) {
+  const st = (d.status && d.status.source_timestamps) || {};
+  const h = d.header || {};
+  const packetTs = h.generated_timestamp || nowUtc();
+
+  const out = {};
+
+  // AMT — real-time, use provided stamp or null
+  out.amt = {
+    observed_at_utc: st.amt || null,
+    collected_at_utc: packetTs,
+    frequency_sec: 900
+  };
+
+  // VP — from source timestamp
+  out.vp = {
+    observed_at_utc: st.vp || null,
+    collected_at_utc: packetTs,
+    frequency_sec: 3600
+  };
+
+  // Pipeline (regime, macro, derivs, cycle) — from combined text
+  const pipeRaw = st.pipeline || '';
+  out.pipeline = {
+    observed_at_utc: pipeRaw.replace(/^.*regime=([^\s|]+).*$/, '$1').replace(' UTC','') || null,
+    collected_at_utc: packetTs,
+    frequency_sec: 3600
+  };
+
+  // On-chain (brk/fetched_at)
+  const brk = (d.reference && d.reference.brk) || {};
+  out.onchain = {
+    observed_at_utc: brk.fetched_at || null,
+    collected_at_utc: packetTs,
+    frequency_sec: 86400
+  };
+
+  // FRED / Yahoo / ETF — per-source timestamps unavailable
+  out.fred = { observed_at_utc: null, collected_at_utc: packetTs, frequency_sec: 86400 };
+  out.yahoo = { observed_at_utc: null, collected_at_utc: packetTs, frequency_sec: 3600 };
+  out.etf = { observed_at_utc: null, collected_at_utc: packetTs, frequency_sec: 86400 };
+
+  // Coinglass heatmap — no capture timestamp in packet; pipeline-staleness tracked
+  out.coinglass = { observed_at_utc: null, collected_at_utc: packetTs, frequency_sec: 900 };
+
+  return out;
+}
+
+// ─── Calculation definitions registry ───
+const CALC_DEFS = {
+  annualized_funding_pct: {
+    formula: "funding_rate * 3 * 365 * 100",
+    description: "Annualized funding rate assuming 8h funding intervals",
+    dependencies: ["derivatives.funding.rate"]
+  },
+  taker_buy_share: {
+    formula: "taker_buy_ratio / (1 + taker_buy_ratio)",
+    description: "Fraction of taker volume that is buyer-initiated",
+    dependencies: ["derivatives.taker_data.taker_buy_sell_ratio"]
+  },
+  oi_change_pct: {
+    formula: "(oi_current - oi_previous) / oi_previous * 100",
+    description: "Percentage change in open interest over window",
+    dependencies: ["derivatives.open_interest.absolute_usd_billions"]
+  },
+  perp_basis_pct: {
+    formula: "(perp_price - spot_price) / spot_price * 100",
+    description: "Perpetual futures basis as percentage of spot",
+    dependencies: ["core_price.spot"]
+  },
+  spread: {
+    formula: "ask - bid",
+    description: "Order book spread in quote currency",
+    dependencies: ["core_price.bid", "core_price.ask"]
+  },
+  nupl: {
+    formula: "1 - 1/MVRV",
+    description: "Net Unrealized Profit/Loss ratio",
+    dependencies: ["on_chain.mvrv"]
+  },
+  value_area_width_pct: {
+    formula: "(VAH - VAL) / POC * 100",
+    description: "Value area width as percentage of POC",
+    dependencies: ["market_structure.volume_profile.poc", "market_structure.volume_profile.vah", "market_structure.volume_profile.val"]
+  },
+  vp_poc_vah_val: {
+    formula: "pipeline-calculated",
+    description: "POC/VAH/VAL derived by Volume Profile engine from OHLCV data. Calculation method not auditable — candle count, bins, and allocation algorithm unknown.",
+    dependencies: []
+  },
+  change_24h: {
+    formula: "(price_current - price_24h_ago) / price_24h_ago * 100",
+    description: "24-hour percentage change",
+    dependencies: ["core_price.spot"]
+  },
+  adx: {
+    formula: "pipeline-calculated (Wilder's ADX from 14-period candles)",
+    description: "Average Directional Index — trend strength indicator",
+    dependencies: []
+  },
+  rsi_14: {
+    formula: "pipeline-calculated (Wilder's RSI with 14-period lookback)",
+    description: "Relative Strength Index — momentum oscillator",
+    dependencies: []
+  },
+  btc_equity_correlation: {
+    formula: "Pearson correlation coefficient over 30 daily observations",
+    description: "30-day rolling correlation between BTC and equity basket",
+    dependencies: []
+  }
+};
+
+
+// ─── Source Identifier Registry ───
+const SOURCE_IDS = {
+  'amt': {
+    provider: 'Binance',
+    endpoint: 'fapi.binance.com (public REST)',
+    api_series_id: null,
+    symbol: 'BTCUSDT',
+    exchange: 'Binance',
+    market_type: 'spot + perpetual futures',
+    _note: 'AMT feed aggregates multiple Binance endpoints via GetClaw MTProto bot'
+  },
+  'vp': {
+    provider: 'Binance',
+    endpoint: 'fapi.binance.com/fapi/v1/klines (OHLCV)',
+    api_series_id: null,
+    symbol: 'BTCUSDT',
+    exchange: 'Binance',
+    market_type: 'perpetual futures',
+    _note: 'Volume Profile derived from 4h klines; candle count, price bins, and allocation method unknown'
+  },
+  'onchain': {
+    provider: 'Glassnode',
+    endpoint: 'api.glassnode.com (free tier)',
+    api_series_id: null,
+    symbol: 'BTC',
+    exchange: null,
+    market_type: 'on-chain',
+    _note: 'Aggregated by BRK on-chain data fetcher'
+  },
+  'fred': {
+    provider: 'Federal Reserve Economic Data',
+    endpoint: 'fred.stlouisfed.org API',
+    api_series_id: {
+      dxy: 'DTWEXBGS (Trade Weighted USD Broad)',
+      us10y: 'DGS10 (10-Year Treasury Constant Maturity Rate)'
+    },
+    symbol: 'See api_series_id per metric',
+    exchange: null,
+    market_type: 'macro',
+    _note: 'Source observation timestamps unavailable — FRED publishes daily'
+  },
+  'yahoo': {
+    provider: 'Yahoo Finance',
+    endpoint: 'query1.finance.yahoo.com/v8/finance/chart/',
+    api_series_id: null,
+    symbol: 'Per metric: ^VIX, SPY/QQQ/GLD basket, USDJPY=X, MSTR',
+    exchange: 'NYSE/NASDAQ',
+    market_type: 'equities/macro',
+    _note: 'Source observation timestamps unavailable'
+  },
+  'etf': {
+    provider: 'ETF aggregate',
+    endpoint: 'Multiple (Farside.co.uk, blockchain.news)',
+    api_series_id: null,
+    symbol: 'US spot BTC ETFs (aggregate)',
+    exchange: null,
+    market_type: 'ETF flows',
+    _note: 'Aggregated daily flow; trading date not provided by source'
+  },
+  'pipeline': {
+    provider: 'Pipeline Engine',
+    endpoint: 'Local computation (VPS)',
+    api_series_id: null,
+    symbol: 'BTCUSDT',
+    exchange: 'Binance',
+    market_type: 'derived',
+    _note: 'Composite indicators calculated by Redline pipeline; per-metric methodology varies'
+  },
+  'alternative': {
+    provider: 'Alternative.me',
+    endpoint: 'alternative.me/crypto/fear-and-greed-index/',
+    api_series_id: null,
+    symbol: 'BTC',
+    exchange: null,
+    market_type: 'sentiment',
+    _note: 'Fear & Greed Index, refreshed daily'
+  },
+  'coinbase': {
+    provider: 'Coinbase',
+    endpoint: 'exchange.coinbase.com (public REST)',
+    api_series_id: null,
+    symbol: 'BTC-USD',
+    exchange: 'Coinbase',
+    market_type: 'spot',
+    _note: 'Coinbase premium calculated as (Coinbase BTC-USD - Binance BTCUSDT) / Binance BTCUSDT * 100'
+  },
+  'coinglass': {
+    provider: 'Coinglass',
+    endpoint: 'Coinglass heatmap V7 (screenshot/OCR capture)',
+    api_series_id: null,
+    symbol: 'BTCUSDT',
+    exchange: 'Binance',
+    market_type: 'liquidation heatmap',
+    _note: 'Cluster estimates parsed from V7 heatmap capture; per-capture timestamp not exposed'
+  },
+};
+
+// ─── Metric row helper for telemetry brief ───
+function metric(label, value, unit, source, freshness, note) {
+  const fcls = freshness || 'unavailable';
+  const suffix = note ? ` <span class="tag tag-${fcls === 'stale' ? 'stale' : fcls === 'unavailable' ? 'unavailable' : 'raw'}">${note}</span>` : '';
+  const valCls = typeof value === 'number' ? (value > 0 ? 'positive' : value < 0 ? 'negative' : 'neutral') : '';
+  let disp = value != null ? value : '—';
+  if (typeof value === 'number') {
+    if (Math.abs(value) < 0.01 && value !== 0) disp = value.toExponential(2);
+    else if (Math.abs(value) < 1) disp = value.toFixed(4);
+    else if (Math.abs(value) < 100) disp = value.toFixed(3);
+    else disp = value.toLocaleString(undefined, {maximumFractionDigits: 2});
+    if (value > 0 && unit !== '%') disp = '+' + disp;
+  }
+  if (value == null) disp = '—';
+  const srcTag = source ? ` <span style="font-size:0.7em;color:var(--muted)">[${source}]</span>` : '';
+  const staleTag = fcls === 'stale' ? ' <span class="tag tag-stale">STALE</span>' : '';
+  const unavTag = fcls === 'unavailable' && value == null ? ' <span class="tag tag-unavailable">UNAVAIL</span>' : '';
+  return `<div class="metric-row"><span class="metric-label">${label}${srcTag}${staleTag}${unavTag}</span><span class="metric-value ${valCls}">${disp}${unit ? ' ' + unit : ''}${suffix}</span></div>`;
+}
+
+// ─── Build timestamp metadata block per metric ───
+function tsMeta(observed, collected, packetTs, freq) {
+  const calculatedAt = nowUtc();
+  const age = observed && isoOk(observed) ?
+    Math.round((new Date(calculatedAt).getTime() - new Date(observed).getTime()) / 1000) : null;
+
+  let fclass = 'unavailable';
+  if (observed && isoOk(observed) && age != null) {
+    fclass = age < freq * 0.5 ? 'fresh' : age < freq * 2 ? 'delayed' : age < freq * 6 ? 'stale' : 'unavailable';
+  }
+
+  return {
+    source_observed_at_utc: observed && isoOk(observed) ? observed : null,
+    pipeline_snapshot_at_utc: observed ? null : packetTs,
+    collected_at_utc: collected || packetTs,
+    packet_generated_at_utc: packetTs,
+    age_calculated_at_utc: calculatedAt,
+    collector_interval_seconds: freq,
+    source_update_frequency_seconds: null,
+    age_seconds: age,
+    freshness: fclass
+  };
+}
+
+// ─── Build metric object for structured JSON ───
+function m(value, unit, sourceKey, source, instrument, window_, dataType, calcId, deps, details) {
+  if (!sourceKey && !source) { sourceKey = 'amt'; source = 'Binance'; }
+  const srcObj = srcTsCache[sourceKey] || { observed_at_utc: null, collected_at_utc: null, frequency_sec: 900 };
+
+  const meta = tsMeta(srcObj.observed_at_utc, srcObj.collected_at_utc, packetTsSnapshot, srcObj.frequency_sec);
+
+  const isAggregator = (sourceKey === 'amt');
+  const sourceObserved = isAggregator ? null : meta.source_observed_at_utc;
+  const aggregatorSnapshot = isAggregator ? meta.source_observed_at_utc : null;
+
+  let freshness = meta.freshness;
+  let eligible = true;
+  if (value == null) {
+    freshness = 'unavailable';
+    eligible = false;
+  } else if (!meta.source_observed_at_utc) {
+    eligible = false;
+  }
+
+  const obj = {
+    value: value != null ? value : null,
+    unit: unit || null,
+    source: source || null,
+    source_identifier: sourceKey || null,
+    instrument: instrument || null,
+    window: window_ || null,
+    source_observed_at_utc: sourceObserved,
+    aggregator_snapshot_at_utc: aggregatorSnapshot,
+    pipeline_snapshot_at_utc: meta.pipeline_snapshot_at_utc,
+    collected_at_utc: meta.collected_at_utc,
+    packet_generated_at_utc: meta.packet_generated_at_utc,
+    age_calculated_at_utc: meta.age_calculated_at_utc,
+    collector_interval_seconds: meta.collector_interval_seconds,
+    source_update_frequency_seconds: meta.source_update_frequency_seconds,
+    age_seconds: meta.age_seconds,
+    freshness: freshness,
+    data_type: dataType || 'raw',
+    formula: calcId || null,
+    dependencies: deps || [],
+    eligible_for_analysis: (details && (details.eligible_for || details.not_eligible_for)) ? undefined : eligible,
+    reproducibility_status: (dataType || 'raw') === 'derived' ? (
+      (calcId && deps && deps.length > 0 && !(details && details._derivation_gap))
+        ? 'FULLY_REPRODUCIBLE'
+        : (calcId && (!deps || deps.length === 0))
+          ? 'PARTIALLY_REPRODUCIBLE'
+          : (details && details._derivation_gap)
+            ? 'REPORTED_NOT_REPRODUCIBLE'
+            : 'UNVERIFIED'
+    ) : null
+  };
+  if (details && typeof details === 'object') Object.assign(obj, details);
+  return obj;
+}
+
+let srcTsCache = {};
+let packetTsSnapshot = '';
+
+// ─── Parse heatmap text into structured clusters ───
+function parseHeatmapClusters(text) {
+  if (!text || typeof text !== 'string') return [];
+  const clusters = [];
+  const now = new Date().toISOString();
+
+  const sideRegex = /(Long|Short):\s*(.+?)(?=\s*\|\s*(?:Long|Short)|$)/g;
+  let match;
+  while ((match = sideRegex.exec(text)) !== null) {
+    const side = match[1].toLowerCase();
+    const items = match[2].split(',').map(s => s.trim());
+    for (const item of items) {
+      const priceMatch = item.match(/\$([\d,]+)\s*\(([+-]?[\d.]+)%\)/);
+      if (priceMatch) {
+        clusters.push({
+          side: side,
+          price: parseFloat(priceMatch[1].replace(/,/g, '')),
+          distance_pct: parseFloat(priceMatch[2]),
+          strength: null,
+          source: 'Coinglass',
+          capture_timestamp_utc: null,
+          data_type: 'estimated_cluster'
+        });
+      }
+    }
+  }
+  return clusters;
+}
+
+// ─── Parse S/R text into structured level objects ───
+function parseSrLevels(srText, timeframe, enrichedSupport, enrichedResistance) {
+  const levels = [];
+  const now = new Date().toISOString();
+
+  if (!srText || typeof srText !== 'string') return levels;
+
+  const sideRegex = /([SR]):\s*(.+?)(?=\s*\|\s*[SR]:|$)/g;
+  let match;
+  while ((match = sideRegex.exec(srText)) !== null) {
+    const side = match[1] === 'S' ? 'support' : 'resistance';
+    const prices = match[2].split('/').map(s => parseFloat(s.trim().replace(/[$,]/g, '')));
+    for (let i = 0; i < prices.length; i++) {
+      if (!isNaN(prices[i])) {
+        levels.push({
+          side: side,
+          price: prices[i],
+          timeframe: timeframe,
+          method: 'calculated_swing_point',
+          touch_count: null,
+          first_observed_at_utc: null,
+          last_tested_at_utc: null,
+          calculated_at_utc: now,
+          eligible_for_analysis: true
+        });
+      }
+    }
+  }
+
+  if (enrichedSupport != null && !isNaN(enrichedSupport)) {
+    if (!levels.some(l => l.side === 'support' && Math.abs(l.price - enrichedSupport) < 1)) {
+      levels.push({
+        side: 'support',
+        price: enrichedSupport,
+        timeframe: timeframe,
+        method: 'nearest_swing_low',
+        touch_count: null,
+        first_observed_at_utc: null,
+        last_tested_at_utc: null,
+        calculated_at_utc: now,
+        eligible_for_analysis: true
+      });
+    }
+  }
+  if (enrichedResistance != null && !isNaN(enrichedResistance)) {
+    if (!levels.some(l => l.side === 'resistance' && Math.abs(l.price - enrichedResistance) < 1)) {
+      levels.push({
+        side: 'resistance',
+        price: enrichedResistance,
+        timeframe: timeframe,
+        method: 'nearest_swing_high',
+        touch_count: null,
+        first_observed_at_utc: null,
+        last_tested_at_utc: null,
+        calculated_at_utc: now,
+        eligible_for_analysis: true
+      });
+    }
+  }
+
+  return levels;
+}
+
+// ─── Render telemetry brief (v2 human sections) ───
+function buildBrief(d, srcTs) {
+  const h = d.header || {}, c = d.critical || {}, ctx = d.context || {};
+  const ref = d.reference || {}, enr = d.enriched || {};
+  const reg = d.regime || {}, src = d.sources || {};
+  const brk = ref.brk || {}, cyc = ref.cycle || {};
+  const fresh = (k) => {
+    const s = (srcTs && srcTs[k]) || {};
+    const obs = s.observed_at_utc;
+    if (!obs) return 'unavailable';
+    const a = ageSec(obs);
+    if (a == null) return 'unavailable';
+    return a < s.frequency_sec * 0.5 ? 'fresh' : a < s.frequency_sec * 2 ? 'delayed' : a < s.frequency_sec * 6 ? 'stale' : 'unavailable';
+  };
+
+  // Core Price
+  let html = '<h2>💰 Core Price</h2>';
+  html += metric('BTC/USDT Spot', h.btc_price, 'USD', 'Binance', fresh('amt'));
+  html += metric('24h Change', h.change_24h, '%', 'Binance', fresh('amt'));
+  html += metric('Bid', h.bid, 'USD', 'Binance', fresh('amt'));
+  html += metric('Ask', h.ask, 'USD', 'Binance', fresh('amt'));
+  html += metric('Spread', h.spread, 'USD', 'Binance', fresh('amt'));
+  html += metric('24h Volume', h.volume_24h, 'USD', 'Binance', fresh('amt'));
+  document.getElementById('core-price').innerHTML = html;
+
+  // Derivatives
+  html = '<h2>📐 Derivatives</h2>';
+  html += '<h3 style="font-size:0.85em;color:var(--muted);margin:12px 0 8px">Funding</h3>';
+  html += metric('Funding Rate', ctx.funding_rate, '%', 'Binance', fresh('amt'));
+  html += metric('Annualized', ctx.funding_rate ? (ctx.funding_rate * 100 * 365 * 3).toFixed(3) + '%' : null, null, 'Binance', fresh('amt'));
+  html += '<h3 style="font-size:0.85em;color:var(--muted);margin:12px 0 8px">Open Interest</h3>';
+  html += metric('OI (USD)', c.oi_absolute_usd_billions, 'B USD', 'Binance', fresh('amt'));
+  html += metric('OI Δ 1h', (c.oi_per_tf_pct_change || {})['1H'], '%', 'Binance', fresh('amt'));
+  html += metric('OI Δ 4h', (c.oi_per_tf_pct_change || {})['4H'], '%', 'Binance', fresh('amt'));
+  html += metric('OI Δ 24h', enr.oi_change_24h_pct || ctx.oi_change_24h, '%', 'Binance', fresh('amt'));
+  html += '<h3 style="font-size:0.85em;color:var(--muted);margin:12px 0 8px">Futures Basis</h3>';
+  html += metric('Perp Basis', ctx.perp_basis_pct, '%', 'Binance', fresh('amt'));
+  html += '<h3 style="font-size:0.85em;color:var(--muted);margin:12px 0 8px">Taker Data</h3>';
+  const takerRatio = enr.taker_buy_ratio;
+  const takerShare = takerRatio != null ? takerRatio / (1 + takerRatio) : null;
+  html += metric('Taker Buy Share', takerShare, 'fraction', 'Binance', fresh('amt'), 'buy/(buy+sell)');
+  html += metric('Taker Buy/Sell Ratio', takerRatio, null, 'Binance', fresh('amt'), 'buy/sell');
+  document.getElementById('derivatives').innerHTML = html;
+
+  // Spot vs Futures
+  html = '<h2>⚔️ Spot vs Futures</h2>';
+  html += '<div style="font-size:0.72em;color:var(--stale);margin-bottom:12px">⚠️ CVD data from AMT feed is COMPOSITE (does not separate spot from perpetual). Metrics below are aggregated.</div>';
+  html += metric('CVD 1h (composite)', (c.cvd_per_tf || {})['1H'], 'USD', 'Binance', fresh('amt'));
+  html += metric('CVD 4h (composite)', (c.cvd_per_tf || {})['4H'], 'USD', 'Binance', fresh('amt'));
+  html += metric('CVD 24h (composite)', ctx.cvd_24h, 'USD', 'Binance', fresh('amt'));
+  html += metric('Coinbase Premium', ctx.coinbase_premium, '%', 'Coinbase', fresh('amt'));
+  html += metric('Session CVD', c.session_cvd, 'USD', 'Binance', fresh('amt'));
+  html += metric('L/S Ratio', ctx.long_short_ratio, null, 'Binance', fresh('amt'));
+  document.getElementById('spot-vs-futures').innerHTML = html;
+
+  // Liquidations
+  html = '<h2>💥 Liquidations</h2>';
+  if (ctx.liq_clusters) {
+    html += metric('Liq Clusters', ctx.liq_clusters, null, 'Coinglass', fresh('amt'));
+  } else {
+    html += '<div class="metric-row"><span class="metric-label">Observed Liquidations</span><span class="metric-value"><span class="tag tag-unavailable">UNAVAILABLE</span></span></div>';
+    html += '<div class="metric-row"><span class="metric-label">Heatmap Clusters</span><span class="metric-value"><span class="tag tag-unavailable">UNAVAILABLE</span></span></div>';
+  }
+  document.getElementById('liquidations').innerHTML = html;
+
+  // Market Structure
+  html = '<h2>📊 Market Structure & Volume Profile</h2>';
+  html += metric('ADX', (src.amt || {}).adx, null, 'Binance', fresh('amt'));
+  html += metric('Balance Width', c.balance_width_pct, '%', 'Binance', fresh('amt'));
+  html += metric('Daily RSI (14)', ctx.daily_rsi_14, null, 'Binance', fresh('amt'));
+  html += metric('S/R 1h', ref.sr_1h, null, 'Binance', fresh('amt'));
+  html += metric('S/R 1d', ref.sr_1d, null, 'Binance', fresh('amt'));
+  html += '<h3 style="font-size:0.85em;color:var(--muted);margin:12px 0 8px">Volume Profile</h3>';
+  const vp = src.volume_profile || {};
+  const vpValid = vp.vah != null && vp.val != null && vp.poc != null &&
+    (vp.vah - vp.val) / vp.poc * 100 >= 0.01;
+  if (vpValid) {
+    html += metric('POC', vp.poc, 'USD', 'Binance', fresh('vp'));
+    html += metric('VAH', vp.vah, 'USD', 'Binance', fresh('vp'));
+    html += metric('VAL', vp.val, 'USD', 'Binance', fresh('vp'));
+    const vpWidth = ((vp.vah - vp.val) / vp.poc * 100).toFixed(3);
+    html += metric('VP Width', vpWidth, '%', 'Binance', fresh('vp'));
+  } else {
+    html += '<div class="metric-row"><span class="metric-label">Volume Profile</span><span class="metric-value"><span class="tag tag-unavailable">INVALID</span></span></div>';
+    html += '<div style="font-size:0.72em;color:var(--stale);padding:8px 0">Profile rejected: value area too narrow or metadata incomplete (candle count, bins, allocation method unavailable).</div>';
+    if (vp.poc != null) html += '<div class="metric-row"><span class="metric-label">Reported POC</span><span class="metric-value neutral">+' + vp.poc.toLocaleString() + ' USD</span></div>';
+  }
+  document.getElementById('market-structure').innerHTML = html;
+
+  // Macro
+  html = '<h2>🌐 Macro & Capital Flows</h2>';
+  html += metric('Broad Trade-Weighted USD', ctx.dxy, null, 'FRED', fresh('fred'));
+  html += metric('US 10Y Yield', ctx.us10y, '%', 'FRED', fresh('fred'));
+  html += metric('VIX', ctx.vix || enr.vix, null, 'Yahoo Finance', fresh('yahoo'));
+  html += metric('Equities', ctx.equities, null, 'Yahoo Finance', fresh('yahoo'));
+  html += metric('USD/JPY', ctx.usdjpy, null, 'Yahoo Finance', fresh('yahoo'));
+  html += metric('MSTR', ctx.mstr_close, 'USD', 'Yahoo Finance', fresh('yahoo'));
+  html += metric('BTC-Equity Corr', enr.correlation_r || ctx.correlation_r, 'r (30d)', 'Pipeline', fresh('pipeline'));
+  html += '<h3 style="font-size:0.85em;color:var(--muted);margin:12px 0 8px">ETF Flows</h3>';
+  html += metric('ETF Flow (daily)', ctx.etf_flow_daily, 'M USD', 'ETF aggregate', fresh('etf'));
+  html += metric('ETF Flow (weekly)', ctx.etf_flow_weekly, 'M USD', 'ETF aggregate', fresh('etf'));
+  html += '<h3 style="font-size:0.85em;color:var(--muted);margin:12px 0 8px">Sentiment</h3>';
+  html += metric('Fear & Greed', enr.fng_value || ctx.fng_value, null, 'Alternative.me', fresh('amt'));
+  html += metric('Black Swan', enr.black_swan_score + '/' + enr.black_swan_max, null, 'Pipeline', fresh('pipeline'));
+  document.getElementById('macro-flows').innerHTML = html;
+
+  // On-Chain
+  html = '<h2>⛓️ On-Chain</h2>';
+  const mvrv = brk.mvrv, nupl = mvrv ? (1 - 1/mvrv) : null;
+  html += metric('MVRV', mvrv ? mvrv.toFixed(3) : null, null, 'Glassnode', fresh('onchain'));
+  html += metric('MVRV Z-Score', cyc.mvrv_z ? Number(cyc.mvrv_z).toFixed(4) : null, null, 'Glassnode', fresh('onchain'));
+  html += metric('NUPL', nupl != null ? (nupl*100).toFixed(1)+'%' : null, null, 'Glassnode', fresh('onchain'));
+  html += metric('SOPR', brk.sopr_24h ? Number(brk.sopr_24h).toFixed(4) : null, null, 'Glassnode', fresh('onchain'));
+  html += metric('LTH SOPR', brk.lth_sopr_24h ? Number(brk.lth_sopr_24h).toFixed(4) : null, null, 'Glassnode', fresh('onchain'));
+  html += metric('STH SOPR', brk.sth_sopr_24h ? Number(brk.sth_sopr_24h).toFixed(4) : null, null, 'Glassnode', fresh('onchain'));
+  html += metric('Realized Price', brk.realized_price ? '$'+brk.realized_price.toLocaleString() : null, 'USD', 'Glassnode', fresh('onchain'));
+  html += metric('Netflow 7d', cyc.netflow_7d ? Number(cyc.netflow_7d).toFixed(2) : null, 'BTC', 'Glassnode', fresh('onchain'));
+  html += metric('Supply in Profit', brk.supply_in_profit_share ? Number(brk.supply_in_profit_share).toFixed(2)+'%' : null, '%', 'Glassnode', fresh('onchain'));
+  document.getElementById('onchain').innerHTML = html;
+}
+
+// ─── Traverse JSON tree to find all metric objects ───
+function findMetricObjects(obj, path, results, visited, skipKeys) {
+  if (!obj || typeof obj !== 'object' || visited.has(obj)) return;
+  visited.add(obj);
+  if (Array.isArray(obj)) {
+    for (let i = 0; i < obj.length; i++)
+      findMetricObjects(obj[i], path + '[' + i + ']', results, visited, skipKeys);
+    return;
+  }
+  if (obj !== null && typeof obj === 'object' && 'freshness' in obj && 'data_type' in obj && 'value' in obj) {
+    results.push({ path: path, obj: obj });
+    return;
+  }
+  const skip = skipKeys || ['data_quality', 'source_health', 'calculation_definitions',
+    'source_identifiers', 'cvd_methodology',
+    'PACKET_VERSION', 'PACKET_TIMESTAMP_UTC', 'PACKET_GENERATED_AT_UTC',
+    'ANALYSIS_STATUS', 'ANALYSIS_AGENT'];
+  for (const [key, val] of Object.entries(obj)) {
+    if (skip.includes(key) || key.startsWith('_')) continue;
+    findMetricObjects(val, path ? path + '.' + key : key, results, visited, skipKeys);
+  }
+}
+
+// ─── Dynamic Data Quality (traverses actual JSON) ───
+function computeDataQuality(packetJson) {
+  const metrics = [];
+  findMetricObjects(packetJson, '', metrics, new Set());
+
+  let populated = 0, valueMissing = 0, valPresentSrcTsMissing = 0;
+  let hasSourceObserved = 0, hasAggregatorSnapshot = 0, hasPipelineSnapshot = 0;
+  let hasAnyTimestamp = 0;
+  let fresh = 0, delayed = 0, stale = 0, unavailable = 0;
+  let reproducible = 0, nonReproducible = 0;
+
+  for (const { path, obj } of metrics) {
+    if (obj.value == null) {
+      valueMissing++;
+      unavailable++;
+      if (obj.data_type === 'derived') nonReproducible++;
+    } else {
+      populated++;
+      if (obj.source_observed_at_utc) hasSourceObserved++;
+      else valPresentSrcTsMissing++;
+      if (obj.aggregator_snapshot_at_utc) hasAggregatorSnapshot++;
+      if (obj.pipeline_snapshot_at_utc) hasPipelineSnapshot++;
+      if (obj.source_observed_at_utc || obj.aggregator_snapshot_at_utc || obj.pipeline_snapshot_at_utc) hasAnyTimestamp++;
+
+      if (obj.freshness === 'fresh') fresh++;
+      else if (obj.freshness === 'delayed') delayed++;
+      else if (obj.freshness === 'stale') stale++;
+      else unavailable++;
+
+      if (obj.data_type === 'derived') {
+        if (obj.formula && obj.dependencies && obj.dependencies.length > 0 &&
+            !obj._derivation_gap) {
+          reproducible++;
+        } else {
+          nonReproducible++;
+        }
+      }
+    }
+  }
+
+  return {
+    expected_metrics: metrics.length,
+    populated_metrics: populated,
+    value_missing: valueMissing,
+    fresh_metrics: fresh,
+    delayed_metrics: delayed,
+    stale_metrics: stale,
+    unavailable_metrics: unavailable,
+    source_observation_timestamp_coverage_percent: populated > 0 ? Math.round(hasSourceObserved / populated * 100) : 0,
+    aggregator_snapshot_coverage_percent: populated > 0 ? Math.round(hasAggregatorSnapshot / populated * 100) : 0,
+    pipeline_snapshot_coverage_percent: populated > 0 ? Math.round(hasPipelineSnapshot / populated * 100) : 0,
+    effective_usable_timestamp_coverage_percent: populated > 0 ? Math.round(hasAnyTimestamp / populated * 100) : 0,
+    value_present_source_timestamp_missing: valPresentSrcTsMissing,
+    reproducible_derived_metrics_count: reproducible,
+    non_reproducible_derived_metrics_count: nonReproducible,
+    transport_ok_count: 0,
+    transport_value_received_count: 0,
+    transport_unavailable_count: 0,
+    transport_error_count: 0,
+    auditability_full_count: 0,
+    auditability_partial_count: 0,
+    auditability_unavailable_count: 0
+  };
+}
+
+// ─── Structured Source Health — transport + auditability ───
+function computeSourceHealth(packetJson) {
+  const metrics = [];
+  findMetricObjects(packetJson, '', metrics, new Set());
+
+  const bySource = {};
+  for (const { path, obj } of metrics) {
+    const src = obj.source || 'unknown';
+    const srcId = obj.source_identifier || src.toLowerCase();
+    if (!bySource[src]) {
+      bySource[src] = {
+        transport_status: 'UNKNOWN',
+        metadata_status: null,
+        auditability_status: 'UNKNOWN',
+        age_seconds: null,
+        successful_metrics: [],
+        value_received_metrics: [],
+        affected_metrics: [],
+        non_auditable_metrics: [],
+        timestamp_missing_metrics: [],
+        metadata_problems: [],
+        source_identifier_ref: srcId
+      };
+    }
+
+    const age = obj.age_seconds;
+    if (age != null && (bySource[src].age_seconds == null || age > bySource[src].age_seconds))
+      bySource[src].age_seconds = age;
+
+    if (obj.endpoint_status === 'UNCONFIRMED' || obj.metadata_confidence === 'LOW') {
+      if (!bySource[src].metadata_problems.includes('ENDPOINT_UNCONFIRMED'))
+        bySource[src].metadata_problems.push('ENDPOINT_UNCONFIRMED');
+    }
+
+    if (path.includes('etf_flows')) {
+      if (!bySource[src].metadata_problems.includes('TRADING_DATE_MISSING'))
+        bySource[src].metadata_problems.push('TRADING_DATE_MISSING');
+    }
+
+    if (obj._derivation_gap) {
+      bySource[src].non_auditable_metrics.push(path);
+    }
+
+    if (obj.value == null) {
+      bySource[src].affected_metrics.push(path);
+    } else {
+      const hasObservedTs = obj.source_observed_at_utc != null;
+      const hasAggregatorTs = obj.aggregator_snapshot_at_utc != null;
+
+      if (hasObservedTs || hasAggregatorTs) {
+        bySource[src].successful_metrics.push(path);
+      } else {
+        bySource[src].value_received_metrics.push(path);
+        bySource[src].timestamp_missing_metrics.push(path);
+        if (!bySource[src].metadata_problems.includes('SOURCE_TIMESTAMP_MISSING'))
+          bySource[src].metadata_problems.push('SOURCE_TIMESTAMP_MISSING');
+      }
+    }
+  }
+
+  for (const [src, info] of Object.entries(bySource)) {
+    const hasValues = info.successful_metrics.length + info.value_received_metrics.length > 0;
+    const allTimestamped = info.value_received_metrics.length === 0;
+    const allMissing = info.successful_metrics.length === 0 && info.value_received_metrics.length === 0;
+    const hasDerivationGaps = info.non_auditable_metrics.length > 0;
+
+    if (allMissing) {
+      info.transport_status = 'UNAVAILABLE';
+    } else if (hasValues && allTimestamped) {
+      info.transport_status = 'OK';
+    } else if (hasValues && !allTimestamped) {
+      info.transport_status = 'VALUE_RECEIVED';
+    } else {
+      info.transport_status = 'OK';
+    }
+
+    if (info.metadata_problems.length === 0) {
+      info.metadata_status = null;
+    } else if (info.metadata_problems.length === 1) {
+      info.metadata_status = info.metadata_problems[0];
+    } else {
+      info.metadata_status = info.metadata_problems;
+    }
+
+    if (allMissing) {
+      info.auditability_status = 'UNAVAILABLE';
+    } else if (!hasDerivationGaps && allTimestamped) {
+      info.auditability_status = 'FULL';
+    } else {
+      info.auditability_status = 'PARTIAL';
+    }
+  }
+
+  return bySource;
+}
+
+// ─── Build Structured JSON (BTC_DATA_PACKET_V2.1 superset) ───
+function buildStructuredJson(d, srcTs) {
+  const h = d.header || {}, c = d.critical || {}, ctx = d.context || {};
+  const ref = d.reference || {}, enr = d.enriched || {};
+  const reg = d.regime || {}, src = d.sources || {};
+  const brk = ref.brk || {}, cyc = ref.cycle || {};
+  const packetTs = h.generated_timestamp || nowUtc();
+
+  srcTsCache = srcTs;
+  packetTsSnapshot = packetTs;
+
+  const takerRatio = enr.taker_buy_ratio;
+  const takerShare = takerRatio != null ? takerRatio / (1 + takerRatio) : null;
+  const mvrv = brk.mvrv;
+  const nupl = mvrv ? (1 - 1/mvrv) : null;
+  const vp = src.volume_profile || {};
+  const vpDiff = vp.vah && vp.val ? vp.vah - vp.val : null;
+  const vpValid = vpDiff != null && vp.poc != null && (vpDiff / vp.poc * 100) >= 0.01;
+
+  const oiAbs = c.oi_absolute_usd_billions;
+  const oiPct = c.oi_per_tf_pct_change || {};
+
+  const cvdMethodology = {
+    markets_included: ['Binance BTCUSDT spot (AMT feed)', 'Binance BTCUSDT perpetual (AMT feed)'],
+    session_start_utc: null,
+    session_end_utc: null,
+    trade_feed: 'Binance aggregated trades (AMT)', 
+    buyer_maker_classification: 'Taker buys when buyer is taker; taker sells when seller is taker',
+    unit: 'USD notional',
+    reset_policy: 'per-session cumulative (resets at session boundary)',
+    formula: 'cumulative(taker_buy_volume - taker_sell_volume) within session',
+    dependencies: ['taker_buy_volume_per_trade', 'taker_sell_volume_per_trade'],
+    _caveat: 'AMT CVD feed is COMPOSITE — does not separate Binance spot from Binance perpetual CVD. Until separate spot and futures CVD are available, leadership inference is not supported.'
+  };
+
+  const packet = {
+    PACKET_VERSION: "BTC_DATA_PACKET_V2.1",
+    PACKET_TIMESTAMP_UTC: packetTs,
+    PACKET_GENERATED_AT_UTC: packetTs,
+
+    calculation_definitions: CALC_DEFS,
+    source_identifiers: SOURCE_IDS,
+
+    core_price: {
+      spot: m(h.btc_price, 'USD', 'amt', 'Binance', 'BTCUSDT spot'),
+      change_24h: m(h.change_24h, 'percent', 'amt', 'Binance', 'BTCUSDT spot', '24h', 'derived', 'change_24h', ['core_price.spot'], {
+        _derivation_gap: 'previous_value (24h ago price) not available in source data; calculation assumed by pipeline'
+      }),
+      bid: m(h.bid, 'USD', 'amt', 'Binance', 'BTCUSDT spot'),
+      ask: m(h.ask, 'USD', 'amt', 'Binance', 'BTCUSDT spot'),
+      spread: m(h.spread, 'USD', 'amt', 'Binance', 'BTCUSDT spot', null, 'derived', 'spread', ['core_price.bid','core_price.ask']),
+      volume_24h: m(h.volume_24h, 'USD', 'amt', 'Binance', 'BTCUSDT spot', '24h')
+    },
+
+    derivatives: {
+      funding: {
+        rate: m(ctx.funding_rate, 'fraction', 'amt', 'Binance', 'BTCUSDT perpetual'),
+        annualized_pct: m(ctx.funding_rate != null ? ctx.funding_rate * 100 * 365 * 3 : null, 'percent', 'amt', 'Binance', 'BTCUSDT perpetual', null, 'derived', 'annualized_funding_pct', ['derivatives.funding.rate'])
+      },
+      open_interest: {
+        absolute_usd_billions: m(oiAbs, 'B USD', 'amt', 'Binance', 'BTCUSDT perpetual'),
+        change_1h_pct: m(oiPct['1H'], 'percent', 'amt', 'Binance', 'BTCUSDT perpetual', '1h', 'derived', 'oi_change_pct', ['derivatives.open_interest.absolute_usd_billions'], {
+          current_value: oiAbs,
+          previous_value: null,
+          window_start_utc: null,
+          window_end_utc: null,
+          _derivation_gap: 'previous OI value not available in source data; pipeline provides only percentage change. Cannot re-derive without raw OI history.'
+        }),
+        change_4h_pct: m(oiPct['4H'], 'percent', 'amt', 'Binance', 'BTCUSDT perpetual', '4h', 'derived', 'oi_change_pct', ['derivatives.open_interest.absolute_usd_billions'], {
+          current_value: oiAbs,
+          previous_value: null,
+          window_start_utc: null,
+          window_end_utc: null,
+          _derivation_gap: 'previous OI value not available in source data'
+        }),
+        change_24h_pct: m(enr.oi_change_24h_pct || ctx.oi_change_24h, 'percent', 'amt', 'Binance', 'BTCUSDT perpetual', '24h', 'derived', 'oi_change_pct', ['derivatives.open_interest.absolute_usd_billions'], {
+          current_value: oiAbs,
+          previous_value: null,
+          window_start_utc: null,
+          window_end_utc: null,
+          _derivation_gap: 'previous OI value not available in source data'
+        })
+      },
+      futures_basis: {
+        perp_basis_pct: m(ctx.perp_basis_pct, 'percent', 'amt', 'Binance', 'BTCUSDT perpetual vs spot', null, 'derived', 'perp_basis_pct', ['core_price.spot'], {
+          perpetual_mark_price: null,
+          perpetual_last_price: null,
+          index_price: null,
+          spot_reference_price: h.btc_price || null,
+          _derivation_gap: 'perpetual mark/index/last prices not available in source data. Only the final basis percentage is provided by the pipeline.'
+        })
+      },
+      taker_data: {
+        taker_buy_share: m(takerShare, 'fraction', 'amt', 'Binance', 'BTCUSDT perpetual', null, 'derived', 'taker_buy_share', ['derivatives.taker_data.taker_buy_sell_ratio'], {
+          _derivation_gap: 'window size, population, and exact Binance endpoint not provided by source data'
+        }),
+        taker_buy_sell_ratio: m(takerRatio, 'ratio', 'amt', 'Binance', 'BTCUSDT perpetual', null, 'raw', null, null, {
+          window: '24h',
+          population: 'all_accounts',
+          measurement_type: 'volume_ratio',
+          endpoint: null,
+          endpoint_status: 'UNCONFIRMED',
+          possible_endpoint: 'Binance futures/data/takerlongshortRatio',
+          metadata_confidence: 'LOW',
+          _note: 'endpoint, population, and measurement_type metadata inferred — not confirmed by pipeline source'
+        })
+      }
+    },
+
+    spot_vs_futures: {
+      cvd_methodology: cvdMethodology,
+      cvd_1h: m((c.cvd_per_tf || {})['1H'], 'USD', 'amt', 'Binance', 'composite spot + perpetual', '1h', 'derived', null, null, {
+        formula: cvdMethodology.formula,
+        dependencies: cvdMethodology.dependencies,
+        unit: cvdMethodology.unit,
+        eligible_for: ['aggregate_order_flow'],
+        not_eligible_for: ['spot_vs_futures_leadership', 'spot_led_classification', 'futures_led_classification'],
+        _derivation_gap: 'composite CVD (spot + futures combined); raw trade data, session bounds, and buyer-maker classification not available for audit'
+      }),
+      cvd_4h: m((c.cvd_per_tf || {})['4H'], 'USD', 'amt', 'Binance', 'composite spot + perpetual', '4h', 'derived', null, null, {
+        formula: cvdMethodology.formula,
+        dependencies: cvdMethodology.dependencies,
+        unit: cvdMethodology.unit,
+        eligible_for: ['aggregate_order_flow'],
+        not_eligible_for: ['spot_vs_futures_leadership', 'spot_led_classification', 'futures_led_classification'],
+        _derivation_gap: 'composite CVD — see cvd_methodology'
+      }),
+      cvd_24h: m(ctx.cvd_24h, 'USD', 'amt', 'Binance', 'composite spot + perpetual', '24h', 'derived', null, null, {
+        formula: cvdMethodology.formula,
+        dependencies: cvdMethodology.dependencies,
+        unit: cvdMethodology.unit,
+        eligible_for: ['aggregate_order_flow'],
+        not_eligible_for: ['spot_vs_futures_leadership', 'spot_led_classification', 'futures_led_classification'],
+        _derivation_gap: 'composite CVD — see cvd_methodology'
+      }),
+      coinbase_premium: m(ctx.coinbase_premium, 'percent', 'coinbase', 'Coinbase', 'BTC-USD spot'),
+      session_cvd: m(c.session_cvd, 'USD', 'amt', 'Binance', 'composite spot + perpetual', 'session', 'derived', null, null, {
+        formula: cvdMethodology.formula,
+        dependencies: cvdMethodology.dependencies,
+        unit: cvdMethodology.unit,
+        eligible_for: ['aggregate_order_flow'],
+        not_eligible_for: ['spot_vs_futures_leadership', 'spot_led_classification', 'futures_led_classification'],
+        _derivation_gap: 'composite CVD — see cvd_methodology'
+      }),
+      long_short_ratio: m(ctx.long_short_ratio, 'ratio', 'amt', 'Binance', 'BTCUSDT perpetual', null, 'raw', null, null, {
+        population: 'all_accounts',
+        measurement_type: 'account_count_ratio',
+        window: '1h',
+        endpoint: null,
+        endpoint_status: 'UNCONFIRMED',
+        possible_endpoint: 'Binance futures/data/globalLongShortAccountRatio',
+        metadata_confidence: 'LOW',
+        _note: 'population, measurement_type, and endpoint metadata inferred — not confirmed by pipeline source'
+      })
+    },
+
+    liquidations: {
+      observed: { status: "unavailable", reason: "No liquidation data source connected to pipeline" },
+      heatmap_clusters: ctx.liq_clusters
+        ? parseHeatmapClusters(ctx.liq_clusters)
+        : []
+    },
+
+    market_structure: {
+      adx: m((src.amt || {}).adx, null, 'amt', 'Binance', 'BTCUSDT perpetual', '1h', 'derived', 'adx', null, {
+        _derivation_gap: 'ADX calculation inputs (14-period candles, +DI/-DI components) not available in source data'
+      }),
+      balance_width_pct: m(c.balance_width_pct, 'percent', 'amt', 'Binance', null, null, 'derived', null, null, {
+        _derivation_gap: 'balance calculation method and input levels not provided'
+      }),
+      rsi_14_daily: m(ctx.daily_rsi_14, null, 'amt', 'Binance', 'BTCUSDT', '1d', 'derived', 'rsi_14', null, {
+        _derivation_gap: 'RSI calculation inputs (14 daily closes) not available in source data'
+      }),
+      sr_1h: parseSrLevels(ref.sr_1h, '1h', enr.sr_1h_support, enr.sr_1h_resistance),
+      sr_1d: parseSrLevels(ref.sr_1d, '1d', enr.sr_1d_support, enr.sr_1d_resistance),
+      volume_profile: vpValid ? {
+        instrument: "BTCUSDT perpetual",
+        market: "futures",
+        timeframe: "4h",
+        poc: m(vp.poc, 'USD', 'vp', 'Binance', 'BTCUSDT perpetual', null, 'derived', 'vp_poc_vah_val', null, {
+          _derivation_gap: 'candle count, price bins, and allocation method not available'
+        }),
+        vah: m(vp.vah, 'USD', 'vp', 'Binance', 'BTCUSDT perpetual', null, 'derived', 'vp_poc_vah_val', null, {
+          _derivation_gap: 'candle count, price bins, and allocation method not available'
+        }),
+        val: m(vp.val, 'USD', 'vp', 'Binance', 'BTCUSDT perpetual', null, 'derived', 'vp_poc_vah_val', null, {
+          _derivation_gap: 'candle count, price bins, and allocation method not available'
+        }),
+        value_area_width_percent: m(vpDiff != null && vp.poc != null ? (vpDiff / vp.poc * 100) : null, 'percent', 'vp', 'Binance', null, null, 'derived', 'value_area_width_pct', ['market_structure.volume_profile.poc','market_structure.volume_profile.vah','market_structure.volume_profile.val'])
+      } : {
+        status: "INVALID_METADATA",
+        eligible_for_analysis: false,
+        reason: [
+          "value_area_too_narrow",
+          "candle_count_missing",
+          "price_bins_missing",
+          "allocation_method_missing"
+        ],
+        reported_values: {
+          poc: vp.poc || null,
+          vah: vp.vah || null,
+          val: vp.val || null,
+          _note: "Reported values unverified — candle count, bins, and calculation method are not available. POC=VAH and $1 value area width are not physically meaningful."
+        }
+      }
+    },
+
+    macro: {
+      broad_trade_weighted_usd: m(ctx.dxy, null, 'fred', 'FRED', 'DTWEXBGS (Trade Weighted U.S. Dollar Index: Broad, Goods and Services)', null, 'raw', null, null, {
+        _derivation_gap: 'source observation timestamp unavailable — FRED publishes daily; pipeline does not capture publication date'
+      }),
+      us10y: m(ctx.us10y, 'percent', 'fred', 'FRED', 'DGS10 (10-Year Treasury)', null, 'raw', null, null, {
+        _derivation_gap: 'source observation timestamp unavailable'
+      }),
+      vix: m(ctx.vix || enr.vix, null, 'yahoo', 'Yahoo Finance', '^VIX', null, 'raw', null, null, {
+        _derivation_gap: 'source observation timestamp unavailable — Yahoo Finance API does not expose per-observation timestamp'
+      }),
+      equities: m(ctx.equities, null, 'yahoo', 'Yahoo Finance', 'SPY/QQQ/GLD basket', null, 'raw', null, null, {
+        _derivation_gap: 'source observation timestamp unavailable; basket composition not provided'
+      }),
+      usdjpy: m(ctx.usdjpy, null, 'yahoo', 'Yahoo Finance', 'USDJPY=X', null, 'raw', null, null, {
+        _derivation_gap: 'source observation timestamp unavailable'
+      }),
+      mstr: m(ctx.mstr_close, 'USD', 'yahoo', 'Yahoo Finance', 'MSTR', null, 'raw', null, null, {
+        _derivation_gap: 'source observation timestamp unavailable'
+      }),
+      btc_equity_correlation: m(enr.correlation_r || ctx.correlation_r, 'Pearson r', 'pipeline', 'Pipeline', null, '30d', 'derived', 'btc_equity_correlation', null, {
+        _derivation_gap: 'correlation inputs (30 daily BTC + equity returns) not available in source data'
+      }),
+      etf_flows: {
+        daily: m(ctx.etf_flow_daily, 'M USD', 'etf', 'ETF aggregate', null, '1d', 'raw', null, null, {
+          _derivation_gap: 'trading date not provided by source; source observation timestamp unavailable'
+        }),
+        daily_as_of_trading_date: null,
+        daily_date_status: "SOURCE_DATE_UNAVAILABLE",
+        weekly: m(ctx.etf_flow_weekly, 'M USD', 'etf', 'ETF aggregate', null, '7d', 'raw', null, null, {
+          _derivation_gap: 'trading date not provided by source'
+        }),
+        weekly_as_of_trading_date: null,
+        weekly_date_status: "SOURCE_DATE_UNAVAILABLE",
+        _note: "ETF flow data source does not provide the trading date represented by each value. Packet date is NOT the trading date."
+      },
+      sentiment: {
+        fear_greed: m(enr.fng_value || ctx.fng_value, null, 'alternative', 'Alternative.me', 'BTC Fear & Greed Index'),
+        black_swan: m(enr.black_swan_score != null ? enr.black_swan_score + '/' + enr.black_swan_max : null, null, 'pipeline', 'Pipeline', null, null, 'derived', null, null, {
+          _derivation_gap: 'black swan scoring inputs (stress indicators, event triggers) not available in source data'
+        })
+      }
+    },
+
+    on_chain: {
+      mvrv: m(brk.mvrv, null, 'onchain', 'Glassnode', 'BTC', null, 'raw'),
+      mvrv_z: m(cyc.mvrv_z ? Number(cyc.mvrv_z) : null, null, 'onchain', 'Glassnode', 'BTC', null, 'raw'),
+      nupl: m(nupl, 'fraction', 'onchain', 'Glassnode', 'BTC', null, 'derived', 'nupl', ['on_chain.mvrv']),
+      sopr: m(brk.sopr_24h ? Number(brk.sopr_24h) : null, null, 'onchain', 'Glassnode', 'BTC', '24h', 'raw'),
+      lth_sopr: m(brk.lth_sopr_24h ? Number(brk.lth_sopr_24h) : null, null, 'onchain', 'Glassnode', 'BTC', '24h', 'raw'),
+      sth_sopr: m(brk.sth_sopr_24h ? Number(brk.sth_sopr_24h) : null, null, 'onchain', 'Glassnode', 'BTC', '24h', 'raw'),
+      realized_price: m(brk.realized_price, 'USD', 'onchain', 'Glassnode', 'BTC'),
+      netflow_7d: m(cyc.netflow_7d ? Number(cyc.netflow_7d) : null, 'BTC', 'onchain', 'Glassnode', 'BTC', '7d', 'raw'),
+      supply_in_profit_pct: m(brk.supply_in_profit_share, 'percent', 'onchain', 'Glassnode', 'BTC')
+    }
+  };
+
+  // ── v1-only superset: composite scores + macro correlations ──
+  const scores = computeCompositeScores(d, currentCompassData);
+  const compass = currentCompassData || null;
+  const hm = d.heatmap || {};
+  const af = d.ai_factors || {};
+  const s9 = af.s9_vix_roc || {}, s10 = af.s10_us10y_roc || {}, s11 = af.s11_volume_anomaly || {};
+  const tws = af.tripwire_summary || {};
+  const roroValue = scores.roro_inputs > 0 ? scores.roro : null;
+  const rotationValue = scores.rotation_inputs > 0 ? scores.rotation : null;
+  const quadrantValue = (scores.roro_inputs > 0 || scores.rotation_inputs > 0) ? scores.quadrant : null;
+
+  packet.composite_scores = {
+    psych_score: m(scores.psych_score, '/10', 'pipeline', 'Pipeline', null, null, 'derived', null, null, {
+      _derivation_gap: 'dashboard JS rule over Fear & Greed + VIX thresholds; inputs and weights not published in packet'
+    }),
+    roro_score: m(roroValue, 'index (-100..+100)', 'pipeline', 'Pipeline', null, null, 'derived', null, null, {
+      inputs_used: scores.roro_inputs,
+      _derivation_gap: 'dashboard JS rule over ETF flows, BTC/ETH, BTC.D, VIX, US10Y; input availability varies per refresh'
+    }),
+    roro_inputs_used: m(scores.roro_inputs, 'count', 'pipeline', 'Pipeline', null, null, 'derived', null, null, {
+      _derivation_gap: 'count of inputs available at build time'
+    }),
+    rotation_score: m(rotationValue, 'index (-100..+100)', 'pipeline', 'Pipeline', null, null, 'derived', null, null, {
+      inputs_used: scores.rotation_inputs,
+      _derivation_gap: 'dashboard JS rule over BTC/Gold, HYG/LQD spread, BTC.D; input availability varies per refresh'
+    }),
+    rotation_inputs_used: m(scores.rotation_inputs, 'count', 'pipeline', 'Pipeline', null, null, 'derived', null, null, {
+      _derivation_gap: 'count of inputs available at build time'
+    }),
+    quadrant: m(quadrantValue, null, 'pipeline', 'Pipeline', null, null, 'derived', null, null, {
+      _derivation_gap: 'quadrant label derived from roro/rotation sign combination'
+    })
+  };
+
+  const compassGap = 'regime compass JSON does not expose per-observation timestamps; values copied as of compass refresh';
+  if (compass) {
+    const cd = compass;
+    packet.macro_correlations = {
+      available_inputs: m(cd.available != null ? cd.available : null, cd.total != null ? 'of ' + cd.total : null, 'pipeline', 'Pipeline', null, null, 'raw', null, null, {_derivation_gap: compassGap}),
+      updated_at_utc: cd.updated || null,
+      btc_eth: {
+        ratio: m(cd.btc_eth && cd.btc_eth.btc_eth_ratio != null ? cd.btc_eth.btc_eth_ratio : null, 'ratio', 'pipeline', 'Pipeline', 'BTC/ETH', 'spot', 'raw', null, null, {_derivation_gap: compassGap}),
+        btc_24h_pct: m(cd.btc_eth && cd.btc_eth.btc_24h_pct != null ? cd.btc_eth.btc_24h_pct : null, 'percent', 'pipeline', 'Pipeline', 'BTC', '24h', 'raw', null, null, {_derivation_gap: compassGap}),
+        eth_24h_pct: m(cd.btc_eth && cd.btc_eth.eth_24h_pct != null ? cd.btc_eth.eth_24h_pct : null, 'percent', 'pipeline', 'Pipeline', 'ETH', '24h', 'raw', null, null, {_derivation_gap: compassGap}),
+        rel_perf_24h_pct: m(cd.btc_eth && cd.btc_eth.rel_perf_24h_pct != null ? cd.btc_eth.rel_perf_24h_pct : null, 'percent', 'pipeline', 'Pipeline', 'BTC vs ETH', '24h', 'derived', null, null, {_derivation_gap: compassGap}),
+        label: cd.btc_eth && cd.btc_eth.label ? cd.btc_eth.label : null
+      },
+      btc_gold: {
+        ratio: m(cd.btc_gold && cd.btc_gold.btc_gold_ratio != null ? cd.btc_gold.btc_gold_ratio : null, 'ratio', 'pipeline', 'Pipeline', 'BTC/Gold', 'spot', 'raw', null, null, {_derivation_gap: compassGap}),
+        label: cd.btc_gold && cd.btc_gold.label ? cd.btc_gold.label : null
+      },
+      credit_spread: {
+        hyg_lqd_ratio: m(cd.credit_spread && cd.credit_spread.hyg_lqd_ratio != null ? cd.credit_spread.hyg_lqd_ratio : null, 'ratio', 'pipeline', 'Pipeline', 'HYG/LQD', null, 'derived', null, null, {_derivation_gap: compassGap}),
+        spread_display: cd.credit_spread && cd.credit_spread.spread_display ? cd.credit_spread.spread_display : null,
+        verdict: cd.credit_spread && cd.credit_spread.label ? cd.credit_spread.label : null
+      },
+      btc_dominance: {
+        dominance_pct: m(cd.btc_dominance && cd.btc_dominance.dominance_pct != null ? cd.btc_dominance.dominance_pct : null, 'percent', 'pipeline', 'Pipeline', 'BTC.D', null, 'raw', null, null, {_derivation_gap: compassGap}),
+        label: cd.btc_dominance && cd.btc_dominance.label ? cd.btc_dominance.label : null
+      },
+      etf_flows: cd.etf_flows && typeof cd.etf_flows === 'object' && Object.keys(cd.etf_flows).length
+        ? { raw: cd.etf_flows, _derivation_gap: compassGap }
+        : null
+    };
+  } else {
+    packet.macro_correlations = {
+      available_inputs: m(0, 'of 0', 'pipeline', 'Pipeline', null, null, 'raw', null, null, {_derivation_gap: 'regime compass data not loaded at build time'}),
+      updated_at_utc: null,
+      _note: 'regime compass JSON not loaded yet — macro correlations refresh when it arrives'
+    };
+  }
+
+  // ── v1-only superset: heatmap walls, AI factors, regime, MST ──
+  packet.liquidity_heatmap = {
+    data_available: !!hm.data_available,
+    nearest_above: hm.nearest_above ? m(hm.nearest_above.price, 'USD', 'coinglass', 'Coinglass', 'BTCUSDT perpetual', null, 'estimated_cluster', null, null, {
+      direction: 'above',
+      distance_pct: hm.nearest_above.distance_pct != null ? hm.nearest_above.distance_pct : null,
+      density: hm.nearest_above.density || null,
+      _derivation_gap: 'Coinglass V7 heatmap capture timestamp not exposed by source; staleness tracked in packet'
+    }) : null,
+    nearest_below: hm.nearest_below ? m(hm.nearest_below.price, 'USD', 'coinglass', 'Coinglass', 'BTCUSDT perpetual', null, 'estimated_cluster', null, null, {
+      direction: 'below',
+      distance_pct: hm.nearest_below.distance_pct != null ? hm.nearest_below.distance_pct : null,
+      density: hm.nearest_below.density || null,
+      _derivation_gap: 'Coinglass V7 heatmap capture timestamp not exposed by source; staleness tracked in packet'
+    }) : null,
+    vice_grip: !!hm.vice_grip,
+    tightness: hm.tightness || null,
+    cluster_spread_usd: hm.cluster_spread_usd != null ? hm.cluster_spread_usd : null,
+    staleness_minutes: hm.staleness_minutes != null ? hm.staleness_minutes : null,
+    staleness_warning: !!hm.staleness_warning
+  };
+
+  packet.ai_factors_summary = {
+    s9_market_stress: m(s9.score != null ? s9.score : null, '/100', 'pipeline', 'Apodex AI→BTC', 'VIX ROC', null, 'derived', null, null, {
+      label: s9.label || null,
+      _derivation_gap: 'AI factor scoring methodology (Apodex AI→BTC) not published in packet'
+    }),
+    s10_whale_conviction: m(s10.score != null ? s10.score : null, '/100', 'pipeline', 'Apodex AI→BTC', 'BTC-AMT', null, 'derived', null, null, {
+      label: s10.label || null,
+      _derivation_gap: 'AI factor scoring methodology (Apodex AI→BTC) not published in packet'
+    }),
+    s11_smart_dumb: m(s11.score != null ? s11.score : null, 'index', 'pipeline', 'Apodex AI→BTC', 'smart/dumb money', null, 'derived', null, null, {
+      label: s11.label || null,
+      _derivation_gap: 'AI factor scoring methodology (Apodex AI→BTC) not published in packet'
+    }),
+    miner_capitulation_risk: m(af.layer0_5 && af.layer0_5.forced_sell_risk ? af.layer0_5.forced_sell_risk : null, null, 'pipeline', 'Apodex AI→BTC', 'hashprice/ERCOT', null, 'raw', null, null, {
+      _derivation_gap: 'miner capitulation inputs not published in packet'
+    }),
+    active_tripwires: m(tws.active_count != null ? tws.active_count : null, 'count', 'pipeline', 'Apodex AI→BTC', null, null, 'raw', null, null, {_derivation_gap: 'tripwire methodology not published in packet'}),
+    total_tripwires: m(tws.total != null ? tws.total : null, 'count', 'pipeline', 'Apodex AI→BTC', null, null, 'raw', null, null, {_derivation_gap: 'tripwire methodology not published in packet'})
+  };
+
+  packet.regime_snapshot = {
+    label: reg.label || null,
+    prev_label: reg.prev_label || null,
+    transitioned: !!reg.transitioned,
+    transition_at_utc: reg.transition_at || null,
+    as_of: reg.as_of || null,
+    confidence: m(reg.confidence != null ? reg.confidence : null, 'fraction', 'pipeline', 'Pipeline', null, null, 'derived', null, null, {
+      _derivation_gap: 'regime classification methodology not auditable from packet data'
+    })
+  };
+
+  if (currentMstData) {
+    const mt = currentMstData.triggers || {};
+    packet.macro_short_trigger = {
+      packet_id: currentMstData.packet_id || null,
+      captured_at_utc: currentMstData.captured_at || null,
+      verdict: mt.verdict || null,
+      verdict_emoji: mt.verdict_emoji || null,
+      t1_mstr: mt.T1_mstr || null,
+      t2_vix: mt.T2_vix || null,
+      t3_us10y: mt.T3_us10y || null,
+      t4_usdjpy: mt.T4_usdjpy || null,
+      btc_price: (currentMstData.btc && currentMstData.btc.price) || null,
+      _note: 'macro_short_trigger.json v1 module — snapshot copied verbatim, not re-derived here'
+    };
+  }
+
+  // Compute dynamic data quality and source health
+  const dq = computeDataQuality(packet);
+  const sh = computeSourceHealth(packet);
+
+  let transportOk = 0, transportValReceived = 0, transportUnavail = 0, transportError = 0;
+  let audFull = 0, audPartial = 0, audUnavail = 0;
+  for (const [src, info] of Object.entries(sh)) {
+    if (info.transport_status === 'OK') transportOk++;
+    else if (info.transport_status === 'VALUE_RECEIVED') transportValReceived++;
+    else if (info.transport_status === 'UNAVAILABLE') transportUnavail++;
+    else if (info.transport_status === 'ERROR') transportError++;
+    if (info.auditability_status === 'FULL') audFull++;
+    else if (info.auditability_status === 'PARTIAL') audPartial++;
+    else if (info.auditability_status === 'UNAVAILABLE') audUnavail++;
+  }
+  dq.transport_ok_count = transportOk;
+  dq.transport_value_received_count = transportValReceived;
+  dq.transport_unavailable_count = transportUnavail;
+  dq.transport_error_count = transportError;
+  dq.auditability_full_count = audFull;
+  dq.auditability_partial_count = audPartial;
+  dq.auditability_unavailable_count = audUnavail;
+
+  packet.data_quality = dq;
+  packet.source_health = sh;
+  packet.ANALYSIS_STATUS = "NOT_PERFORMED";
+  packet.ANALYSIS_AGENT = "ChatGPT";
+
+  return packet;
+}
+
+// ─── Copy structured JSON ───
+async function copyJsonToClipboard() {
+  if (!currentPacketData) return;
+  const srcTs = extractSourceTimestamps(currentPacketData);
+  const packet = buildStructuredJson(currentPacketData, srcTs);
+  const json = JSON.stringify(packet, null, 2);
+  const btn = document.getElementById('copy-json-btn');
+  try {
+    await navigator.clipboard.writeText(json);
+    btn.textContent = '✅ Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 Copy JSON'; btn.classList.remove('copied'); }, 2000);
+  } catch (e) {
+    const ta = document.createElement('textarea'); ta.value = json;
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = '✅ Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 Copy JSON'; btn.classList.remove('copied'); }, 2000);
+  }
+}
+
+// ─── Render LLM Telemetry tab from the shared packet fetch ───
+function renderTelemetry(data) {
+  if (!data) return;
+  const srcTs = extractSourceTimestamps(data);
+  buildBrief(data, srcTs);
+
+  const packet = buildStructuredJson(data, srcTs);
+  const json = JSON.stringify(packet, null, 2);
+  document.getElementById('json-block').textContent = json;
+
+  const dq = packet.data_quality;
+  document.getElementById('dq-stats').textContent =
+    dq.expected_metrics + ' metrics · ' +
+    dq.populated_metrics + ' populated · ' +
+    dq.value_missing + ' missing · ' +
+    dq.fresh_metrics + ' fresh · ' +
+    dq.stale_metrics + ' stale · ' +
+    dq.unavailable_metrics + ' unavail · ' +
+    'ts cov src ' + dq.source_observation_timestamp_coverage_percent + '% agg ' + dq.aggregator_snapshot_coverage_percent + '% eff ' + dq.effective_usable_timestamp_coverage_percent + '% · ' +
+    'tpt OK ' + dq.transport_ok_count + ' recv ' + dq.transport_value_received_count + ' unav ' + dq.transport_unavailable_count + ' err ' + dq.transport_error_count + ' · ' +
+    'aud full ' + dq.auditability_full_count + ' part ' + dq.auditability_partial_count + ' unav ' + dq.auditability_unavailable_count;
+
+  const ts = (data.header || {}).generated_timestamp;
+  const age = ageSec(ts);
+  const fcls = age != null ? (age < 450 ? 'fresh' : age < 1800 ? 'delayed' : 'stale') : 'unavailable';
+  document.getElementById('freshness-dot').className = 'freshness-dot ' + fcls;
+  document.getElementById('freshness-label').textContent = {fresh:'Fresh',delayed:'Delayed',stale:'Stale',unavailable:'Unavailable'}[fcls];
+  document.getElementById('packet-age').textContent = age != null ? age + 's ago' : '—';
+}
+
+// ─── In-page tab switcher (Visual Brief | LLM Telemetry) ───
+function setupTabSwitcher() {
+  const tabs = [
+    { btn: document.getElementById('tab-btn-visual'), panel: document.getElementById('tab-visual') },
+    { btn: document.getElementById('tab-btn-telemetry'), panel: document.getElementById('tab-telemetry') }
+  ];
+  const selectTab = (active) => {
+    for (const t of tabs) {
+      const isActive = t.panel === active;
+      t.panel.classList.toggle('active', isActive);
+      if (t.btn) {
+        t.btn.classList.toggle('active', isActive);
+        t.btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      }
+    }
+    const targetHash = active === tabs[1].panel ? '#telemetry' : '';
+    try { history.replaceState(null, '', window.location.pathname + window.location.search + targetHash); } catch (e) { /* ignore */ }
+  };
+  for (const t of tabs) {
+    if (t.btn) t.btn.addEventListener('click', () => selectTab(t.panel));
+  }
+  // Deep-link support: #telemetry opens the LLM tab (used by the v2 redirect)
+  window.addEventListener('hashchange', () => selectTab(isActiveHash() ? tabs[1].panel : tabs[0].panel));
+  selectTab(isActiveHash() ? tabs[1].panel : tabs[0].panel);
+}
+
+function isActiveHash() {
+  return window.location.hash === '#telemetry';
+}
+
 // --- Init ---
 document.addEventListener('DOMContentLoaded', () => {
   setupClipboardCopy();
+  setupTabSwitcher();
+
+  const copyJsonBtn = document.getElementById('copy-json-btn');
+  if (copyJsonBtn) copyJsonBtn.addEventListener('click', copyJsonToClipboard);
 
   document.getElementById('manual-refresh-btn').addEventListener('click', () => {
     fetchPacketData();
