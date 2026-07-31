@@ -1,9 +1,9 @@
 {
   "signal": {
-    "id": "pfc3l-20260731-030014",
-    "ts": "2026-07-31T03:00:14.864774+00:00",
+    "id": "pfc3l-20260731-031609",
+    "ts": "2026-07-31T03:16:09.563592+00:00",
     "symbol": "BTC/USD",
-    "reference_price": 64294.0,
+    "reference_price": 64238.0,
     "state": "NO_TRADE",
     "confidence": 0,
     "lifecycle_state": "ACTIVE",
@@ -73,28 +73,28 @@
     "score": 80,
     "role": "ACCELERATOR",
     "active_level": {
-      "price": 64243,
+      "price": 64230,
       "role": "ACCELERATOR",
       "category": "STANDARD",
-      "source": "vp_vah",
-      "distance_pct": 0.08,
+      "source": "vp_poc",
+      "distance_pct": 0.01,
       "score": 80
     },
     "levels": [
-      {
-        "price": 64243,
-        "role": "ACCELERATOR",
-        "category": "STANDARD",
-        "source": "vp_vah",
-        "distance_pct": 0.08,
-        "score": 80
-      },
       {
         "price": 64230,
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_poc",
-        "distance_pct": 0.1,
+        "distance_pct": 0.01,
+        "score": 80
+      },
+      {
+        "price": 64243,
+        "role": "ACCELERATOR",
+        "category": "STANDARD",
+        "source": "vp_vah",
+        "distance_pct": 0.01,
         "score": 80
       },
       {
@@ -102,23 +102,24 @@
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_val",
-        "distance_pct": 0.12,
+        "distance_pct": 0.03,
         "score": 80
       }
     ],
     "reasons": [
-      "Active standard level at $64,243 (0.08% away, role: ACCELERATOR)"
+      "Active standard level at $64,230 (0.01% away, role: ACCELERATOR)"
     ],
     "vetoes": []
   },
   "data_quality": {
-    "score": 92,
+    "score": 100,
     "directional_allowed": true,
     "healthy_feeds": 2,
     "total_critical_feeds": 3,
     "reasons": [
-      "Volume Profile stale (809s)",
-      "STALE brk: 52m behind AMT"
+      "Volume Profile stale (29m)",
+      "STALE cycle: missing",
+      "STALE brk: 68m behind AMT"
     ],
     "vetoes": [],
     "feeds": {
@@ -126,19 +127,19 @@
         "label": "AMT feed",
         "healthy": true,
         "stale": false,
-        "age": "21s"
+        "age": "18s"
       },
       "volume_profile": {
         "label": "Volume Profile",
         "healthy": false,
         "stale": true,
-        "age": "809s"
+        "age": "1764s"
       },
       "ai_factors": {
         "label": "AI Factors",
         "healthy": true,
         "stale": false,
-        "age": "19s"
+        "age": "17s"
       },
       "trap_monitor": {
         "label": "Trap Monitor",
@@ -148,5 +149,5 @@
       }
     }
   },
-  "enriched_at": "2026-07-31T03:00:14.892202+00:00"
+  "enriched_at": "2026-07-31T03:16:09.583544+00:00"
 }
