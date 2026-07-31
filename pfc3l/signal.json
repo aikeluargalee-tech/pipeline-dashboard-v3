@@ -1,9 +1,9 @@
 {
   "signal": {
-    "id": "pfc3l-20260731-020738",
-    "ts": "2026-07-31T02:07:38.225787+00:00",
+    "id": "pfc3l-20260731-021208",
+    "ts": "2026-07-31T02:12:08.179671+00:00",
     "symbol": "BTC/USD",
-    "reference_price": 64570.0,
+    "reference_price": 64561.0,
     "state": "NO_TRADE",
     "confidence": 0,
     "lifecycle_state": "ACTIVE",
@@ -71,7 +71,7 @@
       "role": "ACCELERATOR",
       "category": "STANDARD",
       "source": "vp_val",
-      "distance_pct": 0.15,
+      "distance_pct": 0.16,
       "score": 79
     },
     "levels": [
@@ -80,7 +80,7 @@
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_val",
-        "distance_pct": 0.15,
+        "distance_pct": 0.16,
         "score": 79
       },
       {
@@ -88,7 +88,7 @@
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_poc",
-        "distance_pct": 0.18,
+        "distance_pct": 0.19,
         "score": 79
       },
       {
@@ -96,12 +96,12 @@
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_vah",
-        "distance_pct": 0.18,
+        "distance_pct": 0.19,
         "score": 79
       }
     ],
     "reasons": [
-      "Active standard level at $64,666 (0.15% away, role: ACCELERATOR)"
+      "Active standard level at $64,666 (0.16% away, role: ACCELERATOR)"
     ],
     "vetoes": []
   },
@@ -111,8 +111,9 @@
     "healthy_feeds": 2,
     "total_critical_feeds": 3,
     "reasons": [
-      "Volume Profile stale (621m)",
-      "STALE vp: 620m behind AMT"
+      "Volume Profile stale (625m)",
+      "STALE cycle: missing",
+      "STALE vp: 625m behind AMT"
     ],
     "vetoes": [],
     "feeds": {
@@ -126,13 +127,13 @@
         "label": "Volume Profile",
         "healthy": false,
         "stale": true,
-        "age": "37277s"
+        "age": "37547s"
       },
       "ai_factors": {
         "label": "AI Factors",
         "healthy": true,
         "stale": false,
-        "age": "18s"
+        "age": "17s"
       },
       "trap_monitor": {
         "label": "Trap Monitor",
