@@ -1,40 +1,40 @@
 {
-  "ts": "2026-07-31T02:26:58.104366+00:00",
+  "ts": "2026-07-31T02:28:09Z",
   "environment_risk_index": 0,
-  "category": "Accumulation Zone",
+  "category": "NONE",
   "signals": {
-    "S1_DESC": {
+    "S1_PERP_FUNDING": {
       "score": 0,
-      "description": "Funding Rate Extremity"
+      "description": "Extreme funding rate"
     },
-    "S2_DESC": {
+    "S2_OI_SPIKE": {
       "score": 0,
-      "description": "OI Spike >5%/1h"
+      "description": "OI spike (>5% in 1h)"
     },
-    "S3_DESC": {
+    "S3_OI_DIVERGENCE": {
       "score": 0,
-      "description": "OI\u2013Price Divergence"
+      "description": "Price up, OI down"
     },
-    "S4_DESC": {
+    "S4_PREMIUM_DEV": {
       "score": 0,
-      "description": "Coinbase Premium Deviation"
+      "description": "Coinbase premium anomaly"
     },
-    "S5_DESC": {
+    "S5_CVD_DIVERGENCE": {
       "score": 0,
-      "description": "CVD Divergence"
+      "description": "CVD vs price divergence"
     },
-    "S6_DESC": {
+    "S6_EXCHANGE_INFLOW": {
       "score": 0,
-      "description": "Exchange Netflow Spike"
+      "description": "Large exchange inflow"
     },
-    "S7_DESC": {
+    "S7_MINER_SELL": {
       "score": 0,
-      "description": "UTXO Age Band Shift"
+      "description": "Miner sell pressure"
     },
-    "S8_DESC": {
+    "S8_OPTIONS_PUT": {
       "score": 0,
-      "description": "Options 25\u0394 Skew"
+      "description": "Put/call ratio extreme"
     }
   },
-  "structural_backdrop": "Accumulation Zone"
+  "structural_backdrop": "NONE"
 }
