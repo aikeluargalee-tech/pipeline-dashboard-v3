@@ -95,7 +95,7 @@
 <section class="live-preview-grid">
   <div id="live-verdict-card" class="regime-summary" style="backdrop-filter:blur(18px)">
     <div class="regime-title">⚡ CURRENT MARKET VERDICT</div>
-    <div class="regime-verdict" id="home-verdict" style="font-size:2rem;margin:12px 0">CAUTIOUS BULL</div>
+    <div class="regime-verdict" id="home-verdict" style="font-size:2rem;margin:12px 0">LOADING</div>
     <div class="regime-detail" id="home-verdict-detail" style="font-size:0.85em;line-height:1.5">Loading latest synthesis verdict...</div>
     <div style="margin-top:16px">
       <a href="dashboard/" style="font-size:0.82em;color:var(--cyan);text-decoration:none;font-weight:600">See full breakdown →</a>
@@ -308,7 +308,7 @@ async function loadVerdict() {
       if (r7d.hit_rate !== null && r7d.hit_rate !== undefined) {
         document.getElementById('track-regime-7d').textContent = (r7d.hit_rate * 100).toFixed(1) + '%';
       } else {
-        document.getElementById('track-regime-7d').textContent = '100.0%'; // placeholder for initial launch until data accumulates
+        document.getElementById('track-regime-7d').textContent = '—'; // no data yet — never fabricate
       }
       
       const s90 = tdata.signals?.trailing_90d || {};
@@ -318,7 +318,7 @@ async function loadVerdict() {
       if (total > 0) {
         document.getElementById('track-signals-90d').textContent = ((wins / total) * 100).toFixed(1) + '%';
       } else {
-        document.getElementById('track-signals-90d').textContent = '75.0%'; // placeholder for initial launch
+        document.getElementById('track-signals-90d').textContent = '—'; // no data yet — never fabricate
       }
     }
   } catch(e) {
