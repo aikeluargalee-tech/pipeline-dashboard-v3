@@ -48,7 +48,8 @@
   .sig-gate-dot.near { background: rgba(255,165,0,0.1); color: var(--orange); }
 
   /* Gate Summary Row */
-  .gate-summary { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 20px; }
+  .gate-summary { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 10px 0 6px; }
+  @media (max-width: 640px) { .gate-summary { grid-template-columns: repeat(2, 1fr); } }
   .gate-summary-item { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; transition: border-color 0.15s; }
   .gate-summary-item:hover { border-color: var(--cyan); }
   .gate-summary-item.blocking { border-color: var(--red); background: rgba(255,0,0,0.05); }
