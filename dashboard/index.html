@@ -3716,5 +3716,23 @@ setInterval(renderHalvingProgress, 1000 * 60 * 60); // update every hour
 <script src="../assets/js/vp-chart.js?v=1"></script>
 <script src="../assets/js/vp-card.js?v=1"></script>
 
+<!-- GDPR Cookie Consent Banner -->
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(15,15,20,.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(128,128,128,.15);padding:14px 20px;z-index:9999;font-size:13px;color:var(--text);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+  <div style="flex:1;min-width:250px">🍪 This site uses cookies from Google AdSense for ad personalization and measurement. By continuing, you consent to our <a href="../privacy/" style="color:var(--accent)">Privacy Policy</a> and <a href="../terms/" style="color:var(--accent)">Terms</a>.</div>
+  <div style="display:flex;gap:8px;flex-shrink:0">
+    <button onclick="acceptCookies()" style="padding:8px 18px;background:var(--accent);color:#000;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:13px">Accept</button>
+    <button onclick="declineCookies()" style="padding:8px 18px;background:rgba(128,128,128,.1);color:var(--text);border:1px solid rgba(128,128,128,.2);border-radius:6px;cursor:pointer;font-size:13px">Decline</button>
+  </div>
+</div>
+<script>
+(function(){
+  if (localStorage.getItem('cookie-consent')) return;
+  var b = document.getElementById('cookie-banner');
+  if (b) b.style.display = 'flex';
+  window.acceptCookies = function() { localStorage.setItem('cookie-consent','accepted'); b.style.display='none'; };
+  window.declineCookies = function() { localStorage.setItem('cookie-consent','declined'); b.style.display='none'; };
+})();
+</script>
+
 </body>
 </html>
