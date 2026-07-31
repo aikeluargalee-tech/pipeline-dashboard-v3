@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-07-31T09:47:09Z",
+  "last_updated": "2026-07-31T14:45:12Z",
   "s9_vix_roc": {
     "score": 0,
     "label": "NEUTRAL",
     "delta": 0.0,
-    "now": 16.73,
-    "prior": 16.67,
+    "now": 17.95,
+    "prior": 16.73,
     "delta_unit": "pts",
     "threshold": 3.0,
     "as_of": "2026-07-31",
@@ -17,7 +17,7 @@
     "score": 0,
     "label": "NEUTRAL",
     "delta": 0.0,
-    "now": 4.66,
+    "now": 4.72,
     "prior": 4.66,
     "delta_unit": "bps",
     "threshold": 8.0,
@@ -29,13 +29,13 @@
   "s11_volume_anomaly": {
     "score": 0,
     "label": "NEUTRAL",
-    "ratio": 1.48,
-    "vol_now": 17637.07978,
-    "vol_mean_20p": 11920.54652,
+    "ratio": 1.53,
+    "vol_now": 19001.44588,
+    "vol_mean_20p": 12405.8904665,
     "threshold": 3.0,
     "window": 20,
     "candle_bearish": true,
-    "as_of": "2026-07-31T09:47:09Z",
+    "as_of": "2026-07-31T14:45:12Z",
     "name": "S11 \u2014 Volume Anomaly Detector",
     "desc": "4H candle volume \u22653\u00d7 20-period rolling mean on a bearish candle. BTC-internal cascade precursor \u2014 24h lead time validated."
   },
@@ -67,9 +67,9 @@
         "IREN",
         "CLSK"
       ],
-      "as_of": "2026-07-31T09:47:09Z"
+      "as_of": "2026-07-31T14:45:12Z"
     },
-    "as_of": "2026-07-31T09:47:09Z"
+    "as_of": "2026-07-31T14:45:12Z"
   },
   "tripwires": {
     "TW1_CH1_CAPITAL_REVERSAL": {
@@ -80,7 +80,7 @@
         "AI equity index (NVDA/MSFT)"
       ],
       "state": "INACTIVE",
-      "detail": "ETF flow $233M \u2014 normal"
+      "detail": "ETF flow $0M \u2014 normal"
     },
     "TW6_CH6_CORPORATE_TREASURY": {
       "channel": "Ch.6 \u2014 AI Treasury",
@@ -136,5 +136,5 @@
     "active": 0,
     "total": 6
   },
-  "_collected": "2026-07-31 09:47 UTC"
+  "_collected": "2026-07-31 14:45 UTC"
 }
