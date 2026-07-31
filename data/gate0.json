@@ -1,12 +1,11 @@
 {
-  "verdict": "PROCEED",
+  "verdict": "TIGHTENED",
   "sources": [
-    "stablecoins",
-    "session",
-    "ai3_wave",
     "geopolitical"
   ],
-  "rules": {},
+  "rules": {
+    "action": "Reduce position size. Tight stops. Wait for conditions to clear."
+  },
   "modules": {
     "black_swan": {
       "state": "Offline",
@@ -42,17 +41,17 @@
     },
     "session": {
       "state": "PROCEED",
-      "detail": "Active session: ASIA"
+      "detail": "Active session: LONDON"
     },
     "ai3_wave": {
       "state": "PROCEED",
       "detail": "AI-3 Wave inactive"
     },
     "geopolitical": {
-      "state": "PROCEED",
-      "detail": "Monitoring \u2014 34 signals today, no tier classification"
+      "state": "TIGHTENED",
+      "detail": "Tier FADE geopolitical signal: neutral \u2014 34 signals today"
     }
   },
-  "timestamp": "2026-07-31 06:28 UTC",
-  "_collected": "2026-07-31 06:28 UTC"
+  "timestamp": "2026-07-31 09:31 UTC",
+  "_collected": "2026-07-31 09:31 UTC"
 }

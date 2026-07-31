@@ -18,28 +18,28 @@
   },
   "volume_profile": {
     "poc": 64000,
-    "vah": 65050,
+    "vah": 64950,
     "val": 63750,
     "hvns": [
       {
         "price": 64100,
-        "volume": 4067
+        "volume": 4454
       },
       {
         "price": 64050,
-        "volume": 3689
-      },
-      {
-        "price": 64150,
-        "volume": 3567
+        "volume": 4076
       },
       {
         "price": 63950,
-        "volume": 3520
+        "volume": 4053
+      },
+      {
+        "price": 64150,
+        "volume": 4025
       },
       {
         "price": 63900,
-        "volume": 3171
+        "volume": 3704
       }
     ],
     "lvns": [
@@ -135,71 +135,71 @@
       },
       {
         "price": 63650,
-        "volume": 1416
+        "volume": 1493
       },
       {
         "price": 63700,
-        "volume": 1408
+        "volume": 1484
       },
       {
         "price": 63750,
-        "volume": 1584
+        "volume": 1807
       },
       {
         "price": 63800,
-        "volume": 2048
+        "volume": 2271
       },
       {
         "price": 63850,
-        "volume": 2780
+        "volume": 3313
       },
       {
         "price": 63900,
-        "volume": 3171
+        "volume": 3704
       },
       {
         "price": 63950,
-        "volume": 3520
+        "volume": 4053
       },
       {
         "price": 64000,
-        "volume": 4809
+        "volume": 5195
       },
       {
         "price": 64050,
-        "volume": 3689
+        "volume": 4076
       },
       {
         "price": 64100,
-        "volume": 4067
+        "volume": 4454
       },
       {
         "price": 64150,
-        "volume": 3567
+        "volume": 4025
       },
       {
         "price": 64200,
-        "volume": 2710
+        "volume": 3168
       },
       {
         "price": 64250,
-        "volume": 2795
+        "volume": 2866
       },
       {
         "price": 64300,
-        "volume": 2617
+        "volume": 2615
       },
       {
         "price": 64350,
-        "volume": 2876
+        "volume": 2873
       },
       {
         "price": 64400,
-        "volume": 3030
+        "volume": 3102
       },
       {
         "price": 64450,
-        "volume": 2776
+        "volume": 2848
       },
       {
         "price": 64500,
@@ -239,103 +239,91 @@
       },
       {
         "price": 64950,
-        "volume": 1761
+        "volume": 1701
       },
       {
         "price": 65000,
-        "volume": 1473
+        "volume": 1413
       },
       {
         "price": 65050,
-        "volume": 1264
+        "volume": 1204
       },
       {
         "price": 65100,
-        "volume": 1446
+        "volume": 1386
       },
       {
         "price": 65150,
-        "volume": 1486
+        "volume": 1426
       },
       {
         "price": 65200,
-        "volume": 1603
+        "volume": 1543
       },
       {
         "price": 65250,
-        "volume": 1690
+        "volume": 1630
       },
       {
         "price": 65300,
-        "volume": 1503
+        "volume": 1271
       },
       {
         "price": 65350,
-        "volume": 1100
+        "volume": 928
       },
       {
         "price": 65400,
-        "volume": 1120
+        "volume": 948
       },
       {
         "price": 65450,
-        "volume": 649
+        "volume": 477
       },
       {
         "price": 65500,
-        "volume": 592
+        "volume": 420
       },
       {
         "price": 65550,
-        "volume": 388
+        "volume": 277
       },
       {
         "price": 65600,
-        "volume": 298
+        "volume": 187
       },
       {
         "price": 65650,
-        "volume": 298
+        "volume": 187
       },
       {
         "price": 65700,
-        "volume": 298
-      },
-      {
-        "price": 65750,
-        "volume": 111
-      },
-      {
-        "price": 65800,
-        "volume": 111
+        "volume": 187
       }
     ],
     "candles_used": 168,
-    "total_volume": 97151,
+    "total_volume": 99628,
     "bin_step": 50
   },
   "val_absorption": {
-    "timestamp": "2026-07-31 06:28 UTC",
-    "btc_price": 64397.99,
+    "timestamp": "2026-07-31 09:31 UTC",
+    "btc_price": 63682.01,
     "val": 63750.0,
-    "vah": 65050.0,
-    "distance_pct": 1.02,
-    "position": "approaching_val",
-    "volume_declining": true,
-    "volume_expanding": false,
+    "vah": 64950.0,
+    "distance_pct": -0.11,
+    "position": "below_val",
+    "volume_declining": false,
+    "volume_expanding": true,
     "cvd_holding": true,
-    "cvd_value": 6744.42,
-    "cvd_trend": "flat",
-    "target": 65050.0,
-    "early_vol_4h": 3224.9,
-    "late_vol_4h": 1618.8,
-    "signal": "VAL_ABSORPTION",
-    "action": "Watch for reclaim inside VA \u2192 Long entry",
-    "stop": "Below swing low",
-    "stop_loss": 63112.5,
-    "confidence": "MEDIUM",
-    "gate0_status": "PROCEED",
-    "regime_label": "MIXED"
+    "cvd_value": 3641.82,
+    "cvd_trend": "weakening",
+    "target": 64950.0,
+    "early_vol_4h": 2324.2,
+    "late_vol_4h": 4632.1,
+    "signal": "VAL_TEST",
+    "action": "Price testing VAL \u2014 waiting for volume/CVD confirmation",
+    "confidence": "LOW"
   },
-  "_collected": "2026-07-31 06:28 UTC"
+  "_collected": "2026-07-31 09:31 UTC"
 }
