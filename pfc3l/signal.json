@@ -1,9 +1,9 @@
 {
   "signal": {
-    "id": "pfc3l-20260731-160428",
-    "ts": "2026-07-31T16:04:28.817372+00:00",
+    "id": "pfc3l-20260731-162023",
+    "ts": "2026-07-31T16:20:23.504887+00:00",
     "symbol": "BTC/USD",
-    "reference_price": 62797.0,
+    "reference_price": 62896.0,
     "state": "NO_TRADE",
     "confidence": 0,
     "lifecycle_state": "ACTIVE",
@@ -70,15 +70,15 @@
   },
   "levels": {
     "state": "ACTIVE",
-    "score": 79,
+    "score": 78,
     "role": "ACCELERATOR",
     "active_level": {
       "price": 62672,
       "role": "ACCELERATOR",
       "category": "STANDARD",
       "source": "vp_vah",
-      "distance_pct": 0.2,
-      "score": 79
+      "distance_pct": 0.36,
+      "score": 78
     },
     "levels": [
       {
@@ -86,28 +86,28 @@
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_vah",
-        "distance_pct": 0.2,
-        "score": 79
+        "distance_pct": 0.36,
+        "score": 78
       },
       {
         "price": 62653,
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_poc",
-        "distance_pct": 0.23,
-        "score": 79
+        "distance_pct": 0.39,
+        "score": 77
       },
       {
         "price": 62648,
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_val",
-        "distance_pct": 0.24,
-        "score": 79
+        "distance_pct": 0.39,
+        "score": 77
       }
     ],
     "reasons": [
-      "Active standard level at $62,672 (0.20% away, role: ACCELERATOR)"
+      "Active standard level at $62,672 (0.36% away, role: ACCELERATOR)"
     ],
     "vetoes": []
   },
@@ -117,9 +117,12 @@
     "healthy_feeds": 2,
     "total_critical_feeds": 3,
     "reasons": [
-      "Volume Profile stale (79m)",
+      "Volume Profile stale (95m)",
+      "STALE regime: 33m behind AMT",
+      "STALE macro: 33m behind AMT",
+      "STALE derivs: 33m behind AMT",
       "STALE cycle: missing",
-      "STALE vp: 79m behind AMT"
+      "STALE vp: 95m behind AMT"
     ],
     "vetoes": [],
     "feeds": {
@@ -127,13 +130,13 @@
         "label": "AMT feed",
         "healthy": true,
         "stale": false,
-        "age": "18s"
+        "age": "17s"
       },
       "volume_profile": {
         "label": "Volume Profile",
         "healthy": false,
         "stale": true,
-        "age": "4779s"
+        "age": "5734s"
       },
       "ai_factors": {
         "label": "AI Factors",
@@ -149,5 +152,5 @@
       }
     }
   },
-  "enriched_at": "2026-07-31T16:04:28.837140+00:00"
+  "enriched_at": "2026-07-31T16:20:23.529217+00:00"
 }
