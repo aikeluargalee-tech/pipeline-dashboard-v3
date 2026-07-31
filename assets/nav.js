@@ -88,6 +88,7 @@
         <li role="none"><a role="menuitem" href="${BASE}/psychological-levels/">Psych Levels</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/volume-profile/">Volume Profile</a></li>
         <li role="none"><a role="menuitem" href="${BASE}/whale-wake/">Whale Wake</a></li>
+        <li role="none"><a role="menuitem" href="http://localhost:3000/" style="color:var(--aegis-cyan)" title="Crucix — local Macro & Geopolitical OSINT (this machine only)">Crucix</a></li>
         <li role="none" class="nav-more-container">
           <button class="nav-more-btn" aria-haspopup="true" aria-expanded="false">More ▾</button>
           <ul class="nav-more-dropdown" role="menu">
@@ -129,6 +130,7 @@
           <li><a href="${BASE}/verdicts/">Verdict Archive</a></li>
           <li><a href="${BASE}/track-record/">Track Record</a></li>
           <li><a href="${BASE}/compare/">Comparisons</a></li>
+          <li><a href="http://localhost:3000/">Crucix OSINT (local)</a></li>
         </ul>
       </div>
       <div>
