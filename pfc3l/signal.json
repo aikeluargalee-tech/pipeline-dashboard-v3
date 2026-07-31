@@ -1,34 +1,31 @@
 {
   "signal": {
-    "id": "pfc3l-20260731-015619",
-    "ts": "2026-07-31T01:56:19.372027+00:00",
+    "id": "pfc3l-20260731-020738",
+    "ts": "2026-07-31T02:07:38.225787+00:00",
     "symbol": "BTC/USD",
-    "reference_price": 64550.0,
-    "state": "DATA_UNRELIABLE",
+    "reference_price": 64570.0,
+    "state": "NO_TRADE",
     "confidence": 0,
     "lifecycle_state": "ACTIVE",
     "reasons": [
-      "Volume Profile stale (609m)",
-      "STALE regime: 129m behind AMT",
-      "STALE macro: 129m behind AMT",
-      "STALE derivs: 129m behind AMT",
-      "STALE cycle: missing",
-      "STALE vp: 129m behind AMT"
+      "Positioning is balanced \u2014 no vulnerable side"
     ],
     "vetoes": [
-      "AMT feed >15min old (480m)",
-      "AI Factors >15min old (480m)",
-      "Only 0 critical feeds healthy (need 2+)",
-      "DATA QUALITY VETO \u2014 directional signals blocked"
+      "Positioning is balanced \u2014 no vulnerable side"
     ],
     "invalidation_conditions": [],
     "informational_zones": [],
     "gates": {
-      "positioning": "BALANCED",
-      "flow": "NEUTRAL",
-      "catalyst": "NONE",
-      "level": "ACCELERATOR",
-      "data_quality": "FAILED (60/100)"
+      "positioning": false,
+      "flow": false,
+      "catalyst": false,
+      "level": true,
+      "data_quality": true,
+      "short_positioning": false,
+      "short_flow": false,
+      "short_catalyst": false,
+      "short_level": true,
+      "short_data_quality": true
     }
   },
   "positioning": {
@@ -44,14 +41,14 @@
   },
   "flow": {
     "state": "NEUTRAL",
-    "score": 25,
-    "bullish_score": 25,
+    "score": 10,
+    "bullish_score": 10,
     "bearish_score": 10,
-    "taker_buy_ratio": 0.527,
-    "coinbase_premium": -0.1113,
+    "taker_buy_ratio": 0.517,
+    "coinbase_premium": -0.1135,
     "healthy_spot_venues": 2,
     "reasons": [
-      "Taker buy ratio moderate (0.527)"
+      "Flow is balanced \u2014 no dominant direction"
     ],
     "vetoes": []
   },
@@ -61,7 +58,7 @@
     "direction": "POSITIVE",
     "source_quality": 55,
     "reasons": [
-      "Fear & Greed: fear (28)"
+      "Fear & Greed: fear (25)"
     ],
     "vetoes": []
   },
@@ -74,7 +71,7 @@
       "role": "ACCELERATOR",
       "category": "STANDARD",
       "source": "vp_val",
-      "distance_pct": 0.18,
+      "distance_pct": 0.15,
       "score": 79
     },
     "levels": [
@@ -83,7 +80,7 @@
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_val",
-        "distance_pct": 0.18,
+        "distance_pct": 0.15,
         "score": 79
       },
       {
@@ -91,7 +88,7 @@
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_poc",
-        "distance_pct": 0.21,
+        "distance_pct": 0.18,
         "score": 79
       },
       {
@@ -99,51 +96,43 @@
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_vah",
-        "distance_pct": 0.21,
+        "distance_pct": 0.18,
         "score": 79
       }
     ],
     "reasons": [
-      "Active standard level at $64,666 (0.18% away, role: ACCELERATOR)"
+      "Active standard level at $64,666 (0.15% away, role: ACCELERATOR)"
     ],
     "vetoes": []
   },
   "data_quality": {
-    "score": 60,
-    "directional_allowed": false,
-    "healthy_feeds": 0,
+    "score": 100,
+    "directional_allowed": true,
+    "healthy_feeds": 2,
     "total_critical_feeds": 3,
     "reasons": [
-      "Volume Profile stale (609m)",
-      "STALE regime: 129m behind AMT",
-      "STALE macro: 129m behind AMT",
-      "STALE derivs: 129m behind AMT",
-      "STALE cycle: missing",
-      "STALE vp: 129m behind AMT"
+      "Volume Profile stale (621m)",
+      "STALE vp: 620m behind AMT"
     ],
-    "vetoes": [
-      "AMT feed >15min old (480m)",
-      "AI Factors >15min old (480m)",
-      "Only 0 critical feeds healthy (need 2+)"
-    ],
+    "vetoes": [],
     "feeds": {
       "amt": {
         "label": "AMT feed",
-        "healthy": false,
-        "stale": true,
-        "age": "28823s"
+        "healthy": true,
+        "stale": false,
+        "age": "19s"
       },
       "volume_profile": {
         "label": "Volume Profile",
         "healthy": false,
         "stale": true,
-        "age": "36598s"
+        "age": "37277s"
       },
       "ai_factors": {
         "label": "AI Factors",
-        "healthy": false,
-        "stale": true,
-        "age": "28822s"
+        "healthy": true,
+        "stale": false,
+        "age": "18s"
       },
       "trap_monitor": {
         "label": "Trap Monitor",
