@@ -1,9 +1,9 @@
 {
   "signal": {
-    "id": "pfc3l-20260801-130007",
-    "ts": "2026-08-01T13:00:07.182919+00:00",
+    "id": "pfc3l-20260801-131338",
+    "ts": "2026-08-01T13:13:38.314890+00:00",
     "symbol": "BTC/USD",
-    "reference_price": 63104.0,
+    "reference_price": 63103.0,
     "state": "NO_TRADE",
     "confidence": 0,
     "lifecycle_state": "ACTIVE",
@@ -120,12 +120,13 @@
     "vetoes": []
   },
   "data_quality": {
-    "score": 92,
+    "score": 100,
     "directional_allowed": true,
     "healthy_feeds": 2,
     "total_critical_feeds": 3,
     "reasons": [
-      "Volume Profile stale (816s)"
+      "Volume Profile stale (27m)",
+      "STALE cycle: missing"
     ],
     "vetoes": [],
     "feeds": {
@@ -133,19 +134,19 @@
         "label": "AMT feed",
         "healthy": true,
         "stale": false,
-        "age": "58s"
+        "age": "20s"
       },
       "volume_profile": {
         "label": "Volume Profile",
         "healthy": false,
         "stale": true,
-        "age": "816s"
+        "age": "1627s"
       },
       "ai_factors": {
         "label": "AI Factors",
         "healthy": true,
         "stale": false,
-        "age": "57s"
+        "age": "19s"
       },
       "trap_monitor": {
         "label": "Trap Monitor",
@@ -155,5 +156,5 @@
       }
     }
   },
-  "enriched_at": "2026-08-01T13:00:07.202976+00:00"
+  "enriched_at": "2026-08-01T13:13:38.338013+00:00"
 }

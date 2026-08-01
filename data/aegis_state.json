@@ -1,18 +1,18 @@
 {
-  "generated": "2026-08-01T12:59:27.083875+00:00",
-  "generated_human": "2026-08-01 12:59:27 UTC",
-  "reference_price": 63104.0,
+  "generated": "2026-08-01T13:13:38.362235+00:00",
+  "generated_human": "2026-08-01 13:13:38 UTC",
+  "reference_price": 63103.0,
   "snapshot": {
-    "data_health": "DATA_HEALTHY",
+    "data_health": "DATA_DEGRADED",
     "health_reasons": [
-      "All feeds passed"
+      "STALE cycle: missing"
     ],
-    "price": 63104.0,
-    "observed_at": "2026-08-01T12:59:18Z"
+    "price": 63103.0,
+    "observed_at": "2026-08-01T13:13:29Z"
   },
   "latest_verdict": {
     "verdict": "NO_ACTIVE_VERDICT",
-    "trap_probability": 0.25,
+    "trap_probability": 0.125,
     "confidence": 100,
     "risk_action": "MONITOR",
     "evidence": [
@@ -61,14 +61,14 @@
       "aggression": "BALANCED",
       "leverage": "NORMAL",
       "catalyst": "NONE_DETECTED",
-      "environment": "Trap risk 2/8"
+      "environment": "Trap risk 1/8"
     }
   },
   "trap_environment": {
-    "composite": 2,
+    "composite": 1,
     "actual_max": 8,
     "status": "CLEAR",
-    "_collected": "2026-08-01T12:59:18Z",
+    "_collected": "2026-08-01T13:13:29Z",
     "signals": {
       "leverage": [
         {
@@ -129,9 +129,9 @@
         {
           "id": "S8",
           "label": "Options 25\u0394 Skew",
-          "active": true,
-          "value": "-6.60",
-          "score": 1
+          "active": false,
+          "value": "0.00",
+          "score": 0
         }
       ]
     },
@@ -147,8 +147,8 @@
       "oi_implosion": 0,
       "divergence": 0
     },
-    "timestamp": "2026-08-01T12:59:27.083875+00:00",
-    "_collected": "2026-08-01T12:59:18Z",
+    "timestamp": "2026-08-01T13:13:38.362235+00:00",
+    "_collected": "2026-08-01T13:13:29Z",
     "network_health": {
       "hash_rate_ehs": 0,
       "hash_rate_drawdown_pct": 0,
