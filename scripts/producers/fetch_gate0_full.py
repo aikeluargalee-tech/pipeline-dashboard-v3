@@ -117,11 +117,67 @@ def main():
             offline = True
 
     if offline:
-        for r_name in ["black_swan", "vix_spx", "trp_check", "mstr", "elon", "ai_bubble", "quantum"]:
-            modules[r_name] = {
-                "state": "Offline",
-                "detail": "Offline"
-            }
+        # trading-workflow (gate0 orchestrator) is not present on this laptop —
+        # compute module states from live pipeline data.json instead of all-Offline.
+        packet = read_json(os.path.join(SITE, "packet/data.json")) or {}
+        enriched = packet.get("enriched", {}) or {}
+        ctx = packet.get("context", {}) or {}
+        header = packet.get("header", {}) or {}
+
+        # black_swan: score from enriched
+        bs = safe_float(enriched.get("black_swan_score"), "black_swan_score", 0)
+        if bs >= 12:
+            modules["black_swan"] = {"state": "ABORT", "detail": f"Black Swan score {bs} (>=12)"}
+        elif bs >= 8:
+            modules["black_swan"] = {"state": "PAUSE", "detail": f"Black Swan score {bs} (>=8)"}
+        elif bs >= 5:
+            modules["black_swan"] = {"state": "TIGHTENED", "detail": f"Black Swan score {bs} (>=5)"}
+        else:
+            modules["black_swan"] = {"state": "PROCEED", "detail": f"Black Swan score {bs}"}
+
+        # vix_spx: VIX from enriched/context
+        vix = safe_float(enriched.get("vix") or ctx.get("vix"), "vix", None)
+        if vix is not None:
+            if vix > 40:
+                modules["vix_spx"] = {"state": "ABORT", "detail": f"VIX {vix:.1f} (>40)"}
+            elif vix > 30:
+                modules["vix_spx"] = {"state": "PAUSE", "detail": f"VIX {vix:.1f} (>30)"}
+            elif vix > 22:
+                modules["vix_spx"] = {"state": "TIGHTENED", "detail": f"VIX {vix:.1f} (>22)"}
+            else:
+                modules["vix_spx"] = {"state": "PROCEED", "detail": f"VIX {vix:.1f}"}
+        else:
+            modules["vix_spx"] = {"state": "Offline", "detail": "VIX not in packet"}
+
+        # mstr: MSTR close from context
+        mstr = safe_float(ctx.get("mstr_close"), "mstr_close", None)
+        if mstr is not None:
+            if mstr < 70:
+                modules["mstr"] = {"state": "TIGHTENED", "detail": f"MSTR ${mstr:.2f} (<70)"}
+            elif mstr > 300:
+                modules["mstr"] = {"state": "TIGHTENED", "detail": f"MSTR ${mstr:.2f} extended (>300)"}
+            else:
+                modules["mstr"] = {"state": "PROCEED", "detail": f"MSTR ${mstr:.2f}"}
+        else:
+            modules["mstr"] = {"state": "Offline", "detail": "MSTR not in packet"}
+
+        # trp_check: from TRP status file if present
+        trp_status = read_json(os.path.join(SITE, "data/trp_status.json"))
+        if trp_status and trp_status.get("last_tier"):
+            tier = trp_status.get("last_tier")
+            if tier == "S":
+                modules["trp_check"] = {"state": "ABORT", "detail": f"TRP Tier S: {trp_status.get('last_classification','')}"}
+            elif tier == "A":
+                modules["trp_check"] = {"state": "PAUSE", "detail": f"TRP Tier A: {trp_status.get('last_classification','')}"}
+            else:
+                modules["trp_check"] = {"state": "TIGHTENED", "detail": f"TRP Tier {tier}"}
+        else:
+            modules["trp_check"] = {"state": "PROCEED", "detail": "No TRP signal"}
+
+        # elon / ai_bubble / quantum: no live source without trading-workflow collectors
+        modules["elon"] = {"state": "Offline", "detail": "No data source (trading-workflow not migrated)"}
+        modules["ai_bubble"] = {"state": "Offline", "detail": "No data source (trading-workflow not migrated)"}
+        modules["quantum"] = {"state": "Offline", "detail": "No data source (trading-workflow not migrated)"}
 
     # 2. Add stablecoins module
     stablecoins_raw = read_json("/tmp/btc_stablecoin_state.json")
