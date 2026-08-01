@@ -1,29 +1,29 @@
 {
   "header": {
-    "generated_timestamp": "2026-08-01T14:33:34Z",
-    "btc_price": 63107.0,
-    "change_24h": -0.621,
-    "bid": 63107.42,
-    "ask": 63107.43,
+    "generated_timestamp": "2026-08-01T14:49:37Z",
+    "btc_price": 63096.0,
+    "change_24h": 0.667,
+    "bid": 63096.0,
+    "ask": 63096.01,
     "spread": 0.01,
-    "volume_24h": 655883828.59
+    "volume_24h": 628840201.57
   },
   "critical": {
-    "btc_price": 63107.0,
+    "btc_price": 63096.0,
     "amt_adx": null,
     "amt_mtf": "1D ? | 4H ? | 1H ?",
-    "candle_delta": 79.6,
+    "candle_delta": 76.83,
     "candle_deltas_6": [
       326.68,
       -107.51,
       -27.18,
       55.59,
       -53.85,
-      79.6
+      76.83
     ],
-    "delta_sum_6": 273.33,
+    "delta_sum_6": 270.56,
     "delta_trend": "BUYING",
-    "delta_interp": "Buyers dominated. Last candle +79.6.",
+    "delta_interp": "Buyers dominated. Last candle +76.8.",
     "cvd_per_tf": {
       "1D": "N/A",
       "4H": "N/A",
@@ -39,14 +39,14 @@
       "4H": "N/A",
       "1H": "N/A"
     },
-    "session_cvd": 888.8,
+    "session_cvd": 886.04,
     "oi_absolute_usd_billions": 6.87,
-    "taker_ratio_24h": 1.067,
-    "vp_poc": 63080,
-    "vp_vah": 63084,
-    "vp_val": 63080,
-    "vp_shape": "P",
-    "vp_state": "ACCEPTANCE",
+    "taker_ratio_24h": 1.065,
+    "vp_poc": 63114,
+    "vp_vah": 63114,
+    "vp_val": 63113,
+    "vp_shape": "b",
+    "vp_state": "REJECTION_DOWN",
     "balance_state": "DEVELOPING_BALANCE",
     "balance_width_pct": 3.44,
     "adx_regime": "WARMING_UP"
@@ -56,61 +56,61 @@
     "vix": 15.99,
     "etf_flow_daily": -265.4,
     "etf_flow_weekly": -61.5,
-    "coinbase_premium": -0.0997,
+    "coinbase_premium": -0.1004,
     "equities": "SPY $747 (+0.7%) | QQQ $688 (+0.7%) | GLD $372 (-1.5%)",
     "dxy": 99.8,
     "us10y": 4.74,
-    "oi_change_24h": 2.67,
-    "long_short_ratio": 2.1017,
-    "funding_rate": 2.718e-05,
-    "cvd_24h": -1524.3,
+    "oi_change_24h": -0.63,
+    "long_short_ratio": 2.0902,
+    "funding_rate": 3.335e-05,
+    "cvd_24h": -144.03,
     "black_swan_score": "0/17",
     "correlation_r": -0.4888,
-    "liq_clusters": "Long: $63,100 (-0.01%), $63,000 (-0.17%), $62,450 (-1.04%) | Short: $63,150 (+0.07%), $65,400 (+3.63%)",
-    "perp_basis_pct": -0.0384,
+    "liq_clusters": "Long: $63,050 (-0.07%), $63,000 (-0.15%), $62,450 (-1.02%) | Short: $63,100 (+0.01%), $63,150 (+0.09%), $65,400 (+3.65%)",
+    "perp_basis_pct": -0.046,
     "order_book_top5": {
       "bids": [
         {
-          "price": 63107.42,
-          "size": 3.97333
+          "price": 63096.0,
+          "size": 1.26266
         },
         {
-          "price": 63107.41,
-          "size": 0.00106
+          "price": 63095.99,
+          "size": 0.00088
         },
         {
-          "price": 63107.4,
+          "price": 63095.98,
           "size": 0.00016
         },
         {
-          "price": 63107.29,
-          "size": 0.00389
+          "price": 63095.85,
+          "size": 0.00018
         },
         {
-          "price": 63107.27,
-          "size": 0.00018
+          "price": 63095.84,
+          "size": 0.04736
         }
       ],
       "asks": [
         {
-          "price": 63107.43,
-          "size": 4.2626
+          "price": 63096.01,
+          "size": 10.34641
         },
         {
-          "price": 63107.44,
-          "size": 0.00088
+          "price": 63096.02,
+          "size": 0.00543
         },
         {
-          "price": 63107.45,
+          "price": 63096.03,
           "size": 0.00016
         },
         {
-          "price": 63107.53,
+          "price": 63096.65,
           "size": 0.00018
         },
         {
-          "price": 63107.54,
-          "size": 0.07807
+          "price": 63096.66,
+          "size": 0.03602
         }
       ]
     },
@@ -118,20 +118,20 @@
     "realized_vol_1d_pct": 53.08,
     "mstr_close": 93.28,
     "usdjpy": 157.4,
-    "daily_rsi_14": 40.1
+    "daily_rsi_14": 39.9
   },
   "reference": {
     "sr_1h": "S: $63,028 / $62,782 / $62,500 | R: $63,253 / $63,500 / $63,816",
     "sr_1h_inverted": "",
     "sr_1d": "S: $62,500 / $61,250 / $60,000 | R: $66,587 / $67,378 / $68,750",
     "cycle": {
-      "mvrv_z": 1.1934000253677368,
-      "sopr": 0.9925047858118559,
-      "netflow_7d": "N/A"
+      "mvrv_z": 0.4093,
+      "sopr": 0.9947,
+      "netflow_7d": 6661.69
     },
-    "cycle_composite": "N/A",
-    "sth_realized_price": "N/A",
-    "options_skew_25d": "N/A",
+    "cycle_composite": 32.8,
+    "sth_realized_price": null,
+    "options_skew_25d": -7.1,
     "brk_summary": "LTH capitulating (sopr 0.946), STH underwater (sopr 0.996), miner stress moderate (puell 0.73), hashrate -26.0%, rhodl 0",
     "brk": {
       "mvrv": 1.1934000253677368,
@@ -169,21 +169,21 @@
     "fng_classification": "fear",
     "cot_signal": "NEUTRAL",
     "oi_trend": "stable",
-    "oi_change_24h_pct": 2.67,
+    "oi_change_24h_pct": -0.63,
     "liquidity_verdict": "HEALTHY",
-    "taker_buy_ratio": 0.519,
+    "taker_buy_ratio": 0.516,
     "oi_delta": "FLAT",
     "funding_signal": "NEUTRAL",
     "sr_1h_support": 63027.7,
     "sr_1h_resistance": 63253.23,
     "sr_1d_support": 62500.0,
     "sr_1d_resistance": 66587.05,
-    "atr_1h_pct": 0.154,
+    "atr_1h_pct": 0.15,
     "atr_1d_pct": 2.42,
-    "btc_price": 63107.0,
-    "coinbase_premium": -0.0997,
+    "btc_price": 63096.0,
+    "coinbase_premium": -0.1004,
     "vix": 15.99,
-    "funding_rate": 2.718e-05
+    "funding_rate": 3.335e-05
   },
   "ai_factors": {
     "s9_vix_roc": {
@@ -208,17 +208,17 @@
       "as_of": "2026-08-01",
       "prior_date": "2026-08-01"
     },
-    "last_updated": "2026-08-01T14:33:26Z",
+    "last_updated": "2026-08-01T14:49:26Z",
     "s11_volume_anomaly": {
       "score": 0,
       "label": "NEUTRAL",
       "threshold": 3.0,
-      "ratio": 0.24,
-      "vol_now": 670.64216,
+      "ratio": 0.28,
+      "vol_now": 790.74417,
       "vol_mean_20p": 2789.2131894999998,
       "candle_bearish": false,
       "window": 20,
-      "as_of": "2026-08-01T14:33:25Z"
+      "as_of": "2026-08-01T14:49:25Z"
     },
     "layer0_5": {
       "forced_sell_risk": "LOW",
@@ -250,7 +250,7 @@
         ],
         "as_of": "2026-08-01"
       },
-      "as_of": "2026-08-01T14:33:26Z"
+      "as_of": "2026-08-01T14:49:26Z"
     },
     "tripwires": {
       "TW1_CH1_CAPITAL_REVERSAL": {
@@ -317,7 +317,7 @@
     "tripwire_summary": {
       "active_count": 0,
       "total": 6,
-      "as_of": "2026-08-01T14:33:26Z"
+      "as_of": "2026-08-01T14:49:26Z"
     }
   },
   "regime": {
@@ -333,7 +333,9 @@
       "derivatives": "late_expansion"
     },
     "signals": [
+      "mvrv_z_deep_value",
       "lth_sopr_sub_1",
+      "hashrate_drawdown_gt_25pct",
       "supply_in_profit_below_55pct",
       "fear",
       "etf_light_outflows",
@@ -341,8 +343,7 @@
       "breadth_data_limited",
       "neutral_funding",
       "crowded_longs",
-      "taker_buying_dominant",
-      "cvd_declining"
+      "coinbase_discount"
     ],
     "breadth": {
       "spy_momentum": "flat",
@@ -352,7 +353,7 @@
         "mstr_weak"
       ]
     },
-    "as_of": "2026-08-01T14:33:26Z"
+    "as_of": "2026-08-01T14:49:26Z"
   },
   "heatmap": {
     "data_available": false,
@@ -360,47 +361,59 @@
   },
   "status": {
     "source_timestamps": {
-      "amt": "2026-08-01T14:33:25.029501+00:00",
-      "vp": "2026-08-01T13:46:12.133033+00:00",
-      "pipeline": "regime=2026-08-01 13:46 UTC | macro=2026-08-01 13:46 UTC"
+      "amt": "2026-08-01T14:49:24.517270+00:00",
+      "vp": "2026-08-01T14:47:16.803787+00:00",
+      "pipeline": "regime=2026-08-01 14:47 UTC | macro=2026-08-01 14:47 UTC"
     },
     "staleness_warnings": [
-      "STALE regime: 47m behind AMT",
-      "STALE macro: 47m behind AMT",
-      "STALE derivs: 47m behind AMT",
-      "STALE cycle: missing",
-      "STALE vp: 47m behind AMT",
-      "STALE brk: 96m behind AMT"
+      "STALE brk: 112m behind AMT"
     ]
   },
   "sources": {
     "trap_monitor": {
-      "score": "?/?",
-      "status": "N/A",
-      "direction": "N/A",
-      "active_traps": [],
+      "score": "3/7",
+      "status": "CAUTION",
+      "direction": "LONG_TRAP",
+      "active_traps": [
+        "s2_oi_divergence",
+        "s6_exchange_netflow",
+        "s8_options_skew"
+      ],
       "signals": {
-        "S1_DESC": null,
-        "S2_DESC": null,
-        "S3_DESC": null,
-        "S4_DESC": null,
-        "S5_DESC": null,
-        "S6_DESC": null,
-        "S7_DESC": null,
-        "S8_DESC": null
+        "s1_liq_asymmetry": "CLEAR",
+        "s2_oi_divergence": "TRAP",
+        "s3_funding": "CLEAR",
+        "s4_bid_ask_absorption": "CLEAR",
+        "s5_taker_cvd": "CLEAR",
+        "s6_exchange_netflow": "TRAP",
+        "s7_utxo_bands": "CLEAR",
+        "s8_options_skew": "TRAP"
       },
-      "downstream_action": "N/A",
-      "collected": ""
+      "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
+      "collected": "2026-08-01 14:47 UTC"
     },
     "redline": {
-      "error": "unavailable"
+      "l0_regime": "TRANSITIONAL",
+      "l0_confidence": 0.8,
+      "l1_risk": "OFF",
+      "l2_positioning": "N/A",
+      "l3_swing": "NONE",
+      "l3_swing_blocked": true,
+      "l4_intraday": "NONE",
+      "l4_intraday_blocked": true,
+      "l5_structure": "N/A",
+      "conflict": "allow",
+      "overall_status": "DEGRADED",
+      "errors": 1,
+      "regime": "TRANSITIONAL",
+      "timestamp": "2026-07-28T14:29:52.837033"
     },
     "amt": {
-      "price": 63107.0,
-      "change_24h": 0.698,
+      "price": 63096.0,
+      "change_24h": 0.489,
       "balance_state": "DEVELOPING_BALANCE",
-      "aggression_score": 0.44,
-      "net_delta": 888.8,
+      "aggression_score": 0.51,
+      "net_delta": 886.04,
       "whale_pivot": null,
       "whale_conviction": 0,
       "mtf_signal": "WARMING_UP",
@@ -409,12 +422,12 @@
       "plain_english": ""
     },
     "volume_profile": {
-      "poc": 63080,
-      "vah": 63084,
-      "val": 63080,
-      "shape": "P",
-      "state": "ACCEPTANCE",
-      "direction": "LONG",
+      "poc": 63114,
+      "vah": 63114,
+      "val": 63113,
+      "shape": "b",
+      "state": "REJECTION_DOWN",
+      "direction": "SHORT",
       "probability_tier": "BASELINE",
       "active_pattern": "POC_MAGNET"
     },

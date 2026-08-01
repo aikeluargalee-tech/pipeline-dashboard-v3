@@ -1,23 +1,37 @@
 {
-  "generated": "2026-08-01T14:33:41.668102+00:00",
-  "generated_human": "2026-08-01 14:33:41 UTC",
-  "reference_price": 63107.0,
+  "generated": "2026-08-01T14:49:45.407546+00:00",
+  "generated_human": "2026-08-01 14:49:45 UTC",
+  "reference_price": 63096.0,
   "snapshot": {
     "data_health": "DATA_DEGRADED",
     "health_reasons": [
-      "STALE regime: 47m behind AMT",
-      "STALE macro: 47m behind AMT",
-      "STALE derivs: 47m behind AMT"
+      "STALE brk: 112m behind AMT"
     ],
-    "price": 63107.0,
-    "observed_at": "2026-08-01T14:33:34Z"
+    "price": 63096.0,
+    "observed_at": "2026-08-01T14:49:37Z"
   },
   "latest_verdict": {
     "verdict": "NO_ACTIVE_VERDICT",
-    "trap_probability": 0.0,
+    "trap_probability": 0.25,
     "confidence": 100,
     "risk_action": "MONITOR",
-    "evidence": []
+    "evidence": [
+      {
+        "label": "Taker Buy Ratio",
+        "value": "51.6%",
+        "effect": -0.016000000000000014
+      },
+      {
+        "label": "Funding Rate",
+        "value": "0.0000%",
+        "effect": 0.03335
+      },
+      {
+        "label": "OI 5m Delta",
+        "value": "0.0%",
+        "effect": 0.0
+      }
+    ]
   },
   "active_event": {
     "state": "CROSSED",
@@ -27,13 +41,13 @@
     "price": 63027.7,
     "label": "1H Nearest Support",
     "kind": "support",
-    "distance_pct": 0.13
+    "distance_pct": 0.11
   },
   "breakout": {
     "level_interaction": {
       "state": "APPROACHING_SUPPORT",
       "nearest_level": "$63,028",
-      "distance": "0.13%",
+      "distance": "0.11%",
       "direction": "Below \u2192 support test",
       "bars_observed": 15,
       "close_beyond_level": "Yes",
@@ -41,7 +55,7 @@
     },
     "market_evidence": {
       "relative_volume": "1.0x",
-      "taker_buy_sell": "51.9% buy",
+      "taker_buy_sell": "51.6% buy",
       "funding_rate": "0.0000%",
       "oi_delta_5m": "0.0%",
       "atr_14": "0.00%"
@@ -52,14 +66,14 @@
       "aggression": "BALANCED",
       "leverage": "NORMAL",
       "catalyst": "NONE_DETECTED",
-      "environment": "Clear"
+      "environment": "Trap risk 2/8"
     }
   },
   "trap_environment": {
-    "composite": 0,
+    "composite": 2,
     "actual_max": 8,
     "status": "CLEAR",
-    "_collected": "2026-08-01T14:33:34Z",
+    "_collected": "2026-08-01T14:49:37Z",
     "signals": {
       "leverage": [
         {
@@ -80,7 +94,7 @@
           "id": "S3",
           "label": "OI\u2013Price Divergence",
           "active": false,
-          "value": "OI +0.0% vs price -0.62%",
+          "value": "OI +0.0% vs price +0.67%",
           "score": 0
         }
       ],
@@ -88,9 +102,9 @@
         {
           "id": "S4",
           "label": "Coinbase Premium Deviation",
-          "active": false,
+          "active": true,
           "value": "-0.100%",
-          "score": 0
+          "score": 1
         },
         {
           "id": "S5",
@@ -120,9 +134,9 @@
         {
           "id": "S8",
           "label": "Options 25\u0394 Skew",
-          "active": false,
-          "value": "0.00",
-          "score": 0
+          "active": true,
+          "value": "-7.10",
+          "score": 1
         }
       ]
     },
@@ -138,8 +152,8 @@
       "oi_implosion": 0,
       "divergence": 0
     },
-    "timestamp": "2026-08-01T14:33:41.668102+00:00",
-    "_collected": "2026-08-01T14:33:34Z",
+    "timestamp": "2026-08-01T14:49:45.407546+00:00",
+    "_collected": "2026-08-01T14:49:37Z",
     "network_health": {
       "hash_rate_ehs": 0,
       "hash_rate_drawdown_pct": 0,
