@@ -1,7 +1,7 @@
 {
   "signal": {
-    "id": "pfc3l-20260801-125927",
-    "ts": "2026-08-01T12:59:27.036758+00:00",
+    "id": "pfc3l-20260801-130007",
+    "ts": "2026-08-01T13:00:07.182919+00:00",
     "symbol": "BTC/USD",
     "reference_price": 63104.0,
     "state": "NO_TRADE",
@@ -54,24 +54,25 @@
   },
   "flow": {
     "state": "NEUTRAL",
-    "score": 10,
-    "bullish_score": 10,
+    "score": 20,
+    "bullish_score": 20,
     "bearish_score": 10,
     "taker_buy_ratio": 0.519,
     "coinbase_premium": -0.1135,
     "healthy_spot_venues": 2,
     "reasons": [
-      "Flow is balanced \u2014 no dominant direction"
+      "CVD delta trend: buy"
     ],
     "vetoes": []
   },
   "catalyst": {
     "state": "NONE",
-    "confidence": 15,
-    "direction": "POSITIVE",
-    "source_quality": 55,
+    "confidence": 35,
+    "direction": "NEGATIVE",
+    "source_quality": 75,
     "reasons": [
-      "Fear & Greed: fear (27)"
+      "Fear & Greed: fear (27)",
+      "ETF daily outflow -265.4M \u2014 bearish flow catalyst"
     ],
     "vetoes": []
   },
@@ -124,7 +125,7 @@
     "healthy_feeds": 2,
     "total_critical_feeds": 3,
     "reasons": [
-      "Volume Profile stale (776s)"
+      "Volume Profile stale (816s)"
     ],
     "vetoes": [],
     "feeds": {
@@ -132,19 +133,19 @@
         "label": "AMT feed",
         "healthy": true,
         "stale": false,
-        "age": "18s"
+        "age": "58s"
       },
       "volume_profile": {
         "label": "Volume Profile",
         "healthy": false,
         "stale": true,
-        "age": "776s"
+        "age": "816s"
       },
       "ai_factors": {
         "label": "AI Factors",
         "healthy": true,
         "stale": false,
-        "age": "17s"
+        "age": "57s"
       },
       "trap_monitor": {
         "label": "Trap Monitor",
@@ -154,5 +155,5 @@
       }
     }
   },
-  "enriched_at": "2026-08-01T12:59:27.060639+00:00"
+  "enriched_at": "2026-08-01T13:00:07.202976+00:00"
 }

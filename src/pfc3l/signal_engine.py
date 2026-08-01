@@ -325,6 +325,18 @@ def evaluate_flow(data: dict) -> dict[str, Any]:
     liquidity = enriched.get("liquidity_verdict", "UNKNOWN")
     cvd_data = critical.get("cvd_per_tf", {}) or {}
     delta_trend = critical.get("delta_trend", "NEUTRAL")
+    # Normalize packet values ('BUYING'/'SELLING'/'STRONG_SELLING'/'FLAT') to engine's vocabulary
+    _dt = str(delta_trend).upper()
+    if _dt in ("STRONG_BUY", "STRONG_BUYING"):
+        delta_trend = "STRONG_BUY"
+    elif _dt in ("BUY", "BUYING"):
+        delta_trend = "BUY"
+    elif _dt in ("STRONG_SELL", "STRONG_SELLING"):
+        delta_trend = "STRONG_SELL"
+    elif _dt in ("SELL", "SELLING"):
+        delta_trend = "SELL"
+    else:
+        delta_trend = "NEUTRAL"
     delta_sum = critical.get("delta_sum_6", 0) or 0
 
     reasons: list[str] = []
@@ -456,6 +468,7 @@ def evaluate_flow(data: dict) -> dict[str, Any]:
 def evaluate_catalyst(data: dict) -> dict[str, Any]:
     """Evaluate whether a directional catalyst is active."""
     enriched = data.get("enriched", {})
+    context = data.get("context", {})
     ai_factors = data.get("ai_factors", {})
 
     vix = enriched.get("vix", 20)
@@ -523,8 +536,12 @@ def evaluate_catalyst(data: dict) -> dict[str, Any]:
         confidence += 15
         reasons.append(f"{active_trips} AI factor tripwire(s) active")
 
-    # ETF flows from enriched
-    etf_daily = enriched.get("etf_flow_daily", 0) or 0
+    # ETF flows from context (actual key location in data.json)
+    etf_daily = context.get("etf_flow_daily", 0) or 0
+    try:
+        etf_daily = float(etf_daily)
+    except (TypeError, ValueError):
+        etf_daily = 0
     if etf_daily < T["etf_outflow_daily_m"]:
         confidence += 20
         reasons.append(f"ETF daily outflow {etf_daily}M — bearish flow catalyst")
