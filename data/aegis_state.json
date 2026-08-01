@@ -1,16 +1,14 @@
 {
-  "generated": "2026-08-01T13:45:38.361804+00:00",
-  "generated_human": "2026-08-01 13:45:38 UTC",
-  "reference_price": 63080.0,
+  "generated": "2026-08-01T14:01:44.400070+00:00",
+  "generated_human": "2026-08-01 14:01:44 UTC",
+  "reference_price": 63070.0,
   "snapshot": {
     "data_health": "DATA_DEGRADED",
     "health_reasons": [
-      "STALE regime: 47m behind AMT",
-      "STALE macro: 47m behind AMT",
-      "STALE derivs: 47m behind AMT"
+      "STALE brk: 64m behind AMT"
     ],
-    "price": 63080.0,
-    "observed_at": "2026-08-01T13:45:31Z"
+    "price": 63070.0,
+    "observed_at": "2026-08-01T14:01:36Z"
   },
   "latest_verdict": {
     "verdict": "NO_ACTIVE_VERDICT",
@@ -26,7 +24,7 @@
       {
         "label": "Funding Rate",
         "value": "0.0000%",
-        "effect": 0.02716
+        "effect": 0.02718
       },
       {
         "label": "OI 5m Delta",
@@ -43,13 +41,13 @@
     "price": 63027.7,
     "label": "1H Nearest Support",
     "kind": "support",
-    "distance_pct": 0.08
+    "distance_pct": 0.07
   },
   "breakout": {
     "level_interaction": {
       "state": "APPROACHING_SUPPORT",
       "nearest_level": "$63,028",
-      "distance": "0.08%",
+      "distance": "0.07%",
       "direction": "Below \u2192 support test",
       "bars_observed": 15,
       "close_beyond_level": "Yes",
@@ -75,7 +73,7 @@
     "composite": 1,
     "actual_max": 8,
     "status": "CLEAR",
-    "_collected": "2026-08-01T13:45:31Z",
+    "_collected": "2026-08-01T14:01:36Z",
     "signals": {
       "leverage": [
         {
@@ -96,7 +94,7 @@
           "id": "S3",
           "label": "OI\u2013Price Divergence",
           "active": false,
-          "value": "OI +0.0% vs price -1.00%",
+          "value": "OI +0.0% vs price -0.62%",
           "score": 0
         }
       ],
@@ -104,9 +102,9 @@
         {
           "id": "S4",
           "label": "Coinbase Premium Deviation",
-          "active": true,
-          "value": "-0.114%",
-          "score": 1
+          "active": false,
+          "value": "-0.100%",
+          "score": 0
         },
         {
           "id": "S5",
@@ -136,9 +134,9 @@
         {
           "id": "S8",
           "label": "Options 25\u0394 Skew",
-          "active": false,
-          "value": "0.00",
-          "score": 0
+          "active": true,
+          "value": "-6.50",
+          "score": 1
         }
       ]
     },
@@ -154,8 +152,8 @@
       "oi_implosion": 0,
       "divergence": 0
     },
-    "timestamp": "2026-08-01T13:45:38.361804+00:00",
-    "_collected": "2026-08-01T13:45:31Z",
+    "timestamp": "2026-08-01T14:01:44.400070+00:00",
+    "_collected": "2026-08-01T14:01:36Z",
     "network_health": {
       "hash_rate_ehs": 0,
       "hash_rate_drawdown_pct": 0,
