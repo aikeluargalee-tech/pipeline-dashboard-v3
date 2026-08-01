@@ -38,7 +38,7 @@ ASSETS.mkdir(exist_ok=True)
 
 # Paths
 HOME = Path.home()
-FREE_MCP = HOME / "pipeline-dashboard V2" / "scripts" / "producers"
+FREE_MCP = Path(__file__).parent / "scripts" / "producers"
 AI3_STATE = HOME / ".gemini/antigravity/scratch/sigma_trading_engine/ai3_watch_state.json"
 HEATMAP_JSON = Path("/tmp/btc_heatmap_clusters.json")
 V7_IMAGES = Path("/tmp/btc_v7_images.json")

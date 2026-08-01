@@ -17,7 +17,7 @@ from typing import List, Dict
 # Add project root and old chart-patterns scripts dir (modules live there)
 _ROOT = Path(__file__).parent.parent
 _scripts = Path(__file__).parent
-_old_scripts = Path("/home/maswilee/btc-chart-patterns/scripts")
+_old_scripts = Path("/home/susiwilee/btc-chart-patterns/scripts")
 for _d in [_ROOT, _scripts, _old_scripts]:
     if str(_d) not in sys.path:
         sys.path.insert(0, str(_d))

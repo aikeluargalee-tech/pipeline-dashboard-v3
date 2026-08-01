@@ -1,77 +1,77 @@
 {
-  "packet_id": 147,
-  "captured_at": "2026-07-26T13:31:44Z",
+  "packet_id": 148,
+  "captured_at": "2026-08-01T13:22:27Z",
   "btc": {
-    "price": 64460.0,
-    "session_high": 64662.99,
-    "session_low": 64116.97,
-    "change_pct": 0.51,
-    "vwap": 64407.55470764,
-    "volume_btc": 6209.03617,
-    "volume_usd": 399908836.8009682,
+    "price": 63091.89,
+    "session_high": 63849.19,
+    "session_low": 62466.0,
+    "change_pct": -1.14,
+    "vwap": 62961.62426433,
+    "volume_btc": 14044.78416,
+    "volume_usd": 884282423.1555055,
     "break_level": 58872,
-    "gap_to_break_pct": 9.49
+    "gap_to_break_pct": 7.17
   },
   "funding_rate": {
-    "value_pct": 0.0086,
+    "value_pct": 0.0027,
     "next_settlement_utc": null,
-    "trend": "rising",
+    "trend": "stable",
     "consecutive_negative_count": 0
   },
   "taker_volume": {
-    "ratio_24h": 0.985,
-    "delta_sum_6": -42.07,
-    "delta_trend": "NEUTRAL",
+    "ratio_24h": 1.084,
+    "delta_sum_6": 328.85,
+    "delta_trend": "BUYING",
     "deltas_6": [
-      87.72,
-      -209.15,
-      155.49,
-      -189.89,
-      12.35,
-      101.41
+      326.68,
+      -107.51,
+      -27.18,
+      55.59,
+      -53.85,
+      135.12
     ]
   },
   "mstr": {
-    "price": 91.67,
-    "prev_close": 93.63,
-    "change_pct": -2.09,
-    "volume": 13044000,
-    "avg_volume": 21934740,
-    "ma_50": 120.57,
-    "ma_200": 163.44,
+    "price": 93.28,
+    "prev_close": 97.74,
+    "change_pct": -4.56,
+    "volume": 20627800,
+    "avg_volume": 16123395,
+    "ma_50": 112.68,
+    "ma_200": 157.84,
     "buy_window": {
       "active": true,
       "window_start": "2026-07-01",
       "window_end": "2026-07-31",
-      "days_remaining": 5,
+      "days_remaining": -1,
       "announcement_detected": false,
       "consecutive_silent_sessions": 0
     },
-    "gap_to_trigger_pct": 22.23,
+    "gap_to_trigger_pct": 24.37,
     "trigger_price": 75.0
   },
   "vix": {
-    "value": 18.58,
+    "value": 15.99,
     "source": "FRED",
-    "captured_at": "2026-07-26",
+    "captured_at": "2026-08-01",
     "trigger_threshold": 25.0,
     "triggered": false,
     "stale": false
   },
   "us10y": {
-    "value": 4.679,
+    "value": 4.74,
     "source": "FRED",
-    "captured_at": "2026-07-26",
+    "captured_at": "2026-08-01",
     "trigger_threshold": 4.6,
     "triggered": true,
     "stale": false
   },
   "usdjpy": {
-    "value": 163.79,
+    "value": 157.4,
     "source": "live",
-    "captured_at": "2026-07-26T13:31:44Z",
-    "structural_above_162": true,
-    "consecutive_packets_above_162": 16,
+    "captured_at": "2026-08-01T13:22:27Z",
+    "structural_above_162": false,
+    "consecutive_packets_above_162": 0,
     "spike_threshold_pct": 2.0,
     "spike_detected": false,
     "compound_triggered": false
@@ -84,10 +84,10 @@
     "stale_warning": true
   },
   "triggers": {
-    "T1_mstr": "green",
+    "T1_mstr": "yellow",
     "T2_vix": "green",
     "T3_us10y": "red",
-    "T4_usdjpy": "yellow",
+    "T4_usdjpy": "green",
     "triggered_count": 1,
     "verdict": "WATCH",
     "verdict_emoji": "\ud83d\udfe1"
