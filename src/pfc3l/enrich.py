@@ -8,9 +8,19 @@ import json, os, sys
 from datetime import datetime, timezone
 from typing import Any
 
-REPO_ROOT = "/home/susiwilee/projects/pipeline-dashboard-v3"
-SIGNAL_JSON = REPO_ROOT + "/pfc3l/signal.json"
-DATA_JSON = REPO_ROOT + "/packet/data.json"
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+SIGNAL_JSON = os.path.join(REPO_ROOT, "pfc3l", "signal.json")
+DATA_JSON = os.path.join(REPO_ROOT, "packet", "data.json")
+
+
+def _to_float(v, default=0.0):
+    """Robust float conversion — packet uses 'FLAT', 'N/A', '' for missing numerics."""
+    if v is None:
+        return default
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return default
 
 
 def build_invalidation(state: str, data: dict) -> list[str]:
@@ -21,9 +31,9 @@ def build_invalidation(state: str, data: dict) -> list[str]:
     reference = data.get('reference', {})
     sr_1h = _parse_sr(reference.get('sr_1h')) if isinstance(reference.get('sr_1h'), str) else (reference.get('sr_1h') or {})
     sr_1d = _parse_sr(reference.get('sr_1d')) if isinstance(reference.get('sr_1d'), str) else (reference.get('sr_1d') or {})
-    fund = enriched.get('funding_rate', 0)
-    oi_d = critical.get('oi_delta_5m', 0)
-    taker = enriched.get('taker_buy_ratio', 0.5)
+    fund = _to_float(enriched.get('funding_rate'))
+    oi_d = _to_float(critical.get('oi_delta_5m', enriched.get('oi_delta')))
+    taker = _to_float(enriched.get('taker_buy_ratio', 0.5), 0.5)
 
     if 'LONG' in state:
         supp = sr_1h.get('support') or sr_1d.get('support')
@@ -93,7 +103,7 @@ def build_zones(data: dict) -> list[dict]:
     enriched = data.get('enriched', {})
     reference = data.get('reference', {})
     critical = data.get('critical', {})
-    price = enriched.get('price', 0) or (data.get('header', {}).get('price', 0))
+    price = enriched.get('btc_price', 0) or (data.get('header', {}).get('btc_price', 0))
     if not price or price <= 0:
         return []
     sr_1h = _parse_sr(reference.get('sr_1h')) if isinstance(reference.get('sr_1h'), str) else (reference.get('sr_1h') or {})

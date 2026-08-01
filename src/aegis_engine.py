@@ -35,6 +35,28 @@ price = enriched.get('btc_price', 0) or header.get('btc_price', 0) or 0
 def m(v):
     return f"${v:,.0f}" if v else "—"
 
+def _to_float(v, default=0.0):
+    """Robust float conversion — packet uses 'FLAT', 'N/A', '' for missing numerics."""
+    if v is None:
+        return default
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return default
+
+def _parse_sr_pair(sr_val):
+    """Parse 'S: 62100 | R: 64500' string → (support, resistance) floats."""
+    if not sr_val or not isinstance(sr_val, str):
+        return (None, None)
+    supp = res = None
+    m_s = __import__('re').search(r'S:\s*([\d.,]+)', sr_val)
+    m_r = __import__('re').search(r'R:\s*([\d.,]+)', sr_val)
+    if m_s:
+        supp = float(m_s.group(1).replace(',', ''))
+    if m_r:
+        res = float(m_r.group(1).replace(',', ''))
+    return (supp, res)
+
 def pct_str(v, scale=1):
     if v is None: return "—"
     return f"{v*scale:.4f}%"
@@ -62,9 +84,12 @@ else:
     data_health = "DATA_DEGRADED"
     health_reasons = dq_warnings[:3]
 
-# Nearest level from S/R bands (keys are flat: sr_1h_support / sr_1h_resistance)
-sr_1h_supp = enriched.get('sr_1h_support') or 0
-sr_1h_res = enriched.get('sr_1h_resistance') or 0
+# Nearest level from S/R bands (packet stores as 'S: X | R: Y' strings in reference)
+sr_1h_supp, sr_1h_res = _parse_sr_pair(reference.get('sr_1h'))
+if sr_1h_supp is None:
+    sr_1h_supp = _to_float(enriched.get('sr_1h_support'))
+if sr_1h_res is None:
+    sr_1h_res = _to_float(enriched.get('sr_1h_resistance'))
 rlvl = None
 ref_price = price
 if sr_1h_supp and sr_1h_res and ref_price:
@@ -78,12 +103,12 @@ if sr_1h_supp and sr_1h_res and ref_price:
                 'distance_pct': round(d_r/ref_price*100, 2)}
 
 # Breakout validator from critical data
-cvd = critical.get('cvd_per_tf', {}).get('1h', 0) or 0
-taker = enriched.get('taker_buy_ratio', 0.5)
-funding = enriched.get('funding_rate', 0)
-oi_delta = critical.get('oi_delta_5m', 0)
-atr = critical.get('atr_pct', 0)
-volume_ratio = critical.get('volume_ratio', 1.0)
+cvd = _to_float(critical.get('cvd_per_tf', {}).get('1h', 0))
+taker = _to_float(enriched.get('taker_buy_ratio', 0.5), 0.5)
+funding = _to_float(enriched.get('funding_rate'))
+oi_delta = _to_float(critical.get('oi_delta_5m', enriched.get('oi_delta')))
+atr = _to_float(critical.get('atr_pct'))
+volume_ratio = _to_float(critical.get('volume_ratio', 1.0), 1.0)
 
 # Level interaction
 distance_pct = rlvl['distance_pct'] if rlvl else 0
@@ -127,12 +152,12 @@ trap_scores['s2'] = 1 if abs(oi_delta) > 5 else 0
 # S3: OI–price divergence (oi_delta sign vs price move)
 s3 = 0
 oi_dir = 1 if oi_delta > 0 else -1
-price_dir = 1 if header.get('change_24h', 0) > 0 else -1
+price_dir = 1 if _to_float(header.get('change_24h', 0)) > 0 else -1
 if abs(oi_delta) > 3 and oi_dir != price_dir:
     s3 = 1
 trap_scores['s3'] = s3
 # S4: Coinbase premium deviation (>0.1% absolute)
-cb_prem = enriched.get('coinbase_premium', 0) or 0
+cb_prem = _to_float(enriched.get('coinbase_premium'))
 trap_scores['s4'] = 1 if abs(cb_prem) > 0.1 else 0
 # S5: CVD divergence (taker direction vs cvd direction)
 s5 = 0
@@ -306,10 +331,12 @@ cycle = {
 # Approved Levels (from flat S/R keys)
 # ═══════════════════════════════════════
 approved = []
-for tf, supp_key, res_key in [('1H', 'sr_1h_support', 'sr_1h_resistance'),
-                              ('1D', 'sr_1d_support', 'sr_1d_resistance')]:
-    supp_v = enriched.get(supp_key) or 0
-    res_v = enriched.get(res_key) or 0
+for tf, sr_key in [('1H', 'sr_1h'), ('1D', 'sr_1d')]:
+    supp_v, res_v = _parse_sr_pair(reference.get(sr_key))
+    if supp_v is None:
+        supp_v = _to_float(enriched.get(f'sr_{tf.lower()}_support'))
+    if res_v is None:
+        res_v = _to_float(enriched.get(f'sr_{tf.lower()}_resistance'))
     if supp_v and supp_v > 0:
         approved.append({"price": supp_v, "label": f"{tf} Support", "kind": "support", "source": "S/R Bands"})
     if res_v and res_v > 0:
