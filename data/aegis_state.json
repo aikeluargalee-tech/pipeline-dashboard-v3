@@ -1,15 +1,15 @@
 {
-  "generated": "2026-08-01T13:22:27.534879+00:00",
-  "generated_human": "2026-08-01 13:22:27 UTC",
+  "generated": "2026-08-01T13:23:15.401107+00:00",
+  "generated_human": "2026-08-01 13:23:15 UTC",
   "reference_price": 63092.0,
   "snapshot": {
     "data_health": "DATA_DEGRADED",
     "health_reasons": [
       "STALE cycle: missing",
-      "STALE vp: 35m behind AMT"
+      "STALE vp: 36m behind AMT"
     ],
     "price": 63092.0,
-    "observed_at": "2026-08-01T13:22:19Z"
+    "observed_at": "2026-08-01T13:23:07Z"
   },
   "latest_verdict": {
     "verdict": "NO_ACTIVE_VERDICT",
@@ -35,16 +35,21 @@
     ]
   },
   "active_event": {
-    "state": "IDLE",
+    "state": "CROSSED",
     "direction": "NONE"
   },
-  "nearest_level": null,
+  "nearest_level": {
+    "price": 63027.7,
+    "label": "1H Nearest Support",
+    "kind": "support",
+    "distance_pct": 0.1
+  },
   "breakout": {
     "level_interaction": {
-      "state": "IDLE",
-      "nearest_level": "\u2014",
-      "distance": "\u2014",
-      "direction": "\u2014",
+      "state": "APPROACHING_SUPPORT",
+      "nearest_level": "$63,028",
+      "distance": "0.1%",
+      "direction": "Below \u2192 support test",
       "bars_observed": 15,
       "close_beyond_level": "Yes",
       "retest_result": "N/A (not yet crossed)"
@@ -69,7 +74,7 @@
     "composite": 1,
     "actual_max": 8,
     "status": "CLEAR",
-    "_collected": "2026-08-01T13:22:19Z",
+    "_collected": "2026-08-01T13:23:07Z",
     "signals": {
       "leverage": [
         {
@@ -148,8 +153,8 @@
       "oi_implosion": 0,
       "divergence": 0
     },
-    "timestamp": "2026-08-01T13:22:27.534879+00:00",
-    "_collected": "2026-08-01T13:22:19Z",
+    "timestamp": "2026-08-01T13:23:15.401107+00:00",
+    "_collected": "2026-08-01T13:23:07Z",
     "network_health": {
       "hash_rate_ehs": 0,
       "hash_rate_drawdown_pct": 0,
@@ -167,5 +172,30 @@
     "rhodl_ratio": 0.11169999837875366,
     "realized_price": 52821.68
   },
-  "approved_levels": []
+  "approved_levels": [
+    {
+      "price": 63027.7,
+      "label": "1H Support",
+      "kind": "support",
+      "source": "S/R Bands"
+    },
+    {
+      "price": 63253.23,
+      "label": "1H Resistance",
+      "kind": "resistance",
+      "source": "S/R Bands"
+    },
+    {
+      "price": 62500.0,
+      "label": "1D Support",
+      "kind": "support",
+      "source": "S/R Bands"
+    },
+    {
+      "price": 66587.05,
+      "label": "1D Resistance",
+      "kind": "resistance",
+      "source": "S/R Bands"
+    }
+  ]
 }
