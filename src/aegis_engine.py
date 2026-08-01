@@ -28,7 +28,8 @@ status = data.get('status', {})
 black_swan = data.get('black_swan', {})
 header = data.get('header', {})
 
-price = enriched.get('price', 0)
+# price — actual key is btc_price (enriched) or header.btc_price
+price = enriched.get('btc_price', 0) or header.get('btc_price', 0) or 0
 
 # ─── Helper ───
 def m(v):
@@ -61,22 +62,20 @@ else:
     data_health = "DATA_DEGRADED"
     health_reasons = dq_warnings[:3]
 
-# Nearest level from S/R bands
-sr_1h = enriched.get('sr_1h', {})
+# Nearest level from S/R bands (keys are flat: sr_1h_support / sr_1h_resistance)
+sr_1h_supp = enriched.get('sr_1h_support') or 0
+sr_1h_res = enriched.get('sr_1h_resistance') or 0
 rlvl = None
 ref_price = price
-if sr_1h:
-    supp = sr_1h.get('support')
-    res = sr_1h.get('resistance')
-    if supp and res:
-        d_s = ref_price - supp
-        d_r = res - ref_price
-        if abs(d_s) < abs(d_r):
-            rlvl = {'price': supp, 'label': '1H Nearest Support', 'kind': 'support',
-                    'distance_pct': round(d_s/ref_price*100, 2)}
-        else:
-            rlvl = {'price': res, 'label': '1H Nearest Resistance', 'kind': 'resistance',
-                    'distance_pct': round(d_r/ref_price*100, 2)}
+if sr_1h_supp and sr_1h_res and ref_price:
+    d_s = ref_price - sr_1h_supp
+    d_r = sr_1h_res - ref_price
+    if abs(d_s) < abs(d_r):
+        rlvl = {'price': sr_1h_supp, 'label': '1H Nearest Support', 'kind': 'support',
+                'distance_pct': round(d_s/ref_price*100, 2)}
+    else:
+        rlvl = {'price': sr_1h_res, 'label': '1H Nearest Resistance', 'kind': 'resistance',
+                'distance_pct': round(d_r/ref_price*100, 2)}
 
 # Breakout validator from critical data
 cvd = critical.get('cvd_per_tf', {}).get('1h', 0) or 0
@@ -119,8 +118,39 @@ if abs(funding) > 0.001:
 if abs(oi_delta) > 5:
     leverage = "OI_SPIKE"
 
-# Verdict
-trap_env_risk = context.get('trap_signals', {}).get('total_score', 0)
+# Trap environment — compute S1-S8 from real data (no trap_signals key exists in data.json)
+trap_scores = {}
+# S1: Funding rate extremity
+trap_scores['s1'] = 1 if abs(funding) > 0.0005 else 0
+# S2: OI spike >5%/1h
+trap_scores['s2'] = 1 if abs(oi_delta) > 5 else 0
+# S3: OI–price divergence (oi_delta sign vs price move)
+s3 = 0
+oi_dir = 1 if oi_delta > 0 else -1
+price_dir = 1 if header.get('change_24h', 0) > 0 else -1
+if abs(oi_delta) > 3 and oi_dir != price_dir:
+    s3 = 1
+trap_scores['s3'] = s3
+# S4: Coinbase premium deviation (>0.1% absolute)
+cb_prem = enriched.get('coinbase_premium', 0) or 0
+trap_scores['s4'] = 1 if abs(cb_prem) > 0.1 else 0
+# S5: CVD divergence (taker direction vs cvd direction)
+s5 = 0
+if cvd != 0 and abs(cvd) > 0.5:
+    s5 = 1 if (taker > 0.5) != (cvd > 0) else 0
+trap_scores['s5'] = s5
+# S6/S7: on-chain netflow — not available in packet, leave 0
+trap_scores['s6'] = 0
+trap_scores['s7'] = 0
+# S8: options skew — from reference
+try:
+    skew = float(reference.get('options_skew_25d', 0) or 0)
+except (TypeError, ValueError):
+    skew = 0.0
+trap_scores['s8'] = 1 if abs(skew) > 2 else 0
+
+trap_total = sum(trap_scores.values())
+trap_env_risk = trap_total
 trap_prob = min(trap_env_risk / 8, 1.0)
 verdict = "UNCONFIRMED_BREAK" if trap_prob > 0.5 else \
           "TRAP_LIKELY" if trap_prob > 0.375 else \
@@ -187,12 +217,12 @@ breakout = {
 # ═══════════════════════════════════════
 # SECTION 3: Trap Environment
 # ═══════════════════════════════════════
-signals = context.get('trap_signals', {})
+signals = trap_scores
 env = {
-    "composite": signals.get('total_score', 0),
+    "composite": trap_total,
     "actual_max": 8,
-    "status": "TRAP_ACTIVE" if signals.get('total_score', 0) >= 6 else
-             "CAUTION" if signals.get('total_score', 0) >= 3 else
+    "status": "TRAP_ACTIVE" if trap_total >= 6 else
+             "CAUTION" if trap_total >= 3 else
              "CLEAR",
     "_collected": header.get('generated_timestamp', now_ts),
     "signals": {
@@ -201,12 +231,12 @@ env = {
              "value": pct_str(funding), "score": signals.get('s1', 0)},
             {"id": "S2", "label": "OI Spike >5%/1h", "active": abs(oi_delta) > 5,
              "value": f"{oi_delta:.1f}%", "score": signals.get('s2', 0)},
-            {"id": "S3", "label": "OI–Price Divergence", "active": False,
-             "value": "—", "score": signals.get('s3', 0)},
+            {"id": "S3", "label": "OI–Price Divergence", "active": bool(trap_scores['s3']),
+             "value": f"OI {oi_delta:+.1f}% vs price {header.get('change_24h',0):+.2f}%", "score": signals.get('s3', 0)},
         ],
         "orderflow": [
-            {"id": "S4", "label": "Coinbase Premium Deviation", "active": False,
-             "value": "—", "score": signals.get('s4', 0)},
+            {"id": "S4", "label": "Coinbase Premium Deviation", "active": bool(trap_scores['s4']),
+             "value": f"{cb_prem:+.3f}%", "score": signals.get('s4', 0)},
             {"id": "S5", "label": "CVD Divergence", "active": cvd != 0 and ((taker > 0.5) != (cvd > 0)),
              "value": f"CVD {cvd}", "score": signals.get('s5', 0)},
         ],
@@ -217,11 +247,11 @@ env = {
              "value": "—", "score": signals.get('s7', 0)},
         ],
         "options": [
-            {"id": "S8", "label": "Options 25Δ Skew", "active": False,
-             "value": "—", "score": signals.get('s8', 0)},
+            {"id": "S8", "label": "Options 25Δ Skew", "active": bool(trap_scores['s8']),
+             "value": f"{skew:.2f}", "score": signals.get('s8', 0)},
         ],
     },
-    "structural_backdrop": "Accumulation Zone" if enriched.get('mvrv_z', 0) < 1 else "Neutral",
+    "structural_backdrop": "Accumulation Zone" if (reference.get('brk', {}).get('mvrv', 0) or 0) < 1 else "Neutral",
 }
 
 # ═══════════════════════════════════════
@@ -258,31 +288,32 @@ crash_data = {
 }
 
 # ═══════════════════════════════════════
-# Cycle data
+# Cycle data — from reference.brk (mvrv, sopr, nupl, etc.)
 # ═══════════════════════════════════════
+brk = reference.get('brk', {})
 cycle = {
-    "mvrv_z": enriched.get('mvrv_z'),
-    "sopr": enriched.get('sopr'),
-    "nupl": enriched.get('nupl'),
-    "lth_sopr_24h": enriched.get('lth_sopr'),
-    "supply_in_profit_share": enriched.get('supply_in_profit'),
+    "mvrv_z": brk.get('mvrv'),
+    "sopr": brk.get('sopr_24h'),
+    "nupl": brk.get('nupl'),
+    "lth_sopr_24h": brk.get('lth_sopr_24h'),
+    "supply_in_profit_share": brk.get('supply_in_profit_share'),
+    "puell_multiple": brk.get('puell_multiple'),
+    "rhodl_ratio": brk.get('rhodl_ratio'),
+    "realized_price": brk.get('realized_price'),
 }
 
 # ═══════════════════════════════════════
-# Approved Levels (from S/R bands)
+# Approved Levels (from flat S/R keys)
 # ═══════════════════════════════════════
 approved = []
-for tf, tf_data in [('1H', enriched.get('sr_1h', {})), ('1D', enriched.get('sr_1d', {})),
-                     ('4H', enriched.get('sr_4h', {}))]:
-    for kind in ['support', 'resistance']:
-        v = tf_data.get(kind)
-        if v and v > 0:
-            approved.append({
-                "price": v,
-                "label": f"{tf} {kind.title()}",
-                "kind": kind,
-                "source": "S/R Bands",
-            })
+for tf, supp_key, res_key in [('1H', 'sr_1h_support', 'sr_1h_resistance'),
+                              ('1D', 'sr_1d_support', 'sr_1d_resistance')]:
+    supp_v = enriched.get(supp_key) or 0
+    res_v = enriched.get(res_key) or 0
+    if supp_v and supp_v > 0:
+        approved.append({"price": supp_v, "label": f"{tf} Support", "kind": "support", "source": "S/R Bands"})
+    if res_v and res_v > 0:
+        approved.append({"price": res_v, "label": f"{tf} Resistance", "kind": "resistance", "source": "S/R Bands"})
 
 # ═══════════════════════════════════════
 # Assemble full state

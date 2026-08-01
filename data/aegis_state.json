@@ -1,22 +1,37 @@
 {
-  "generated": "2026-07-31T02:26:58.104366+00:00",
-  "generated_human": "2026-07-31 02:26:58 UTC",
-  "reference_price": 0,
+  "generated": "2026-08-01T12:57:45.774346+00:00",
+  "generated_human": "2026-08-01 12:57:45 UTC",
+  "reference_price": 63107.0,
   "snapshot": {
-    "data_health": "DATA_DEGRADED",
+    "data_health": "DATA_HEALTHY",
     "health_reasons": [
-      "STALE cycle: missing",
-      "STALE vp: 625m behind AMT"
+      "All feeds passed"
     ],
-    "price": 0,
-    "observed_at": "2026-07-31T02:11:59Z"
+    "price": 63107.0,
+    "observed_at": "2026-08-01T12:57:39Z"
   },
   "latest_verdict": {
     "verdict": "NO_ACTIVE_VERDICT",
-    "trap_probability": 0.0,
+    "trap_probability": 0.25,
     "confidence": 100,
     "risk_action": "MONITOR",
-    "evidence": []
+    "evidence": [
+      {
+        "label": "Taker Buy Ratio",
+        "value": "51.5%",
+        "effect": -0.015000000000000013
+      },
+      {
+        "label": "Funding Rate",
+        "value": "0.0000%",
+        "effect": 0.02503
+      },
+      {
+        "label": "OI 5m Delta",
+        "value": "0%",
+        "effect": 0.0
+      }
+    ]
   },
   "active_event": {
     "state": "IDLE",
@@ -35,8 +50,8 @@
     },
     "market_evidence": {
       "relative_volume": "1.0x",
-      "taker_buy_sell": "51.7% buy",
-      "funding_rate": "0.0001%",
+      "taker_buy_sell": "51.5% buy",
+      "funding_rate": "0.0000%",
       "oi_delta_5m": "0.0%",
       "atr_14": "0.00%"
     },
@@ -46,21 +61,21 @@
       "aggression": "BALANCED",
       "leverage": "NORMAL",
       "catalyst": "NONE_DETECTED",
-      "environment": "Clear"
+      "environment": "Trap risk 2/8"
     }
   },
   "trap_environment": {
-    "composite": 0,
+    "composite": 2,
     "actual_max": 8,
     "status": "CLEAR",
-    "_collected": "2026-07-31T02:11:59Z",
+    "_collected": "2026-08-01T12:57:39Z",
     "signals": {
       "leverage": [
         {
           "id": "S1",
           "label": "Funding Rate Extremity",
           "active": false,
-          "value": "0.0001%",
+          "value": "0.0000%",
           "score": 0
         },
         {
@@ -74,7 +89,7 @@
           "id": "S3",
           "label": "OI\u2013Price Divergence",
           "active": false,
-          "value": "\u2014",
+          "value": "OI +0.0% vs price -0.88%",
           "score": 0
         }
       ],
@@ -82,9 +97,9 @@
         {
           "id": "S4",
           "label": "Coinbase Premium Deviation",
-          "active": false,
-          "value": "\u2014",
-          "score": 0
+          "active": true,
+          "value": "-0.112%",
+          "score": 1
         },
         {
           "id": "S5",
@@ -114,13 +129,13 @@
         {
           "id": "S8",
           "label": "Options 25\u0394 Skew",
-          "active": false,
-          "value": "\u2014",
-          "score": 0
+          "active": true,
+          "value": "-6.60",
+          "score": 1
         }
       ]
     },
-    "structural_backdrop": "Accumulation Zone"
+    "structural_backdrop": "Neutral"
   },
   "crash_precursor": {
     "composite": 0,
@@ -132,8 +147,8 @@
       "oi_implosion": 0,
       "divergence": 0
     },
-    "timestamp": "2026-07-31T02:26:58.104366+00:00",
-    "_collected": "2026-07-31T02:11:59Z",
+    "timestamp": "2026-08-01T12:57:45.774346+00:00",
+    "_collected": "2026-08-01T12:57:39Z",
     "network_health": {
       "hash_rate_ehs": 0,
       "hash_rate_drawdown_pct": 0,
@@ -142,11 +157,14 @@
     }
   },
   "cycle": {
-    "mvrv_z": null,
-    "sopr": null,
-    "nupl": null,
-    "lth_sopr_24h": null,
-    "supply_in_profit_share": null
+    "mvrv_z": 1.1934000253677368,
+    "sopr": 0.9925047858118559,
+    "nupl": 0.16200000047683716,
+    "lth_sopr_24h": 0.9456315284414919,
+    "supply_in_profit_share": 51.40999984741211,
+    "puell_multiple": 0.7287999987602234,
+    "rhodl_ratio": 0.11169999837875366,
+    "realized_price": 52821.68
   },
   "approved_levels": []
 }
