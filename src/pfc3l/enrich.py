@@ -79,23 +79,31 @@ def build_invalidation(state: str, data: dict) -> list[str]:
 
 
 def _parse_sr(sr_val):
-    """Parse S/R string format 'S: 64000 | R: 66000' into dict."""
+    """Parse S/R string format 'S: $63,028 / $62,782 | R: $63,253' into dict.
+    Returns nearest (first) support and resistance — multi-level strings
+    ($ formatted, slash-separated) are handled.
+    """
     result = {}
     if not sr_val or not isinstance(sr_val, str):
         return result
+    import re
     parts = sr_val.split("|")
     for p in parts:
         p = p.strip()
         if p.startswith("S:"):
-            try:
-                result['support'] = float(p.split(":")[1].strip())
-            except (ValueError, IndexError):
-                pass
+            m = re.search(r"[\d.,]+", p)
+            if m:
+                try:
+                    result['support'] = float(m.group(0).replace(",", ""))
+                except ValueError:
+                    pass
         elif p.startswith("R:"):
-            try:
-                result['resistance'] = float(p.split(":")[1].strip())
-            except (ValueError, IndexError):
-                pass
+            m = re.search(r"[\d.,]+", p)
+            if m:
+                try:
+                    result['resistance'] = float(m.group(0).replace(",", ""))
+                except ValueError:
+                    pass
     return result
 
 def build_zones(data: dict) -> list[dict]:

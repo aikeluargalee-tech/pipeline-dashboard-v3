@@ -175,8 +175,22 @@ def main():
             modules["trp_check"] = {"state": "PROCEED", "detail": "No TRP signal"}
 
         # elon / ai_bubble / quantum: no live source without trading-workflow collectors
+        # ai_bubble: derive from AI-Factors tripwires TW1 (capital reversal — AI equity
+        # correction + ETF outflows) and TW4 (hyperscaler capex cuts / AI-demand signal)
+        ai_factors = packet.get("ai_factors", {}) or {}
+        tw = ai_factors.get("tripwires", {}) or {}
+        tw_states = [str(v.get("state", "")).upper() for v in tw.values() if isinstance(v, dict)]
+        tw_active = [k for k, v in tw.items() if isinstance(v, dict) and str(v.get("state", "")).upper() in ("ACTIVE", "TRIGGERED", "ELEVATED")]
+        ai_bubble_score = len(tw_active)
+        if ai_bubble_score >= 2:
+            modules["ai_bubble"] = {"state": "TIGHTENED", "detail": f"{ai_bubble_score} AI-bubble tripwires active: {', '.join(tw_active)}"}
+        elif ai_bubble_score == 1 or "WATCH" in tw_states:
+            modules["ai_bubble"] = {"state": "TIGHTENED", "detail": "AI-bubble tripwire in WATCH state (TW1 capital reversal)"}
+        else:
+            modules["ai_bubble"] = {"state": "PROCEED", "detail": "No AI-bubble tripwires active"}
+        # elon / quantum: no legitimate data source without trading-workflow collectors
+        # (X/Twitter scraping is not viable; quantum-news monitoring needs a new GDELT feed)
         modules["elon"] = {"state": "Offline", "detail": "No data source (trading-workflow not migrated)"}
-        modules["ai_bubble"] = {"state": "Offline", "detail": "No data source (trading-workflow not migrated)"}
         modules["quantum"] = {"state": "Offline", "detail": "No data source (trading-workflow not migrated)"}
 
     # 2. Add stablecoins module
