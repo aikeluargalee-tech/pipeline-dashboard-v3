@@ -1,9 +1,9 @@
 {
   "signal": {
-    "id": "pfc3l-20260801-132936",
-    "ts": "2026-08-01T13:29:36.685455+00:00",
+    "id": "pfc3l-20260801-134538",
+    "ts": "2026-08-01T13:45:38.305794+00:00",
     "symbol": "BTC/USD",
-    "reference_price": 63084.0,
+    "reference_price": 63080.0,
     "state": "NO_TRADE",
     "confidence": 0,
     "lifecycle_state": "ACTIVE",
@@ -24,13 +24,13 @@
       {
         "price": 63082,
         "label": "VP POC",
-        "dist_pct": -0.0,
+        "dist_pct": 0.0,
         "side": "below"
       },
       {
         "price": 63028,
         "label": "1H S",
-        "dist_pct": -0.09,
+        "dist_pct": -0.08,
         "side": "below"
       },
       {
@@ -42,13 +42,13 @@
       {
         "price": 62500,
         "label": "1D S",
-        "dist_pct": -0.93,
+        "dist_pct": -0.92,
         "side": "below"
       },
       {
         "price": 66587,
         "label": "1D R",
-        "dist_pct": 5.55,
+        "dist_pct": 5.56,
         "side": "above"
       }
     ],
@@ -149,13 +149,13 @@
     "healthy_feeds": 2,
     "total_critical_feeds": 3,
     "reasons": [
-      "Volume Profile stale (43m)",
-      "STALE regime: 31m behind AMT",
-      "STALE macro: 31m behind AMT",
-      "STALE derivs: 31m behind AMT",
+      "Volume Profile stale (59m)",
+      "STALE regime: 47m behind AMT",
+      "STALE macro: 47m behind AMT",
+      "STALE derivs: 47m behind AMT",
       "STALE cycle: missing",
-      "STALE vp: 42m behind AMT",
-      "STALE brk: 31m behind AMT"
+      "STALE vp: 58m behind AMT",
+      "STALE brk: 47m behind AMT"
     ],
     "vetoes": [],
     "feeds": {
@@ -163,19 +163,19 @@
         "label": "AMT feed",
         "healthy": true,
         "stale": false,
-        "age": "17s"
+        "age": "18s"
       },
       "volume_profile": {
         "label": "Volume Profile",
         "healthy": false,
         "stale": true,
-        "age": "2585s"
+        "age": "3547s"
       },
       "ai_factors": {
         "label": "AI Factors",
         "healthy": true,
         "stale": false,
-        "age": "15s"
+        "age": "17s"
       },
       "trap_monitor": {
         "label": "Trap Monitor",
@@ -185,5 +185,5 @@
       }
     }
   },
-  "enriched_at": "2026-08-01T13:29:36.705452+00:00"
+  "enriched_at": "2026-08-01T13:45:38.332183+00:00"
 }
