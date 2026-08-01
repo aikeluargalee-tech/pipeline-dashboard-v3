@@ -1,7 +1,79 @@
 {
-  "ts": "2026-08-01T12:41:45Z",
-  "mvrv_z": 0,
-  "nupl": 0,
-  "lth_sopr": 0,
-  "puell_multiple": 0
+  "mvrv_z": 0.4093,
+  "sopr": 0.9947,
+  "puell_multiple": 0.8013,
+  "netflow_7d": 6661.69,
+  "sth_realized_price": null,
+  "sth_net_position_change": null,
+  "regime": "neutral",
+  "composite_score": 32.8,
+  "cycle_phase": "medium",
+  "distribution": {
+    "timestamp": "2026-08-01 12:42 UTC",
+    "source": "blockchair.com",
+    "total_addresses": 59461902,
+    "total_btc": 20064227.29155096,
+    "tiers": [
+      {
+        "range": "100+ BTC",
+        "addresses": "2,081,166",
+        "btc": "12,339,499",
+        "pct": "61.50%",
+        "pctNum": 61.5,
+        "color": "#f59e0b"
+      },
+      {
+        "range": "1 \u2013 100 BTC",
+        "addresses": "951,390",
+        "btc": "6,320,231",
+        "pct": "31.50%",
+        "pctNum": 31.5,
+        "color": "#3b82f6"
+      },
+      {
+        "range": "0.001 \u2013 1 BTC",
+        "addresses": "24,379,379",
+        "btc": "1,404,495",
+        "pct": "7.00%",
+        "pctNum": 7.0,
+        "color": "#6366f1"
+      },
+      {
+        "range": "<0.001 BTC",
+        "addresses": "32,049,965",
+        "btc": "6,019",
+        "pct": "0.03%",
+        "pctNum": 0.03,
+        "color": "#64748b"
+      }
+    ]
+  },
+  "options_skew": {
+    "timestamp": "2026-08-01 12:42 UTC",
+    "spot": 63130.28,
+    "skew_25d": -6.6,
+    "put_25d_iv": 36.6,
+    "call_25d_iv": 30.0,
+    "put_name": "BTC-14AUG26-60000-P",
+    "call_name": "BTC-14AUG26-66000-C",
+    "label": "Elevated hedging \u2014 institutions buying downside protection",
+    "emoji": "\ud83d\udfe1",
+    "display": "\ud83d\udfe1 Options skew (25\u0394): -6.6% \u2014 elevated hedging \u2014 institutions buying downside protection"
+  },
+  "nupl": 0.16200000047683716,
+  "rhodl_ratio": 0.11110000312328339,
+  "lth_sopr_24h": 0.9479842293864655,
+  "sth_sopr_24h": 0.9956780710686826,
+  "supply_in_profit_share": 51.47999954223633,
+  "mvrv": 1.1934000253677368,
+  "realized_price": 52822.1,
+  "lth_net_realized_pnl": 1245886.72,
+  "sth_net_realized_pnl": -234534.61,
+  "utxos_1y_sopr": 1.111234758907106,
+  "hash_rate_ehs": 1.0291003697843431e+21,
+  "hash_rate_drawdown_pct": -24.639999389648438,
+  "fee_rate_sat_vb": 1.207,
+  "difficulty": 126231507121868.19,
+  "_brk_fetched_at": "2026-08-01T04:41:21.800115+00:00",
+  "_collected": "2026-08-01 12:43 UTC"
 }
