@@ -1,5 +1,43 @@
 {
-  "status": "inactive",
-  "reason": "Regime only 12min old \u2014 wait for stabilization",
-  "timestamp": "2026-08-01T12:58:31.613270+00:00"
+  "strategy": "Mean Reversion + Vol Filter",
+  "version": "1.0.0",
+  "mode": "LOOSE",
+  "signal": "NO_SIGNAL",
+  "timestamp": "2026-08-01T13:46:10.125481+00:00",
+  "btc_price": 63077.53,
+  "mean_20h": 63028.01,
+  "atr_pct": 1.69,
+  "atr_data_valid": true,
+  "atr_price": 1066.01,
+  "rsi_14": 41.6,
+  "confidence": "LOW",
+  "position_size_pct": 0.3,
+  "max_hold_hours": 8,
+  "stop_distance_usd": 2132.02,
+  "entry_price": null,
+  "stop_loss": null,
+  "tp_primary": null,
+  "tp_partial": null,
+  "tp_partial_pct": 0.5,
+  "rr_ratio": null,
+  "long_checks": {
+    "rsi": false,
+    "taker_ratio": false,
+    "cvd": true,
+    "oi_delta": true,
+    "funding": true,
+    "liquidity": true,
+    "range_guard": "BLOCKED: stop 3.4% exceeds 20h low range 1.0%"
+  },
+  "short_checks": {
+    "rsi": false,
+    "taker_ratio": false,
+    "cvd": false,
+    "oi_delta": true,
+    "funding": true,
+    "liquidity": true,
+    "range_guard": "BLOCKED: stop 3.4% exceeds 20h high range 0.7%"
+  },
+  "invalidation_triggers": [],
+  "regime": "RANGING"
 }
