@@ -188,10 +188,25 @@ def main():
             modules["ai_bubble"] = {"state": "TIGHTENED", "detail": "AI-bubble tripwire in WATCH state (TW1 capital reversal)"}
         else:
             modules["ai_bubble"] = {"state": "PROCEED", "detail": "No AI-bubble tripwires active"}
-        # elon / quantum: no legitimate data source without trading-workflow collectors
-        # (X/Twitter scraping is not viable; quantum-news monitoring needs a new GDELT feed)
-        modules["elon"] = {"state": "Offline", "detail": "No data source (trading-workflow not migrated)"}
-        modules["quantum"] = {"state": "Offline", "detail": "No data source (trading-workflow not migrated)"}
+        # elon / quantum: from GDELT news collector (fetch_gate0_news.py) —
+        # quantum-threat + Musk-crypto signals, cached hourly.
+        gate0_news = read_json(os.path.join(SITE, "data/gate0_news.json")) or {}
+        q_news = gate0_news.get("quantum", {}) or {}
+        e_news = gate0_news.get("elon", {}) or {}
+        q_state = str(q_news.get("state", "CLEAR")).upper()
+        e_state = str(e_news.get("state", "CLEAR")).upper()
+        if q_state == "ELEVATED":
+            modules["quantum"] = {"state": "TIGHTENED", "detail": f"Quantum-crypto news: {q_news.get('article_count', 0)} articles, severity {q_news.get('severity', 0)}"}
+        elif q_state == "WATCH":
+            modules["quantum"] = {"state": "TIGHTENED", "detail": f"Quantum-crypto news watch: {q_news.get('article_count', 0)} articles"}
+        else:
+            modules["quantum"] = {"state": "PROCEED", "detail": "No quantum-crypto threat news (GDELT)"}
+        if e_state == "ELEVATED":
+            modules["elon"] = {"state": "TIGHTENED", "detail": f"Elon crypto news: {e_news.get('article_count', 0)} articles, severity {e_news.get('severity', 0)}"}
+        elif e_state == "WATCH":
+            modules["elon"] = {"state": "TIGHTENED", "detail": f"Elon crypto news watch: {e_news.get('article_count', 0)} articles"}
+        else:
+            modules["elon"] = {"state": "PROCEED", "detail": "No Elon crypto news (GDELT)"}
 
     # 2. Add stablecoins module
     stablecoins_raw = read_json("/tmp/btc_stablecoin_state.json")

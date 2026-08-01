@@ -3,6 +3,7 @@
   "sources": [
     "trp_check",
     "ai_bubble",
+    "quantum",
     "geopolitical"
   ],
   "rules": {
@@ -29,13 +30,13 @@
       "state": "TIGHTENED",
       "detail": "AI-bubble tripwire in WATCH state (TW1 capital reversal)"
     },
-    "elon": {
-      "state": "Offline",
-      "detail": "No data source (trading-workflow not migrated)"
-    },
     "quantum": {
-      "state": "Offline",
-      "detail": "No data source (trading-workflow not migrated)"
+      "state": "TIGHTENED",
+      "detail": "Quantum-crypto news: 5 articles, severity 7"
+    },
+    "elon": {
+      "state": "PROCEED",
+      "detail": "No Elon crypto news (GDELT)"
     },
     "stablecoins": {
       "state": "PROCEED",
@@ -51,9 +52,9 @@
     },
     "geopolitical": {
       "state": "TIGHTENED",
-      "detail": "Tier FADE geopolitical signal: neutral \u2014 0 signals today"
+      "detail": "Tier FADE geopolitical signal: neutral \u2014 6 signals today"
     }
   },
-  "timestamp": "2026-08-01 13:46 UTC",
-  "_collected": "2026-08-01 13:46 UTC"
+  "timestamp": "2026-08-01 14:26 UTC",
+  "_collected": "2026-08-01 14:26 UTC"
 }
