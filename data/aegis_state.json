@@ -1,16 +1,14 @@
 {
-  "generated": "2026-08-02T13:58:29.373530+00:00",
-  "generated_human": "2026-08-02 13:58:29 UTC",
-  "reference_price": 63116.0,
+  "generated": "2026-08-02T15:05:59.692866+00:00",
+  "generated_human": "2026-08-02 15:05:59 UTC",
+  "reference_price": 63079.0,
   "snapshot": {
-    "data_health": "DATA_DEGRADED",
+    "data_health": "DATA_HEALTHY",
     "health_reasons": [
-      "STALE regime: 432m behind AMT",
-      "STALE macro: 432m behind AMT",
-      "STALE derivs: 432m behind AMT"
+      "All feeds passed"
     ],
-    "price": 63116.0,
-    "observed_at": "2026-08-02T13:58:16Z"
+    "price": 63079.0,
+    "observed_at": "2026-08-02T14:14:47Z"
   },
   "latest_verdict": {
     "verdict": "NO_ACTIVE_VERDICT",
@@ -20,13 +18,13 @@
     "evidence": [
       {
         "label": "Taker Buy Ratio",
-        "value": "50.9%",
-        "effect": -0.009000000000000008
+        "value": "52.2%",
+        "effect": -0.02200000000000002
       },
       {
         "label": "Funding Rate",
         "value": "0.0001%",
-        "effect": 0.09866
+        "effect": 0.08642
       },
       {
         "label": "OI 5m Delta",
@@ -40,16 +38,16 @@
     "direction": "NONE"
   },
   "nearest_level": {
-    "price": 62782.05,
+    "price": 63045.15,
     "label": "1H Nearest Support",
     "kind": "support",
-    "distance_pct": 0.53
+    "distance_pct": 0.05
   },
   "breakout": {
     "level_interaction": {
       "state": "APPROACHING_SUPPORT",
-      "nearest_level": "$62,782",
-      "distance": "0.53%",
+      "nearest_level": "$63,045",
+      "distance": "0.05%",
       "direction": "Below \u2192 support test",
       "bars_observed": 15,
       "close_beyond_level": "Yes",
@@ -57,13 +55,13 @@
     },
     "market_evidence": {
       "relative_volume": "1.0x",
-      "taker_buy_sell": "50.9% buy",
+      "taker_buy_sell": "52.2% buy",
       "funding_rate": "0.0001%",
       "oi_delta_5m": "0.0%",
       "atr_14": "0.00%"
     },
     "why_verdict": {
-      "acceptance": "UNCERTAIN",
+      "acceptance": "CLOSE_TO_LEVEL",
       "participation": "NORMAL",
       "aggression": "BALANCED",
       "leverage": "NORMAL",
@@ -75,7 +73,7 @@
     "composite": 2,
     "actual_max": 8,
     "status": "CLEAR",
-    "_collected": "2026-08-02T13:58:16Z",
+    "_collected": "2026-08-02T14:14:47Z",
     "signals": {
       "leverage": [
         {
@@ -96,7 +94,7 @@
           "id": "S3",
           "label": "OI\u2013Price Divergence",
           "active": false,
-          "value": "OI +0.0% vs price +0.68%",
+          "value": "OI +0.0% vs price +0.08%",
           "score": 0
         }
       ],
@@ -105,7 +103,7 @@
           "id": "S4",
           "label": "Coinbase Premium Deviation",
           "active": true,
-          "value": "-0.100%",
+          "value": "-0.105%",
           "score": 1
         },
         {
@@ -137,7 +135,7 @@
           "id": "S8",
           "label": "Options 25\u0394 Skew",
           "active": true,
-          "value": "-4.80",
+          "value": "-4.60",
           "score": 1
         }
       ]
@@ -154,8 +152,8 @@
       "oi_implosion": 0,
       "divergence": 0
     },
-    "timestamp": "2026-08-02T13:58:29.373530+00:00",
-    "_collected": "2026-08-02T13:58:16Z",
+    "timestamp": "2026-08-02T15:05:59.692866+00:00",
+    "_collected": "2026-08-02T14:14:47Z",
     "network_health": {
       "hash_rate_ehs": 0,
       "hash_rate_drawdown_pct": 0,
@@ -164,24 +162,24 @@
     }
   },
   "cycle": {
-    "mvrv_z": 1.194599986076355,
-    "sopr": 0.9813974259436322,
-    "nupl": 0.16279999911785126,
-    "lth_sopr_24h": 0.822543205655356,
-    "supply_in_profit_share": 51.59000015258789,
-    "puell_multiple": 0.7301999926567078,
-    "rhodl_ratio": 0.13339999318122864,
-    "realized_price": 52777.12
+    "mvrv_z": 1.1943000555038452,
+    "sopr": 0.9808852543536295,
+    "nupl": 0.16259999573230743,
+    "lth_sopr_24h": 0.8185756494919221,
+    "supply_in_profit_share": 51.31999969482422,
+    "puell_multiple": 0.7300999760627747,
+    "rhodl_ratio": 0.13439999520778656,
+    "realized_price": 52776.53
   },
   "approved_levels": [
     {
-      "price": 62782.05,
+      "price": 63045.15,
       "label": "1H Support",
       "kind": "support",
       "source": "S/R Bands"
     },
     {
-      "price": 63750.0,
+      "price": 63560.0,
       "label": "1H Resistance",
       "kind": "resistance",
       "source": "S/R Bands"
