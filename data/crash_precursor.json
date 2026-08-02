@@ -1,7 +1,19 @@
 {
   "composite": 0,
-  "alert_fired": false,
-  "signals": {},
   "status": "NORMAL",
-  "_collected": "2026-08-02 01:52 UTC"
+  "signals": {
+    "taker": 0,
+    "bid_wall": 0,
+    "funding": 0,
+    "oi_implosion": 0,
+    "divergence": 0
+  },
+  "timestamp": "2026-08-02T01:53:41.495711+00:00",
+  "_collected": "2026-08-02T01:53:30Z",
+  "network_health": {
+    "hash_rate_ehs": 0,
+    "hash_rate_drawdown_pct": 0,
+    "fee_rate_sat_vb": 0,
+    "difficulty": 0
+  }
 }
