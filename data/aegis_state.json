@@ -1,14 +1,16 @@
 {
-  "generated": "2026-08-02T02:08:45.402453+00:00",
-  "generated_human": "2026-08-02 02:08:45 UTC",
-  "reference_price": 63516.0,
+  "generated": "2026-08-02T02:24:50.272519+00:00",
+  "generated_human": "2026-08-02 02:24:50 UTC",
+  "reference_price": 63509.0,
   "snapshot": {
     "data_health": "DATA_DEGRADED",
     "health_reasons": [
-      "STALE cycle: missing"
+      "STALE regime: 32m behind AMT",
+      "STALE macro: 32m behind AMT",
+      "STALE derivs: 32m behind AMT"
     ],
-    "price": 63516.0,
-    "observed_at": "2026-08-02T02:08:32Z"
+    "price": 63509.0,
+    "observed_at": "2026-08-02T02:24:37Z"
   },
   "latest_verdict": {
     "verdict": "NO_ACTIVE_VERDICT",
@@ -41,13 +43,13 @@
     "price": 63045.15,
     "label": "1H Nearest Resistance",
     "kind": "resistance",
-    "distance_pct": -0.74
+    "distance_pct": -0.73
   },
   "breakout": {
     "level_interaction": {
       "state": "APPROACHING_RESISTANCE",
       "nearest_level": "$63,045",
-      "distance": "-0.74%",
+      "distance": "-0.73%",
       "direction": "Above \u2192 resistance test",
       "bars_observed": 15,
       "close_beyond_level": "Yes",
@@ -73,7 +75,7 @@
     "composite": 1,
     "actual_max": 8,
     "status": "CLEAR",
-    "_collected": "2026-08-02T02:08:32Z",
+    "_collected": "2026-08-02T02:24:37Z",
     "signals": {
       "leverage": [
         {
@@ -152,8 +154,8 @@
       "oi_implosion": 0,
       "divergence": 0
     },
-    "timestamp": "2026-08-02T02:08:45.402453+00:00",
-    "_collected": "2026-08-02T02:08:32Z",
+    "timestamp": "2026-08-02T02:24:50.272519+00:00",
+    "_collected": "2026-08-02T02:24:37Z",
     "network_health": {
       "hash_rate_ehs": 0,
       "hash_rate_drawdown_pct": 0,
