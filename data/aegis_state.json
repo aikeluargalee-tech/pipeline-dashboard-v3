@@ -1,16 +1,14 @@
 {
-  "generated": "2026-08-02T05:38:34.293526+00:00",
-  "generated_human": "2026-08-02 05:38:34 UTC",
-  "reference_price": 63450.0,
+  "generated": "2026-08-02T05:54:31.110022+00:00",
+  "generated_human": "2026-08-02 05:54:31 UTC",
+  "reference_price": 63455.0,
   "snapshot": {
     "data_health": "DATA_DEGRADED",
     "health_reasons": [
-      "STALE regime: 51m behind AMT",
-      "STALE macro: 51m behind AMT",
-      "STALE derivs: 51m behind AMT"
+      "STALE brk: 240m behind AMT"
     ],
-    "price": 63450.0,
-    "observed_at": "2026-08-02T05:38:26Z"
+    "price": 63455.0,
+    "observed_at": "2026-08-02T05:54:23Z"
   },
   "latest_verdict": {
     "verdict": "NO_ACTIVE_VERDICT",
@@ -20,13 +18,13 @@
     "evidence": [
       {
         "label": "Taker Buy Ratio",
-        "value": "51.2%",
-        "effect": -0.01200000000000001
+        "value": "50.9%",
+        "effect": -0.009000000000000008
       },
       {
         "label": "Funding Rate",
         "value": "0.0001%",
-        "effect": 0.07471
+        "effect": 0.09239
       },
       {
         "label": "OI 5m Delta",
@@ -43,13 +41,13 @@
     "price": 63750.0,
     "label": "1H Nearest Resistance",
     "kind": "resistance",
-    "distance_pct": 0.47
+    "distance_pct": 0.46
   },
   "breakout": {
     "level_interaction": {
       "state": "APPROACHING_RESISTANCE",
       "nearest_level": "$63,750",
-      "distance": "0.47%",
+      "distance": "0.46%",
       "direction": "Above \u2192 resistance test",
       "bars_observed": 15,
       "close_beyond_level": "Yes",
@@ -57,7 +55,7 @@
     },
     "market_evidence": {
       "relative_volume": "1.0x",
-      "taker_buy_sell": "51.2% buy",
+      "taker_buy_sell": "50.9% buy",
       "funding_rate": "0.0001%",
       "oi_delta_5m": "0.0%",
       "atr_14": "0.00%"
@@ -75,7 +73,7 @@
     "composite": 1,
     "actual_max": 8,
     "status": "CLEAR",
-    "_collected": "2026-08-02T05:38:26Z",
+    "_collected": "2026-08-02T05:54:23Z",
     "signals": {
       "leverage": [
         {
@@ -96,7 +94,7 @@
           "id": "S3",
           "label": "OI\u2013Price Divergence",
           "active": false,
-          "value": "OI +0.0% vs price +0.73%",
+          "value": "OI +0.0% vs price +0.66%",
           "score": 0
         }
       ],
@@ -104,9 +102,9 @@
         {
           "id": "S4",
           "label": "Coinbase Premium Deviation",
-          "active": true,
-          "value": "-0.106%",
-          "score": 1
+          "active": false,
+          "value": "-0.099%",
+          "score": 0
         },
         {
           "id": "S5",
@@ -136,9 +134,9 @@
         {
           "id": "S8",
           "label": "Options 25\u0394 Skew",
-          "active": false,
-          "value": "0.00",
-          "score": 0
+          "active": true,
+          "value": "-4.80",
+          "score": 1
         }
       ]
     },
@@ -154,8 +152,8 @@
       "oi_implosion": 0,
       "divergence": 0
     },
-    "timestamp": "2026-08-02T05:38:34.293526+00:00",
-    "_collected": "2026-08-02T05:38:26Z",
+    "timestamp": "2026-08-02T05:54:31.110022+00:00",
+    "_collected": "2026-08-02T05:54:23Z",
     "network_health": {
       "hash_rate_ehs": 0,
       "hash_rate_drawdown_pct": 0,
