@@ -1,16 +1,16 @@
 {
-  "packet_id": 177,
-  "captured_at": "2026-08-02T07:15:54Z",
+  "packet_id": 178,
+  "captured_at": "2026-08-02T13:58:56Z",
   "btc": {
-    "price": 63488.59,
-    "session_high": null,
-    "session_low": null,
-    "change_pct": 0.68,
-    "vwap": null,
-    "volume_btc": null,
-    "volume_usd": 3211671.38,
+    "price": 63119.22,
+    "session_high": 63634.0,
+    "session_low": 62275.0,
+    "change_pct": 0.08,
+    "vwap": 63086.72387163,
+    "volume_btc": 8430.97684,
+    "volume_usd": 531882707.873199,
     "break_level": 58872,
-    "gap_to_break_pct": 7.84
+    "gap_to_break_pct": 7.21
   },
   "funding_rate": {
     "value_pct": 0.0099,
@@ -19,19 +19,26 @@
     "consecutive_negative_count": 0
   },
   "taker_volume": {
-    "ratio_24h": 0,
-    "delta_sum_6": 0,
-    "delta_trend": "N/A",
-    "deltas_6": []
+    "ratio_24h": 1.091,
+    "delta_sum_6": 341.15,
+    "delta_trend": "BUYING",
+    "deltas_6": [
+      -191.7,
+      162.3,
+      177.13,
+      215.79,
+      -24.55,
+      2.18
+    ]
   },
   "mstr": {
     "price": 93.28,
-    "prev_close": null,
-    "change_pct": null,
-    "volume": 0,
-    "avg_volume": 0,
-    "ma_50": null,
-    "ma_200": null,
+    "prev_close": 97.74,
+    "change_pct": -4.56,
+    "volume": 20627800,
+    "avg_volume": 16123395,
+    "ma_50": 112.68,
+    "ma_200": 157.84,
     "buy_window": {
       "active": true,
       "window_start": "2026-07-01",
@@ -46,7 +53,7 @@
   "vix": {
     "value": 15.99,
     "source": "FRED",
-    "captured_at": null,
+    "captured_at": "2026-08-02",
     "trigger_threshold": 25.0,
     "triggered": false,
     "stale": false
@@ -54,15 +61,15 @@
   "us10y": {
     "value": 4.74,
     "source": "FRED",
-    "captured_at": null,
+    "captured_at": "2026-08-02",
     "trigger_threshold": 4.6,
     "triggered": true,
     "stale": false
   },
   "usdjpy": {
     "value": 157.4,
-    "source": "stale",
-    "captured_at": "2026-08-02T07:15:54Z",
+    "source": "live",
+    "captured_at": "2026-08-02T13:58:56Z",
     "structural_above_162": false,
     "consecutive_packets_above_162": 0,
     "spike_threshold_pct": 2.0,
