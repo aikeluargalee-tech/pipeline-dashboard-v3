@@ -1,32 +1,30 @@
 {
-  "generated": "2026-08-02T02:40:28.503568+00:00",
-  "generated_human": "2026-08-02 02:40:28 UTC",
-  "reference_price": 63374.0,
+  "generated": "2026-08-02T02:56:25.893107+00:00",
+  "generated_human": "2026-08-02 02:56:25 UTC",
+  "reference_price": 63447.0,
   "snapshot": {
     "data_health": "DATA_DEGRADED",
     "health_reasons": [
-      "STALE regime: 48m behind AMT",
-      "STALE macro: 48m behind AMT",
-      "STALE derivs: 48m behind AMT"
+      "STALE brk: 62m behind AMT"
     ],
-    "price": 63374.0,
-    "observed_at": "2026-08-02T02:40:21Z"
+    "price": 63447.0,
+    "observed_at": "2026-08-02T02:56:19Z"
   },
   "latest_verdict": {
     "verdict": "NO_ACTIVE_VERDICT",
-    "trap_probability": 0.125,
+    "trap_probability": 0.25,
     "confidence": 100,
     "risk_action": "MONITOR",
     "evidence": [
       {
         "label": "Taker Buy Ratio",
-        "value": "50.1%",
-        "effect": -0.0010000000000000009
+        "value": "51.1%",
+        "effect": -0.01100000000000001
       },
       {
         "label": "Funding Rate",
-        "value": "0.0000%",
-        "effect": 0.04978
+        "value": "0.0001%",
+        "effect": 0.05781
       },
       {
         "label": "OI 5m Delta",
@@ -40,16 +38,16 @@
     "direction": "NONE"
   },
   "nearest_level": {
-    "price": 63045.15,
+    "price": 63500.0,
     "label": "1H Nearest Resistance",
     "kind": "resistance",
-    "distance_pct": -0.52
+    "distance_pct": 0.08
   },
   "breakout": {
     "level_interaction": {
       "state": "APPROACHING_RESISTANCE",
-      "nearest_level": "$63,045",
-      "distance": "-0.52%",
+      "nearest_level": "$63,500",
+      "distance": "0.08%",
       "direction": "Above \u2192 resistance test",
       "bars_observed": 15,
       "close_beyond_level": "Yes",
@@ -57,32 +55,32 @@
     },
     "market_evidence": {
       "relative_volume": "1.0x",
-      "taker_buy_sell": "50.1% buy",
-      "funding_rate": "0.0000%",
+      "taker_buy_sell": "51.1% buy",
+      "funding_rate": "0.0001%",
       "oi_delta_5m": "0.0%",
       "atr_14": "0.00%"
     },
     "why_verdict": {
-      "acceptance": "UNCERTAIN",
+      "acceptance": "CLOSE_TO_LEVEL",
       "participation": "NORMAL",
       "aggression": "BALANCED",
       "leverage": "NORMAL",
       "catalyst": "NONE_DETECTED",
-      "environment": "Trap risk 1/8"
+      "environment": "Trap risk 2/8"
     }
   },
   "trap_environment": {
-    "composite": 1,
+    "composite": 2,
     "actual_max": 8,
     "status": "CLEAR",
-    "_collected": "2026-08-02T02:40:21Z",
+    "_collected": "2026-08-02T02:56:19Z",
     "signals": {
       "leverage": [
         {
           "id": "S1",
           "label": "Funding Rate Extremity",
           "active": false,
-          "value": "0.0000%",
+          "value": "0.0001%",
           "score": 0
         },
         {
@@ -96,7 +94,7 @@
           "id": "S3",
           "label": "OI\u2013Price Divergence",
           "active": false,
-          "value": "OI +0.0% vs price +0.05%",
+          "value": "OI +0.0% vs price +0.46%",
           "score": 0
         }
       ],
@@ -105,7 +103,7 @@
           "id": "S4",
           "label": "Coinbase Premium Deviation",
           "active": true,
-          "value": "-0.113%",
+          "value": "-0.106%",
           "score": 1
         },
         {
@@ -136,9 +134,9 @@
         {
           "id": "S8",
           "label": "Options 25\u0394 Skew",
-          "active": false,
-          "value": "0.00",
-          "score": 0
+          "active": true,
+          "value": "-5.50",
+          "score": 1
         }
       ]
     },
@@ -154,8 +152,8 @@
       "oi_implosion": 0,
       "divergence": 0
     },
-    "timestamp": "2026-08-02T02:40:28.503568+00:00",
-    "_collected": "2026-08-02T02:40:21Z",
+    "timestamp": "2026-08-02T02:56:25.893107+00:00",
+    "_collected": "2026-08-02T02:56:19Z",
     "network_health": {
       "hash_rate_ehs": 0,
       "hash_rate_drawdown_pct": 0,
@@ -181,7 +179,7 @@
       "source": "S/R Bands"
     },
     {
-      "price": 63045.15,
+      "price": 63500.0,
       "label": "1H Resistance",
       "kind": "resistance",
       "source": "S/R Bands"

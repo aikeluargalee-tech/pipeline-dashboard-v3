@@ -1,9 +1,9 @@
 {
   "signal": {
-    "id": "pfc3l-20260802-024028",
-    "ts": "2026-08-02T02:40:28.463225+00:00",
+    "id": "pfc3l-20260802-025625",
+    "ts": "2026-08-02T02:56:25.853374+00:00",
     "symbol": "BTC/USD",
-    "reference_price": 63374.0,
+    "reference_price": 63447.0,
     "state": "NO_TRADE",
     "confidence": 0,
     "lifecycle_state": "ACTIVE",
@@ -22,33 +22,33 @@
     ],
     "informational_zones": [
       {
-        "price": 63045,
+        "price": 63500,
         "label": "1H R",
-        "dist_pct": -0.52,
-        "side": "below"
+        "dist_pct": 0.08,
+        "side": "above"
       },
       {
-        "price": 63016,
+        "price": 63368,
         "label": "VP POC",
-        "dist_pct": -0.56,
+        "dist_pct": -0.12,
         "side": "below"
       },
       {
         "price": 62500,
         "label": "1H S",
-        "dist_pct": -1.38,
+        "dist_pct": -1.49,
         "side": "below"
       },
       {
         "price": 62500,
         "label": "1D S",
-        "dist_pct": -1.38,
+        "dist_pct": -1.49,
         "side": "below"
       },
       {
         "price": 66587,
         "label": "1D R",
-        "dist_pct": 5.07,
+        "dist_pct": 4.95,
         "side": "above"
       }
     ],
@@ -81,8 +81,8 @@
     "score": 20,
     "bullish_score": 20,
     "bearish_score": 10,
-    "taker_buy_ratio": 0.501,
-    "coinbase_premium": -0.1133,
+    "taker_buy_ratio": 0.511,
+    "coinbase_premium": -0.1065,
     "healthy_spot_venues": 2,
     "reasons": [
       "CVD delta trend: buy"
@@ -102,60 +102,55 @@
   },
   "levels": {
     "state": "ACTIVE",
-    "score": 76,
+    "score": 80,
     "role": "ACCELERATOR",
     "active_level": {
-      "price": 63016,
+      "price": 63379,
       "role": "ACCELERATOR",
       "category": "STANDARD",
-      "source": "vp_poc",
-      "distance_pct": 0.56,
-      "score": 76
+      "source": "vp_vah",
+      "distance_pct": 0.11,
+      "score": 80
     },
     "levels": [
       {
-        "price": 63016,
-        "role": "ACCELERATOR",
-        "category": "STANDARD",
-        "source": "vp_poc",
-        "distance_pct": 0.56,
-        "score": 76
-      },
-      {
-        "price": 63021,
+        "price": 63379,
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_vah",
-        "distance_pct": 0.56,
-        "score": 76
+        "distance_pct": 0.11,
+        "score": 80
       },
       {
-        "price": 63003,
+        "price": 63368,
+        "role": "ACCELERATOR",
+        "category": "STANDARD",
+        "source": "vp_poc",
+        "distance_pct": 0.12,
+        "score": 80
+      },
+      {
+        "price": 63364,
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_val",
-        "distance_pct": 0.59,
-        "score": 76
+        "distance_pct": 0.13,
+        "score": 79
       }
     ],
     "reasons": [
-      "Active standard level at $63,016 (0.56% away, role: ACCELERATOR)"
+      "Active standard level at $63,379 (0.11% away, role: ACCELERATOR)"
     ],
     "vetoes": []
   },
   "data_quality": {
-    "score": 100,
+    "score": 92,
     "directional_allowed": true,
     "healthy_feeds": 2,
     "total_critical_feeds": 3,
     "reasons": [
-      "Volume Profile stale (47m)",
-      "STALE regime: 48m behind AMT",
-      "STALE macro: 48m behind AMT",
-      "STALE derivs: 48m behind AMT",
-      "STALE cycle: missing",
-      "STALE vp: 47m behind AMT",
-      "STALE brk: 46m behind AMT"
+      "Volume Profile stale (605s)",
+      "STALE brk: 62m behind AMT"
     ],
     "vetoes": [],
     "feeds": {
@@ -163,19 +158,19 @@
         "label": "AMT feed",
         "healthy": true,
         "stale": false,
-        "age": "16s"
+        "age": "15s"
       },
       "volume_profile": {
         "label": "Volume Profile",
         "healthy": false,
         "stale": true,
-        "age": "2873s"
+        "age": "605s"
       },
       "ai_factors": {
         "label": "AI Factors",
         "healthy": true,
         "stale": false,
-        "age": "15s"
+        "age": "13s"
       },
       "trap_monitor": {
         "label": "Trap Monitor",
@@ -185,5 +180,5 @@
       }
     }
   },
-  "enriched_at": "2026-08-02T02:40:28.482761+00:00"
+  "enriched_at": "2026-08-02T02:56:25.872489+00:00"
 }
