@@ -1,10 +1,79 @@
 {
-  "mvrv_z": 1.1898000240325928,
-  "sopr": 0.9797392496153109,
+  "mvrv_z": 0.4093,
+  "sopr": 0.9947,
+  "puell_multiple": 0.8013,
+  "netflow_7d": 7037.46,
+  "sth_realized_price": null,
+  "sth_net_position_change": null,
+  "regime": "neutral",
+  "composite_score": 32.8,
+  "cycle_phase": "medium",
+  "distribution": {
+    "timestamp": "2026-08-02 01:51 UTC",
+    "source": "blockchair.com",
+    "total_addresses": 59429682,
+    "total_btc": 20064521.04155096,
+    "tiers": [
+      {
+        "range": "100+ BTC",
+        "addresses": "2,080,038",
+        "btc": "12,339,680",
+        "pct": "61.50%",
+        "pctNum": 61.5,
+        "color": "#f59e0b"
+      },
+      {
+        "range": "1 \u2013 100 BTC",
+        "addresses": "950,874",
+        "btc": "6,320,324",
+        "pct": "31.50%",
+        "pctNum": 31.5,
+        "color": "#3b82f6"
+      },
+      {
+        "range": "0.001 \u2013 1 BTC",
+        "addresses": "24,366,169",
+        "btc": "1,404,516",
+        "pct": "7.00%",
+        "pctNum": 7.0,
+        "color": "#6366f1"
+      },
+      {
+        "range": "<0.001 BTC",
+        "addresses": "32,032,598",
+        "btc": "6,019",
+        "pct": "0.03%",
+        "pctNum": 0.03,
+        "color": "#64748b"
+      }
+    ]
+  },
+  "options_skew": {
+    "timestamp": "2026-08-02 01:52 UTC",
+    "spot": 63012.9,
+    "skew_25d": -6.2,
+    "put_25d_iv": 36.1,
+    "call_25d_iv": 29.9,
+    "put_name": "BTC-14AUG26-60000-P",
+    "call_name": "BTC-14AUG26-66000-C",
+    "label": "Elevated hedging \u2014 institutions buying downside protection",
+    "emoji": "\ud83d\udfe1",
+    "display": "\ud83d\udfe1 Options skew (25\u0394): -6.2% \u2014 elevated hedging \u2014 institutions buying downside protection"
+  },
   "nupl": 0.15950000286102295,
-  "lth_sopr_24h": 0.8218985772938598,
-  "supply_in_profit_share": 50.340003967285156,
-  "puell_multiple": 0.7267000079154968,
   "rhodl_ratio": 0.1324000060558319,
-  "realized_price": 52777.65
+  "lth_sopr_24h": 0.8218985772938598,
+  "sth_sopr_24h": 0.9970379059532025,
+  "supply_in_profit_share": 50.340003967285156,
+  "mvrv": 1.1898000240325928,
+  "realized_price": 52777.65,
+  "lth_net_realized_pnl": -444315.37,
+  "sth_net_realized_pnl": 228672.89,
+  "utxos_1y_sopr": 0.8976178357171319,
+  "hash_rate_ehs": 1.0291003697843431e+21,
+  "hash_rate_drawdown_pct": -24.639999389648438,
+  "fee_rate_sat_vb": 0.5,
+  "difficulty": 126231507121868.19,
+  "_brk_fetched_at": "2026-08-01T17:51:12.670563+00:00",
+  "_collected": "2026-08-02 01:52 UTC"
 }

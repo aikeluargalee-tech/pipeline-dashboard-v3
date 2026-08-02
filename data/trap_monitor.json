@@ -1,40 +1,77 @@
 {
-  "ts": "2026-08-02T01:51:41.187372+00:00",
-  "environment_risk_index": 1,
-  "category": "Neutral",
+  "composite": 4,
+  "actual_max": 7,
+  "status": "CAUTION",
+  "direction": "LONG_TRAP",
+  "long_trap_signals": 5,
+  "short_trap_signals": 0,
+  "downstream_action": "Reduce position size. Wait for 2+ signals to resolve before L4 entries.",
   "signals": {
-    "S1_DESC": {
+    "s1_liq_asymmetry": {
       "score": 0,
-      "description": "Funding Rate Extremity"
+      "verdict": "CLEAR",
+      "max": 1,
+      "value": "3L/2S",
+      "threshold": "\u22652\u00d7 asymmetry",
+      "note": "Long=3, Short=2 \u2014 balanced"
     },
-    "S2_DESC": {
-      "score": 0,
-      "description": "OI Spike >5%/1h"
-    },
-    "S3_DESC": {
-      "score": 0,
-      "description": "OI\u2013Price Divergence"
-    },
-    "S4_DESC": {
+    "s2_oi_divergence": {
       "score": 1,
-      "description": "Coinbase Premium Deviation"
+      "verdict": "TRAP",
+      "max": 1,
+      "value": "-0.79%",
+      "threshold": "OI < -0.5% unwinding",
+      "note": "OI -0.8% \u2014 unwinding while price $62986 \u2014 divergence"
     },
-    "S5_DESC": {
+    "s3_funding": {
       "score": 0,
-      "description": "CVD Divergence"
+      "verdict": "CLEAR",
+      "max": 1,
+      "value": "0.0050%",
+      "threshold": "|Funding| > 0.01%",
+      "note": "Funding 0.0050% \u2014 neutral"
     },
-    "S6_DESC": {
+    "s4_bid_ask_absorption": {
       "score": 0,
-      "description": "Exchange Netflow Spike"
+      "verdict": "CLEAR",
+      "max": 1,
+      "value": "Bid:5 Ask:6",
+      "threshold": "Ask/Bid ratio > 2.0",
+      "note": "Bid=5, Ask=6 \u2014 balanced"
     },
-    "S7_DESC": {
-      "score": 0,
-      "description": "UTXO Age Band Shift"
+    "s5_taker_cvd": {
+      "score": 1,
+      "verdict": "TRAP",
+      "max": 1,
+      "value": "Taker:1.0452 CVD:-2786.0",
+      "threshold": "Taker > 1.0 + CVD < 0",
+      "note": "Taker 1.05 (aggressive buying) + CVD -2786 negative \u2014 divergence trap"
     },
-    "S8_DESC": {
+    "s6_exchange_netflow": {
+      "score": 1,
+      "verdict": "TRAP",
+      "max": 1,
+      "value": "7037 BTC",
+      "threshold": "|Netflow| > 2,000 BTC",
+      "note": "Netflow +7037 BTC \u2014 exchange inflow = distribution"
+    },
+    "s7_utxo_bands": {
       "score": 0,
-      "description": "Options 25\u0394 Skew"
+      "verdict": "CLEAR",
+      "max": 1,
+      "value": "LTH:0.82|1Y+:0.90|SiP:50%",
+      "threshold": "\u22652 of: LTH-SOPR>1.02, 1Y+UTXO-SOPR>1.5, SiP>80%",
+      "note": "0/3 sub-signals \u2014 LTH-SOPR 0.8219 \u2014 below threshold (selling at loss) | 1Y+ UTXO SOPR 0.898 \u2014 below threshold | Supply in Profit 50.3% \u2014 not in distribution zone [BRK \u2014 bitview.space | fetched 2026-08-01T17:51]"
+    },
+    "s8_options_skew": {
+      "score": 1,
+      "verdict": "TRAP",
+      "max": 1,
+      "value": "-6.2%",
+      "threshold": "|Skew| > 5%",
+      "note": "Skew -6.2% \u2014 puts richly bid (institutions hedging)"
     }
   },
-  "structural_backdrop": "Neutral"
+  "btc_price": 62986.66,
+  "_collected": "2026-08-02 01:52 UTC"
 }
