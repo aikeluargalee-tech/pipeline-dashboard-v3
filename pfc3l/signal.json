@@ -1,9 +1,9 @@
 {
   "signal": {
-    "id": "pfc3l-20260802-050555",
-    "ts": "2026-08-02T05:05:55.931464+00:00",
+    "id": "pfc3l-20260802-052233",
+    "ts": "2026-08-02T05:22:33.945607+00:00",
     "symbol": "BTC/USD",
-    "reference_price": 63520.0,
+    "reference_price": 63494.0,
     "state": "NO_TRADE",
     "confidence": 0,
     "lifecycle_state": "ACTIVE",
@@ -24,31 +24,31 @@
       {
         "price": 63546,
         "label": "VP POC",
-        "dist_pct": 0.04,
+        "dist_pct": 0.08,
         "side": "above"
       },
       {
         "price": 63750,
         "label": "1H R",
-        "dist_pct": 0.36,
+        "dist_pct": 0.4,
         "side": "above"
       },
       {
         "price": 62500,
         "label": "1H S",
-        "dist_pct": -1.61,
+        "dist_pct": -1.57,
         "side": "below"
       },
       {
         "price": 62500,
         "label": "1D S",
-        "dist_pct": -1.61,
+        "dist_pct": -1.57,
         "side": "below"
       },
       {
         "price": 66587,
         "label": "1D R",
-        "dist_pct": 4.83,
+        "dist_pct": 4.87,
         "side": "above"
       }
     ],
@@ -109,7 +109,7 @@
       "role": "ACCELERATOR",
       "category": "STANDARD",
       "source": "vp_poc",
-      "distance_pct": 0.04,
+      "distance_pct": 0.08,
       "score": 80
     },
     "levels": [
@@ -118,7 +118,7 @@
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_poc",
-        "distance_pct": 0.04,
+        "distance_pct": 0.08,
         "score": 80
       },
       {
@@ -126,7 +126,7 @@
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_val",
-        "distance_pct": 0.04,
+        "distance_pct": 0.08,
         "score": 80
       },
       {
@@ -134,24 +134,28 @@
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_vah",
-        "distance_pct": 0.06,
+        "distance_pct": 0.1,
         "score": 80
       }
     ],
     "reasons": [
-      "Active standard level at $63,546 (0.04% away, role: ACCELERATOR)"
+      "Active standard level at $63,546 (0.08% away, role: ACCELERATOR)"
     ],
     "vetoes": []
   },
   "data_quality": {
-    "score": 92,
+    "score": 100,
     "directional_allowed": true,
     "healthy_feeds": 2,
     "total_critical_feeds": 3,
     "reasons": [
-      "Volume Profile stale (1141s)",
+      "Volume Profile stale (35m)",
+      "STALE regime: 35m behind AMT",
+      "STALE macro: 35m behind AMT",
+      "STALE derivs: 35m behind AMT",
       "STALE cycle: missing",
-      "STALE brk: 192m behind AMT"
+      "STALE vp: 35m behind AMT",
+      "STALE brk: 208m behind AMT"
     ],
     "vetoes": [],
     "feeds": {
@@ -159,19 +163,19 @@
         "label": "AMT feed",
         "healthy": true,
         "stale": false,
-        "age": "26s"
+        "age": "19s"
       },
       "volume_profile": {
         "label": "Volume Profile",
         "healthy": false,
         "stale": true,
-        "age": "1141s"
+        "age": "2139s"
       },
       "ai_factors": {
         "label": "AI Factors",
         "healthy": true,
         "stale": false,
-        "age": "23s"
+        "age": "17s"
       },
       "trap_monitor": {
         "label": "Trap Monitor",
@@ -181,5 +185,5 @@
       }
     }
   },
-  "enriched_at": "2026-08-02T05:05:55.953572+00:00"
+  "enriched_at": "2026-08-02T05:22:33.966874+00:00"
 }
