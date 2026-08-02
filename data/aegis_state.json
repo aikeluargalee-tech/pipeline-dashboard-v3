@@ -1,18 +1,19 @@
 {
-  "generated": "2026-08-02T02:56:25.893107+00:00",
-  "generated_human": "2026-08-02 02:56:25 UTC",
-  "reference_price": 63447.0,
+  "generated": "2026-08-02T03:12:43.978873+00:00",
+  "generated_human": "2026-08-02 03:12:43 UTC",
+  "reference_price": 63397.0,
   "snapshot": {
     "data_health": "DATA_DEGRADED",
     "health_reasons": [
-      "STALE brk: 62m behind AMT"
+      "STALE cycle: missing",
+      "STALE brk: 79m behind AMT"
     ],
-    "price": 63447.0,
-    "observed_at": "2026-08-02T02:56:19Z"
+    "price": 63397.0,
+    "observed_at": "2026-08-02T03:12:30Z"
   },
   "latest_verdict": {
     "verdict": "NO_ACTIVE_VERDICT",
-    "trap_probability": 0.25,
+    "trap_probability": 0.125,
     "confidence": 100,
     "risk_action": "MONITOR",
     "evidence": [
@@ -41,13 +42,13 @@
     "price": 63500.0,
     "label": "1H Nearest Resistance",
     "kind": "resistance",
-    "distance_pct": 0.08
+    "distance_pct": 0.16
   },
   "breakout": {
     "level_interaction": {
       "state": "APPROACHING_RESISTANCE",
       "nearest_level": "$63,500",
-      "distance": "0.08%",
+      "distance": "0.16%",
       "direction": "Above \u2192 resistance test",
       "bars_observed": 15,
       "close_beyond_level": "Yes",
@@ -66,14 +67,14 @@
       "aggression": "BALANCED",
       "leverage": "NORMAL",
       "catalyst": "NONE_DETECTED",
-      "environment": "Trap risk 2/8"
+      "environment": "Trap risk 1/8"
     }
   },
   "trap_environment": {
-    "composite": 2,
+    "composite": 1,
     "actual_max": 8,
     "status": "CLEAR",
-    "_collected": "2026-08-02T02:56:19Z",
+    "_collected": "2026-08-02T03:12:30Z",
     "signals": {
       "leverage": [
         {
@@ -134,9 +135,9 @@
         {
           "id": "S8",
           "label": "Options 25\u0394 Skew",
-          "active": true,
-          "value": "-5.50",
-          "score": 1
+          "active": false,
+          "value": "0.00",
+          "score": 0
         }
       ]
     },
@@ -152,8 +153,8 @@
       "oi_implosion": 0,
       "divergence": 0
     },
-    "timestamp": "2026-08-02T02:56:25.893107+00:00",
-    "_collected": "2026-08-02T02:56:19Z",
+    "timestamp": "2026-08-02T03:12:43.978873+00:00",
+    "_collected": "2026-08-02T03:12:30Z",
     "network_health": {
       "hash_rate_ehs": 0,
       "hash_rate_drawdown_pct": 0,
