@@ -1,20 +1,18 @@
 {
-  "generated": "2026-08-02T04:33:48.000995+00:00",
-  "generated_human": "2026-08-02 04:33:48 UTC",
-  "reference_price": 63556.0,
+  "generated": "2026-08-02T04:49:49.688460+00:00",
+  "generated_human": "2026-08-02 04:49:49 UTC",
+  "reference_price": 63530.0,
   "snapshot": {
     "data_health": "DATA_DEGRADED",
     "health_reasons": [
-      "STALE regime: 47m behind AMT",
-      "STALE macro: 47m behind AMT",
-      "STALE derivs: 47m behind AMT"
+      "STALE brk: 176m behind AMT"
     ],
-    "price": 63556.0,
-    "observed_at": "2026-08-02T04:33:34Z"
+    "price": 63530.0,
+    "observed_at": "2026-08-02T04:49:34Z"
   },
   "latest_verdict": {
     "verdict": "NO_ACTIVE_VERDICT",
-    "trap_probability": 0.125,
+    "trap_probability": 0.25,
     "confidence": 100,
     "risk_action": "MONITOR",
     "evidence": [
@@ -26,7 +24,7 @@
       {
         "label": "Funding Rate",
         "value": "0.0001%",
-        "effect": 0.06536
+        "effect": 0.07471
       },
       {
         "label": "OI 5m Delta",
@@ -40,16 +38,16 @@
     "direction": "NONE"
   },
   "nearest_level": {
-    "price": 63500.0,
+    "price": 63750.0,
     "label": "1H Nearest Resistance",
     "kind": "resistance",
-    "distance_pct": -0.09
+    "distance_pct": 0.35
   },
   "breakout": {
     "level_interaction": {
       "state": "APPROACHING_RESISTANCE",
-      "nearest_level": "$63,500",
-      "distance": "-0.09%",
+      "nearest_level": "$63,750",
+      "distance": "0.35%",
       "direction": "Above \u2192 resistance test",
       "bars_observed": 15,
       "close_beyond_level": "Yes",
@@ -68,14 +66,14 @@
       "aggression": "BALANCED",
       "leverage": "NORMAL",
       "catalyst": "NONE_DETECTED",
-      "environment": "Trap risk 1/8"
+      "environment": "Trap risk 2/8"
     }
   },
   "trap_environment": {
-    "composite": 1,
+    "composite": 2,
     "actual_max": 8,
     "status": "CLEAR",
-    "_collected": "2026-08-02T04:33:34Z",
+    "_collected": "2026-08-02T04:49:34Z",
     "signals": {
       "leverage": [
         {
@@ -96,7 +94,7 @@
           "id": "S3",
           "label": "OI\u2013Price Divergence",
           "active": false,
-          "value": "OI +0.0% vs price +0.80%",
+          "value": "OI +0.0% vs price +0.73%",
           "score": 0
         }
       ],
@@ -105,7 +103,7 @@
           "id": "S4",
           "label": "Coinbase Premium Deviation",
           "active": true,
-          "value": "-0.119%",
+          "value": "-0.106%",
           "score": 1
         },
         {
@@ -136,9 +134,9 @@
         {
           "id": "S8",
           "label": "Options 25\u0394 Skew",
-          "active": false,
-          "value": "0.00",
-          "score": 0
+          "active": true,
+          "value": "-4.70",
+          "score": 1
         }
       ]
     },
@@ -154,8 +152,8 @@
       "oi_implosion": 0,
       "divergence": 0
     },
-    "timestamp": "2026-08-02T04:33:48.000995+00:00",
-    "_collected": "2026-08-02T04:33:34Z",
+    "timestamp": "2026-08-02T04:49:49.688460+00:00",
+    "_collected": "2026-08-02T04:49:34Z",
     "network_health": {
       "hash_rate_ehs": 0,
       "hash_rate_drawdown_pct": 0,
@@ -181,7 +179,7 @@
       "source": "S/R Bands"
     },
     {
-      "price": 63500.0,
+      "price": 63750.0,
       "label": "1H Resistance",
       "kind": "resistance",
       "source": "S/R Bands"
