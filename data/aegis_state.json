@@ -1,32 +1,30 @@
 {
-  "generated": "2026-08-02T03:44:45.692395+00:00",
-  "generated_human": "2026-08-02 03:44:45 UTC",
-  "reference_price": 63498.0,
+  "generated": "2026-08-02T04:00:38.738251+00:00",
+  "generated_human": "2026-08-02 04:00:38 UTC",
+  "reference_price": 63477.0,
   "snapshot": {
     "data_health": "DATA_DEGRADED",
     "health_reasons": [
-      "STALE regime: 58m behind AMT",
-      "STALE macro: 58m behind AMT",
-      "STALE derivs: 58m behind AMT"
+      "STALE brk: 126m behind AMT"
     ],
-    "price": 63498.0,
-    "observed_at": "2026-08-02T03:44:32Z"
+    "price": 63477.0,
+    "observed_at": "2026-08-02T04:00:31Z"
   },
   "latest_verdict": {
     "verdict": "NO_ACTIVE_VERDICT",
-    "trap_probability": 0.125,
+    "trap_probability": 0.25,
     "confidence": 100,
     "risk_action": "MONITOR",
     "evidence": [
       {
         "label": "Taker Buy Ratio",
-        "value": "51.1%",
-        "effect": -0.01100000000000001
+        "value": "51.2%",
+        "effect": -0.01200000000000001
       },
       {
         "label": "Funding Rate",
         "value": "0.0001%",
-        "effect": 0.05781
+        "effect": 0.06536
       },
       {
         "label": "OI 5m Delta",
@@ -43,13 +41,13 @@
     "price": 63500.0,
     "label": "1H Nearest Resistance",
     "kind": "resistance",
-    "distance_pct": 0.0
+    "distance_pct": 0.04
   },
   "breakout": {
     "level_interaction": {
       "state": "APPROACHING_RESISTANCE",
       "nearest_level": "$63,500",
-      "distance": "0.0%",
+      "distance": "0.04%",
       "direction": "Above \u2192 resistance test",
       "bars_observed": 15,
       "close_beyond_level": "Yes",
@@ -57,7 +55,7 @@
     },
     "market_evidence": {
       "relative_volume": "1.0x",
-      "taker_buy_sell": "51.1% buy",
+      "taker_buy_sell": "51.2% buy",
       "funding_rate": "0.0001%",
       "oi_delta_5m": "0.0%",
       "atr_14": "0.00%"
@@ -68,14 +66,14 @@
       "aggression": "BALANCED",
       "leverage": "NORMAL",
       "catalyst": "NONE_DETECTED",
-      "environment": "Trap risk 1/8"
+      "environment": "Trap risk 2/8"
     }
   },
   "trap_environment": {
-    "composite": 1,
+    "composite": 2,
     "actual_max": 8,
     "status": "CLEAR",
-    "_collected": "2026-08-02T03:44:32Z",
+    "_collected": "2026-08-02T04:00:31Z",
     "signals": {
       "leverage": [
         {
@@ -96,7 +94,7 @@
           "id": "S3",
           "label": "OI\u2013Price Divergence",
           "active": false,
-          "value": "OI +0.0% vs price +0.46%",
+          "value": "OI +0.0% vs price +0.80%",
           "score": 0
         }
       ],
@@ -105,7 +103,7 @@
           "id": "S4",
           "label": "Coinbase Premium Deviation",
           "active": true,
-          "value": "-0.106%",
+          "value": "-0.119%",
           "score": 1
         },
         {
@@ -136,9 +134,9 @@
         {
           "id": "S8",
           "label": "Options 25\u0394 Skew",
-          "active": false,
-          "value": "0.00",
-          "score": 0
+          "active": true,
+          "value": "-5.30",
+          "score": 1
         }
       ]
     },
@@ -154,8 +152,8 @@
       "oi_implosion": 0,
       "divergence": 0
     },
-    "timestamp": "2026-08-02T03:44:45.692395+00:00",
-    "_collected": "2026-08-02T03:44:32Z",
+    "timestamp": "2026-08-02T04:00:38.738251+00:00",
+    "_collected": "2026-08-02T04:00:31Z",
     "network_health": {
       "hash_rate_ehs": 0,
       "hash_rate_drawdown_pct": 0,
