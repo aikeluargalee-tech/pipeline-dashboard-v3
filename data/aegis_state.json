@@ -1,16 +1,16 @@
 {
-  "generated": "2026-08-02T15:40:54.300513+00:00",
-  "generated_human": "2026-08-02 15:40:54 UTC",
-  "reference_price": 63136.0,
+  "generated": "2026-08-02T16:43:43.638765+00:00",
+  "generated_human": "2026-08-02 16:43:43 UTC",
+  "reference_price": 63247.0,
   "snapshot": {
     "data_health": "DATA_DEGRADED",
     "health_reasons": [
-      "STALE regime: 31m behind AMT",
-      "STALE macro: 31m behind AMT",
-      "STALE derivs: 31m behind AMT"
+      "STALE regime: 56m behind AMT",
+      "STALE macro: 56m behind AMT",
+      "STALE derivs: 56m behind AMT"
     ],
-    "price": 63136.0,
-    "observed_at": "2026-08-02T15:40:47Z"
+    "price": 63247.0,
+    "observed_at": "2026-08-02T16:43:36Z"
   },
   "latest_verdict": {
     "verdict": "NO_ACTIVE_VERDICT",
@@ -26,7 +26,7 @@
       {
         "label": "Funding Rate",
         "value": "0.0001%",
-        "effect": 0.08038999999999999
+        "effect": 0.08033
       },
       {
         "label": "OI 5m Delta",
@@ -43,13 +43,13 @@
     "price": 63028.34,
     "label": "1H Nearest Support",
     "kind": "support",
-    "distance_pct": 0.17
+    "distance_pct": 0.35
   },
   "breakout": {
     "level_interaction": {
       "state": "APPROACHING_SUPPORT",
       "nearest_level": "$63,028",
-      "distance": "0.17%",
+      "distance": "0.35%",
       "direction": "Below \u2192 support test",
       "bars_observed": 15,
       "close_beyond_level": "Yes",
@@ -75,7 +75,7 @@
     "composite": 1,
     "actual_max": 8,
     "status": "CLEAR",
-    "_collected": "2026-08-02T15:40:47Z",
+    "_collected": "2026-08-02T16:43:36Z",
     "signals": {
       "leverage": [
         {
@@ -96,7 +96,7 @@
           "id": "S3",
           "label": "OI\u2013Price Divergence",
           "active": false,
-          "value": "OI +0.0% vs price -0.02%",
+          "value": "OI +0.0% vs price +0.16%",
           "score": 0
         }
       ],
@@ -105,7 +105,7 @@
           "id": "S4",
           "label": "Coinbase Premium Deviation",
           "active": true,
-          "value": "-0.115%",
+          "value": "-0.106%",
           "score": 1
         },
         {
@@ -154,8 +154,8 @@
       "oi_implosion": 0,
       "divergence": 0
     },
-    "timestamp": "2026-08-02T15:40:54.300513+00:00",
-    "_collected": "2026-08-02T15:40:47Z",
+    "timestamp": "2026-08-02T16:43:43.638765+00:00",
+    "_collected": "2026-08-02T16:43:36Z",
     "network_health": {
       "hash_rate_ehs": 0,
       "hash_rate_drawdown_pct": 0,
@@ -164,14 +164,14 @@
     }
   },
   "cycle": {
-    "mvrv_z": 1.194700002670288,
-    "sopr": 0.980725220869413,
-    "nupl": 0.16290000081062317,
-    "lth_sopr_24h": 0.8164083894265693,
-    "supply_in_profit_share": 51.7400016784668,
-    "puell_multiple": 0.730400025844574,
-    "rhodl_ratio": 0.1362999975681305,
-    "realized_price": 52776.41
+    "mvrv_z": 1.1948000192642212,
+    "sopr": 0.9804541888262109,
+    "nupl": 0.16300000250339508,
+    "lth_sopr_24h": 0.8116129145592695,
+    "supply_in_profit_share": 51.79999923706055,
+    "puell_multiple": 0.7304999828338623,
+    "rhodl_ratio": 0.13670000433921814,
+    "realized_price": 52776.48
   },
   "approved_levels": [
     {

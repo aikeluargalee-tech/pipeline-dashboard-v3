@@ -1,9 +1,9 @@
 {
   "signal": {
-    "id": "pfc3l-20260802-154054",
-    "ts": "2026-08-02T15:40:54.256167+00:00",
+    "id": "pfc3l-20260802-164343",
+    "ts": "2026-08-02T16:43:43.596433+00:00",
     "symbol": "BTC/USD",
-    "reference_price": 63136.0,
+    "reference_price": 63247.0,
     "state": "NO_TRADE",
     "confidence": 0,
     "lifecycle_state": "ACTIVE",
@@ -22,33 +22,33 @@
     ],
     "informational_zones": [
       {
-        "price": 63116,
+        "price": 63182,
         "label": "VP POC",
-        "dist_pct": -0.03,
+        "dist_pct": -0.1,
         "side": "below"
       },
       {
         "price": 63028,
         "label": "1H S",
-        "dist_pct": -0.17,
+        "dist_pct": -0.35,
         "side": "below"
       },
       {
         "price": 63560,
         "label": "1H R",
-        "dist_pct": 0.67,
+        "dist_pct": 0.49,
         "side": "above"
       },
       {
         "price": 62500,
         "label": "1D S",
-        "dist_pct": -1.01,
+        "dist_pct": -1.18,
         "side": "below"
       },
       {
         "price": 66587,
         "label": "1D R",
-        "dist_pct": 5.47,
+        "dist_pct": 5.28,
         "side": "above"
       }
     ],
@@ -78,15 +78,15 @@
   },
   "flow": {
     "state": "NEUTRAL",
-    "score": 35,
-    "bullish_score": 35,
+    "score": 45,
+    "bullish_score": 45,
     "bearish_score": 10,
     "taker_buy_ratio": 0.522,
-    "coinbase_premium": -0.1146,
+    "coinbase_premium": -0.1065,
     "healthy_spot_venues": 2,
     "reasons": [
       "Taker buy ratio moderate (0.522)",
-      "CVD delta trend: buy"
+      "CVD delta trend: strong buy (sum: 587.27)"
     ],
     "vetoes": []
   },
@@ -106,41 +106,41 @@
     "score": 80,
     "role": "ACCELERATOR",
     "active_level": {
-      "price": 63116,
+      "price": 63182,
       "role": "ACCELERATOR",
       "category": "STANDARD",
       "source": "vp_poc",
-      "distance_pct": 0.03,
+      "distance_pct": 0.1,
       "score": 80
     },
     "levels": [
       {
-        "price": 63116,
+        "price": 63182,
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_poc",
-        "distance_pct": 0.03,
+        "distance_pct": 0.1,
         "score": 80
       },
       {
-        "price": 63117,
+        "price": 63186,
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_vah",
-        "distance_pct": 0.03,
+        "distance_pct": 0.1,
         "score": 80
       },
       {
-        "price": 63112,
+        "price": 63157,
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_val",
-        "distance_pct": 0.04,
-        "score": 80
+        "distance_pct": 0.14,
+        "score": 79
       }
     ],
     "reasons": [
-      "Active standard level at $63,116 (0.03% away, role: ACCELERATOR)"
+      "Active standard level at $63,182 (0.10% away, role: ACCELERATOR)"
     ],
     "vetoes": []
   },
@@ -150,12 +150,12 @@
     "healthy_feeds": 2,
     "total_critical_feeds": 3,
     "reasons": [
-      "Volume Profile stale (101m)",
-      "STALE regime: 31m behind AMT",
-      "STALE macro: 31m behind AMT",
-      "STALE derivs: 31m behind AMT",
+      "Volume Profile stale (56m)",
+      "STALE regime: 56m behind AMT",
+      "STALE macro: 56m behind AMT",
+      "STALE derivs: 56m behind AMT",
       "STALE cycle: missing",
-      "STALE vp: 101m behind AMT"
+      "STALE vp: 56m behind AMT"
     ],
     "vetoes": [],
     "feeds": {
@@ -163,19 +163,19 @@
         "label": "AMT feed",
         "healthy": true,
         "stale": false,
-        "age": "16s"
+        "age": "18s"
       },
       "volume_profile": {
         "label": "Volume Profile",
         "healthy": false,
         "stale": true,
-        "age": "6080s"
+        "age": "3410s"
       },
       "ai_factors": {
         "label": "AI Factors",
         "healthy": true,
         "stale": false,
-        "age": "15s"
+        "age": "17s"
       },
       "trap_monitor": {
         "label": "Trap Monitor",
@@ -185,5 +185,5 @@
       }
     }
   },
-  "enriched_at": "2026-08-02T15:40:54.277967+00:00"
+  "enriched_at": "2026-08-02T16:43:43.616375+00:00"
 }
