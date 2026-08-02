@@ -1,44 +1,37 @@
 {
-  "packet_id": 175,
-  "captured_at": "2026-08-02T06:43:51Z",
+  "packet_id": 176,
+  "captured_at": "2026-08-02T06:59:54Z",
   "btc": {
-    "price": 63486.69,
-    "session_high": 63634.0,
-    "session_low": 62275.0,
-    "change_pct": 0.66,
-    "vwap": 63024.70059366,
-    "volume_btc": 7675.17558,
-    "volume_usd": 483725642.9332583,
+    "price": 63488.59,
+    "session_high": null,
+    "session_low": null,
+    "change_pct": 0.68,
+    "vwap": null,
+    "volume_btc": null,
+    "volume_usd": 3154771.8,
     "break_level": 58872,
     "gap_to_break_pct": 7.84
   },
   "funding_rate": {
-    "value_pct": 0.0092,
+    "value_pct": 0.0099,
     "next_settlement_utc": null,
     "trend": "rising",
     "consecutive_negative_count": 0
   },
   "taker_volume": {
-    "ratio_24h": 1.038,
-    "delta_sum_6": 139.35,
-    "delta_trend": "BUYING",
-    "deltas_6": [
-      -53.85,
-      36.23,
-      -191.7,
-      162.3,
-      177.13,
-      9.24
-    ]
+    "ratio_24h": 0,
+    "delta_sum_6": 0,
+    "delta_trend": "N/A",
+    "deltas_6": []
   },
   "mstr": {
     "price": 93.28,
-    "prev_close": 97.74,
-    "change_pct": -4.56,
-    "volume": 20627800,
-    "avg_volume": 16123395,
-    "ma_50": 112.68,
-    "ma_200": 157.84,
+    "prev_close": null,
+    "change_pct": null,
+    "volume": 0,
+    "avg_volume": 0,
+    "ma_50": null,
+    "ma_200": null,
     "buy_window": {
       "active": true,
       "window_start": "2026-07-01",
@@ -53,7 +46,7 @@
   "vix": {
     "value": 15.99,
     "source": "FRED",
-    "captured_at": "2026-08-02",
+    "captured_at": null,
     "trigger_threshold": 25.0,
     "triggered": false,
     "stale": false
@@ -61,15 +54,15 @@
   "us10y": {
     "value": 4.74,
     "source": "FRED",
-    "captured_at": "2026-08-02",
+    "captured_at": null,
     "trigger_threshold": 4.6,
     "triggered": true,
     "stale": false
   },
   "usdjpy": {
     "value": 157.4,
-    "source": "live",
-    "captured_at": "2026-08-02T06:43:51Z",
+    "source": "stale",
+    "captured_at": "2026-08-02T06:59:54Z",
     "structural_above_162": false,
     "consecutive_packets_above_162": 0,
     "spike_threshold_pct": 2.0,
