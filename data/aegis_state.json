@@ -1,18 +1,19 @@
 {
-  "generated": "2026-08-02T15:05:59.692866+00:00",
-  "generated_human": "2026-08-02 15:05:59 UTC",
-  "reference_price": 63079.0,
+  "generated": "2026-08-02T15:08:50.408428+00:00",
+  "generated_human": "2026-08-02 15:08:50 UTC",
+  "reference_price": 63100.0,
   "snapshot": {
-    "data_health": "DATA_HEALTHY",
+    "data_health": "DATA_DEGRADED",
     "health_reasons": [
-      "All feeds passed"
+      "STALE vp: 68m behind AMT",
+      "STALE brk: 53m behind AMT"
     ],
-    "price": 63079.0,
-    "observed_at": "2026-08-02T14:14:47Z"
+    "price": 63100.0,
+    "observed_at": "2026-08-02T15:08:42Z"
   },
   "latest_verdict": {
     "verdict": "NO_ACTIVE_VERDICT",
-    "trap_probability": 0.25,
+    "trap_probability": 0.125,
     "confidence": 100,
     "risk_action": "MONITOR",
     "evidence": [
@@ -24,7 +25,7 @@
       {
         "label": "Funding Rate",
         "value": "0.0001%",
-        "effect": 0.08642
+        "effect": 0.07959999999999999
       },
       {
         "label": "OI 5m Delta",
@@ -38,16 +39,16 @@
     "direction": "NONE"
   },
   "nearest_level": {
-    "price": 63045.15,
+    "price": 63028.34,
     "label": "1H Nearest Support",
     "kind": "support",
-    "distance_pct": 0.05
+    "distance_pct": 0.11
   },
   "breakout": {
     "level_interaction": {
       "state": "APPROACHING_SUPPORT",
-      "nearest_level": "$63,045",
-      "distance": "0.05%",
+      "nearest_level": "$63,028",
+      "distance": "0.11%",
       "direction": "Below \u2192 support test",
       "bars_observed": 15,
       "close_beyond_level": "Yes",
@@ -66,14 +67,14 @@
       "aggression": "BALANCED",
       "leverage": "NORMAL",
       "catalyst": "NONE_DETECTED",
-      "environment": "Trap risk 2/8"
+      "environment": "Trap risk 1/8"
     }
   },
   "trap_environment": {
-    "composite": 2,
+    "composite": 1,
     "actual_max": 8,
     "status": "CLEAR",
-    "_collected": "2026-08-02T14:14:47Z",
+    "_collected": "2026-08-02T15:08:42Z",
     "signals": {
       "leverage": [
         {
@@ -94,7 +95,7 @@
           "id": "S3",
           "label": "OI\u2013Price Divergence",
           "active": false,
-          "value": "OI +0.0% vs price +0.08%",
+          "value": "OI +0.0% vs price -0.03%",
           "score": 0
         }
       ],
@@ -102,9 +103,9 @@
         {
           "id": "S4",
           "label": "Coinbase Premium Deviation",
-          "active": true,
-          "value": "-0.105%",
-          "score": 1
+          "active": false,
+          "value": "-0.099%",
+          "score": 0
         },
         {
           "id": "S5",
@@ -152,8 +153,8 @@
       "oi_implosion": 0,
       "divergence": 0
     },
-    "timestamp": "2026-08-02T15:05:59.692866+00:00",
-    "_collected": "2026-08-02T14:14:47Z",
+    "timestamp": "2026-08-02T15:08:50.408428+00:00",
+    "_collected": "2026-08-02T15:08:42Z",
     "network_health": {
       "hash_rate_ehs": 0,
       "hash_rate_drawdown_pct": 0,
@@ -173,7 +174,7 @@
   },
   "approved_levels": [
     {
-      "price": 63045.15,
+      "price": 63028.34,
       "label": "1H Support",
       "kind": "support",
       "source": "S/R Bands"

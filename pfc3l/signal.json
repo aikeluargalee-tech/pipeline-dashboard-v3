@@ -1,67 +1,68 @@
 {
   "signal": {
-    "id": "pfc3l-20260802-150559",
-    "ts": "2026-08-02T15:05:59.650899+00:00",
+    "id": "pfc3l-20260802-150850",
+    "ts": "2026-08-02T15:08:50.368569+00:00",
     "symbol": "BTC/USD",
-    "reference_price": 63079.0,
-    "state": "DATA_UNRELIABLE",
+    "reference_price": 63100.0,
+    "state": "NO_TRADE",
     "confidence": 0,
     "lifecycle_state": "ACTIVE",
     "reasons": [
-      "Volume Profile stale (66m)"
+      "Positioning is balanced \u2014 no vulnerable side"
     ],
     "vetoes": [
-      "AMT feed >15min old (51m)",
-      "AI Factors >15min old (51m)",
-      "Only 0 critical feeds healthy (need 2+)",
-      "Packet stale (51m old)",
-      "DATA QUALITY VETO \u2014 directional signals blocked"
+      "Positioning is balanced \u2014 no vulnerable side"
     ],
     "invalidation_conditions": [
-      "All critical feeds return within 5 minutes",
-      "No timestamp sequence gaps detected",
-      "Minimum 2 critical feeds confirmed healthy",
+      "3+ gates (P, F, C, L) simultaneously align",
+      "Data quality score \u2265 60",
+      "Clear directional catalyst with no vetoes active",
       "OI 5m delta spike beyond \u00b15% (currently 0.0%)",
       "Catalyst expires or is corrected at source"
     ],
     "informational_zones": [
       {
-        "price": 63045,
-        "label": "1H S",
-        "dist_pct": -0.05,
-        "side": "below"
-      },
-      {
         "price": 63116,
         "label": "VP POC",
-        "dist_pct": 0.06,
+        "dist_pct": 0.03,
         "side": "above"
+      },
+      {
+        "price": 63028,
+        "label": "1H S",
+        "dist_pct": -0.11,
+        "side": "below"
       },
       {
         "price": 63560,
         "label": "1H R",
-        "dist_pct": 0.76,
+        "dist_pct": 0.73,
         "side": "above"
       },
       {
         "price": 62500,
         "label": "1D S",
-        "dist_pct": -0.92,
+        "dist_pct": -0.95,
         "side": "below"
       },
       {
         "price": 66587,
         "label": "1D R",
-        "dist_pct": 5.56,
+        "dist_pct": 5.53,
         "side": "above"
       }
     ],
     "gates": {
-      "positioning": "BALANCED",
-      "flow": "NEUTRAL",
-      "catalyst": "NONE",
-      "level": "ACCELERATOR",
-      "data_quality": "FAILED (30/100)"
+      "positioning": false,
+      "flow": false,
+      "catalyst": false,
+      "level": true,
+      "data_quality": true,
+      "short_positioning": false,
+      "short_flow": false,
+      "short_catalyst": false,
+      "short_level": true,
+      "short_data_quality": true
     }
   },
   "positioning": {
@@ -71,7 +72,7 @@
     "short_vulnerability_score": 5,
     "opposite_score": 5,
     "reasons": [
-      "Long/short ratio high (1.92) \u2014 longs crowded"
+      "Long/short ratio high (1.94) \u2014 longs crowded"
     ],
     "vetoes": []
   },
@@ -81,7 +82,7 @@
     "bullish_score": 35,
     "bearish_score": 10,
     "taker_buy_ratio": 0.522,
-    "coinbase_premium": -0.1047,
+    "coinbase_premium": -0.0991,
     "healthy_spot_venues": 2,
     "reasons": [
       "Taker buy ratio moderate (0.522)",
@@ -109,7 +110,7 @@
       "role": "ACCELERATOR",
       "category": "STANDARD",
       "source": "vp_val",
-      "distance_pct": 0.05,
+      "distance_pct": 0.02,
       "score": 80
     },
     "levels": [
@@ -118,7 +119,7 @@
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_val",
-        "distance_pct": 0.05,
+        "distance_pct": 0.02,
         "score": 80
       },
       {
@@ -126,7 +127,7 @@
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_poc",
-        "distance_pct": 0.06,
+        "distance_pct": 0.03,
         "score": 80
       },
       {
@@ -134,47 +135,44 @@
         "role": "ACCELERATOR",
         "category": "STANDARD",
         "source": "vp_vah",
-        "distance_pct": 0.06,
+        "distance_pct": 0.03,
         "score": 80
       }
     ],
     "reasons": [
-      "Active standard level at $63,112 (0.05% away, role: ACCELERATOR)"
+      "Active standard level at $63,112 (0.02% away, role: ACCELERATOR)"
     ],
     "vetoes": []
   },
   "data_quality": {
-    "score": 30,
-    "directional_allowed": false,
-    "healthy_feeds": 0,
+    "score": 100,
+    "directional_allowed": true,
+    "healthy_feeds": 2,
     "total_critical_feeds": 3,
     "reasons": [
-      "Volume Profile stale (66m)"
+      "Volume Profile stale (69m)",
+      "STALE vp: 68m behind AMT",
+      "STALE brk: 53m behind AMT"
     ],
-    "vetoes": [
-      "AMT feed >15min old (51m)",
-      "AI Factors >15min old (51m)",
-      "Only 0 critical feeds healthy (need 2+)",
-      "Packet stale (51m old)"
-    ],
+    "vetoes": [],
     "feeds": {
       "amt": {
         "label": "AMT feed",
-        "healthy": false,
-        "stale": true,
-        "age": "3083s"
+        "healthy": true,
+        "stale": false,
+        "age": "18s"
       },
       "volume_profile": {
         "label": "Volume Profile",
         "healthy": false,
         "stale": true,
-        "age": "3986s"
+        "age": "4156s"
       },
       "ai_factors": {
         "label": "AI Factors",
-        "healthy": false,
-        "stale": true,
-        "age": "3080s"
+        "healthy": true,
+        "stale": false,
+        "age": "17s"
       },
       "trap_monitor": {
         "label": "Trap Monitor",
@@ -184,5 +182,5 @@
       }
     }
   },
-  "enriched_at": "2026-08-02T15:05:59.671373+00:00"
+  "enriched_at": "2026-08-02T15:08:50.388004+00:00"
 }
